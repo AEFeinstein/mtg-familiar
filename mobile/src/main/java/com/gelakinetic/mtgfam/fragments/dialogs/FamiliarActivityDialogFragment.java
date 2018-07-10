@@ -29,14 +29,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -72,7 +70,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
+        /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this.getActivity());
 
@@ -135,12 +133,9 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 builder.negativeText(R.string.dialog_thanks_anyway);
 
                 builder.positiveText(R.string.main_donate_title);
-                builder.onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FamiliarActivity.PAYPAL_URL));
-                        startActivity(myIntent);
-                    }
+                builder.onPositive((dialog, which) -> {
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FamiliarActivity.PAYPAL_URL));
+                    startActivity(myIntent);
                 });
 
                 /* Set the custom view */
@@ -156,14 +151,11 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 /* Set the image view */
                 ImageView payPal = dialogLayout.findViewById(R.id.imageview1);
                 payPal.setImageResource(R.drawable.paypal_icon);
-                payPal.setOnClickListener(new View.OnClickListener() {
+                payPal.setOnClickListener(v -> {
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri
+                            .parse(FamiliarActivity.PAYPAL_URL));
 
-                    public void onClick(View v) {
-                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri
-                                .parse(FamiliarActivity.PAYPAL_URL));
-
-                        startActivity(myIntent);
-                    }
+                    startActivity(myIntent);
                 });
                 dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
 
@@ -176,22 +168,19 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 builder.title(R.string.main_tts_warning_title)
                         .content(R.string.main_tts_warning_text)
                         .positiveText(R.string.main_install_tts)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                /* TTS couldn't init, try installing TTS data */
-                                try {
-                                    Intent installIntent = new Intent();
-                                    installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                                    startActivity(installIntent);
-                                } catch (ActivityNotFoundException e) {
-                                    /* TTS not even installed */
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setData(Uri.parse("market://details?id=com.google.android.tts"));
-                                    startActivity(intent);
-                                }
-                                dialog.dismiss();
+                        .onPositive((dialog, which) -> {
+                            /* TTS couldn't init, try installing TTS data */
+                            try {
+                                Intent installIntent = new Intent();
+                                installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                                startActivity(installIntent);
+                            } catch (ActivityNotFoundException e) {
+                                /* TTS not even installed */
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse("market://details?id=com.google.android.tts"));
+                                startActivity(intent);
                             }
+                            dialog.dismiss();
                         })
                         .negativeText(R.string.dialog_cancel);
                 return builder.build();
@@ -216,26 +205,20 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             final FamiliarActivity activity = getFamiliarActivity();
             if (mDialogId == DIALOG_CHANGE_LOG) {
                 if (PreferenceAdapter.getBounceDrawer(getContext())) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (null != activity &&
-                                    null != activity.mDrawerLayout &&
-                                    null != activity.mDrawerList) {
-                                activity.mDrawerLayout.openDrawer(activity.mDrawerList);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (null != activity) {
-                                            PreferenceAdapter.setBounceDrawer(activity);
-                                            if (null != activity.mDrawerLayout &&
-                                                    null != activity.mDrawerList) {
-                                                activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                            }
-                                        }
+                    new Handler().postDelayed(() -> {
+                        if (null != activity &&
+                                null != activity.mDrawerLayout &&
+                                null != activity.mDrawerList) {
+                            activity.mDrawerLayout.openDrawer(activity.mDrawerList);
+                            new Handler().postDelayed(() -> {
+                                if (null != activity) {
+                                    PreferenceAdapter.setBounceDrawer(activity);
+                                    if (null != activity.mDrawerLayout &&
+                                            null != activity.mDrawerList) {
+                                        activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
                                     }
-                                }, 2000);
-                            }
+                                }
+                            }, 2000);
                         }
                     }, 500);
                 }

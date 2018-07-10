@@ -25,13 +25,13 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -55,10 +54,11 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
@@ -199,7 +199,7 @@ public class SearchViewFragment extends FamiliarFragment {
      * @return the inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.search_frag, container, false);
@@ -265,16 +265,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcChoice.setAdapter(cmcChoiceAdapter);
 
         /* set the buttons to open the dialogs */
-        mFormatButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(SearchViewDialogFragment.FORMAT_LIST);
-            }
-        });
-        mRarityButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(SearchViewDialogFragment.RARITY_LIST);
-            }
-        });
+        mFormatButton.setOnClickListener(v -> showDialog(SearchViewDialogFragment.FORMAT_LIST));
+        mRarityButton.setOnClickListener(v -> showDialog(SearchViewDialogFragment.RARITY_LIST));
 
         /* This is a better default, might want to reorder the array */
         mColorSpinner.setSelection(2);
@@ -283,14 +275,12 @@ public class SearchViewFragment extends FamiliarFragment {
         checkDialogButtonColors();
 
         /* This listener will do searches directly from the TextViews. Attach it to everything! */
-        TextView.OnEditorActionListener doSearchListener = new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
-                if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
-                    doSearch();
-                    return true;
-                }
-                return false;
+        TextView.OnEditorActionListener doSearchListener = (arg0, arg1, arg2) -> {
+            if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
+                doSearch();
+                return true;
             }
+            return false;
         };
         mNameField.setOnEditorActionListener(doSearchListener);
         mTextField.setOnEditorActionListener(doSearchListener);
@@ -305,16 +295,13 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, true));
-        mNameField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SearchCriteria searchCriteria = new SearchCriteria();
-                searchCriteria.name = ((TextView) view.findViewById(R.id.text1)).getText().toString();
-                Bundle args = new Bundle();
-                args.putSerializable(CRITERIA, searchCriteria);
-                ResultListFragment rlFrag = new ResultListFragment();
-                startNewFragment(rlFrag, args);
-            }
+        mNameField.setOnItemClickListener((adapterView, view, i, l) -> {
+            SearchCriteria searchCriteria = new SearchCriteria();
+            searchCriteria.name = ((TextView) view.findViewById(R.id.text1)).getText().toString();
+            Bundle args = new Bundle();
+            args.putSerializable(CRITERIA, searchCriteria);
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, args);
         });
 
         /* Disable system level autocomplete for fields which do it already */
@@ -333,11 +320,14 @@ public class SearchViewFragment extends FamiliarFragment {
             protected Void doInBackground(Void... voids) {
 
                 /* Only actually get data if the arrays are null */
+                Cursor formatCursor = null;
+                Cursor setCursor = null;
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
                     if (mSetNames == null) {
                         /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                        Cursor setCursor = CardDbAdapter.fetchAllSets(database);
+                        setCursor = CardDbAdapter.fetchAllSets(database);
                         setCursor.moveToFirst();
 
                         mSetNames = new String[setCursor.getCount()];
@@ -353,12 +343,11 @@ public class SearchViewFragment extends FamiliarFragment {
                             mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
                             setCursor.moveToNext();
                         }
-                        setCursor.close();
                     }
 
                     if (mFormatNames == null) {
-                            /* Query the database for all formats and fill the arrays to populate the list of choices with */
-                        Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
+                        /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                        formatCursor = CardDbAdapter.fetchAllFormats(database);
                         formatCursor.moveToFirst();
 
                         mFormatNames = new String[formatCursor.getCount()];
@@ -367,7 +356,6 @@ public class SearchViewFragment extends FamiliarFragment {
                             mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
                             formatCursor.moveToNext();
                         }
-                        formatCursor.close();
                     }
 
                     if (mSupertypes == null) {
@@ -387,10 +375,17 @@ public class SearchViewFragment extends FamiliarFragment {
                     if (mWatermarks == null) {
                         mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_WATERMARK, false, database);
                     }
-                } catch (FamiliarDbException e) {
-                    handleFamiliarDbException(true);
+                } catch (SQLiteException | FamiliarDbException e) {
+                    handleFamiliarDbException(false);
+                } finally {
+                    if (null != setCursor) {
+                        setCursor.close();
+                    }
+                    if (null != formatCursor) {
+                        formatCursor.close();
+                    }
+                    DatabaseManager.closeDatabase(getActivity(), handle);
                 }
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 return null;
             }
@@ -408,29 +403,33 @@ public class SearchViewFragment extends FamiliarFragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            /* set the autocomplete for supertypes */
+                    getActivity().runOnUiThread(() -> {
+                        /* set the autocomplete for supertypes */
+                        if (null != mSupertypes) {
                             ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
                             mSupertypeField.setAdapter(supertypeAdapter);
+                        }
 
+                        if (null != mSubtypes) {
                             /* set the autocomplete for subtypes */
                             ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
                             mSubtypeField.setAdapter(subtypeAdapter);
+                        }
 
+                        if (null != mArtists) {
                             /* set the autocomplete for sets */
                             final SetAdapter setAdapter = new SetAdapter();
                             mSetField.setAdapter(setAdapter);
-
                             /* set the autocomplete for artists */
                             ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
                             mArtistField.setThreshold(1);
                             mArtistField.setAdapter(artistAdapter);
+                        }
 
+                        if (null != mWatermarks) {
                             /* set the autocomplete for watermarks */
                             ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
@@ -445,11 +444,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }.execute();
 
         /* set the search button! */
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                doSearch();
-            }
-        });
+        searchButton.setOnClickListener(v -> doSearch());
 
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;
@@ -502,7 +497,7 @@ public class SearchViewFragment extends FamiliarFragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
         outState.putIntArray(SAVED_RARITY_KEY, mRarityCheckedIndices);
         outState.putIntArray(SAVED_SET_KEY, mSetCheckedIndices);
@@ -543,22 +538,6 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
         searchCriteria.text = mTextField.getText().toString().trim();
-        String supertype = "";
-        for (String type : mSupertypeField.getObjects()) {
-            if (supertype.isEmpty()) {
-                supertype = type;
-            } else {
-                supertype += " " + type;
-            }
-        }
-        String subtype = "";
-        for (String type : mSubtypeField.getObjects()) {
-            if (subtype.isEmpty()) {
-                subtype = type;
-            } else {
-                subtype += " " + type;
-            }
-        }
 
         searchCriteria.superTypes = mSupertypeField.getObjects();
         searchCriteria.subTypes = mSubtypeField.getObjects();
@@ -596,6 +575,9 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         if (searchCriteria.sets.size() == 0) {
             searchCriteria.sets = null;
+        }
+        if (searchCriteria.watermark.length() == 0) {
+            searchCriteria.watermark = null;
         }
 
         /* Build a color string. capital letters means the user is search for that color */
@@ -674,13 +656,14 @@ public class SearchViewFragment extends FamiliarFragment {
             searchCriteria.format = mFormatNames[mSelectedFormat];
         }
 
-        searchCriteria.rarity = null;
+        StringBuilder rarityBuilder = new StringBuilder();
         for (int index : mRarityCheckedIndices) {
-            if (searchCriteria.rarity == null) {
-                searchCriteria.rarity = mRarityCodes[index] + "";
-            } else {
-                searchCriteria.rarity += mRarityCodes[index];
-            }
+            rarityBuilder.append(mRarityCodes[index]);
+        }
+        if (rarityBuilder.length() > 0) {
+            searchCriteria.rarity = rarityBuilder.toString();
+        } else {
+            searchCriteria.rarity = null;
         }
 
         String[] logicChoices = getResources().getStringArray(R.array.logic_spinner);
@@ -838,7 +821,7 @@ public class SearchViewFragment extends FamiliarFragment {
             os.writeObject(searchCriteria);
             os.close();
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, SnackbarWrapper.LENGTH_LONG);
         }
     }
 
@@ -1000,7 +983,7 @@ public class SearchViewFragment extends FamiliarFragment {
             checkDialogButtonColors();
 
         } catch (IOException | ClassNotFoundException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, SnackbarWrapper.LENGTH_LONG);
         }
     }
 

@@ -1,74 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright 2017 Adam Feinstein
-  ~
-  ~ This file is part of MTG Familiar.
-  ~
-  ~ MTG Familiar is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ MTG Familiar is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <resources>
 
-    <!-- General-purpose strings -->
-    <string name="name_search_hint">"Vyhľadať názvy"</string>
-    <string name="dialog_ok">"OK"</string>
-    <string name="dialog_cancel">"Zrušiť"</string>
-    <string name="dialog_yes">"Áno"</string>
-    <string name="dialog_done">"Hotovo"</string>
-    <string name="dialog_both">"Oboje"</string>
-    <string name="dialog_life">"Život"</string>
-    <string name="dialog_thanks">"Vďaka!"</string>
-    <string name="dialog_thanks_anyway">"Aj tak ďakujeme!"</string>
-    <string name="dialog_enjoy">"Užite si to!"</string>
-    <string name="update_notification">"Vyhľadávajú sa aktualizácie databázy"</string>
-    <string name="update_updating_set">"Pridávajú sa %s"</string>
-    <string name="update_updating_rules">"Aktualizácia herných pravidiel"</string>
-    <string name="update_added">"Pridané:"</string>
-    <string name="update_added_rules">"nové herné pravidlá"</string>
-    <string name="update_added_mtr">"nové turnajové pravidlá"</string>
-    <string name="update_added_ipg">"nová Príručka postupov pri porušení pravidiel"</string>
-    <string name="update_added_jar">"nové Rozhodovanie podľa bežných pravidiel"</string>
-    <string name="error">"Chyba"</string>
-    <string name="error_database">"Došlo k chybe databázy. Ak chyba pretrváva, skúste vymazať dáta aplikácie z ponuky nastavení systému Android."</string>
-    <string name="error_no_email_client">"Zdá sa, že nemáte nainštalovaného aktívneho e-mailového klienta. Prosím nastavte e-mailovú aplikáciu."</string>
-    <string name="toast_no_card">"Karta s týmto názvom sa nenašla."</string>
+<!-- General-purpose strings -->
+<string name="name_search_hint">"Vyhľadať názvy"</string>
+<string name="dialog_ok">"OK"</string>
+<string name="dialog_cancel">"Zrušiť"</string>
+<string name="dialog_yes">"Áno"</string>
+<string name="dialog_done">"Hotovo"</string>
+<string name="dialog_both">"Oboje"</string>
+<string name="dialog_life">"Život"</string>
+<string name="dialog_thanks">"Vďaka!"</string>
+<string name="dialog_thanks_anyway">"Aj tak ďakujeme!"</string>
+<string name="dialog_enjoy">"Užite si to!"</string>
+<string name="update_notification">"Vyhľadávajú sa aktualizácie databázy"</string>
+<string name="update_updating_set">"Pridávajú sa %s"</string>
+<string name="update_updating_rules">"Aktualizácia herných pravidiel"</string>
+<string name="update_added">"Pridané:"</string>
+<string name="update_added_rules">"nové herné pravidlá"</string>
+<string name="update_added_mtr">"nové turnajové pravidlá"</string>
+<string name="update_added_ipg">"nová Príručka postupov pri porušení pravidiel"</string>
+<string name="update_added_jar">"nové Rozhodovanie podľa bežných pravidiel"</string>
+<string name="error">"Chyba"</string>
+<string name="error_database">"Došlo k chybe databázy. Ak chyba pretrváva, skúste vymazať dáta aplikácie z ponuky nastavení systému Android."</string>
+<string name="error_no_email_client">"Zdá sa, že nemáte nainštalovaného aktívneho e-mailového klienta. Prosím nastavte e-mailovú aplikáciu."</string>
+<string name="toast_no_card">"Karta s týmto názvom sa nenašla."</string>
 
-    <!-- In what case does the app use this term? -->
-    <string name="not_deleted">"nevymazané"</string>
-    <string name="no_network">"Sieť nie je k dispozícii"</string>
-    <string name="filter_title_view_card">"Zobraziť kartu"</string>
+<!-- In what case does the app use this term? -->
+<string name="not_deleted">"nevymazané"</string>
+<string name="no_network">"Sieť nie je k dispozícii"</string>
+<string name="filter_title_view_card">"Zobraziť kartu"</string>
 
-    <!-- Main menu activity -->
-    <string name="main_pages">"STRÁNKY"</string>
-    <string name="main_extras">"DOPLNKY"</string>
-    <string name="main_card_search">"Vyhľadávanie"</string>
-    <string name="main_life_counter">"Počítadlo životov"</string>
-    <string name="main_mana_pool">"Manapool"</string>
-    <string name="main_dice">"Kocky"</string>
-    <string name="main_trade">"Výmena kariet"</string>
-    <string name="main_wishlist">"Zoznam želaní"</string>
-    <string name="main_timer">"Časomiera"</string>
-    <string name="main_rules">"Pravidlá"</string>
-    <string name="main_judges_corner">"Rozhodcovský kútik"</string>
-    <string name="main_mojhosto">"MoJhoSto"</string>
-    <string name="main_decklist">"Deck builder"</string>
-    <string name="main_force_update_title">"Aktualizovať"</string>
-    <string name="main_settings_title">"Nastavenia"</string>
-    <string name="main_donate_title">"Podporte nás"</string>
-    <string name="main_donate_dialog_title">"Podporte vývojárov"</string>
-    <string name="main_profile">"Profil"</string>
-    <string name="main_donate_text">"Koľko by ste zaplatili za prémiovú MTG aplikáciu, ako je táto? 1 000 €? 10 000 €?&lt;br&gt;
+<!-- Main menu activity -->
+<string name="main_pages">"STRÁNKY"</string>
+<string name="main_extras">"DOPLNKY"</string>
+<string name="main_card_search">"Vyhľadávanie"</string>
+<string name="main_life_counter">"Počítadlo životov"</string>
+<string name="main_mana_pool">"Manapool"</string>
+<string name="main_dice">"Kocky"</string>
+<string name="main_trade">"Výmena kariet"</string>
+<string name="main_wishlist">"Zoznam želaní"</string>
+<string name="main_timer">"Časomiera"</string>
+<string name="main_rules">"Pravidlá"</string>
+<string name="main_judges_corner">"Rozhodcovský kútik"</string>
+<string name="main_mojhosto">"MoJhoSto"</string>
+<string name="main_decklist">"Deck builder"</string>
+<string name="main_force_update_title">"Aktualizovať"</string>
+<string name="main_settings_title">"Nastavenia"</string>
+<string name="main_donate_title">"Podporte nás"</string>
+<string name="main_donate_dialog_title">"Podporte vývojárov"</string>
+<string name="main_profile">"Profil"</string>
+<string name="main_donate_text">"Koľko by ste zaplatili za prémiovú MTG aplikáciu, ako je táto? 1 000 €? 10 000 €?&lt;br&gt;
 &lt;br&gt;
 Ak toto čítate, už dávno viete, že ju dávame úplne zadarmo!&lt;br&gt;
 &lt;br&gt;
@@ -79,18 +60,18 @@ Máme draftovacie návyky, ktoré musíme živiť, OK?&lt;br&gt;
 Kliknutím na tlačidlo nižšie nás môžete podporiť prostredníctvom služby PayPal. 1 € je super. 5 € je ešte viac super! Chápete ako to funguje.&lt;br&gt;
 &lt;br&gt;
 Takže, ako štedro sa dnes cítite?"</string>
-    <string name="main_whats_new_title">"Čo je nové"</string>
-    <string name="main_whats_new_in_title">"Čo je nové vo verzii"</string>
-    <string name="main_tts_warning_title">"Prevod textu na reč"</string>
-    <string name="main_tts_warning_text">"Táto aplikácia má funkciu prevodu textu na reč pre niektoré z jej častí, ale zdá sa,  že ju nemáte nainštalovanú. Ak ju chcete nainštalovať, použite odkaz \"Inštalovať prevod textu ne reč\" v ponuke nastavení."</string>
-    <string name="main_export_data_title">"Uložiť dáta na SD"</string>
-    <string name="main_export_success">"Dáta boli úspešne uložené do"</string>
-    <string name="main_export_fail">"Nepodarilo sa uložiť dáta na SD kartu "</string>
-    <string name="main_import_data_title">"Načítať dáta z SD"</string>
-    <string name="main_import_success">"Načítanie bolo úspešné"</string>
-    <string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte MTGFamiliarBackup.zip do koreňového adresára SD karty"</string>
-    <string name="main_about">"O aplikácii"</string>
-    <string name="main_about_text">"Táto aplikácia je môj darček pre MTG komunitu.&lt;br&gt;
+<string name="main_whats_new_title">"Čo je nové"</string>
+<string name="main_whats_new_in_title">"Čo je nové vo verzii"</string>
+<string name="main_tts_warning_title">"Prevod textu na reč"</string>
+<string name="main_tts_warning_text">"Táto aplikácia má funkciu prevodu textu na reč pre niektoré z jej častí, ale zdá sa,  že ju nemáte nainštalovanú. Ak ju chcete nainštalovať, použite odkaz \"Inštalovať prevod textu ne reč\" v ponuke nastavení."</string>
+<string name="main_export_data_title">"Uložiť dáta na SD"</string>
+<string name="main_export_success">"Dáta boli úspešne uložené do"</string>
+<string name="main_export_fail">"Nepodarilo sa uložiť dáta na SD kartu "</string>
+<string name="main_import_data_title">"Načítať dáta z SD"</string>
+<string name="main_import_success">"Načítanie bolo úspešné"</string>
+<string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte MTGFamiliarBackup.zip do koreňového adresára SD karty"</string>
+<string name="main_about">"O aplikácii"</string>
+<string name="main_about_text">"Táto aplikácia je môj darček pre MTG komunitu.&lt;br&gt;
 &lt;br&gt;
 Otázky, pripomienky, výčitky a pochvaly nám prosím posielajte na &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -124,254 +105,248 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
+&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; used under the BSD, part MIT, Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
 "</string>
-    <string name="main_drawer_open">"Otvoriť navigačný panel"</string>
-    <string name="main_drawer_close">"Zatvoriť navigačný panel"</string>
-    <string name="main_install_tts">"Nainštalovať TTS"</string>
-    <string name="main_export_no_data">"Žiadne dáta na uloženie"</string>
+<string name="main_drawer_open">"Otvoriť navigačný panel"</string>
+<string name="main_drawer_close">"Zatvoriť navigačný panel"</string>
+<string name="main_install_tts">"Nainštalovať TTS"</string>
+<string name="main_export_no_data">"Žiadne dáta na uloženie"</string>
 
-    <!-- Search activity -->
-    <string name="search_name">"Názov"</string>
-    <string name="search_supertype">"(Nad)Typ"</string>
-    <string name="search_subtype">"Podtyp"</string>
-    <string name="search_text">"Text karty"</string>
-    <string name="search_power">"Sila"</string>
-    <string name="search_toughness">"Odolnosť"</string>
+<!-- Search activity -->
+<string name="search_name">"Názov"</string>
+<string name="search_supertype">"(Nad)Typ"</string>
+<string name="search_subtype">"Podtyp"</string>
+<string name="search_text">"Text karty"</string>
+<string name="search_power">"Sila"</string>
+<string name="search_toughness">"Odolnosť"</string>
 
-    <!-- We don't use CMC often in Slovakia, rather simply Mana cost. I know it's not the same, but it expresses it better than CMC. I will use Mana cost. -->
-    <string name="search_cmc">"Manová cena"</string>
+<!-- We don't use CMC often in Slovakia, rather simply Mana cost. I know it's not the same, but it expresses it better than CMC. I will use Mana cost. -->
+<string name="search_cmc">"Manová cena"</string>
 
-    <!-- this has an {X} after it in layout -->
-    <string name="search_set">"Edícia"</string>
-    <string name="search_sets">"Edície"</string>
-    <string name="search_format">"Formát"</string>
-    <string name="search_formats">"Formáty"</string>
-    <string name="search_rarity">"Vzácnosť"</string>
-    <string name="search_rarities">"Vzácnosti"</string>
-    <string name="search_flavor_text">"Flavor text"</string>
-    <string name="search_artist">"Ilustrátor"</string>
-    <string name="search_search">"Vyhľadať!"</string>
-    <string name="search_randomize">"Náhodne!"</string>
-    <string name="search_clear_fields">"Vymazať polia"</string>
-    <string name="search_save_defaults">"Uložiť predvolené hodnoty"</string>
-    <string name="search_load_defaults">"Načítať predvolené hodnoty"</string>
+<!-- this has an {X} after it in layout -->
+<string name="search_set">"Edícia"</string>
+<string name="search_sets">"Edície"</string>
+<string name="search_format">"Formát"</string>
+<string name="search_formats">"Formáty"</string>
+<string name="search_rarity">"Vzácnosť"</string>
+<string name="search_rarities">"Vzácnosti"</string>
+<string name="search_flavor_text">"Flavor text"</string>
+<string name="search_artist">"Ilustrátor"</string>
+<string name="search_search">"Vyhľadať!"</string>
+<string name="search_randomize">"Náhodne!"</string>
+<string name="search_clear_fields">"Vymazať polia"</string>
+<string name="search_save_defaults">"Uložiť predvolené hodnoty"</string>
+<string name="search_load_defaults">"Načítať predvolené hodnoty"</string>
 
-    <!-- Search results sounds weird in Slovak. I will use "No cards found." instead. -->
-    <string name="search_toast_no_results">"Neboli nájdené žiadne karty."</string>
+<!-- Search results sounds weird in Slovak. I will use "No cards found." instead. -->
+<string name="search_toast_no_results">"Neboli nájdené žiadne karty."</string>
 
-    <!-- If the number 1 it is better to use:   %1$d nájdená karta.
-    For 2-4:   %1$d nájdené karty. -->
-    <plurals name="search_toast_results">
-        <item quantity="one">"%1$d nájdená karta"</item>
-        <item quantity="few">"%1$d nájdené karty"</item>
-        <item quantity="many">"%1$d nájdených kariet"</item>
-        <item quantity="other">"%1$d nájdených kariet"</item>
-    </plurals>
-    <string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
-    <string name="search_toast_cannot_load">"Nepodarilo sa načítať možnosti vyhľadávania."</string>
-    <string name="search_All_types">"Všetky typy"</string>
-    <string name="search_Any_types">"Akýkoľvek typ(y)"</string>
-    <string name="search_NOT_any_selected_types">"NIE akýkoľvek vybraný typ(y)"</string>
-    <string name="search_All_words">"Všetky slová"</string>
-    <string name="search_Any_words">"Akékoľvek slovo(á)"</string>
-    <string name="search_Exact_phrase">"Presná fráza"</string>
-    <string name="search_Most_recent_printing">"Najnovšia verzia"</string>
-    <string name="search_Original_printing">"Originálna verzia"</string>
-    <string name="search_All_printings">"Všetky verzie"</string>
-    <string name="search_Reprints_only">"Len reprinty"</string>
-    <string name="search_May_include_any_colors">"Môže obsahovať akúkoľvek farbu(y)"</string>
-    <string name="search_Must_include_all_colors">"Musí obsahovať všetky farby"</string>
-    <string name="search_No_other_colors">"Žiadne iné farby"</string>
-    <string name="search_Exact_all_selected_and_no_others">"Presne (všetky vybrané a žiadne iné)"</string>
+<!-- If the number 1 it is better to use:   %1$d nájdená karta.
+For 2-4:   %1$d nájdené karty. -->
+<plurals name="search_toast_results">
+<item quantity="one">"%1$d nájdená karta"</item>
+<item quantity="few">"%1$d nájdené karty"</item>
+<item quantity="other">"%1$d nájdených kariet"</item>
+</plurals>
+<string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
+<string name="search_toast_cannot_load">"Nepodarilo sa načítať možnosti vyhľadávania."</string>
+<string name="search_All_types">"Všetky typy"</string>
+<string name="search_Any_types">"Akýkoľvek typ(y)"</string>
+<string name="search_NOT_any_selected_types">"NIE akýkoľvek vybraný typ(y)"</string>
+<string name="search_All_words">"Všetky slová"</string>
+<string name="search_Any_words">"Akékoľvek slovo(á)"</string>
+<string name="search_Exact_phrase">"Presná fráza"</string>
+<string name="search_Most_recent_printing">"Najnovšia verzia"</string>
+<string name="search_Original_printing">"Originálna verzia"</string>
+<string name="search_All_printings">"Všetky verzie"</string>
+<string name="search_Reprints_only">"Len reprinty"</string>
+<string name="search_May_include_any_colors">"Môže obsahovať akúkoľvek farbu(y)"</string>
+<string name="search_Must_include_all_colors">"Musí obsahovať všetky farby"</string>
+<string name="search_No_other_colors">"Žiadne iné farby"</string>
+<string name="search_Exact_all_selected_and_no_others">"Presne (všetky vybrané a žiadne iné)"</string>
 
-    <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-        See arrays.xml and onCreate method in SearchViewFragment -->
-    <string name="search_Common">"Common"</string>
-    <string name="search_Uncommon">"Uncommon"</string>
-    <string name="search_Rare">"Rare"</string>
-    <string name="search_Mythic">"Mythic"</string>
-    <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Typ"</string>
+<!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
+    See arrays.xml and onCreate method in SearchViewFragment -->
+<string name="search_Common">"Common"</string>
+<string name="search_Uncommon">"Uncommon"</string>
+<string name="search_Rare">"Rare"</string>
+<string name="search_Mythic">"Mythic"</string>
+<string name="search_Timeshifted">"Timeshifted"</string>
     <string name="search_mana_cost">"Manová cena"</string>
-    <string name="search_collectors_number">"Zberateľské číslo"</string>
-    <string name="search_color_title">"Farba"</string>
-    <string name="search_color_identity_title">"Farebná identita"</string>
+<string name="search_collectors_number">"Zberateľské číslo"</string>
+<string name="search_color_title">"Farba"</string>
+<string name="search_color_identity_title">"Farebná identita"</string>
 
-    <!-- Card view activity -->
-    <string name="card_view_transform">"Transformovať"</string>
-    <string name="card_view_fuse">"Zlúčiť"</string>
-    <string name="card_view_other_half">"Druhá polovica"</string>
-    <string name="card_view_copy">"Skopírovať časť"</string>
-    <string name="card_view_copy_all">"Skopírovať kartu"</string>
-    <string name="card_view_image">"Obrázok karty"</string>
-    <string name="card_view_price">"Cena karty"</string>
-    <string name="card_view_change_set">"Zmeniť edíciu"</string>
-    <string name="card_view_legality">"Legálnosť"</string>
-    <string name="card_view_rulings">"Pravidlá karty"</string>
-    <string name="card_view_legal">"Legálna"</string>
-    <string name="card_view_restricted">"Obmedzená"</string>
-    <string name="card_view_banned">"Zakázaná"</string>
-    <string name="card_view_no_commander">"Nemôže byť generálom"</string>
-    <string name="card_view_price_dialog_title">"Ceny podľa TCGPlayer.com"</string>
-    <string name="card_view_price_dialog_low">"Nízka:"</string>
-    <string name="card_view_price_dialog_medium">"Priemerná:"</string>
-    <string name="card_view_price_dialog_high">"Vysoká:"</string>
-    <string name="card_view_price_dialog_foil">"Foil priemerná:"</string>
-    <string name="card_view_price_dialog_link">"Kliknite sem pre všetky informácie o cenách a trendoch"</string>
-    <string name="card_view_no_rulings">"Žiadne pravidlá pre túto kartu"</string>
-    <string name="card_view_gatherer_page">"Stránka Gatherer"</string>
-    <string name="card_view_set_dialog_title">"Vyberte edíciu"</string>
-    <string name="card_view_price_not_found">"Cena sa nenašla"</string>
-    <string name="card_view_image_not_found">"Obrázok sa nenašiel"</string>
-    <string name="card_view_no_external_storage">"Nepodarilo sa pristúpiť k externému úložisku, prosím skontrolujte svoju SD kartu."</string>
-    <string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
-    <string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
-    <string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
-    <string name="card_view_no_image">"Nepodarilo sa nájsť obrázok na uloženie, prosím skúste to znova."</string>
+<!-- Card view activity -->
+<string name="card_view_transform">"Transformovať"</string>
+<string name="card_view_fuse">"Zlúčiť"</string>
+<string name="card_view_other_half">"Druhá polovica"</string>
+<string name="card_view_copy">"Skopírovať časť"</string>
+<string name="card_view_copy_all">"Skopírovať kartu"</string>
+<string name="card_view_image">"Obrázok karty"</string>
+<string name="card_view_price">"Cena karty"</string>
+<string name="card_view_change_set">"Zmeniť edíciu"</string>
+<string name="card_view_legality">"Legálnosť"</string>
+<string name="card_view_rulings">"Pravidlá karty"</string>
+<string name="card_view_legal">"Legálna"</string>
+<string name="card_view_restricted">"Obmedzená"</string>
+<string name="card_view_banned">"Zakázaná"</string>
+<string name="card_view_no_commander">"Nemôže byť generálom"</string>
+<string name="card_view_price_dialog_title">"Ceny podľa TCGPlayer.com"</string>
+<string name="card_view_price_dialog_link">"Kliknite sem pre všetky informácie o cenách a trendoch"</string>
+<string name="card_view_no_rulings">"Žiadne pravidlá pre túto kartu"</string>
+<string name="card_view_gatherer_page">"Stránka Gatherer"</string>
+<string name="card_view_set_dialog_title">"Vyberte edíciu"</string>
+<string name="card_view_price_not_found">"Cena sa nenašla"</string>
+<string name="card_view_image_not_found">"Obrázok sa nenašiel"</string>
+<string name="card_view_no_external_storage">"Nepodarilo sa pristúpiť k externému úložisku, prosím skontrolujte svoju SD kartu."</string>
+<string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
+<string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
+<string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
     <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
-    <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
-    <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
-    <string name="card_view_share_card">"Zdieľať kartu"</string>
+<string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
+<string name="card_view_image_saved">"Obrázok sa uložil do "</string>
+<string name="card_view_share_card">"Zdieľať kartu"</string>
 
-    <!-- Life counter activity -->
-    <string name="life_counter_announce_life">"Oznámiť počty životov"</string>
-    <string name="life_counter_change_default_gathering">"Upraviť stretnutia"</string>
-    <string name="life_counter_set_gathering">"Načítať stretnutie"</string>
-    <string name="life_counter_change_display">"Zmeniť režim zobrazenia"</string>
-    <string name="life_counter_remove_player">"Odstrániť hráča"</string>
-    <string name="life_counter_add_player">"Pridať hráča"</string>
-    <string name="life_counter_gathering_dialog_title">"Vyberte stretnutie"</string>
-    <string name="life_counter_clear_dialog_text">"Vymazať počty životov alebo hráčov?
+<!-- Life counter activity -->
+<string name="life_counter_announce_life">"Oznámiť počty životov"</string>
+<string name="life_counter_change_default_gathering">"Upraviť stretnutia"</string>
+<string name="life_counter_set_gathering">"Načítať stretnutie"</string>
+<string name="life_counter_change_display">"Zmeniť režim zobrazenia"</string>
+<string name="life_counter_remove_player">"Odstrániť hráča"</string>
+<string name="life_counter_add_player">"Pridať hráča"</string>
+<string name="life_counter_gathering_dialog_title">"Vyberte stretnutie"</string>
+<string name="life_counter_clear_dialog_text">"Vymazať počty životov alebo hráčov?
 Manapool bude tiež vymazaný."</string>
-    <string name="life_counter_edit_name_dialog_title">"Zadajte meno"</string>
-    <string name="life_counter_Commander">"Commander"</string>
-    <string name="life_counter_Compact">"Kompaktný"</string>
-    <string name="life_counter_Normal">"Normálny"</string>
-    <string name="life_counter_commander_cast">"Počet zahraní generála"</string>
-    <string name="life_counter_default_name">"Hráč"</string>
-    <plurals name="life_counter_spoken_life">
-        <item quantity="one">"%1$s má %2$d život."</item>
-        <item quantity="few">"%1$s má %2$d životov."</item>
-        <item quantity="many">"%1$s má %2$d životov."</item>
-        <item quantity="other">"%1$s má %2$d životov."</item>
-    </plurals>
-    <plurals name="life_counter_spoken_poison">
-        <item quantity="one">"%1$s má %2$d poison žetón."</item>
-        <item quantity="few">"%1$s má %2$d poison žetónov."</item>
-        <item quantity="many">"%1$s má %2$d poison žetónov."</item>
-        <item quantity="other">"%1$s má %2$d poison žetónov."</item>
-    </plurals>
-    <string name="life_counter_over_9000">"nad 9000"</string>
-    <string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>
-    <string name="life_counter_edit_life_dialog_title">"Zadajte počet životov"</string>
-    <string name="life_counter_edit_poison_dialog_title">"Zadajte poison žetóny"</string>
+<string name="life_counter_edit_name_dialog_title">"Zadajte meno"</string>
+<string name="life_counter_Commander">"Commander"</string>
+<string name="life_counter_Compact">"Kompaktný"</string>
+<string name="life_counter_Normal">"Normálny"</string>
+<string name="life_counter_commander_cast">"Počet zahraní generála"</string>
+<string name="life_counter_default_name">"Hráč"</string>
+<plurals name="life_counter_spoken_life">
+<item quantity="one">"%1$s má %2$d život."</item>
+<item quantity="few">"%1$s má %2$d životov."</item>
+<item quantity="other">"%1$s má %2$d životov."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+<item quantity="one">"%1$s má %2$d poison žetón."</item>
+<item quantity="few">"%1$s má %2$d poison žetónov."</item>
+<item quantity="other">"%1$s má %2$d poison žetónov."</item>
+</plurals>
+<string name="life_counter_over_9000">"nad 9000"</string>
+<string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>
+<string name="life_counter_edit_life_dialog_title">"Zadajte počet životov"</string>
+<string name="life_counter_edit_poison_dialog_title">"Zadajte poison žetóny"</string>
 
-    <!-- Default gathering activity -->
-    <string name="gathering_starting_life">"Začiatočný počet životov:"</string>
-    <string name="gathering_save">"Uložiť stretnutie"</string>
-    <string name="gathering_enter_name">"Zadajte názov stretnutia"</string>
-    <string name="gathering_dialog_overwrite_title">"Potvrďte prepísanie"</string>
-    <string name="gathering_dialog_overwrite_text">"Toto stretnutie už existuje. Chcete prepísať existujúci súbor?"</string>
-    <string name="gathering_load">"Načítať stretnutie"</string>
-    <string name="gathering_delete">"Zmazať stretnutie"</string>
-    <string name="gathering_toast_no_gatherings">"Žiadne stretnutia neexistujú."</string>
-    <string name="gathering_toast_no_name">"Prosím uveďte názov stretnutia."</string>
-    <string name="gathering_empty_field">"Polia nemôžu byť prázdne. Prosím skontrolujte všetky polia."</string>
-    <string name="gathering_display_mode_title">"Režim zobrazenia:"</string>
+<!-- Default gathering activity -->
+<string name="gathering_starting_life">"Začiatočný počet životov:"</string>
+<string name="gathering_save">"Uložiť stretnutie"</string>
+<string name="gathering_enter_name">"Zadajte názov stretnutia"</string>
+<string name="gathering_dialog_overwrite_title">"Potvrďte prepísanie"</string>
+<string name="gathering_dialog_overwrite_text">"Toto stretnutie už existuje. Chcete prepísať existujúci súbor?"</string>
+<string name="gathering_load">"Načítať stretnutie"</string>
+<string name="gathering_delete">"Zmazať stretnutie"</string>
+<string name="gathering_toast_no_gatherings">"Žiadne stretnutia neexistujú."</string>
+<string name="gathering_toast_no_name">"Prosím uveďte názov stretnutia."</string>
+<string name="gathering_empty_field">"Polia nemôžu byť prázdne. Prosím skontrolujte všetky polia."</string>
+<string name="gathering_display_mode_title">"Režim zobrazenia:"</string>
 
-    <!-- Dice activity -->
-    <string name="dice_heads">"hlava"</string>
-    <string name="dice_tails">"orol"</string>
+<!-- Dice activity -->
+<string name="dice_heads">"hlava"</string>
+<string name="dice_tails">"orol"</string>
 
-    <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
+<!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Vymazať všetko"</string>
 
-    <!-- Card trading activity -->
-    <string name="trader_add_card">"Pridať kartu"</string>
-    <string name="trader_save">"Uložiť výmenu"</string>
-    <string name="trader_load">"Načítať výmenu"</string>
-    <string name="trader_delete">"Zmazať výmenu"</string>
-    <string name="trader_edit_dialog_remove">"Odstrániť"</string>
-    <string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
-    <string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
-    <string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
-    <string name="trader_select_dialog_title">"Vyberte výmenu"</string>
-    <string name="trader_delete_dialog_title">"Zmazať výmenu"</string>
-    <string name="trader_edit_dialog_info">"Podrobnosti"</string>
-    <string name="trader_toast_no_trades">"Nemáte žiadne uložené výmeny."</string>
-    <string name="trader_toast_save_error">"Výmenu sa nepodarilo uložiť; prosím skúste to znova."</string>
-    <string name="trader_toast_invalid_chars">"Názvy výmien nesmú obsahovať znak ('/')."</string>
-    <string name="trader_Low">"Nízke"</string>
-    <string name="trader_Average">"Priemerné"</string>
-    <string name="trader_High">"Vysoké"</string>
-    <string name="trader_sort">"Zoradiť výmenu"</string>
-    <string name="trader_share">"Zdieľať výmenu"</string>
-    <string name="trade_share_title">"Výmena"</string>
+<!-- Card trading activity -->
+<string name="trader_add_card">"Pridať kartu"</string>
+<string name="trader_save">"Uložiť výmenu"</string>
+<string name="trader_load">"Načítať výmenu"</string>
+<string name="trader_delete">"Zmazať výmenu"</string>
+<string name="trader_edit_dialog_remove">"Odstrániť"</string>
+<string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
+<string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
+<string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
+<string name="trader_edit_dialog_info">"Podrobnosti"</string>
+<string name="trader_toast_no_trades">"Nemáte žiadne uložené výmeny."</string>
+<string name="trader_toast_save_error">"Výmenu sa nepodarilo uložiť; prosím skúste to znova."</string>
+<string name="trader_toast_invalid_chars">"Názvy výmien nesmú obsahovať znak ('/')."</string>
+<string name="trader_Low">"Nízke"</string>
+<string name="trader_Average">"Priemerné"</string>
+<string name="trader_High">"Vysoké"</string>
+<string name="trader_sort">"Zoradiť výmenu"</string>
+<string name="trader_share">"Zdieľať výmenu"</string>
+<string name="trade_share_title">"Výmena"</string>
 
-    <!-- Wishlist activity -->
-    <string name="wishlist_add_card">"Pridať"</string>
-    <string name="wishlist_set_pricing">"Nastavenia cien"</string>
-    <string name="wishlist_share">"Zdieľať zoznam želaní"</string>
-    <string name="wishlist_empty_dialog_title">"Vyprázdniť zoznam želaní"</string>
-    <string name="wishlist_empty_dialog_text">"Naozaj chcete vyprázdniť zoznam želaní?"</string>
-    <string name="wishlist_edit_dialog_title_end">"v zozname želaní"</string>
-    <string name="wishlist_loading">"Načítavam"</string>
-    <string name="wishlist_share_title">"MTG Familiar zoznam želaní"</string>
-    <string name="wishlist_foil">"foil"</string>
-    <string name="wishlist_sort">"Zoradiť zoznam želaní"</string>
-    <string name="wishlist_type_price">"Cena"</string>
-    <string name="wishlist_ascending">"Vzostupne"</string>
-    <string name="wishlist_sort_by">"Zoradiť podľa"</string>
+<!-- Wishlist activity -->
+<string name="wishlist_add_card">"Pridať"</string>
+<string name="wishlist_set_pricing">"Nastavenia cien"</string>
+<string name="wishlist_share">"Zdieľať zoznam želaní"</string>
+<string name="wishlist_empty_dialog_title">"Vyprázdniť zoznam želaní"</string>
+<string name="wishlist_empty_dialog_text">"Naozaj chcete vyprázdniť zoznam želaní?"</string>
+<string name="wishlist_edit_dialog_title_end">"v zozname želaní"</string>
+<string name="wishlist_loading">"Načítavam"</string>
+<string name="wishlist_share_title">"MTG Familiar zoznam želaní"</string>
+<string name="wishlist_foil">"foil"</string>
+<string name="wishlist_sort">"Zoradiť zoznam želaní"</string>
+<string name="wishlist_type_price">"Cena"</string>
+<string name="wishlist_ascending">"Vzostupne"</string>
+<string name="wishlist_sort_by">"Zoradiť podľa"</string>
 
-    <!-- Round timer activity -->
-    <string name="timer_how_long">"Ako dlho trvá kolo?"</string>
-    <string name="timer_start">"Spustiť časomieru"</string>
-    <string name="timer_cancel">"Zrušiť časomieru"</string>
-    <string name="timer_set_ringtone">"Nastaviť zvonenie časomiery"</string>
-    <string name="timer_set_warnings">"Nastaviť upozornenia"</string>
-    <string name="timer_warning_dialog_title">"Hlasové upozornenia"</string>
-    <string name="timer_tone_dialog_title">"Vyberte tón upozornenia"</string>
-    <string name="timer_notification_ongoing">"Kolo sa skončí o %1$tl:%1$tM %1$Tp."</string>
-    <string name="timer_two_minutes_left">"Kolo sa skončí o dve minúty"</string>
-    <string name="timer_five_minutes_left">"Kolo sa skončí o päť minút"</string>
-    <string name="timer_ten_minutes_left">"Kolo sa skončí o desať minút"</string>
-    <string name="timer_fifteen_minutes_left">"Kolo sa skončí o pätnásť minút"</string>
-    <string name="timer_ended">"Kolo sa skončilo."</string>
-    <string name="timer_easter_egg">"Večer posledného dňa, zostáva dvanásť hodín"</string>
+<!-- Round timer activity -->
+<string name="timer_how_long">"Ako dlho trvá kolo?"</string>
+<string name="timer_start">"Spustiť časomieru"</string>
+<string name="timer_cancel">"Zrušiť časomieru"</string>
+<string name="timer_set_ringtone">"Nastaviť zvonenie časomiery"</string>
+<string name="timer_set_warnings">"Nastaviť upozornenia"</string>
+<string name="timer_warning_dialog_title">"Hlasové upozornenia"</string>
+<string name="timer_tone_dialog_title">"Vyberte tón upozornenia"</string>
+<string name="timer_notification_ongoing">"Kolo sa skončí o %1$tl:%1$tM %1$Tp."</string>
+<string name="timer_two_minutes_left">"Kolo sa skončí o dve minúty"</string>
+<string name="timer_five_minutes_left">"Kolo sa skončí o päť minút"</string>
+<string name="timer_ten_minutes_left">"Kolo sa skončí o desať minút"</string>
+<string name="timer_fifteen_minutes_left">"Kolo sa skončí o pätnásť minút"</string>
+<string name="timer_ended">"Kolo sa skončilo."</string>
+<string name="timer_easter_egg">"Večer posledného dňa, zostáva dvanásť hodín"</string>
 
-    <!-- Rules activity -->
-    <string name="rules_exit">"Opustiť pravidlá"</string>
-    <string name="rules_glossary">"Slovník"</string>
-    <string name="rules_no_results_toast">"Neboli nájdené žiadne výsledky."</string>
-    <string name="rules_short_key_toast">"Váš hľadaný výraz musí mať aspoň 3 znaky."</string>
-    <string name="rules_search_all">"Vyhľadať vo všetkých pravidlách"</string>
-    <string name="rules_search_cat">"Vyhľadať medzi %s"</string>
-    <string name="rules_this_cat">"táto kategória:"</string>
-    <string name="rules_banned_and_restricted">"Formáty, zákazy a obmedzenia"</string>
-    <string name="rules_banned_as_commander">"Zakázaná ako generál"</string>
-    <string name="rules_no_cards">"Žiadne karty"</string>
-    <string name="rules_legal_sets">"Legálne edície"</string>
-    <string name="rules_bb_wb_sets">"Všetky edície s čiernym a bielym okrajom"</string>
-    <string name="rules_coppied">"Pravidlo skopírované"</string>
-    <string name="rules_copy_tag">"Pravidlo MTG"</string>
+<!-- Rules activity -->
+<string name="rules_exit">"Opustiť pravidlá"</string>
+<string name="rules_glossary">"Slovník"</string>
+<string name="rules_no_results_toast">"Neboli nájdené žiadne výsledky."</string>
+<string name="rules_short_key_toast">"Váš hľadaný výraz musí mať aspoň 3 znaky."</string>
+<string name="rules_search_all">"Vyhľadať vo všetkých pravidlách"</string>
+<string name="rules_search_cat">"Vyhľadať medzi %s"</string>
+<string name="rules_this_cat">"táto kategória:"</string>
+<string name="rules_banned_and_restricted">"Formáty, zákazy a obmedzenia"</string>
+<string name="rules_banned_as_commander">"Zakázaná ako generál"</string>
+<string name="rules_no_cards">"Žiadne karty"</string>
+<string name="rules_legal_sets">"Legálne edície"</string>
+<string name="rules_bb_wb_sets">"Všetky edície s čiernym a bielym okrajom"</string>
+<string name="rules_coppied">"Pravidlo skopírované"</string>
+<string name="rules_copy_tag">"Pravidlo MTG"</string>
 
-    <!-- Profile activity -->
-    <string name="profile_update_dci">"Aktualizovať DCI číslo"</string>
-    <string name="profile_remove_dci">"Odstrániť DCI číslo"</string>
-    <string name="profile_update_dci_dialog_title">"Vložte vaše DCI číslo"</string>
-    <string name="profile_invalid_dci">"Zadali ste neplatné DCI číslo"</string>
-    <string name="profile_no_dci">"Nezadali ste vaše DCI číslo"</string>
-    <string name="profile_planeswalker_points">"PLANESWALKER BODY"</string>
+<!-- Profile activity -->
+<string name="profile_update_dci">"Aktualizovať DCI číslo"</string>
+<string name="profile_remove_dci">"Odstrániť DCI číslo"</string>
+<string name="profile_update_dci_dialog_title">"Vložte vaše DCI číslo"</string>
+<string name="profile_invalid_dci">"Zadali ste neplatné DCI číslo"</string>
+<string name="profile_no_dci">"Nezadali ste vaše DCI číslo"</string>
+<string name="profile_planeswalker_points">"PLANESWALKER BODY"</string>
 
-    <!-- MoJhoSto activity -->
-    <string name="mojhosto_rules_title">"Pravidlá MoJhoSto"</string>
+<!-- MoJhoSto activity -->
+<string name="mojhosto_rules_title">"Pravidlá MoJhoSto"</string>
 
-    <!-- POEditor says the Slovak translation is 100% done, but this is empty. Will it be translated? -->
-    <string name="mojhosto_rules_text">"MoJhoSto je neoficiálny Vanguard formát z Magic Online.&lt;br&gt;
+<!-- POEditor says the Slovak translation is 100% done, but this is empty. Will it be translated? -->
+<string name="mojhosto_rules_text">"MoJhoSto je neoficiálny Vanguard formát z Magic Online.&lt;br&gt;
 &lt;br&gt;
 Každý hráč musí mať balík, ktorý pozostáva iba zo 60 základných zemí.&lt;br&gt;
 &lt;br&gt;
@@ -392,184 +367,211 @@ Pravidlá si môžete kedykoľvek prečítať z menu.&lt;br&gt;
 Pero a papier môžu byť užitočné pre sledovanie stavu hry. Bohužiaľ, MTG Familiar nemôže vytvoriť skutočné karty.&lt;br&gt;
 &lt;br&gt;
 Veľa šťastia a zabavte sa!"</string>
-    <string name="mojhosto_momir_label">"CMC ="</string>
-    <string name="mojhosto_random_creature">"Náhodná bytosť"</string>
-    <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
-    <string name="mojhosto_random_equipment">"Náhodné vybavenie"</string>
-    <string name="mojhosto_random_instants">"Náhodný instant"</string>
-    <string name="mojhosto_random_sorceries">"Náhodné sorcery"</string>
-    <string name="mojhosto_dialog_play">"Poďme hrať!"</string>
+<string name="mojhosto_momir_label">"CMC ="</string>
+<string name="mojhosto_random_creature">"Náhodná bytosť"</string>
+<string name="mojhosto_stonehewer_label">"CMC ≤"</string>
+<string name="mojhosto_random_equipment">"Náhodné vybavenie"</string>
+<string name="mojhosto_random_instants">"Náhodný instant"</string>
+<string name="mojhosto_random_sorceries">"Náhodné sorcery"</string>
+<string name="mojhosto_dialog_play">"Poďme hrať!"</string>
 
-    <!-- Preferences -->
-    <string name="pref_screen_general">"Všeobecné nastavenia"</string>
-    <string name="pref_screen_search">"Vyhľadávanie"</string>
-    <string name="pref_screen_trade_wishlist">"Výmena a Zoznam želaní"</string>
-    <string name="pref_cat_default_fragment">"Predvolená stránka"</string>
-    <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
-    <string name="pref_cat_updates">"Aktualizácie databázy"</string>
-    <string name="pref_auto_updates_title">"Automatické aktualizácie"</string>
-    <string name="pref_auto_updates_summary">"Po otvorení aplikácie skontrolovať nové edície a zákazy"</string>
-    <string name="pref_update_frequency_title">"Frekvencia aktualizácií"</string>
-    <string name="pref_update_frequency_summary">"Počet dní medzi kontrolou nových edícií a zákazov"</string>
-    <string name="pref_cat_card_view">"Zobrazenie karty"</string>
-    <string name="pref_show_art_title">"Vždy zobraziť obrázok"</string>
-    <string name="pref_show_art_summary">"Pri prezeraní karty načítať oficiálny obrázok karty namiesto textu pravidiel"</string>
-    <string name="pref_card_language_title">"Jazyk kariet"</string>
-    <string name="pref_card_language_summary">"Vyberte jazyk, v ktorom sa zobrazí obrázok karty"</string>
-    <string name="pref_cat_life_screen">"Nastavenia zobrazenia"</string>
-    <string name="pref_wake_lock_title">"Zámok vypnutia obrazovky"</string>
-    <string name="pref_wake_lock_summary">"Nastaviť obrazovku počítadla životov, aby nikdy neprešla do režimu spánku"</string>
-    <string name="pref_dim_lock_summary">"Stlmiť obrazovku pri nečinnosti"</string>
-    <string name="pref_dim_lock_title">"Povoliť stlmenie obrazovky"</string>
-    <string name="pref_dim_lock_level_summary">"Nastavte úroveň jasu po stlmení obrazovky"</string>
-    <string name="pref_dim_lock_level_title">"Jasnosť obrazovky"</string>
-    <string name="pref_display_mode_title">"Režim zobrazenia"</string>
-    <string name="pref_display_mode_summary">"Vyberte, ako sa má zobraziť počítadlo životov"</string>
-    <string name="pref_ringtone_title">"Zvonenie časomiery"</string>
-    <string name="pref_ringtone_summary">"Vyberte tón upozornenia, ktorý sa prehrá, keď skončí časomiera"</string>
-    <string name="pref_fifteen_minutes_title">"15-minútové upozornenie"</string>
-    <string name="pref_ten_minutes_title">"10-minútové upozornenie"</string>
-    <string name="pref_five_minutes_title">"5-minútové upozornenie"</string>
-    <string name="pref_two_minutes_title">"2-minútové upozornenie"</string>
-    <string name="pref_cat_trade_window">"Výmena kariet"</string>
-    <string name="pref_trade_price_title">"Nastavenie cien"</string>
-    <string name="pref_trade_price_summary">"Použiť ceny TCGplayer pri vymieňaní kariet"</string>
-    <string name="pref_cat_result_list">"Zoznam výsledkov"</string>
-    <string name="pref_consolidate_title">"Skonsolidovať výsledky"</string>
-    <string name="pref_consolidate_summary">"Zobraziť len najnovšiu verziu karty"</string>
-    <string name="pref_show_set_title">"Zobraziť edíciu"</string>
-    <string name="pref_show_mana_title">"Zobraziť manovú cenu"</string>
-    <string name="pref_show_type_title">"Zobraziť typ/podtyp"</string>
-    <string name="pref_show_ability_title">"Zobraziť text pravidiel"</string>
-    <string name="pref_show_pt_title">"Zobraziť silu/odolnosť"</string>
-    <string name="pref_wishlist_details_title">"Zobraziť podrobnosti"</string>
-    <string name="pref_wishlist_details_summary">"Zobraziť úplné informácie o kartách v zozname želaní"</string>
-    <string name="pref_wishlist_totals_title">"Zobraziť celkovú sumu"</string>
-    <string name="pref_wishlist_totals_summary">"Zobraziť celkovú sumu kariet v zozname želaní"</string>
-    <string name="pref_wishlist_prices_title">"Zobraziť ceny kariet"</string>
-    <string name="pref_wishlist_prices_summary">"Zobraziť cenu každej karty v zozname želaní"</string>
-    <string name="pref_English">"Anglický"</string>
-    <string name="pref_French">"Francúzsky"</string>
-    <string name="pref_Italian">"Taliansky"</string>
-    <string name="pref_Spanish">"Španielsky"</string>
-    <string name="pref_Japanese">"Japonský"</string>
-    <string name="pref_Russian">"Ruský"</string>
-    <string name="pref_German">"Nemecký"</string>
-    <string name="pref_Polish">"Poľský"</string>
+<!-- Preferences -->
+<string name="pref_screen_general">"Všeobecné nastavenia"</string>
+<string name="pref_cat_default_fragment">"Predvolená stránka"</string>
+<string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
+<string name="pref_cat_updates">"Aktualizácie databázy"</string>
+<string name="pref_auto_updates_title">"Automatické aktualizácie"</string>
+<string name="pref_auto_updates_summary">"Po otvorení aplikácie skontrolovať nové edície a zákazy"</string>
+<string name="pref_update_frequency_title">"Frekvencia aktualizácií"</string>
+<string name="pref_update_frequency_summary">"Počet dní medzi kontrolou nových edícií a zákazov"</string>
+<string name="pref_cat_card_view">"Zobrazenie karty"</string>
+<string name="pref_show_art_title">"Vždy zobraziť obrázok"</string>
+<string name="pref_show_art_summary">"Pri prezeraní karty načítať oficiálny obrázok karty namiesto textu pravidiel"</string>
+<string name="pref_card_language_title">"Jazyk kariet"</string>
+<string name="pref_card_language_summary">"Vyberte jazyk, v ktorom sa zobrazí obrázok karty"</string>
+<string name="pref_cat_life_screen">"Nastavenia zobrazenia"</string>
+<string name="pref_wake_lock_title">"Zámok vypnutia obrazovky"</string>
+<string name="pref_wake_lock_summary">"Nastaviť obrazovku počítadla životov, aby nikdy neprešla do režimu spánku"</string>
+<string name="pref_dim_lock_summary">"Stlmiť obrazovku pri nečinnosti"</string>
+<string name="pref_dim_lock_title">"Povoliť stlmenie obrazovky"</string>
+<string name="pref_dim_lock_level_summary">"Nastavte úroveň jasu po stlmení obrazovky"</string>
+<string name="pref_dim_lock_level_title">"Jasnosť obrazovky"</string>
+<string name="pref_display_mode_title">"Režim zobrazenia"</string>
+<string name="pref_display_mode_summary">"Vyberte, ako sa má zobraziť počítadlo životov"</string>
+<string name="pref_ringtone_title">"Zvonenie časomiery"</string>
+<string name="pref_ringtone_summary">"Vyberte tón upozornenia, ktorý sa prehrá, keď skončí časomiera"</string>
+<string name="pref_fifteen_minutes_title">"15-minútové upozornenie"</string>
+<string name="pref_ten_minutes_title">"10-minútové upozornenie"</string>
+<string name="pref_five_minutes_title">"5-minútové upozornenie"</string>
+<string name="pref_two_minutes_title">"2-minútové upozornenie"</string>
+<string name="pref_cat_trade_window">"Výmena kariet"</string>
+<string name="pref_trade_price_title">"Nastavenie cien"</string>
+<string name="pref_trade_price_summary">"Použiť ceny TCGplayer pri vymieňaní kariet"</string>
+<string name="pref_cat_result_list">"Zoznam výsledkov"</string>
+<string name="pref_consolidate_title">"Skonsolidovať výsledky"</string>
+<string name="pref_consolidate_summary">"Zobraziť len najnovšiu verziu karty"</string>
+<string name="pref_show_set_title">"Zobraziť edíciu"</string>
+<string name="pref_show_mana_title">"Zobraziť manovú cenu"</string>
+<string name="pref_show_type_title">"Zobraziť typ/podtyp"</string>
+<string name="pref_show_ability_title">"Zobraziť text pravidiel"</string>
+<string name="pref_show_pt_title">"Zobraziť silu/odolnosť"</string>
+<string name="pref_wishlist_details_title">"Zobraziť podrobnosti"</string>
+<string name="pref_wishlist_details_summary">"Zobraziť úplné informácie o kartách v zozname želaní"</string>
+<string name="pref_wishlist_totals_title">"Zobraziť celkovú sumu"</string>
+<string name="pref_wishlist_totals_summary">"Zobraziť celkovú sumu kariet v zozname želaní"</string>
+<string name="pref_wishlist_prices_title">"Zobraziť ceny kariet"</string>
+<string name="pref_wishlist_prices_summary">"Zobraziť cenu každej karty v zozname želaní"</string>
+<string name="pref_English">"Anglický"</string>
+<string name="pref_French">"Francúzsky"</string>
+<string name="pref_Italian">"Taliansky"</string>
+<string name="pref_Spanish">"Španielsky"</string>
+<string name="pref_Japanese">"Japonský"</string>
+<string name="pref_Russian">"Ruský"</string>
+<string name="pref_German">"Nemecký"</string>
+<string name="pref_Polish">"Poľský"</string>
 
-    <!-- Only used for app translation, not card names -->
-    <string name="pref_1_day">"1 deň"</string>
-    <string name="pref_2_days">"2 dni"</string>
-    <string name="pref_3_days">"3 dni"</string>
-    <string name="pref_5_days">"5 dní"</string>
-    <string name="pref_1_week">"1 týždeň"</string>
-    <string name="pref_2_weeks">"2 týždne"</string>
-    <string name="pref_life_timer_title">"Počkať"</string>
-    <string name="pref_life_timer_summary">"Ako dlho čakať pred zapísaním nového vstupu"</string>
-    <string name="pref_1_second">"1 sekundu"</string>
-    <string name="pref_2_seconds">"2 sekundy"</string>
-    <string name="pref_3_seconds">"3 sekundy"</string>
-    <string name="pref_4_seconds">"4 sekundy"</string>
-    <string name="pref_5_seconds">"5 sekúnd"</string>
-    <string name="pref_cat_widget">"Miniaplikácia"</string>
-    <string name="pref_widget_mode_title">"Tlačidlá miniaplikácie"</string>
-    <string name="pref_widget_mode_summary">"Tlačidlá, ktoré sa zobrazia v miniaplikácii"</string>
-    <string name="pref_theme_dark">"Tmavý"</string>
-    <string name="pref_theme_light">"Svetlý"</string>
-    <string name="pref_cat_theme">"Vzhľad a forma"</string>
-    <string name="pref_theme_title">"Motív"</string>
-    <string name="pref_theme_summary">"Nastavte svetlý alebo tmavý motív"</string>
-    <string name="pref_image_cache_size_summary">"Maximálny počet miesta na disku, ktorý sa môže použiť na ukladanie obrázkov kariet"</string>
-    <string name="pref_image_cache_size_title">"Veľkosť pamäte na obrázky"</string>
-    <string name="pref_cat_card_cache">"Vyrovnávacia pamäť"</string>
-    <string name="pref_language">"Jazyk"</string>
-    <string name="pref_set_language">"Nastavte iný jazyk"</string>
+<!-- Only used for app translation, not card names -->
+<string name="pref_1_day">"1 deň"</string>
+<string name="pref_2_days">"2 dni"</string>
+<string name="pref_3_days">"3 dni"</string>
+<string name="pref_5_days">"5 dní"</string>
+<string name="pref_1_week">"1 týždeň"</string>
+<string name="pref_2_weeks">"2 týždne"</string>
+<string name="pref_life_timer_title">"Počkať"</string>
+<string name="pref_life_timer_summary">"Ako dlho čakať pred zapísaním nového vstupu"</string>
+<string name="pref_1_second">"1 sekundu"</string>
+<string name="pref_2_seconds">"2 sekundy"</string>
+<string name="pref_3_seconds">"3 sekundy"</string>
+<string name="pref_4_seconds">"4 sekundy"</string>
+<string name="pref_5_seconds">"5 sekúnd"</string>
+<string name="pref_cat_widget">"Miniaplikácia"</string>
+<string name="pref_widget_mode_title">"Tlačidlá miniaplikácie"</string>
+<string name="pref_widget_mode_summary">"Tlačidlá, ktoré sa zobrazia v miniaplikácii"</string>
+<string name="pref_theme_dark">"Tmavý"</string>
+<string name="pref_theme_light">"Svetlý"</string>
+<string name="pref_cat_theme">"Vzhľad a forma"</string>
+<string name="pref_theme_title">"Motív"</string>
+<string name="pref_theme_summary">"Nastavte svetlý alebo tmavý motív"</string>
+<string name="pref_image_cache_size_summary">"Maximálny počet miesta na disku, ktorý sa môže použiť na ukladanie obrázkov kariet"</string>
+<string name="pref_image_cache_size_title">"Veľkosť pamäte na obrázky"</string>
+<string name="pref_cat_card_cache">"Vyrovnávacia pamäť"</string>
+<string name="pref_language">"Jazyk"</string>
+<string name="pref_set_language">"Nastavte iný jazyk"</string>
 
-    <!-- Judge's Corner -->
-    <string name="judges_corner_MTR">"MTR"</string>
-    <string name="judges_corner_IPG">"IPG"</string>
-    <string name="judges_corner_JAR">"JAR"</string>
-    <string name="judges_corner_jump_to_top">"Späť na začiatok"</string>
-    <string name="judges_corner_counter">"Počítadlo"</string>
-    <string name="judges_corner_error">"Nastala chyba."</string>
-    <string name="deck_counter_reset">"Vynulovať"</string>
+<!-- Judge's Corner -->
+<string name="judges_corner_MTR">"MTR"</string>
+<string name="judges_corner_IPG">"IPG"</string>
+<string name="judges_corner_JAR">"JAR"</string>
+<string name="judges_corner_jump_to_top">"Späť na začiatok"</string>
+<string name="judges_corner_counter">"Počítadlo"</string>
+<string name="judges_corner_error">"Nastala chyba."</string>
+<string name="deck_counter_reset">"Vynulovať"</string>
 
-    <!-- Deck Builder -->
-    <string name="decklist_sideboard">"Sideboard"</string>
-    <string name="decklist_creatures">"Bytosti"</string>
-    <string name="decklist_planeswalkers">"Sférochodci"</string>
-    <string name="decklist_enchantments">"Očarovania"</string>
-    <string name="decklist_artifacts">"Artefakty"</string>
-    <string name="decklist_lands">"Landy"</string>
-    <string name="decklist_edit_dialog_title_end">"v balíku"</string>
-    <string name="decklist_delete">"Zmazať balík"</string>
-    <string name="decklist_save">"Uložiť balík"</string>
-    <string name="decklist_load">"Načítať balík"</string>
-    <string name="decklist_clear">"Vymazať balík"</string>
-    <string name="decklist_toast_no_decks">"Nemáte žiadne uložené balíky."</string>
-    <string name="decklist_select_dialog_title">"Vyberte balík"</string>
-    <string name="decklist_delete_dialog_title">"Zmazať balík"</string>
-    <string name="decklist_clear_dialog_text">"Naozaj chcete vymazať aktuálny balík?"</string>
-    <string name="decklist_share">"Zdieľať balík"</string>
-    <string name="decklist_share_title">"MTG Familiar Decklist"</string>
-    <string name="decklist_instants">"Instanty"</string>
-    <string name="decklist_sorceries">"Sorcery"</string>
-    <string name="decklist_others">"Ostatné"</string>
-    <string name="decklist_unnamed_deck">"Nepomenovaný balík"</string>
+<!-- Deck Builder -->
+<string name="decklist_sideboard">"Sideboard"</string>
+<string name="decklist_creatures">"Bytosti"</string>
+<string name="decklist_planeswalkers">"Sférochodci"</string>
+<string name="decklist_enchantments">"Očarovania"</string>
+<string name="decklist_artifacts">"Artefakty"</string>
+<string name="decklist_lands">"Landy"</string>
+<string name="decklist_edit_dialog_title_end">"v balíku"</string>
+<string name="decklist_delete">"Zmazať balík"</string>
+<string name="decklist_save">"Uložiť balík"</string>
+<string name="decklist_load">"Načítať balík"</string>
+<string name="decklist_clear">"Vymazať balík"</string>
+<string name="decklist_toast_no_decks">"Nemáte žiadne uložené balíky."</string>
+<string name="decklist_select_dialog_title">"Vyberte balík"</string>
+<string name="decklist_delete_dialog_title">"Zmazať balík"</string>
+<string name="decklist_clear_dialog_text">"Naozaj chcete vymazať aktuálny balík?"</string>
+<string name="decklist_share">"Zdieľať balík"</string>
+<string name="decklist_share_title">"MTG Familiar Decklist"</string>
+<string name="decklist_instants">"Instanty"</string>
+<string name="decklist_sorceries">"Sorcery"</string>
+<string name="decklist_others">"Ostatné"</string>
+<string name="decklist_unnamed_deck">"Nepomenovaný balík"</string>
 
-    <!-- "Added Slovak Translation" was added -->
-    <string name="main_whats_new_text">"- Vyhľadávanie kariet podľa mana costu&lt;br&gt;
-- Vo výsledkoch vyhľadávania stlačte a podržte na karte, ktorú chcete pridať do balíčka alebo do zoznamu želaní&lt;br&gt;
-- Pridávanie kariet do sideboardu v deckbuilderi&lt;br&gt;
-- Zoradenie kariet podľa poradia pridania v zozname želaní a vo výmene kariet &lt;br&gt;
-- V zoznamoch stlačte a podržte pre výber viacerých kariet a prejdením prsta ich odstránite&lt;br&gt;
-- Opravy chýb a optimalizácie"</string>
-    <string name="card_view_send_to">"Zdieľať obrázok cez"</string>
-    <string name="card_view_translated_dialog_title">"Preložený názov karty"</string>
-    <string name="pref_Portuguese">"Portugalský (Brazílsky)"</string>
-    <string name="pref_Chinese">"Čínsky zjednodušený"</string>
-    <string name="pref_Chinese_trad">"Čínsky tradičný"</string>
-    <string name="pref_Korean">"Kórejský"</string>
+<!-- "Added Slovak Translation" was added -->
+<string name="main_whats_new_text">"- Pridaný Pauper formát&lt;br&gt;
+- Pridané vyhľadávanie podľa vodoznaku&lt;br&gt;
+- Pridaná kontrola legality balíka&lt;br&gt;
+- Prídaná TCGPlayer.com Market Price"</string>
+<string name="card_view_send_to">"Zdieľať obrázok cez"</string>
+<string name="card_view_translated_dialog_title">"Preložený názov karty"</string>
+<string name="pref_Portuguese">"Portugalský (Brazílsky)"</string>
+<string name="pref_Chinese">"Čínsky zjednodušený"</string>
+<string name="pref_Chinese_trad">"Čínsky tradičný"</string>
+<string name="pref_Korean">"Kórejský"</string>
 
-    <!-- Only used for app translation, not card names -->
-    <string name="pref_Slovak">"Slovenský"</string>
-    <string name="pref_use_sound_instead_of_tts">"Použiť zvuk namiesto TTS"</string>
-    <string name="Equals">"Rovné"</string>
-    <string name="DoesNotEqual">"Nerovné"</string>
-    <string name="Contains">"Obsahuje"</string>
-    <string name="DoesNotContain">"Neobsahuje"</string>
-    <string name="NoComparison">"Žiadne porovnanie"</string>
-    <string name="card_view_copied_to_clipboard">"Skopírované"</string>
-    <string name="wishlist_type_order">"Poradie pridané"</string>
-    <string name="pref_cat_decklist">"Decklist"</string>
-    <string name="pref_decklist_totals_summary">"Zobraziť celkovú sumu v editore balíkov"</string>
-    <string name="pref_tap_symbol_title">"Symbol tapnutia"</string>
-    <string name="pref_tap_symbol_summary">"Ktorý symbol tapnutia zobrazovať"</string>
-    <string name="pref_tap_symbol_modern">"Ôsma edícia"</string>
-    <string name="pref_tap_symbol_old">"Štvrtá edícia"</string>
-    <string name="pref_tap_symbol_older">"Revised edícia"</string>
-    <string name="pref_white_symbol_title">"Biely mana symbol"</string>
-    <string name="pref_white_symbol_summary">"Ktorý biely mana symbol používať"</string>
-    <string name="pref_white_symbol_modern">"Ice Age"</string>
-    <string name="pref_white_symbol_old">"Limitovaná edícia Alpha"</string>
-    <string name="pref_cat_list_general">"Všeobecný zoznam"</string>
-    <string name="pref_undo_timeout_seconds_summary">"Počet sekúnd, počas ktorých položka zostane v stave vrátenia pred odstránením"</string>
-    <string name="pref_undo_timeout_seconds_title">"Časový limit pre vrátenie späť"</string>
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Slovenský"</string>
+<string name="pref_use_sound_instead_of_tts">"Použiť zvuk namiesto TTS"</string>
+<string name="Equals">"Rovné"</string>
+<string name="DoesNotEqual">"Nerovné"</string>
+<string name="Contains">"Obsahuje"</string>
+<string name="DoesNotContain">"Neobsahuje"</string>
+<string name="NoComparison">"Žiadne porovnanie"</string>
+<string name="card_view_copied_to_clipboard">"Skopírované"</string>
+<string name="wishlist_type_order">"Poradie pridané"</string>
+<string name="pref_cat_decklist">"Decklist"</string>
+<string name="pref_decklist_totals_summary">"Zobraziť celkovú sumu v editore balíkov"</string>
+<string name="pref_tap_symbol_title">"Symbol tapnutia"</string>
+<string name="pref_tap_symbol_summary">"Ktorý symbol tapnutia zobrazovať"</string>
+<string name="pref_tap_symbol_modern">"Ôsma edícia"</string>
+<string name="pref_tap_symbol_old">"Štvrtá edícia"</string>
+<string name="pref_tap_symbol_older">"Revised edícia"</string>
+<string name="pref_white_symbol_title">"Biely mana symbol"</string>
+<string name="pref_white_symbol_summary">"Ktorý biely mana symbol používať"</string>
+<string name="pref_white_symbol_modern">"Ice Age"</string>
+<string name="pref_white_symbol_old">"Limitovaná edícia Alpha"</string>
+<string name="pref_cat_list_general">"Všeobecný zoznam"</string>
+<string name="pref_undo_timeout_seconds_summary">"Počet sekúnd, počas ktorých položka zostane v stave vrátenia pred odstránením"</string>
+<string name="pref_undo_timeout_seconds_title">"Časový limit pre vrátenie späť"</string>
 
-    <!-- General Card List -->
-    <string name="cardlist_undo">"vrátiť späť"</string>
-    <string name="cardlist_delete_selected">"Odstrániť vybrané položky"</string>
-    <string name="cardlist_item_deleted">"Odstránené"</string>
-    <string name="decklist_import_to_wishlist">"Importovať vybrané do zoznamu želaní"</string>
-    <string name="decklist_save_as">"Uložiť balík ako"</string>
-    <string name="decklist_saved_toast">"Balík %1$s uložený!"</string>
-    <string name="result_list_Add_to_decklist">"Pridať do balíka"</string>
-    <string name="result_list_Add_to_wishlist">"Pridať do zoznamu želaní"</string>
-    <string name="pref_deck_price_summary">"Používať ceny kariet z TCGPlayer v deck builderi"</string>
-    <plurals name="decklist_cards_count">
-        <item quantity="one">"%1$d karta"</item>
-        <item quantity="few">"%1$d karty"</item>
-        <item quantity="many">"%1$d kariet"</item>
-        <item quantity="other">"%1$d kariet"</item>
-    </plurals>
+<!-- General Card List -->
+<string name="cardlist_undo">"vrátiť späť"</string>
+<string name="cardlist_delete_selected">"Odstrániť vybrané položky"</string>
+<string name="cardlist_item_deleted">"Odstránené"</string>
+<string name="decklist_import_to_wishlist">"Importovať vybrané do zoznamu želaní"</string>
+<string name="decklist_save_as">"Uložiť balík ako"</string>
+<string name="decklist_saved_toast">"Balík %1$s uložený!"</string>
+<string name="result_list_Add_to_decklist">"Pridať do balíka"</string>
+<string name="result_list_Add_to_wishlist">"Pridať do zoznamu želaní"</string>
+<string name="pref_deck_price_summary">"Používať ceny kariet z TCGPlayer v deck builderi"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d karta"</item>
+<item quantity="few">"%1$d karty"</item>
+<item quantity="other">"%1$d kariet"</item>
+</plurals>
+
+<!-- This is shown when a price download fails for an unknown reason -->
+<string name="price_error_unknown">"Chyba načítania ceny"</string>
+
+<!-- This is shown when a price download fails because the user isn't connected to the internet -->
+<string name="price_error_network">"Chyba načítania ceny [sieť]"</string>
+
+<!-- This is shown when a price download fails because there is a database error -->
+<string name="price_error_database">"Chyba načítania ceny [databáza]"</string>
+
+<!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
+<string name="price_error_api_key">"Chyba načítania ceny [API kľúče]"</string>
+
+<!-- This is shown when a price download fails because the user is looking up a card that has no paper printings, like Magic Online's Vintage Masters -->
+<string name="price_error_online_only">"Karta je iba online"</string>
+
+<!-- This is the "hint text" on the search page for the watermark field, like https://scryfall.com/card/rtr/164 has the Golgari watermark -->
+<string name="search_watermark">"Vodoznak"</string>
+
+<!-- This is a pricing option shown many places. Previously the options were Low, Average, and High. Now Market is another option. See: https://store.tcgplayer.com/help/marketprice -->
+<string name="trader_Market">"Trh"</string>
+
+<!-- Pretty much the same as pref_deck_price_summary or pref_trade_price_summary.
+This is shown in the settings menu for what price to display in the wishlist. -->
+<string name="pref_wishlist_price_summary">"Používať ceny TCGPlayer v zozname želaní"</string>
+
+<!-- This is the title for the dialog which displays deck legalities (Modern, Standard, Legacy, Pauper, etc). -->
+<string name="decklist_legality">"Legalita balíka"</string>
+
+<!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
+Standard ....... Not Legal -->
+<string name="decklist_not_legal">"Nie je legálny"</string>
 </resources>

@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -74,7 +75,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * resources.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.judges_corner_frag, container, false);
     }
@@ -82,7 +83,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
     /**
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
      * Here we can pick out the {@link View}s we need to configure from the content view.
-     *
+     * <p>
      * We set the {@link ViewPager}'s adapter to be an instance of
      * {@link SampleFragmentPagerAdapter}. The {@link PagerSlidingTabStrip} is then given the
      * {@link ViewPager} so that it can populate itself.
@@ -90,7 +91,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * @param view View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
      */
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         /* A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above. */
@@ -160,7 +161,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * The {@link FragmentPagerAdapter} used to display pages in this sample. The individual pages
      * are instances of ContentFragment which just display three lines of text. Each page is
      * created by the relevant {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem} for the requested position.
-     *
+     * <p>
      * The important section of this class is the {@link #getPageTitle(int)} method which controls
      * what is displayed in the {@link PagerSlidingTabStrip}.
      */
@@ -172,7 +173,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
         /**
          * Return the {@link android.support.v4.app.Fragment} to be displayed at {@code position}.
-         *
+         * <p>
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#createFragment()}.
          */
         @Override
@@ -188,7 +189,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
         /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link PagerSlidingTabStrip}.
-         *
+         * <p>
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#getTitle()}.
          */
         @Override

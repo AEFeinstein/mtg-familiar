@@ -34,64 +34,154 @@ import java.util.ArrayList;
 public class Card implements Comparable<Card> {
 
     // The card's name
-    public String mName = "";
+    protected String mName = "";
 
     // The card's mana cost
-    public String mManaCost = "";
+    protected String mManaCost = "";
 
     // The card's converted mana cost
-    public int mCmc = 0;
+    protected int mCmc = 0;
 
     // The card's type, includes super and sub
-    public String mType = "";
+    protected String mType = "";
 
     // The card's text text
-    public String mText = "";
+    protected String mText = "";
 
     // The card's flavor text
-    public String mFlavor = "";
+    protected String mFlavor = "";
 
     // The card's expansion
-    public String mExpansion = "";
+    protected String mExpansion = "";
 
     // The card's rarity
-    public char mRarity = '\0';
+    protected char mRarity = '\0';
 
     // The card's collector's number. Not an integer (i.e. 181a, 181b)
-    public String mNumber = "";
+    protected String mNumber = "";
 
     // The card's artist
-    public String mArtist = "";
+    protected String mArtist = "";
 
     // The card's colors
-    public String mColor = "";
+    protected String mColor = "";
 
     // The card's colors
-    public String mColorIdentity = "";
+    protected String mColorIdentity = "";
 
     // The card's multiverse id
-    public int mMultiverseId = 0;
+    protected int mMultiverseId = 0;
 
     // The card's power. Not an integer (i.e. *+1, X)
-    public float mPower = CardDbAdapter.NO_ONE_CARES;
+    protected float mPower = CardDbAdapter.NO_ONE_CARES;
 
     // The card's toughness, see mPower
-    public float mToughness = CardDbAdapter.NO_ONE_CARES;
+    protected float mToughness = CardDbAdapter.NO_ONE_CARES;
 
     // The card's loyalty. An integer in practice
-    public int mLoyalty = CardDbAdapter.NO_ONE_CARES;
+    protected int mLoyalty = CardDbAdapter.NO_ONE_CARES;
 
     // All the card's foreign printings
-    public ArrayList<ForeignPrinting> mForeignPrintings = new ArrayList<>();
+    protected ArrayList<ForeignPrinting> mForeignPrintings = new ArrayList<>();
 
-    // The card's loyalty. An integer in practice
-    public String mWatermark = "";
+    // The card's watermark
+    protected String mWatermark = "";
+
+    public String getName() {
+        return mName;
+    }
+
+    public String getManaCost() {
+        return mManaCost;
+    }
+
+    public int getCmc() {
+        return mCmc;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public String getText() {
+        return mText;
+    }
+
+    public String getFlavor() {
+        return mFlavor;
+    }
+
+    public String getExpansion() {
+        return mExpansion;
+    }
+
+    public char getRarity() {
+        return mRarity;
+    }
+
+    public String getNumber() {
+        return mNumber;
+    }
+
+    public String getArtist() {
+        return mArtist;
+    }
+
+    public String getColor() {
+        return mColor;
+    }
+
+    public String getColorIdentity() {
+        return mColorIdentity;
+    }
+
+    public int getMultiverseId() {
+        return mMultiverseId;
+    }
+
+    public float getPower() {
+        return mPower;
+    }
+
+    public float getToughness() {
+        return mToughness;
+    }
+
+    public int getLoyalty() {
+        return mLoyalty;
+    }
+
+    public ArrayList<ForeignPrinting> getForeignPrintings() {
+        return mForeignPrintings;
+    }
+
+    public String getWatermark() {
+        return mWatermark;
+    }
 
     // Private class for encapsulating foreign printing information
     public static class ForeignPrinting implements Comparable<ForeignPrinting> {
-        public int mMultiverseId;
-        public String mName;
-        public String mLanguageCode;
+        private final int mMultiverseId;
+        private final String mName;
+        private final String mLanguageCode;
+
+        public ForeignPrinting(ForeignPrinting fp) {
+            if (null != fp) {
+                this.mMultiverseId = fp.mMultiverseId;
+                this.mName = fp.mName;
+                this.mLanguageCode = fp.mLanguageCode;
+            } else {
+                this.mName = "";
+                this.mLanguageCode = "";
+                this.mMultiverseId = 0;
+            }
+        }
+
+        public ForeignPrinting(String name, String languageCode, int multiverseId) {
+            this.mName = name;
+            this.mLanguageCode = languageCode;
+            this.mMultiverseId = multiverseId;
+        }
 
         @Override
         public int compareTo(@NonNull ForeignPrinting o) {
@@ -102,6 +192,25 @@ public class Card implements Comparable<Card> {
         public boolean equals(Object arg0) {
             return (arg0 instanceof ForeignPrinting) &&
                     (this.mMultiverseId == ((ForeignPrinting) arg0).mMultiverseId);
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 23;
+            hash = hash * 31 + super.hashCode();
+            return hash * 31 + this.mMultiverseId;
+        }
+
+        public int getMultiverseId() {
+            return mMultiverseId;
+        }
+
+        public String getName() {
+            return mName;
+        }
+
+        public String getLanguageCode() {
+            return mLanguageCode;
         }
     }
 

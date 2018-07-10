@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein and April King
   ~
   ~ This file is part of MTG Familiar.
@@ -103,10 +102,24 @@
 
         </PreferenceCategory>
 
+        <PreferenceCategory xmlns:robobunny="http://robobunny.com"
+            android:title="@string/pref_cat_list_general">
+
+            <com.robobunny.preferences.SeekBarPreference
+                android:defaultValue="3"
+                android:key="@string/key_undoTimeout"
+                android:max="10"
+                android:summary="@string/pref_undo_timeout_seconds_summary"
+                android:title="@string/pref_undo_timeout_seconds_title"
+                robobunny:interval="1"
+                robobunny:min="1"
+                robobunny:unitsRight="s" />
+
+        </PreferenceCategory>
     </PreferenceScreen>
 
     <!-- Search and results preferences -->
-    <PreferenceScreen android:title="@string/pref_screen_search">
+    <PreferenceScreen android:title="@string/main_card_search">
 
         <PreferenceCategory android:title="@string/pref_cat_result_list">
 
@@ -231,6 +244,76 @@
 
     </PreferenceScreen>
 
+    <!-- Trade preferences -->
+    <PreferenceScreen android:title="@string/main_trade">
+
+        <PreferenceCategory android:title="@string/pref_cat_trade_window">
+
+            <ListPreference
+                android:defaultValue="3"
+                android:entries="@array/trade_option_entries"
+                android:entryValues="@array/trade_option_values"
+                android:key="@string/key_tradePrice"
+                android:summary="@string/pref_trade_price_summary"
+                android:title="@string/pref_trade_price_title" />
+
+        </PreferenceCategory>
+    </PreferenceScreen>
+
+    <!-- Wishlist preferences -->
+    <PreferenceScreen android:title="@string/main_wishlist">
+        <PreferenceCategory android:title="@string/main_wishlist">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_showTotalPriceWishlistPref"
+                android:summary="@string/pref_wishlist_totals_summary"
+                android:title="@string/pref_wishlist_totals_title" />
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/key_showIndividualPricesWishlistPref"
+                android:summary="@string/pref_wishlist_prices_summary"
+                android:title="@string/pref_wishlist_prices_title" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_verboseWishlistPref"
+                android:summary="@string/pref_wishlist_details_summary"
+                android:title="@string/pref_wishlist_details_title" />
+
+            <ListPreference
+                android:defaultValue="3"
+                android:entries="@array/trade_option_entries"
+                android:entryValues="@array/trade_option_values"
+                android:key="@string/key_wishlistPrice"
+                android:summary="@string/pref_wishlist_price_summary"
+                android:title="@string/pref_trade_price_title" />
+
+        </PreferenceCategory>
+    </PreferenceScreen>
+
+    <!-- Deck preferences -->
+    <PreferenceScreen android:title="@string/main_decklist">
+        <PreferenceCategory android:title="@string/pref_cat_decklist">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_showTotalPriceDecklistPref"
+                android:summary="@string/pref_decklist_totals_summary"
+                android:title="@string/pref_wishlist_totals_title" />
+
+            <ListPreference
+                android:defaultValue="3"
+                android:entries="@array/trade_option_entries"
+                android:entryValues="@array/trade_option_values"
+                android:key="@string/key_deckPrice"
+                android:summary="@string/pref_deck_price_summary"
+                android:title="@string/pref_trade_price_title" />
+
+        </PreferenceCategory>
+    </PreferenceScreen>
+
     <!-- Round timer preferences -->
     <PreferenceScreen android:title="@string/main_timer">
 
@@ -267,78 +350,6 @@
                 android:defaultValue="false"
                 android:key="@string/key_useSoundInsteadOfTTSPref"
                 android:title="@string/pref_use_sound_instead_of_tts" />
-
-        </PreferenceCategory>
-
-    </PreferenceScreen>
-
-    <!-- Trade and wishlist preferences -->
-    <PreferenceScreen android:title="@string/pref_screen_trade_wishlist">
-
-        <PreferenceCategory xmlns:robobunny="http://robobunny.com"
-            android:title="@string/pref_cat_list_general">
-
-            <com.robobunny.preferences.SeekBarPreference
-                android:defaultValue="3"
-                android:key="@string/key_undoTimeout"
-                android:max="10"
-                android:summary="@string/pref_undo_timeout_seconds_summary"
-                android:title="@string/pref_undo_timeout_seconds_title"
-                robobunny:interval="1"
-                robobunny:min="1"
-                robobunny:unitsRight="s" />
-
-        </PreferenceCategory>
-
-        <PreferenceCategory android:title="@string/pref_cat_trade_window">
-
-            <ListPreference
-                android:defaultValue="1"
-                android:entries="@array/trade_option_entries"
-                android:entryValues="@array/trade_option_values"
-                android:key="@string/key_tradePrice"
-                android:summary="@string/pref_trade_price_summary"
-                android:title="@string/pref_trade_price_title" />
-
-        </PreferenceCategory>
-
-        <PreferenceCategory android:title="@string/main_wishlist">
-
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="@string/key_showTotalPriceWishlistPref"
-                android:summary="@string/pref_wishlist_totals_summary"
-                android:title="@string/pref_wishlist_totals_title" />
-
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="@string/key_showIndividualPricesWishlistPref"
-                android:summary="@string/pref_wishlist_prices_summary"
-                android:title="@string/pref_wishlist_prices_title" />
-
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="@string/key_verboseWishlistPref"
-                android:summary="@string/pref_wishlist_details_summary"
-                android:title="@string/pref_wishlist_details_title" />
-
-        </PreferenceCategory>
-
-        <PreferenceCategory android:title="@string/pref_cat_decklist">
-
-            <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="@string/key_showTotalPriceDecklistPref"
-                android:summary="@string/pref_decklist_totals_summary"
-                android:title="@string/pref_wishlist_totals_title" />
-
-            <ListPreference
-                android:defaultValue="1"
-                android:entries="@array/trade_option_entries"
-                android:entryValues="@array/trade_option_values"
-                android:key="@string/key_deckPrice"
-                android:summary="@string/pref_deck_price_summary"
-                android:title="@string/pref_trade_price_title" />
 
         </PreferenceCategory>
 

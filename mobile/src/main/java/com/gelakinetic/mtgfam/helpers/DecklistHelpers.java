@@ -19,12 +19,14 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -42,28 +44,28 @@ public class DecklistHelpers {
     /**
      * Write the decklist passed as a parameter to the decklist file.
      *
-     * @param mCtx      A context to open the file and pop toasts with
+     * @param activity  A context to open the file and pop toasts with
      * @param lDecklist The decklist to write to the file
      * @param fileName  The name of the file to write the decklist to
      */
     public static void WriteDecklist(
-            Context mCtx,
-            ArrayList<Pair<MtgCard, Boolean>> lDecklist,
+            Activity activity,
+            ArrayList<MtgCard> lDecklist,
             String fileName) {
 
         try {
-            FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
-            for (Pair<MtgCard, Boolean> m : lDecklist) {
-                String cardString = m.first.toWishlistString();
+            FileOutputStream fos = activity.openFileOutput(fileName, Context.MODE_PRIVATE);
+            for (MtgCard m : lDecklist) {
+                String cardString = m.toWishlistString();
                 /* If the card is a sideboard card, add the marking */
-                if (m.second) {
+                if (m.isSideboard()) {
                     cardString = "SB:" + cardString;
                 }
                 fos.write(cardString.getBytes());
             }
             fos.close();
-        } catch (IOException ioe) {
-            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+        } catch (IOException | IllegalArgumentException ioe) {
+            SnackbarWrapper.makeAndShowText(activity, ioe.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         }
 
     }
@@ -71,27 +73,27 @@ public class DecklistHelpers {
     /**
      * Write the decklist passed as a parameter to the given filename.
      *
-     * @param mCtx                A context to open the file and pop toasts with
+     * @param activity            A context to open the file and pop toasts with
      * @param mCompressedDecklist The decklist to write to the file
      * @param fileName            the filename for the decklist
      */
     public static void WriteCompressedDecklist(
-            Context mCtx,
+            Activity activity,
             ArrayList<CompressedDecklistInfo> mCompressedDecklist,
             String fileName) {
 
-        if (null == mCtx) {
+        if (null == activity) {
             return;
         }
         try {
 
             final String newFileName =
                     fileName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
-            FileOutputStream fos = mCtx.openFileOutput(newFileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = activity.openFileOutput(newFileName, Context.MODE_PRIVATE);
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                if (cdi.mName != null) {
+                if (cdi.getName() != null && !cdi.getName().isEmpty()) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                         cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
@@ -105,7 +107,7 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException ioe) {
-            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, ioe.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         }
 
     }
@@ -113,19 +115,20 @@ public class DecklistHelpers {
     /**
      * Read the decklist from a file and return it as an ArrayList<Pair<MtgCard, Boolean>>.
      *
-     * @param mCtx A context to open the file and pop toasts with
-     * @return The decklist in ArrayList<Pair> form
+     * @param activity A context to open the file and pop toasts with
+     * @param deckName     the name of the deck to load
+     * @param loadFullData true to load all card data from the database, false to to just read the file
+     * @return The decklist as an ArrayList of MtgCards
      */
-    public static ArrayList<Pair<MtgCard, Boolean>> ReadDecklist(Context mCtx, String deckName) {
+    public static ArrayList<MtgCard> ReadDecklist(Activity activity, String deckName, boolean loadFullData) throws FamiliarDbException {
 
-        ArrayList<Pair<MtgCard, Boolean>> lDecklist = new ArrayList<>();
+        ArrayList<MtgCard> lDecklist = new ArrayList<>();
 
         try {
             String line;
             // Sanitize the deckname before loading in case it was saved improperly on an earlier version of Familiar
             deckName = deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
-            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
-            try {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(activity.openFileInput(deckName)))) {
                 boolean isSideboard;
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
@@ -137,15 +140,17 @@ public class DecklistHelpers {
                         isSideboard = true;
                         line = line.substring(3);
                     }
-                    lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+                    lDecklist.add(MtgCard.fromWishlistString(line, isSideboard, activity));
                 }
-            } finally {
-                br.close();
             }
         } catch (NumberFormatException nfe) {
-            ToastWrapper.makeAndShowText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, nfe.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         } catch (IOException ioe) {
             /* Catches file not found exception when decklist doesn't exist */
+        }
+
+        if (loadFullData && !lDecklist.isEmpty()) {
+            MtgCard.initCardListFromDb(activity, lDecklist);
         }
         return lDecklist;
 
@@ -168,7 +173,7 @@ public class DecklistHelpers {
                     readableDecklist
                             .append(isi.mNumberOf)
                             .append(' ')
-                            .append(cdi.mName);
+                            .append(cdi.getName());
                     if (isi.mIsFoil) {
                         readableDecklist
                                 .append(" (")
@@ -185,20 +190,20 @@ public class DecklistHelpers {
 
     public static Pair<Map<String, String>, Map<String, String>> getTargetNumberOfs(
             String mCardName,
-            ArrayList<Pair<MtgCard, Boolean>> decklist,
+            ArrayList<MtgCard> decklist,
             boolean isSideboard) {
 
         final Map<String, String> targetCardNumberOfs = new HashMap<>();
         final Map<String, String> targetFoilNumberOfs = new HashMap<>();
 
-        for (Pair<MtgCard, Boolean> card : decklist) {
-            if (card.first.mName.equals(mCardName) && card.second == isSideboard) {
-                if (card.first.foil) {
-                    targetFoilNumberOfs.put(card.first.setCode,
-                            String.valueOf(card.first.numberOf));
+        for (MtgCard card : decklist) {
+            if (card.getName().equals(mCardName) && card.isSideboard() == isSideboard) {
+                if (card.mIsFoil) {
+                    targetFoilNumberOfs.put(card.getExpansion(),
+                            String.valueOf(card.mNumberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.first.setCode, String.valueOf(card.first.numberOf));
+                targetCardNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);

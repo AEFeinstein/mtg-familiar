@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +55,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      * @param values   The values which will back this adapter
      * @param fragment The fragment this adapter will be shown in
      */
-    public CardDataAdapter(ArrayList<T> values, FamiliarListFragment fragment) {
+    protected CardDataAdapter(ArrayList<T> values, FamiliarListFragment fragment) {
         items = values;
         inSelectMode = false;
         undoBuffer = new ArrayList<>();
@@ -72,7 +73,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      */
     @Override
     @CallSuper
-    public void onBindViewHolder(VH holder, int position) {
+    public void onBindViewHolder(@NonNull VH holder, int position) {
         if (!isInSelectMode()) {
             /* Sometimes an item will be selected after we exit select mode */
             setItemSelected(holder.itemView, position, false, false);
@@ -96,7 +97,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      * @return The item at that position
      */
     @Nullable
-    public T getItem(int position) {
+    protected T getItem(int position) {
         if (position < items.size()) {
             return items.get(position);
         }
@@ -111,15 +112,14 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      */
     void swipeRemoveItem(final int position) {
         // Remove the item from the list and add it to a temporary array
-        String removedName = items.get(position).mName;
+        String removedName = items.get(position).getName();
         undoBuffer.add(items.remove(position));
 
         onItemRemoved();
 
-        Snackbar.make(mFragment.getFamiliarActivity().findViewById(R.id.fragment_container),
-                mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
-                PreferenceAdapter.getUndoTimeout(mFragment.getContext()))
-                .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+        SnackbarWrapper.makeAndShowText(mFragment.getFamiliarActivity(), mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
+                PreferenceAdapter.getUndoTimeout(mFragment.getContext()), R.string.cardlist_undo,
+                new View.OnClickListener() {
                     /**
                      * When "Undo" is clicked, readd the removed items to the underlying list,
                      * remove them from the undo list, and notify the adapter that it was changed
@@ -130,8 +130,8 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                     public void onClick(View v) {
                         undoDelete();
                     }
-                })
-                .addCallback(new Snackbar.Callback() {
+                },
+                new Snackbar.Callback() {
                     /**
                      * When the snackbar is dismissed, depending on how it was dismissed, either
                      * clear the undo buffer of all items and notify the adapter, or ignore it
@@ -159,8 +159,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                             }
                         }
                     }
-                })
-                .show();
+                });
     }
 
     /**

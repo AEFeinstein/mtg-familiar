@@ -50,7 +50,7 @@ public enum Comparison {
 
     @NonNull
     @Contract(pure = true)
-    public String appendToSql(String sqlString, String part1, String part2) {
+    public StringBuilder appendToSql(StringBuilder sqlString, String part1, String part2) {
         String searchCondition = "";
         switch (this) {
             case EQ:
@@ -66,12 +66,12 @@ public enum Comparison {
                 searchCondition = part1 + " NOT LIKE '%" + part2 + "%'";
                 break;
         }
-        if (sqlString.isEmpty()) {
-            return searchCondition;
+        if (sqlString.length() == 0) {
+            return sqlString.append(searchCondition);
         } else if (searchCondition.isEmpty()) {
             return sqlString;
         } else {
-            return sqlString + " AND " + searchCondition;
+            return sqlString.append(" AND ").append(searchCondition);
         }
     }
 }

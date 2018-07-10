@@ -303,7 +303,7 @@ class RulesParser {
          * @param text        self-explanatory
          * @param position    self-explanatory
          */
-        public RuleItem(int category, int subcategory, String entry, String text, int position) {
+        RuleItem(int category, int subcategory, String entry, String text, int position) {
             this.category = category;
             this.subcategory = subcategory;
             this.entry = entry;
@@ -316,7 +316,7 @@ class RulesParser {
          *
          * @param example self-explanatory
          */
-        public void addExample(String example) {
+        void addExample(String example) {
             this.text += "<br><br>" + example.trim();
         }
     }
@@ -333,7 +333,7 @@ class RulesParser {
          *
          * @param term The Glossary term
          */
-        public GlossaryItem(String term) {
+        GlossaryItem(String term) {
             this.term = term;
             this.definition = "";
         }
@@ -341,7 +341,7 @@ class RulesParser {
         /**
          * @param line The Glossary Definition
          */
-        public void addDefinitionLine(String line) {
+        void addDefinitionLine(String line) {
             if (this.definition.length() > 0) {
                 this.definition += "<br>";
             }

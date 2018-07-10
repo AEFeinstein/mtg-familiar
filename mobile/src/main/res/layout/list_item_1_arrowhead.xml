@@ -36,7 +36,6 @@
         android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
     <TextView
-        android:id="@+id/arrowhead"
         style="@style/text.small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

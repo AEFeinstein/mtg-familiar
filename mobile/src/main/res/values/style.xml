@@ -28,22 +28,9 @@
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
-    <style name="notification_title">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="notification_text">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-    </style>
-
     <style name="list_view_divider">
         <item name="android:divider">?attr/color_drawer_divider_item</item>
         <item name="android:dividerHeight">1dp</item>
-    </style>
-
-    <style name="text.micro" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="text.small" parent="TextAppearance.AppCompat">

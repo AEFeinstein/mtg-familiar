@@ -171,10 +171,8 @@ class MTRIPGParser {
 
         if (shouldUpdate) {
             StringBuilder sb = new StringBuilder();
-            line = reader.readLine();
-            while (line != null) {
+            while ((line = reader.readLine()) != null) {
                 sb.append(line.trim());
-                line = reader.readLine();
             }
 
             File output;

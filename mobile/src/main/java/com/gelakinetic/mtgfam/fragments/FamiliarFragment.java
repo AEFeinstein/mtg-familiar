@@ -22,8 +22,8 @@ package com.gelakinetic.mtgfam.fragments;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -38,9 +38,7 @@ import android.view.ViewGroup;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-
-import java.util.concurrent.RejectedExecutionException;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 /**
  * This is the superclass for all fragments. It has a bunch of convenient methods
@@ -81,6 +79,7 @@ public abstract class FamiliarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         getFamiliarActivity().clearLoading();
+        getFamiliarActivity().mMarketPriceStore.stopAllRequests();
     }
 
     /**
@@ -95,7 +94,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @return The inflated view
      */
     @Override
-    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    public abstract View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     /**
      * Clear any results from the prior fragment. We don't want them persisting past this fragment,
@@ -107,6 +106,7 @@ public abstract class FamiliarFragment extends Fragment {
         if ((getActivity()) != null) {
             getFamiliarActivity().getFragmentResults();
             getFamiliarActivity().mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
+            getFamiliarActivity().selectDrawerEntry(this.getClass());
         }
     }
 
@@ -117,7 +117,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         }
@@ -138,13 +138,6 @@ public abstract class FamiliarFragment extends Fragment {
     public void onPause() {
         super.onPause();
         removeDialog(getFragmentManager());
-        try {
-            if (getFamiliarActivity().mSpiceManager.getPendingRequestCount() > 0) {
-                getFamiliarActivity().mSpiceManager.cancelAllRequests();
-            }
-        } catch (RejectedExecutionException e) {
-            /* eat it */
-        }
     }
 
     /**
@@ -163,12 +156,9 @@ public abstract class FamiliarFragment extends Fragment {
             if (canInterceptSearchKey()) {
                 menu.add(R.string.search_search)
                         .setIcon(R.drawable.ic_menu_search)
-                        .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                onInterceptSearchKey();
-                                return true;
-                            }
+                        .setOnMenuItemClickListener(item -> {
+                            onInterceptSearchKey();
+                            return true;
                         }).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             } else {
 
@@ -178,8 +168,17 @@ public abstract class FamiliarFragment extends Fragment {
                 }
                 SearchView sv = new SearchView(getActivity());
                 try {
+                    // Try to get the package name, important for debug builds
+                    String packageName = null;
+                    if (null != getContext()) {
+                        packageName = getContext().getPackageName();
+                    }
+                    // Default to the production package name
+                    if (null == packageName) {
+                        packageName = "com.gelakinetic.mtgfam";
+                    }
                     sv.setSearchableInfo(searchManager.getSearchableInfo(
-                            new ComponentName(getContext().getPackageName(), "com.gelakinetic.mtgfam.FamiliarActivity")));
+                            new ComponentName(packageName, "com.gelakinetic.mtgfam.FamiliarActivity")));
 
                     MenuItem mi = menu.add(R.string.name_search_hint)
                             .setIcon(R.drawable.ic_menu_search);
@@ -203,7 +202,7 @@ public abstract class FamiliarFragment extends Fragment {
                     });
                     mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
-                } catch (Resources.NotFoundException e) {
+                } catch (RuntimeException e) {
                     /* One user threw this once. I think the typed ComponentName fixes it, but just in case */
                 }
             }
@@ -249,7 +248,7 @@ public abstract class FamiliarFragment extends Fragment {
                     getFamiliarActivity().hideKeyboard();
                 }
             }
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | NullPointerException e) {
             // If the fragment can't be shown, fail quietly
         }
     }
@@ -275,20 +274,15 @@ public abstract class FamiliarFragment extends Fragment {
         /* Show a toast on the UI thread */
         FragmentActivity activity = getActivity();
         if (null != activity) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ToastWrapper.makeAndShowText(getActivity(), R.string.error_database, ToastWrapper.LENGTH_LONG);
-                }
-            });
+            activity.runOnUiThread(() -> SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_database, SnackbarWrapper.LENGTH_LONG));
             /* Finish the fragment if requested */
             if (shouldFinish) {
                 try {
-                /* will be correct for nested ViewPager fragments too */
+                    /* will be correct for nested ViewPager fragments too */
                     FragmentManager fm = activity.getSupportFragmentManager();
                     if (fm != null) {
-                    /* If there is only one fragment, finish the activity
-                     * Otherwise pop the offending fragment */
+                        /* If there is only one fragment, finish the activity
+                         * Otherwise pop the offending fragment */
                         if (fm.getFragments().size() == 1) {
                             activity.finish();
                         } else {

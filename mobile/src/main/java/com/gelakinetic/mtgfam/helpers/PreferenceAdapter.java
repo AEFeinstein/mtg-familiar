@@ -30,8 +30,10 @@ import android.support.annotation.Nullable;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -95,128 +97,20 @@ public class PreferenceAdapter {
     }
 
     /* White mana */
-    public static synchronized int getWhiteMana(@Nullable Context context) {
+    public static synchronized int getMana(@Nullable Context context, int key) {
         if (null == context) {
             return 0;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_whiteMana), 0);
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(key), 0);
     }
 
-    public static synchronized void setWhiteMana(@Nullable Context context, int whiteMana) {
+    public static synchronized void setMana(@Nullable Context context, int key, int mana) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_whiteMana), whiteMana);
-        edit.apply();
-    }
-
-    /* Blue mana */
-    public static synchronized int getBlueMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_blueMana), 0);
-    }
-
-    public static synchronized void setBlueMana(@Nullable Context context, int blueMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_blueMana), blueMana);
-        edit.apply();
-    }
-
-    /* Black mana */
-    public static synchronized int getBlackMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_blackMana), 0);
-    }
-
-    public static synchronized void setBlackMana(@Nullable Context context, int blackMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_blackMana), blackMana);
-        edit.apply();
-    }
-
-    /* Red mana */
-    public static synchronized int getRedMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_redMana), 0);
-    }
-
-    public static synchronized void setRedMana(@Nullable Context context, int redMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_redMana), redMana);
-        edit.apply();
-    }
-
-    /* Green mana */
-    public static synchronized int getGreenMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_greenMana), 0);
-    }
-
-    public static synchronized void setGreenMana(@Nullable Context context, int greenMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_greenMana), greenMana);
-        edit.apply();
-    }
-
-    /* Colorless mana */
-    public static synchronized int getColorlessMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_colorlessMana), 0);
-    }
-
-    public static synchronized void setColorlessMana(@Nullable Context context, int colorlessMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_colorlessMana), colorlessMana);
-        edit.apply();
-    }
-
-    /* Spell count */
-    public static synchronized int getSpellCount(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_spellCount), 0);
-    }
-
-    public static synchronized void setSpellCount(@Nullable Context context, int spellCount) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_spellCount), spellCount);
+        edit.putInt(context.getString(key), mana);
         edit.apply();
     }
 
@@ -611,20 +505,40 @@ public class PreferenceAdapter {
     }
 
     /* Trade price */
-    public static synchronized String getTradePrice(@Nullable Context context) {
+    public static synchronized MarketPriceInfo.PriceType getTradePrice(@Nullable Context context) {
         if (null == context) {
-            return "1";
+            return MarketPriceInfo.PriceType.MARKET;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "1");
+        return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "3")));
     }
 
-    public static synchronized void setTradePrice(@Nullable Context context, String tradePrice) {
+    public static synchronized void setTradePrice(@Nullable Context context, MarketPriceInfo.PriceType tradePrice) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_tradePrice), tradePrice);
+        edit.putString(context.getString(R.string.key_tradePrice), Integer.toString(tradePrice.ordinal()));
+        edit.apply();
+    }
+
+    /* Wishlist price */
+    public static synchronized MarketPriceInfo.PriceType getWishlistPrice(@Nullable Context context) {
+        if (null == context) {
+            return MarketPriceInfo.PriceType.MARKET;
+        }
+        return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_wishlistPrice), "3")));
+    }
+
+    public static synchronized void setWishlistPrice(@Nullable Context context, MarketPriceInfo.PriceType wishlistPrice) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_wishlistPrice), Integer.toString(wishlistPrice.ordinal()));
         edit.apply();
     }
 
@@ -988,20 +902,94 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
     }
 
-    public static synchronized String getDeckPrice(@Nullable Context context) {
+    /* Deck price */
+    public static synchronized MarketPriceInfo.PriceType getDeckPrice(@Nullable Context context) {
         if (null == context) {
-            return "1";
+            return MarketPriceInfo.PriceType.MARKET;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "1");
+        return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "3")));
     }
 
-    public static synchronized void setDeckPrice(@Nullable Context context, String deckPrice) {
+    public static synchronized void setDeckPrice(@Nullable Context context, MarketPriceInfo.PriceType tradePrice) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_deckPrice), deckPrice);
+        edit.putString(context.getString(R.string.key_deckPrice), Integer.toString(tradePrice.ordinal()));
         edit.apply();
     }
+
+    public static synchronized String getTcgpApiToken(@Nullable Context context) {
+        if (null == context) {
+            return "1";
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_TcgpToken), "");
+    }
+
+    public static synchronized void setTcgpApiToken(@Nullable Context context, String token) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_TcgpToken), token);
+        edit.apply();
+    }
+
+    public static synchronized Date getTcgpApiTokenExpirationDate(@Nullable Context context) {
+        if (null == context) {
+            return new Date(0);
+        }
+        long time = PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_TcgpTokenExpirationDate), 0);
+        return new Date(time);
+    }
+
+    public static synchronized void setTcgpApiTokenExpirationDate(@Nullable Context context, Date date) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_TcgpTokenExpirationDate), date.getTime());
+        edit.apply();
+    }
+
+    public static synchronized String getLastLoadedDecklist(@Nullable Context context) {
+        if (null == context) {
+            return "";
+        }
+
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_LastDecklistLoaded), "");
+    }
+
+    public static synchronized void setLastLoadedDecklist(@Nullable Context context, String deckName) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_LastDecklistLoaded), deckName);
+        edit.apply();
+    }
+
+    public static synchronized String getLastLoadedTrade(@Nullable Context context) {
+        if (null == context) {
+            return "";
+        }
+
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_LastTradeLoaded), "");
+    }
+
+    public static synchronized void setLastLoadedTrade(@Nullable Context context, String deckName) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_LastTradeLoaded), deckName);
+        edit.apply();
+    }
+
 }

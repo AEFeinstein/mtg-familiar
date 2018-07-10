@@ -1,74 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright 2017 Adam Feinstein
-  ~
-  ~ This file is part of MTG Familiar.
-  ~
-  ~ MTG Familiar is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ MTG Familiar is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <resources>
 
-    <!-- General-purpose strings -->
-    <string name="name_search_hint">"Ricerca per nome"</string>
-    <string name="dialog_ok">"OK"</string>
-    <string name="dialog_cancel">"Annulla"</string>
-    <string name="dialog_yes">"Si"</string>
-    <string name="dialog_done">"Termina"</string>
-    <string name="dialog_both">"Entrambi"</string>
-    <string name="dialog_life">"Vita"</string>
-    <string name="dialog_thanks">"Grazie!"</string>
-    <string name="dialog_thanks_anyway">"Grazie comunque!"</string>
-    <string name="dialog_enjoy">"Divertiti!"</string>
-    <string name="update_notification">"Sto controllando gli aggiornamenti del database"</string>
-    <string name="update_updating_set">"Sto aggiungendo %s"</string>
-    <string name="update_updating_rules">"Sto aggiornando il regolamento"</string>
-    <string name="update_added">"Aggiunto"</string>
-    <string name="update_added_rules">"nuova regola globale"</string>
-    <string name="update_added_mtr">"Nuova Regola Torneo Magic"</string>
-    <string name="update_added_ipg">"nuova Guida Procedimento Infrazioni"</string>
-    <string name="update_added_jar">"Nuova JAR"</string>
-    <string name="error">"Errore"</string>
-    <string name="error_database">"Errore del database. Se questo errore persiste, prova a cancellare i dati dell'applicazione dalle impostazioni di sistema."</string>
-    <string name="error_no_email_client">"Sembra che tu non abbia un client di posta attivo. Per favore configurane uno."</string>
-    <string name="toast_no_card">"Nessuna carta trovata con questo nome."</string>
-    <string name="not_deleted">"non eliminato"</string>
-    <string name="no_network">"La rete non è disponibile"</string>
-    <string name="filter_title_view_card">"Guarda la carta"</string>
+<!-- General-purpose strings -->
+<string name="name_search_hint">"Ricerca per nome"</string>
+<string name="dialog_ok">"OK"</string>
+<string name="dialog_cancel">"Annulla"</string>
+<string name="dialog_yes">"Si"</string>
+<string name="dialog_done">"Termina"</string>
+<string name="dialog_both">"Entrambi"</string>
+<string name="dialog_life">"Vita"</string>
+<string name="dialog_thanks">"Grazie!"</string>
+<string name="dialog_thanks_anyway">"Grazie comunque!"</string>
+<string name="dialog_enjoy">"Divertiti!"</string>
+<string name="update_notification">"Sto controllando gli aggiornamenti del database"</string>
+<string name="update_updating_set">"Sto aggiungendo %s"</string>
+<string name="update_updating_rules">"Sto aggiornando il regolamento"</string>
+<string name="update_added">"Aggiunto"</string>
+<string name="update_added_rules">"nuova regola globale"</string>
+<string name="update_added_mtr">"Nuova Regola Torneo Magic"</string>
+<string name="update_added_ipg">"nuova Guida Procedimento Infrazioni"</string>
+<string name="update_added_jar">"Nuova JAR"</string>
+<string name="error">"Errore"</string>
+<string name="error_database">"Errore del database. Se questo errore persiste, prova a cancellare i dati dell'applicazione dalle impostazioni di sistema."</string>
+<string name="error_no_email_client">"Sembra che tu non abbia un client di posta attivo. Per favore configurane uno."</string>
+<string name="toast_no_card">"Nessuna carta trovata con questo nome."</string>
+<string name="not_deleted">"non eliminato"</string>
+<string name="no_network">"La rete non è disponibile"</string>
+<string name="filter_title_view_card">"Guarda la carta"</string>
 
-    <!-- Main menu activity -->
-    <string name="main_pages">"PAGINE"</string>
-    <string name="main_extras">"EXTRA"</string>
-    <string name="main_card_search">"Cerca una carta"</string>
-    <string name="main_life_counter">"Contatore Vita"</string>
-    <string name="main_mana_pool">"Riserva di Mana"</string>
-    <string name="main_dice">"Dado"</string>
-    <string name="main_trade">"Scambia Carte"</string>
-    <string name="main_wishlist">"Carte desiderate"</string>
-    <string name="main_timer">"Timer turno"</string>
-    <string name="main_rules">"Regole"</string>
-    <string name="main_judges_corner">"Angolo del Giudice"</string>
-    <string name="main_mojhosto">"MoJhoSto Basic"</string>
+<!-- Main menu activity -->
+<string name="main_pages">"PAGINE"</string>
+<string name="main_extras">"EXTRA"</string>
+<string name="main_card_search">"Cerca una carta"</string>
+<string name="main_life_counter">"Contatore Vita"</string>
+<string name="main_mana_pool">"Riserva di Mana"</string>
+<string name="main_dice">"Dado"</string>
+<string name="main_trade">"Scambia Carte"</string>
+<string name="main_wishlist">"Carte desiderate"</string>
+<string name="main_timer">"Timer turno"</string>
+<string name="main_rules">"Regole"</string>
+<string name="main_judges_corner">"Angolo del Giudice"</string>
+<string name="main_mojhosto">"MoJhoSto Basic"</string>
 
-    <!-- I haven't translated this string because I think is more understandable and more known in english. -->
-    <string name="main_decklist">"Deck Builder"</string>
-    <string name="main_force_update_title">"Forza aggiornamento"</string>
-    <string name="main_settings_title">"Impostazioni"</string>
-    <string name="main_donate_title">"Dona"</string>
-    <string name="main_donate_dialog_title">"Fai una donazione agli sviluppatori"</string>
-    <string name="main_profile">"Profilo"</string>
-    <string name="main_donate_text">"Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;
+<!-- I haven't translated this string because I think is more understandable and more known in english. -->
+<string name="main_decklist">"Deck Builder"</string>
+<string name="main_force_update_title">"Forza aggiornamento"</string>
+<string name="main_settings_title">"Impostazioni"</string>
+<string name="main_donate_title">"Dona"</string>
+<string name="main_donate_dialog_title">"Fai una donazione agli sviluppatori"</string>
+<string name="main_profile">"Profilo"</string>
+<string name="main_donate_text">"Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
 Beh, se stai leggendo questo avviso, sai anche che la stiamo regalando!&lt;br&gt;
 &lt;br&gt;
@@ -80,18 +61,19 @@ Puoi toccare il bottone qua sotto per donare via PayPal. $1 è figo. $5 è più 
 &lt;br&gt;
 Quindi, quanto ti senti generoso oggi?
 "</string>
-    <string name="main_whats_new_title">"Novità"</string>
-    <string name="main_whats_new_in_title">"Novità in questa versione"</string>
-    <string name="main_tts_warning_title">"Sintetizzatore vocale (TTS)"</string>
-    <string name="main_tts_warning_text">"Questa applicazione usa un sintetizzatore vocale per alcune delle sue funzionalità, ma sembra che tu non ne abbia uno installato. Se vuoi installarlo, usa il link Install Text-to-Speech nel menu delle impostazioni."</string>
-    <string name="main_export_data_title">"Salva dati sulla SD"</string>
-    <string name="main_export_success">"Dati salvati in"</string>
-    <string name="main_export_fail">"Salvataggio dei dati sulla scheda SD fallito"</string>
-    <string name="main_import_data_title">"Carica dati dalla scheda SD"</string>
-    <string name="main_import_success">"Caricamento completato"</string>
-    <string name="main_import_fail">"Caricamento fallito. Metti il file MTGFamiliarBackup.zip nella cartella files dei dati di quest app"</string>
-    <string name="main_about">"Info"</string>
-    <string name="main_about_text">"Questa app è il mio regalo per la comunità di MTG.&lt;br&gt;
+<string name="main_whats_new_title">"Novità"</string>
+<string name="main_whats_new_in_title">"Novità in questa versione"</string>
+<string name="main_tts_warning_title">"Sintetizzatore vocale (TTS)"</string>
+<string name="main_tts_warning_text">"Questa applicazione usa un sintetizzatore vocale per alcune delle sue funzionalità, ma sembra che tu non ne abbia uno installato. Se vuoi installarlo, usa il link Install Text-to-Speech nel menu delle impostazioni."</string>
+<string name="main_export_data_title">"Salva dati sulla SD"</string>
+<string name="main_export_success">"Dati salvati in"</string>
+<string name="main_export_fail">"Salvataggio dei dati sulla scheda SD fallito"</string>
+<string name="main_import_data_title">"Carica dati dalla scheda SD"</string>
+<string name="main_import_success">"Caricamento completato"</string>
+<string name="main_import_fail">"Caricamento fallito. Metti il file MTGFamiliarBackup.zip nella cartella files dei dati di quest app"</string>
+<string name="main_about">"Info"</string>
+
+<string name="main_about_text">"Questa app è il mio regalo per la comunità di MTG.&lt;br&gt;
 &lt;br&gt;
 Invia commenti, suggerimenti, preghiere e tutto ciò che riguarda questa app a &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -125,240 +107,237 @@ Magic the Gathering e Magic the Gathering cards sono ™ &amp; © Wizards of the
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
+&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; usato sotto BSD, part MIT, Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
 Questo programma ha una licenza &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
 "</string>
-    <string name="main_drawer_open">"Apri la colonna di navigazione"</string>
-    <string name="main_drawer_close">"Chiudi la colonna di navigazione"</string>
-    <string name="main_install_tts">"Installa un sintetizzatore vocale (TTS)"</string>
-    <string name="main_export_no_data">"Nessun dato da salvare"</string>
+<string name="main_drawer_open">"Apri la colonna di navigazione"</string>
+<string name="main_drawer_close">"Chiudi la colonna di navigazione"</string>
+<string name="main_install_tts">"Installa un sintetizzatore vocale (TTS)"</string>
+<string name="main_export_no_data">"Nessun dato da salvare"</string>
 
-    <!-- Search activity -->
-    <string name="search_name">"Nome"</string>
-    <string name="search_supertype">"Tipo"</string>
-    <string name="search_subtype">"Sottotipo"</string>
-    <string name="search_text">"Testo"</string>
-    <string name="search_power">"Forza"</string>
-    <string name="search_toughness">"Costituzione"</string>
-    <string name="search_cmc">"CMC"</string>
+<!-- Search activity -->
+<string name="search_name">"Nome"</string>
+<string name="search_supertype">"Tipo"</string>
+<string name="search_subtype">"Sottotipo"</string>
+<string name="search_text">"Testo"</string>
+<string name="search_power">"Forza"</string>
+<string name="search_toughness">"Costituzione"</string>
+<string name="search_cmc">"CMC"</string>
 
-    <!-- this has an {X} after it in layout -->
-    <string name="search_set">"Espansione"</string>
-    <string name="search_sets">"Espansioni"</string>
-    <string name="search_format">"Formato"</string>
-    <string name="search_formats">"Formati"</string>
-    <string name="search_rarity">"Rarità"</string>
-    <string name="search_rarities">"Rarità"</string>
-    <string name="search_flavor_text">"Testo della carta"</string>
-    <string name="search_artist">"Artista"</string>
-    <string name="search_search">"Cerca!"</string>
-    <string name="search_randomize">"Ordina casualmente!"</string>
-    <string name="search_clear_fields">"Campi vuoti"</string>
-    <string name="search_save_defaults">"Salva come predefinito"</string>
-    <string name="search_load_defaults">"Carica valori predefiniti"</string>
-    <string name="search_toast_no_results">"Nessun risultato trovato."</string>
-    <plurals name="search_toast_results">
-        <item quantity="one">"%1$d risultati trovati."</item>
-        <item quantity="other">"%1$d risultati trovati."</item>
-    </plurals>
-    <string name="search_toast_cannot_save">"Non posso salvare le opzioni di ricerca."</string>
-    <string name="search_toast_cannot_load">"Non posso caricare le opzioni di ricerca."</string>
-    <string name="search_All_types">"Tutti i tipi"</string>
-    <string name="search_Any_types">"Qualunque tipo"</string>
-    <string name="search_NOT_any_selected_types">"NESSUN tipo selezionato"</string>
-    <string name="search_All_words">"Tutte le parole"</string>
-    <string name="search_Any_words">"Qualunque parola"</string>
-    <string name="search_Exact_phrase">"Frase esatta"</string>
-    <string name="search_Most_recent_printing">"Stampa più recente"</string>
-    <string name="search_Original_printing">"Stampa originale"</string>
-    <string name="search_All_printings">"Tutte le ristampe"</string>
-    <string name="search_Reprints_only">"Solo ristampe"</string>
-    <string name="search_May_include_any_colors">"Può includere qualsiasi colore"</string>
-    <string name="search_Must_include_all_colors">"Deve includere tutti i colori"</string>
-    <string name="search_No_other_colors">"Nessun altro colore"</string>
-    <string name="search_Exact_all_selected_and_no_others">"Esatto (tutti i selezionati e nessun altro)"</string>
+<!-- this has an {X} after it in layout -->
+<string name="search_set">"Espansione"</string>
+<string name="search_sets">"Espansioni"</string>
+<string name="search_format">"Formato"</string>
+<string name="search_formats">"Formati"</string>
+<string name="search_rarity">"Rarità"</string>
+<string name="search_rarities">"Rarità"</string>
+<string name="search_flavor_text">"Testo della carta"</string>
+<string name="search_artist">"Artista"</string>
+<string name="search_search">"Cerca!"</string>
+<string name="search_randomize">"Ordina casualmente!"</string>
+<string name="search_clear_fields">"Campi vuoti"</string>
+<string name="search_save_defaults">"Salva come predefinito"</string>
+<string name="search_load_defaults">"Carica valori predefiniti"</string>
+<string name="search_toast_no_results">"Nessun risultato trovato."</string>
+<plurals name="search_toast_results">
+<item quantity="one">"%1$d risultati trovati."</item>
+<item quantity="other">"%1$d risultati trovati."</item>
+</plurals>
+<string name="search_toast_cannot_save">"Non posso salvare le opzioni di ricerca."</string>
+<string name="search_toast_cannot_load">"Non posso caricare le opzioni di ricerca."</string>
+<string name="search_All_types">"Tutti i tipi"</string>
+<string name="search_Any_types">"Qualunque tipo"</string>
+<string name="search_NOT_any_selected_types">"NESSUN tipo selezionato"</string>
+<string name="search_All_words">"Tutte le parole"</string>
+<string name="search_Any_words">"Qualunque parola"</string>
+<string name="search_Exact_phrase">"Frase esatta"</string>
+<string name="search_Most_recent_printing">"Stampa più recente"</string>
+<string name="search_Original_printing">"Stampa originale"</string>
+<string name="search_All_printings">"Tutte le ristampe"</string>
+<string name="search_Reprints_only">"Solo ristampe"</string>
+<string name="search_May_include_any_colors">"Può includere qualsiasi colore"</string>
+<string name="search_Must_include_all_colors">"Deve includere tutti i colori"</string>
+<string name="search_No_other_colors">"Nessun altro colore"</string>
+<string name="search_Exact_all_selected_and_no_others">"Esatto (tutti i selezionati e nessun altro)"</string>
 
-    <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-        See arrays.xml and onCreate method in SearchViewFragment -->
-    <string name="search_Common">"Comune"</string>
-    <string name="search_Uncommon">"Non comune"</string>
-    <string name="search_Rare">"Rara"</string>
-    <string name="search_Mythic">"Mitica"</string>
-    <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Tipo"</string>
+<!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
+    See arrays.xml and onCreate method in SearchViewFragment -->
+<string name="search_Common">"Comune"</string>
+<string name="search_Uncommon">"Non comune"</string>
+<string name="search_Rare">"Rara"</string>
+<string name="search_Mythic">"Mitica"</string>
+<string name="search_Timeshifted">"Timeshifted"</string>
     <string name="search_mana_cost">"Costo di mana"</string>
-    <string name="search_collectors_number">"Numero del collezionista"</string>
-    <string name="search_color_title">"Colore"</string>
-    <string name="search_color_identity_title">"Identità di colore"</string>
+<string name="search_collectors_number">"Numero del collezionista"</string>
+<string name="search_color_title">"Colore"</string>
+<string name="search_color_identity_title">"Identità di colore"</string>
 
-    <!-- Card view activity -->
-    <string name="card_view_transform">"Trasforma"</string>
-    <string name="card_view_fuse">"Fusione"</string>
-    <string name="card_view_other_half">"Altra metà"</string>
-    <string name="card_view_copy">"Copia la selezione negli appunti"</string>
-    <string name="card_view_copy_all">"Copia la carta negli appunti"</string>
-    <string name="card_view_image">"Immagine della carta"</string>
-    <string name="card_view_price">"Prezzo della carta"</string>
-    <string name="card_view_change_set">"Cambia espansione"</string>
-    <string name="card_view_legality">"Legalità"</string>
-    <string name="card_view_rulings">"Regolamento della carta"</string>
-    <string name="card_view_legal">"Legale"</string>
-    <string name="card_view_restricted">"Limitato"</string>
-    <string name="card_view_banned">"Bannate"</string>
-    <string name="card_view_no_commander">"Non può essere un comandante"</string>
-    <string name="card_view_price_dialog_title">"Prezzi di TCGPlayer.com"</string>
-    <string name="card_view_price_dialog_low">"Basso:"</string>
-    <string name="card_view_price_dialog_medium">"Medio:"</string>
-    <string name="card_view_price_dialog_high">"Alto:"</string>
-    <string name="card_view_price_dialog_foil">"Prezzo medio Foil:"</string>
-    <string name="card_view_price_dialog_link">"Clicca qui per tutte le informazioni sui prezzi e le tendenze"</string>
-    <string name="card_view_no_rulings">"Nessun regolamento per questa carta"</string>
-    <string name="card_view_gatherer_page">"Vai al Gatherer"</string>
-    <string name="card_view_set_dialog_title">"Scegli un set"</string>
-    <string name="card_view_price_not_found">"Prezzo non trovato"</string>
-    <string name="card_view_image_not_found">"Immagine non trovata"</string>
-    <string name="card_view_no_external_storage">"Non riesco ad accere alla memoria esterna, controlla la scheda SD."</string>
-    <string name="card_view_no_pictures_folder">"Non riesco a trovare la cartella delle immagini, prova ancora."</string>
-    <string name="card_view_unable_to_create_dir">"Impossibile creare la cartella per il salvataggio delle immagini, per favore riprova."</string>
-    <string name="card_view_unable_to_create_file">"Impossibile creare il file immagine, per favore riprova."</string>
-    <string name="card_view_no_image">"Non riesco a trovare l'immagine da salvare, prova ancora."</string>
+<!-- Card view activity -->
+<string name="card_view_transform">"Trasforma"</string>
+<string name="card_view_fuse">"Fusione"</string>
+<string name="card_view_other_half">"Altra metà"</string>
+<string name="card_view_copy">"Copia la selezione negli appunti"</string>
+<string name="card_view_copy_all">"Copia la carta negli appunti"</string>
+<string name="card_view_image">"Immagine della carta"</string>
+<string name="card_view_price">"Prezzo della carta"</string>
+<string name="card_view_change_set">"Cambia espansione"</string>
+<string name="card_view_legality">"Legalità"</string>
+<string name="card_view_rulings">"Regolamento della carta"</string>
+<string name="card_view_legal">"Legale"</string>
+<string name="card_view_restricted">"Limitato"</string>
+<string name="card_view_banned">"Bannate"</string>
+<string name="card_view_no_commander">"Non può essere un comandante"</string>
+<string name="card_view_price_dialog_title">"Prezzi di TCGPlayer.com"</string>
+<string name="card_view_price_dialog_link">"Clicca qui per tutte le informazioni sui prezzi e le tendenze"</string>
+<string name="card_view_no_rulings">"Nessun regolamento per questa carta"</string>
+<string name="card_view_gatherer_page">"Vai al Gatherer"</string>
+<string name="card_view_set_dialog_title">"Scegli un set"</string>
+<string name="card_view_price_not_found">"Prezzo non trovato"</string>
+<string name="card_view_image_not_found">"Immagine non trovata"</string>
+<string name="card_view_no_external_storage">"Non riesco ad accere alla memoria esterna, controlla la scheda SD."</string>
+<string name="card_view_no_pictures_folder">"Non riesco a trovare la cartella delle immagini, prova ancora."</string>
+<string name="card_view_unable_to_create_dir">"Impossibile creare la cartella per il salvataggio delle immagini, per favore riprova."</string>
+<string name="card_view_unable_to_create_file">"Impossibile creare il file immagine, per favore riprova."</string>
     <string name="card_view_unable_to_save_image">"Impossibile salvare l'immagine, per favore riprova."</string>
-    <string name="card_view_save_failure">"Salvataggio dell'immagine fallito, per favore riprova."</string>
-    <string name="card_view_image_saved">"Immagine salvata in "</string>
-    <string name="card_view_share_card">"Condividi carta"</string>
+<string name="card_view_save_failure">"Salvataggio dell'immagine fallito, per favore riprova."</string>
+<string name="card_view_image_saved">"Immagine salvata in "</string>
+<string name="card_view_share_card">"Condividi carta"</string>
 
-    <!-- Life counter activity -->
-    <string name="life_counter_announce_life">"Ascolta i punti vita totali"</string>
-    <string name="life_counter_change_default_gathering">"Modifica le modalità di gioco"</string>
-    <string name="life_counter_set_gathering">"Carica una modalità di gioco"</string>
-    <string name="life_counter_change_display">"Cambia la modalità di visualizzazione"</string>
-    <string name="life_counter_remove_player">"Rimuovi un giocatore"</string>
-    <string name="life_counter_add_player">"Aggiungi un giocatore"</string>
-    <string name="life_counter_gathering_dialog_title">"Seleziona una modalità di gioco"</string>
-    <string name="life_counter_clear_dialog_text">"Azzera i punti vita o i giocatori?
+<!-- Life counter activity -->
+<string name="life_counter_announce_life">"Ascolta i punti vita totali"</string>
+<string name="life_counter_change_default_gathering">"Modifica le modalità di gioco"</string>
+<string name="life_counter_set_gathering">"Carica una modalità di gioco"</string>
+<string name="life_counter_change_display">"Cambia la modalità di visualizzazione"</string>
+<string name="life_counter_remove_player">"Rimuovi un giocatore"</string>
+<string name="life_counter_add_player">"Aggiungi un giocatore"</string>
+<string name="life_counter_gathering_dialog_title">"Seleziona una modalità di gioco"</string>
+<string name="life_counter_clear_dialog_text">"Azzera i punti vita o i giocatori?
 
 Verrà azzerata anche la riserva di mana"</string>
-    <string name="life_counter_edit_name_dialog_title">"Inserisci il nome"</string>
-    <string name="life_counter_Commander">"Comandante"</string>
-    <string name="life_counter_Compact">"Compatto"</string>
-    <string name="life_counter_Normal">"Normale"</string>
-    <string name="life_counter_commander_cast">"Costo del Comandante"</string>
-    <string name="life_counter_default_name">"Giocatore"</string>
-    <plurals name="life_counter_spoken_life">
-        <item quantity="one">"%1$s ha %2$d punti vita."</item>
-        <item quantity="other">"%1$s ha %2$d punti vita."</item>
-    </plurals>
-    <plurals name="life_counter_spoken_poison">
-        <item quantity="one">"%1$s ha %2$d contatori veleno."</item>
-        <item quantity="other">"%1$s ha %2$d contatori veleno."</item>
-    </plurals>
-    <string name="life_counter_over_9000">"più di 9000"</string>
-    <string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
-    <string name="life_counter_edit_life_dialog_title">"Inserisci la vita"</string>
-    <string name="life_counter_edit_poison_dialog_title">"Inserisci i contatori veleno"</string>
+<string name="life_counter_edit_name_dialog_title">"Inserisci il nome"</string>
+<string name="life_counter_Commander">"Comandante"</string>
+<string name="life_counter_Compact">"Compatto"</string>
+<string name="life_counter_Normal">"Normale"</string>
+<string name="life_counter_commander_cast">"Costo del Comandante"</string>
+<string name="life_counter_default_name">"Giocatore"</string>
+<plurals name="life_counter_spoken_life">
+<item quantity="one">"%1$s ha %2$d punti vita."</item>
+<item quantity="other">"%1$s ha %2$d punti vita."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+<item quantity="one">"%1$s ha %2$d contatori veleno."</item>
+<item quantity="other">"%1$s ha %2$d contatori veleno."</item>
+</plurals>
+<string name="life_counter_over_9000">"più di 9000"</string>
+<string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
+<string name="life_counter_edit_life_dialog_title">"Inserisci la vita"</string>
+<string name="life_counter_edit_poison_dialog_title">"Inserisci i contatori veleno"</string>
 
-    <!-- Default gathering activity -->
-    <string name="gathering_starting_life">"Punti vita iniziali:"</string>
-    <string name="gathering_save">"Salva la modalità di gioco"</string>
-    <string name="gathering_enter_name">"Inserisci il nome della modalità di gioco"</string>
-    <string name="gathering_dialog_overwrite_title">"Conferma la sovrascrittura"</string>
-    <string name="gathering_dialog_overwrite_text">"Questa è una modalità già esistente. Vuoi sovrascriverla?"</string>
-    <string name="gathering_load">"Carica una modalità di gioco"</string>
-    <string name="gathering_delete">"Elimina la modalità di gioco"</string>
-    <string name="gathering_toast_no_gatherings">"Non ci sono modalità di gioco."</string>
-    <string name="gathering_toast_no_name">"Per favore inserisci un nome per la modalità di gioco."</string>
-    <string name="gathering_empty_field">"I campi non possono essere vuoti. Per favore controllali tutti."</string>
-    <string name="gathering_display_mode_title">"Modalità di visualizzazione:"</string>
+<!-- Default gathering activity -->
+<string name="gathering_starting_life">"Punti vita iniziali:"</string>
+<string name="gathering_save">"Salva la modalità di gioco"</string>
+<string name="gathering_enter_name">"Inserisci il nome della modalità di gioco"</string>
+<string name="gathering_dialog_overwrite_title">"Conferma la sovrascrittura"</string>
+<string name="gathering_dialog_overwrite_text">"Questa è una modalità già esistente. Vuoi sovrascriverla?"</string>
+<string name="gathering_load">"Carica una modalità di gioco"</string>
+<string name="gathering_delete">"Elimina la modalità di gioco"</string>
+<string name="gathering_toast_no_gatherings">"Non ci sono modalità di gioco."</string>
+<string name="gathering_toast_no_name">"Per favore inserisci un nome per la modalità di gioco."</string>
+<string name="gathering_empty_field">"I campi non possono essere vuoti. Per favore controllali tutti."</string>
+<string name="gathering_display_mode_title">"Modalità di visualizzazione:"</string>
 
-    <!-- Dice activity -->
-    <string name="dice_heads">"Testa"</string>
-    <string name="dice_tails">"croce"</string>
+<!-- Dice activity -->
+<string name="dice_heads">"Testa"</string>
+<string name="dice_tails">"croce"</string>
 
-    <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Il caricamento della riserva di mana è fallito!"</string>
+<!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Cancella tutto"</string>
 
-    <!-- Card trading activity -->
-    <string name="trader_add_card">"Aggiungi una carta"</string>
-    <string name="trader_save">"Salva Scambio"</string>
-    <string name="trader_load">"Carica Scambio"</string>
-    <string name="trader_delete">"Elimina Scambio"</string>
-    <string name="trader_edit_dialog_remove">"Rimuovi"</string>
-    <string name="trader_edit_dialog_reset_price">"Resetta Prezzo"</string>
-    <string name="trader_clear_dialog_title">"Azzera Scambio"</string>
-    <string name="trader_clear_dialog_text">"Vuoi davvero eliminare lo scambio corrente?"</string>
-    <string name="trader_select_dialog_title">"Seleziona uno Scambio"</string>
-    <string name="trader_delete_dialog_title">"Elimina uno Scambio"</string>
-    <string name="trader_edit_dialog_info">"Informazione sulla carta"</string>
-    <string name="trader_toast_no_trades">"Non hai salvato scambi."</string>
-    <string name="trader_toast_save_error">"Lo scambio non può essere salvato, riprova più tardi."</string>
-    <string name="trader_toast_invalid_chars">"I nome degli scambi non possono contenere il carattere separatore delle cartelle (/)."</string>
-    <string name="trader_Low">"Basso"</string>
-    <string name="trader_Average">"Medio"</string>
-    <string name="trader_High">"Alto"</string>
-    <string name="trader_sort">"Ordina lo Scambio"</string>
-    <string name="trader_share">"Condividi Scambio"</string>
-    <string name="trade_share_title">"Scambia"</string>
+<!-- Card trading activity -->
+<string name="trader_add_card">"Aggiungi una carta"</string>
+<string name="trader_save">"Salva Scambio"</string>
+<string name="trader_load">"Carica Scambio"</string>
+<string name="trader_delete">"Elimina Scambio"</string>
+<string name="trader_edit_dialog_remove">"Rimuovi"</string>
+<string name="trader_edit_dialog_reset_price">"Resetta Prezzo"</string>
+<string name="trader_clear_dialog_title">"Azzera Scambio"</string>
+<string name="trader_clear_dialog_text">"Vuoi davvero eliminare lo scambio corrente?"</string>
+<string name="trader_edit_dialog_info">"Informazione sulla carta"</string>
+<string name="trader_toast_no_trades">"Non hai salvato scambi."</string>
+<string name="trader_toast_save_error">"Lo scambio non può essere salvato, riprova più tardi."</string>
+<string name="trader_toast_invalid_chars">"I nome degli scambi non possono contenere il carattere separatore delle cartelle (/)."</string>
+<string name="trader_Low">"Basso"</string>
+<string name="trader_Average">"Medio"</string>
+<string name="trader_High">"Alto"</string>
+<string name="trader_sort">"Ordina lo Scambio"</string>
+<string name="trader_share">"Condividi Scambio"</string>
+<string name="trade_share_title">"Scambia"</string>
 
-    <!-- Wishlist activity -->
-    <string name="wishlist_add_card">"Aggiungi Carta"</string>
-    <string name="wishlist_set_pricing">"Seleziona opzioni di prezzo"</string>
-    <string name="wishlist_share">"Condividi Lista Carte Desiderate"</string>
-    <string name="wishlist_empty_dialog_title">"Lista carte desiderate vuota"</string>
-    <string name="wishlist_empty_dialog_text">"Sei sicuro di voler azzerare la lista carte desiderate?"</string>
-    <string name="wishlist_edit_dialog_title_end">"nella lista carte desiderate"</string>
-    <string name="wishlist_loading">"Caricamento"</string>
-    <string name="wishlist_share_title">"Lista dei desideri di MTG Familiar"</string>
-    <string name="wishlist_foil">"foil"</string>
-    <string name="wishlist_sort">"Ordina Lista Carte desiderate"</string>
-    <string name="wishlist_type_price">"Prezzo"</string>
-    <string name="wishlist_ascending">"Crescente"</string>
-    <string name="wishlist_sort_by">"Ordina per"</string>
+<!-- Wishlist activity -->
+<string name="wishlist_add_card">"Aggiungi Carta"</string>
+<string name="wishlist_set_pricing">"Seleziona opzioni di prezzo"</string>
+<string name="wishlist_share">"Condividi Lista Carte Desiderate"</string>
+<string name="wishlist_empty_dialog_title">"Lista carte desiderate vuota"</string>
+<string name="wishlist_empty_dialog_text">"Sei sicuro di voler azzerare la lista carte desiderate?"</string>
+<string name="wishlist_edit_dialog_title_end">"nella lista carte desiderate"</string>
+<string name="wishlist_loading">"Caricamento"</string>
+<string name="wishlist_share_title">"Lista dei desideri di MTG Familiar"</string>
+<string name="wishlist_foil">"foil"</string>
+<string name="wishlist_sort">"Ordina Lista Carte desiderate"</string>
+<string name="wishlist_type_price">"Prezzo"</string>
+<string name="wishlist_ascending">"Crescente"</string>
+<string name="wishlist_sort_by">"Ordina per"</string>
 
-    <!-- Round timer activity -->
-    <string name="timer_how_long">"Quanto è lungo il round?"</string>
-    <string name="timer_start">"Avvia il timer"</string>
-    <string name="timer_cancel">"Ferma Timer"</string>
-    <string name="timer_set_ringtone">"Seleziona Suoneria Timer"</string>
-    <string name="timer_set_warnings">"Seleziona Avvisi"</string>
-    <string name="timer_warning_dialog_title">"Avvisi Vocali"</string>
-    <string name="timer_tone_dialog_title">"Seleziona il tono di allerta"</string>
-    <string name="timer_notification_ongoing">"Il round terminerà alle %1$tl:%1$tM %1$Tp."</string>
-    <string name="timer_two_minutes_left">"Il turno finirà in due minuti"</string>
-    <string name="timer_five_minutes_left">"Il round terminerà in cinque minuti"</string>
-    <string name="timer_ten_minutes_left">"Il round finirà fra 10 minuti"</string>
-    <string name="timer_fifteen_minutes_left">"Il round terminerà in quindici minuti"</string>
-    <string name="timer_ended">"Il round è terminato."</string>
-    <string name="timer_easter_egg">"Notte del giorno finale, venti ore rimanenti"</string>
+<!-- Round timer activity -->
+<string name="timer_how_long">"Quanto è lungo il round?"</string>
+<string name="timer_start">"Avvia il timer"</string>
+<string name="timer_cancel">"Ferma Timer"</string>
+<string name="timer_set_ringtone">"Seleziona Suoneria Timer"</string>
+<string name="timer_set_warnings">"Seleziona Avvisi"</string>
+<string name="timer_warning_dialog_title">"Avvisi Vocali"</string>
+<string name="timer_tone_dialog_title">"Seleziona il tono di allerta"</string>
+<string name="timer_notification_ongoing">"Il round terminerà alle %1$tl:%1$tM %1$Tp."</string>
+<string name="timer_two_minutes_left">"Il turno finirà in due minuti"</string>
+<string name="timer_five_minutes_left">"Il round terminerà in cinque minuti"</string>
+<string name="timer_ten_minutes_left">"Il round finirà fra 10 minuti"</string>
+<string name="timer_fifteen_minutes_left">"Il round terminerà in quindici minuti"</string>
+<string name="timer_ended">"Il round è terminato."</string>
+<string name="timer_easter_egg">"Notte del giorno finale, venti ore rimanenti"</string>
 
-    <!-- Rules activity -->
-    <string name="rules_exit">"Esci dal Regolamento"</string>
-    <string name="rules_glossary">"Glossario"</string>
-    <string name="rules_no_results_toast">"Nessun risultato trovato."</string>
-    <string name="rules_short_key_toast">"La tua ricerca deve essere lunga almeno tre caratteri."</string>
-    <string name="rules_search_all">"Cerca in tutto il regolamento"</string>
-    <string name="rules_search_cat">"Cerca senza %s"</string>
-    <string name="rules_this_cat">"questa categoria:"</string>
-    <string name="rules_banned_and_restricted">"Formato, Bannate e Limitate"</string>
-    <string name="rules_banned_as_commander">"Bannate come Comandante"</string>
-    <string name="rules_no_cards">"Nessuna carta"</string>
-    <string name="rules_legal_sets">"Espansioni legali"</string>
-    <string name="rules_bb_wb_sets">"Tutte le espansioni con bordi in bianco e nero"</string>
-    <string name="rules_coppied">"Regola copiata negli appunti"</string>
-    <string name="rules_copy_tag">"Regola di MTG"</string>
+<!-- Rules activity -->
+<string name="rules_exit">"Esci dal Regolamento"</string>
+<string name="rules_glossary">"Glossario"</string>
+<string name="rules_no_results_toast">"Nessun risultato trovato."</string>
+<string name="rules_short_key_toast">"La tua ricerca deve essere lunga almeno tre caratteri."</string>
+<string name="rules_search_all">"Cerca in tutto il regolamento"</string>
+<string name="rules_search_cat">"Cerca senza %s"</string>
+<string name="rules_this_cat">"questa categoria:"</string>
+<string name="rules_banned_and_restricted">"Formato, Bannate e Limitate"</string>
+<string name="rules_banned_as_commander">"Bannate come Comandante"</string>
+<string name="rules_no_cards">"Nessuna carta"</string>
+<string name="rules_legal_sets">"Espansioni legali"</string>
+<string name="rules_bb_wb_sets">"Tutte le espansioni con bordi in bianco e nero"</string>
+<string name="rules_coppied">"Regola copiata negli appunti"</string>
+<string name="rules_copy_tag">"Regola di MTG"</string>
 
-    <!-- Profile activity -->
-    <string name="profile_update_dci">"Aggiorna il numero DCI"</string>
-    <string name="profile_remove_dci">"Rimuovi il numero DCI"</string>
-    <string name="profile_update_dci_dialog_title">"Inserisci il tuo numero DCI"</string>
-    <string name="profile_invalid_dci">"Inserito numero DCI non valido"</string>
-    <string name="profile_no_dci">"Non hai inserito il tuo numero DCI"</string>
-    <string name="profile_planeswalker_points">"Punti Planeswalker"</string>
+<!-- Profile activity -->
+<string name="profile_update_dci">"Aggiorna il numero DCI"</string>
+<string name="profile_remove_dci">"Rimuovi il numero DCI"</string>
+<string name="profile_update_dci_dialog_title">"Inserisci il tuo numero DCI"</string>
+<string name="profile_invalid_dci">"Inserito numero DCI non valido"</string>
+<string name="profile_no_dci">"Non hai inserito il tuo numero DCI"</string>
+<string name="profile_planeswalker_points">"Punti Planeswalker"</string>
 
-    <!-- MoJhoSto activity -->
-    <string name="mojhosto_rules_title">"Regole base del MoJhoSto"</string>
-    <string name="mojhosto_rules_text">"Il MoJhoSto è un formato Vanguard tratto da Magic Online.&lt;br&gt;
+<!-- MoJhoSto activity -->
+<string name="mojhosto_rules_title">"Regole base del MoJhoSto"</string>
+<string name="mojhosto_rules_text">"Il MoJhoSto è un formato Vanguard tratto da Magic Online.&lt;br&gt;
 &lt;br&gt;
 Per giocare, ogni giocatore deve avere un mazzo che consista di sole 60 terre base.&lt;br&gt;
 &lt;br&gt;
@@ -380,182 +359,211 @@ Carta e penna potrebbero essere utili per tener conto dello stato del gioco. Sfo
 &lt;br&gt;
 Buona fortuna, e divertiti!
 "</string>
-    <string name="mojhosto_momir_label">"CMC="</string>
-    <string name="mojhosto_random_creature">"Creatura casuale"</string>
-    <string name="mojhosto_stonehewer_label">"CMC &lt;="</string>
-    <string name="mojhosto_random_equipment">"Equipaggiamento casuale"</string>
-    <string name="mojhosto_random_instants">"Istantaneo casuale"</string>
-    <string name="mojhosto_random_sorceries">"Stregoneria casuale"</string>
-    <string name="mojhosto_dialog_play">"Giochiamo!"</string>
+<string name="mojhosto_momir_label">"CMC="</string>
+<string name="mojhosto_random_creature">"Creatura casuale"</string>
+<string name="mojhosto_stonehewer_label">"CMC &lt;="</string>
+<string name="mojhosto_random_equipment">"Equipaggiamento casuale"</string>
+<string name="mojhosto_random_instants">"Istantaneo casuale"</string>
+<string name="mojhosto_random_sorceries">"Stregoneria casuale"</string>
+<string name="mojhosto_dialog_play">"Giochiamo!"</string>
 
-    <!-- Preferences -->
-    <string name="pref_screen_general">"Impostazioni Generali"</string>
-    <string name="pref_screen_search">"Ricerca e Risultati"</string>
-    <string name="pref_screen_trade_wishlist">"Scambio e Carte desiderate"</string>
-    <string name="pref_cat_default_fragment">"Pagina di default"</string>
-    <string name="pref_default_fragment_mode_summary">"La prima cosa che vedi quando apri l'applicazione"</string>
-    <string name="pref_cat_updates">"Aggiornamento del database"</string>
-    <string name="pref_auto_updates_title">"Aggiornamenti Automatici"</string>
-    <string name="pref_auto_updates_summary">"Controlla per nuove espansioni e carte bannate quando l'app viene aperta"</string>
-    <string name="pref_update_frequency_title">"Frequenza d'aggiornamento"</string>
-    <string name="pref_update_frequency_summary">"Numero di giorni che intercorrono tra un controllo per nuove espansioni e carte bannate e l'altro"</string>
-    <string name="pref_cat_card_view">"Guarda la carta"</string>
-    <string name="pref_show_art_title">"Mostra sempre l'immagine"</string>
-    <string name="pref_show_art_summary">"Quando si guarda una carta, carica l'immagine ufficiale invece del testo"</string>
-    <string name="pref_card_language_title">"Lingua della carta"</string>
-    <string name="pref_card_language_summary">"Scegli la lingua usata per recuperare l'immagine"</string>
-    <string name="pref_cat_life_screen">"Impostazioni Display"</string>
-    <string name="pref_wake_lock_title">"Impedisci il blocco"</string>
-    <string name="pref_wake_lock_summary">"Imponi allo schermo di non spegnersi quando mostra il contatore punti vita"</string>
-    <string name="pref_dim_lock_summary">"Scurisci lo schermo se l'utente è inattivo"</string>
-    <string name="pref_dim_lock_title">"Abilita l'abbassamento della luminosità"</string>
-    <string name="pref_dim_lock_level_summary">"Seleziona il livello di luminosità quando lo schermo si scurisce"</string>
-    <string name="pref_dim_lock_level_title">"Luminosità dello schermo"</string>
-    <string name="pref_display_mode_title">"Modalità di visualizzazione"</string>
-    <string name="pref_display_mode_summary">"Scegli come mostrare il contatore dei punti vita"</string>
-    <string name="pref_ringtone_title">"Suoneria Timer"</string>
-    <string name="pref_ringtone_summary">"Seleziona una suoneria di notifica per la fine del timer"</string>
-    <string name="pref_fifteen_minutes_title">"Allerta fra 15 minuti"</string>
-    <string name="pref_ten_minutes_title">"Allerta fra 10 minuti"</string>
-    <string name="pref_five_minutes_title">"Allerta fra 5 minuti"</string>
-    <string name="pref_two_minutes_title">"Avviso 2 minuti"</string>
-    <string name="pref_cat_trade_window">"Finestra di scambio"</string>
-    <string name="pref_trade_price_title">"Impostazioni Prezzo"</string>
-    <string name="pref_trade_price_summary">"Prezzo TCGplayer da usare quando si scambiano carte"</string>
-    <string name="pref_cat_result_list">"Lista dei risultati"</string>
-    <string name="pref_consolidate_title">"Raggruppa i risultati"</string>
-    <string name="pref_consolidate_summary">"Mostra solo la ristampa più recente di una carta"</string>
-    <string name="pref_show_set_title">"Mostra l'espansione"</string>
-    <string name="pref_show_mana_title">"Mostra il Costo di Mana"</string>
-    <string name="pref_show_type_title">"Mostra Tipo/Sottotipo"</string>
-    <string name="pref_show_ability_title">"Mostra il testo del regolamento"</string>
-    <string name="pref_show_pt_title">"Mostra Forza/Costituzione"</string>
-    <string name="pref_wishlist_details_title">"Mostra Dettagli"</string>
-    <string name="pref_wishlist_details_summary">"Mostra informazioni dettagliate delle carte nella lista carte desiderate"</string>
-    <string name="pref_wishlist_totals_title">"Mostra il prezzo totale"</string>
-    <string name="pref_wishlist_totals_summary">"Mostra il prezzo totale nella lista delle carte desiderate"</string>
-    <string name="pref_wishlist_prices_title">"Mostra il prezzo delle carte"</string>
-    <string name="pref_wishlist_prices_summary">"Mostra il prezzo di ogni carta nella lista delle carte desiderate"</string>
-    <string name="pref_English">"Inglese"</string>
-    <string name="pref_French">"Francese"</string>
-    <string name="pref_Italian">"Italiano"</string>
-    <string name="pref_Spanish">"Spagnolo"</string>
-    <string name="pref_Japanese">"Giapponese"</string>
-    <string name="pref_Russian">"Russo"</string>
-    <string name="pref_German">"Tedesco"</string>
-    <string name="pref_Polish">"Polacco"</string>
+<!-- Preferences -->
+<string name="pref_screen_general">"Impostazioni Generali"</string>
+<string name="pref_cat_default_fragment">"Pagina di default"</string>
+<string name="pref_default_fragment_mode_summary">"La prima cosa che vedi quando apri l'applicazione"</string>
+<string name="pref_cat_updates">"Aggiornamento del database"</string>
+<string name="pref_auto_updates_title">"Aggiornamenti Automatici"</string>
+<string name="pref_auto_updates_summary">"Controlla per nuove espansioni e carte bannate quando l'app viene aperta"</string>
+<string name="pref_update_frequency_title">"Frequenza d'aggiornamento"</string>
+<string name="pref_update_frequency_summary">"Numero di giorni che intercorrono tra un controllo per nuove espansioni e carte bannate e l'altro"</string>
+<string name="pref_cat_card_view">"Guarda la carta"</string>
+<string name="pref_show_art_title">"Mostra sempre l'immagine"</string>
+<string name="pref_show_art_summary">"Quando si guarda una carta, carica l'immagine ufficiale invece del testo"</string>
+<string name="pref_card_language_title">"Lingua della carta"</string>
+<string name="pref_card_language_summary">"Scegli la lingua usata per recuperare l'immagine"</string>
+<string name="pref_cat_life_screen">"Impostazioni Display"</string>
+<string name="pref_wake_lock_title">"Impedisci il blocco"</string>
+<string name="pref_wake_lock_summary">"Imponi allo schermo di non spegnersi quando mostra il contatore punti vita"</string>
+<string name="pref_dim_lock_summary">"Scurisci lo schermo se l'utente è inattivo"</string>
+<string name="pref_dim_lock_title">"Abilita l'abbassamento della luminosità"</string>
+<string name="pref_dim_lock_level_summary">"Seleziona il livello di luminosità quando lo schermo si scurisce"</string>
+<string name="pref_dim_lock_level_title">"Luminosità dello schermo"</string>
+<string name="pref_display_mode_title">"Modalità di visualizzazione"</string>
+<string name="pref_display_mode_summary">"Scegli come mostrare il contatore dei punti vita"</string>
+<string name="pref_ringtone_title">"Suoneria Timer"</string>
+<string name="pref_ringtone_summary">"Seleziona una suoneria di notifica per la fine del timer"</string>
+<string name="pref_fifteen_minutes_title">"Allerta fra 15 minuti"</string>
+<string name="pref_ten_minutes_title">"Allerta fra 10 minuti"</string>
+<string name="pref_five_minutes_title">"Allerta fra 5 minuti"</string>
+<string name="pref_two_minutes_title">"Avviso 2 minuti"</string>
+<string name="pref_cat_trade_window">"Finestra di scambio"</string>
+<string name="pref_trade_price_title">"Impostazioni Prezzo"</string>
+<string name="pref_trade_price_summary">"Prezzo TCGplayer da usare quando si scambiano carte"</string>
+<string name="pref_cat_result_list">"Lista dei risultati"</string>
+<string name="pref_consolidate_title">"Raggruppa i risultati"</string>
+<string name="pref_consolidate_summary">"Mostra solo la ristampa più recente di una carta"</string>
+<string name="pref_show_set_title">"Mostra l'espansione"</string>
+<string name="pref_show_mana_title">"Mostra il Costo di Mana"</string>
+<string name="pref_show_type_title">"Mostra Tipo/Sottotipo"</string>
+<string name="pref_show_ability_title">"Mostra il testo del regolamento"</string>
+<string name="pref_show_pt_title">"Mostra Forza/Costituzione"</string>
+<string name="pref_wishlist_details_title">"Mostra Dettagli"</string>
+<string name="pref_wishlist_details_summary">"Mostra informazioni dettagliate delle carte nella lista carte desiderate"</string>
+<string name="pref_wishlist_totals_title">"Mostra il prezzo totale"</string>
+<string name="pref_wishlist_totals_summary">"Mostra il prezzo totale nella lista delle carte desiderate"</string>
+<string name="pref_wishlist_prices_title">"Mostra il prezzo delle carte"</string>
+<string name="pref_wishlist_prices_summary">"Mostra il prezzo di ogni carta nella lista delle carte desiderate"</string>
+<string name="pref_English">"Inglese"</string>
+<string name="pref_French">"Francese"</string>
+<string name="pref_Italian">"Italiano"</string>
+<string name="pref_Spanish">"Spagnolo"</string>
+<string name="pref_Japanese">"Giapponese"</string>
+<string name="pref_Russian">"Russo"</string>
+<string name="pref_German">"Tedesco"</string>
+<string name="pref_Polish">"Polacco"</string>
 
-    <!-- Only used for app translation, not card names -->
-    <string name="pref_1_day">"1 giorno"</string>
-    <string name="pref_2_days">"2 giorni"</string>
-    <string name="pref_3_days">"3 giorni"</string>
-    <string name="pref_5_days">"5 giorni"</string>
-    <string name="pref_1_week">"1 settimana"</string>
-    <string name="pref_2_weeks">"2 settimane"</string>
-    <string name="pref_life_timer_title">"Timer"</string>
-    <string name="pref_life_timer_summary">"Quanto devo aspettare prima di inserire una modifica diversa"</string>
-    <string name="pref_1_second">"1 secondo"</string>
-    <string name="pref_2_seconds">"2 secondi"</string>
-    <string name="pref_3_seconds">"3 secondi"</string>
-    <string name="pref_4_seconds">"4 secondi"</string>
-    <string name="pref_5_seconds">"5 secondi"</string>
-    <string name="pref_cat_widget">"Widget"</string>
-    <string name="pref_widget_mode_title">"Bottoni del Widget"</string>
-    <string name="pref_widget_mode_summary">"Bottoni da mostrare nel widget"</string>
-    <string name="pref_theme_dark">"Scuro"</string>
-    <string name="pref_theme_light">"Chiaro"</string>
-    <string name="pref_cat_theme">"Aspetto visivo"</string>
-    <string name="pref_theme_title">"Tema"</string>
-    <string name="pref_theme_summary">"Seleziona un tema scuro o chiaro"</string>
-    <string name="pref_image_cache_size_summary">"Massima quantità di memoria cache riservata alle immagini"</string>
-    <string name="pref_image_cache_size_title">"Dimensione cache per le immagini"</string>
-    <string name="pref_cat_card_cache">"Cache per le immagini"</string>
-    <string name="pref_language">"Lingua"</string>
-    <string name="pref_set_language">"Seleziona una lingua differente"</string>
+<!-- Only used for app translation, not card names -->
+<string name="pref_1_day">"1 giorno"</string>
+<string name="pref_2_days">"2 giorni"</string>
+<string name="pref_3_days">"3 giorni"</string>
+<string name="pref_5_days">"5 giorni"</string>
+<string name="pref_1_week">"1 settimana"</string>
+<string name="pref_2_weeks">"2 settimane"</string>
+<string name="pref_life_timer_title">"Timer"</string>
+<string name="pref_life_timer_summary">"Quanto devo aspettare prima di inserire una modifica diversa"</string>
+<string name="pref_1_second">"1 secondo"</string>
+<string name="pref_2_seconds">"2 secondi"</string>
+<string name="pref_3_seconds">"3 secondi"</string>
+<string name="pref_4_seconds">"4 secondi"</string>
+<string name="pref_5_seconds">"5 secondi"</string>
+<string name="pref_cat_widget">"Widget"</string>
+<string name="pref_widget_mode_title">"Bottoni del Widget"</string>
+<string name="pref_widget_mode_summary">"Bottoni da mostrare nel widget"</string>
+<string name="pref_theme_dark">"Scuro"</string>
+<string name="pref_theme_light">"Chiaro"</string>
+<string name="pref_cat_theme">"Aspetto visivo"</string>
+<string name="pref_theme_title">"Tema"</string>
+<string name="pref_theme_summary">"Seleziona un tema scuro o chiaro"</string>
+<string name="pref_image_cache_size_summary">"Massima quantità di memoria cache riservata alle immagini"</string>
+<string name="pref_image_cache_size_title">"Dimensione cache per le immagini"</string>
+<string name="pref_cat_card_cache">"Cache per le immagini"</string>
+<string name="pref_language">"Lingua"</string>
+<string name="pref_set_language">"Seleziona una lingua differente"</string>
 
-    <!-- Judge's Corner -->
-    <string name="judges_corner_MTR">"MTR"</string>
-    <string name="judges_corner_IPG">"IPG"</string>
-    <string name="judges_corner_JAR">"JAR"</string>
-    <string name="judges_corner_jump_to_top">"Vai all'inizio"</string>
-    <string name="judges_corner_counter">"Contatore"</string>
-    <string name="judges_corner_error">"È occorso un errore."</string>
-    <string name="deck_counter_reset">"Reset"</string>
+<!-- Judge's Corner -->
+<string name="judges_corner_MTR">"MTR"</string>
+<string name="judges_corner_IPG">"IPG"</string>
+<string name="judges_corner_JAR">"JAR"</string>
+<string name="judges_corner_jump_to_top">"Vai all'inizio"</string>
+<string name="judges_corner_counter">"Contatore"</string>
+<string name="judges_corner_error">"È occorso un errore."</string>
+<string name="deck_counter_reset">"Reset"</string>
 
-    <!-- Deck Builder -->
-    <string name="decklist_sideboard">"Sideboard"</string>
-    <string name="decklist_creatures">"Creature"</string>
-    <string name="decklist_planeswalkers">"Planeswalker"</string>
-    <string name="decklist_enchantments">"Incantesimi"</string>
-    <string name="decklist_artifacts">"Artefatti"</string>
-    <string name="decklist_lands">"Terre"</string>
-    <string name="decklist_edit_dialog_title_end">"Nel grimorio"</string>
-    <string name="decklist_delete">"Elimina grimorio"</string>
-    <string name="decklist_save">"Salva grimorio"</string>
-    <string name="decklist_load">"Carica grimorio"</string>
-    <string name="decklist_clear">"Azzera grimorio"</string>
-    <string name="decklist_toast_no_decks">"Non hai grimori salvati"</string>
-    <string name="decklist_select_dialog_title">"Seleziona un grimorio"</string>
-    <string name="decklist_delete_dialog_title">"Elimina un grimorio"</string>
-    <string name="decklist_clear_dialog_text">"Sicuro di voler azzerare il grimorio corrente?"</string>
-    <string name="decklist_share">"Condividi grimorio"</string>
-    <string name="decklist_share_title">"Grimori MTG Familiar"</string>
-    <string name="decklist_instants">"Istantanei"</string>
-    <string name="decklist_sorceries">"Stregonerie"</string>
-    <string name="decklist_others">"Altri"</string>
-    <string name="decklist_unnamed_deck">"Grimorio senza nome"</string>
+<!-- Deck Builder -->
+<string name="decklist_sideboard">"Sideboard"</string>
+<string name="decklist_creatures">"Creature"</string>
+<string name="decklist_planeswalkers">"Planeswalker"</string>
+<string name="decklist_enchantments">"Incantesimi"</string>
+<string name="decklist_artifacts">"Artefatti"</string>
+<string name="decklist_lands">"Terre"</string>
+<string name="decklist_edit_dialog_title_end">"Nel grimorio"</string>
+<string name="decklist_delete">"Elimina grimorio"</string>
+<string name="decklist_save">"Salva grimorio"</string>
+<string name="decklist_load">"Carica grimorio"</string>
+<string name="decklist_clear">"Azzera grimorio"</string>
+<string name="decklist_toast_no_decks">"Non hai grimori salvati"</string>
+<string name="decklist_select_dialog_title">"Seleziona un grimorio"</string>
+<string name="decklist_delete_dialog_title">"Elimina un grimorio"</string>
+<string name="decklist_clear_dialog_text">"Sicuro di voler azzerare il grimorio corrente?"</string>
+<string name="decklist_share">"Condividi grimorio"</string>
+<string name="decklist_share_title">"Grimori MTG Familiar"</string>
+<string name="decklist_instants">"Istantanei"</string>
+<string name="decklist_sorceries">"Stregonerie"</string>
+<string name="decklist_others">"Altri"</string>
+<string name="decklist_unnamed_deck">"Grimorio senza nome"</string>
 
-    <!-- "Added Slovak Translation" was added -->
-    <string name="main_whats_new_text">"- Nella Ricerca, cerca le carte per costo di mana&lt;br&gt;
-- Nei Risultati, tieni premuta una carta per aggiungerla ad un mazzo o alle Carte Desiderate&lt;br&gt;
-- Nel Deck Builder, aggiungi carte al sideboard&lt;br&gt;
-- Nella sezione Scambio Carte e Carte Desiderate, ordina per ordine di aggiunta&lt;br&gt;
-- Nelle liste, tieni premuto per selezionare carte multiple e scorri per eliminarle&lt;br&gt;
-- Risoluzione bug e ottimizzazioni"</string>
-    <string name="card_view_send_to">"Condividi l'immagine usando"</string>
-    <string name="card_view_translated_dialog_title">"Nome della carta tradotto"</string>
-    <string name="pref_Portuguese">"Portoghese(Brasile)"</string>
-    <string name="pref_Chinese">"Cinese Semplificato"</string>
-    <string name="pref_Chinese_trad">"Cinese Tradizionale"</string>
-    <string name="pref_Korean">"Coreano"</string>
+<!-- "Added Slovak Translation" was added -->
+<string name="main_whats_new_text">"- Aggiunto il formato Pauper&lt;br&gt;
+- Aggiunta ricerca per filigrana&lt;br&gt;
+- Aggiunti controlli sulla legalità dei grimori&lt;br&gt;
+- Aggiunti i prezzi da TCGPlayer.com
+"</string>
+<string name="card_view_send_to">"Condividi l'immagine usando"</string>
+<string name="card_view_translated_dialog_title">"Nome della carta tradotto"</string>
+<string name="pref_Portuguese">"Portoghese(Brasile)"</string>
+<string name="pref_Chinese">"Cinese Semplificato"</string>
+<string name="pref_Chinese_trad">"Cinese Tradizionale"</string>
+<string name="pref_Korean">"Coreano"</string>
 
-    <!-- Only used for app translation, not card names -->
-    <string name="pref_Slovak">"Slovacco"</string>
-    <string name="pref_use_sound_instead_of_tts">"Usa suoni invece del motore TTS"</string>
-    <string name="Equals">"Uguale"</string>
-    <string name="DoesNotEqual">"Non è uguale"</string>
-    <string name="Contains">"Contiene"</string>
-    <string name="DoesNotContain">"Non contiene"</string>
-    <string name="NoComparison">"Nessun confronto"</string>
-    <string name="card_view_copied_to_clipboard">"Copiato negli appunti"</string>
-    <string name="wishlist_type_order">"Ordine aggiunto"</string>
-    <string name="pref_cat_decklist">"Lista mazzo"</string>
-    <string name="pref_decklist_totals_summary">"Mostra il prezzo totale nell'editor del mazzo"</string>
-    <string name="pref_tap_symbol_title">"Simbolo di tap"</string>
-    <string name="pref_tap_symbol_summary">"Quale simbolo di tap visualizzare"</string>
-    <string name="pref_tap_symbol_modern">"Ottava Edizione"</string>
-    <string name="pref_tap_symbol_old">"Quarta Edizione"</string>
-    <string name="pref_tap_symbol_older">"Edizione Rivisitata"</string>
-    <string name="pref_white_symbol_title">"Simbolo del Mana Bianco"</string>
-    <string name="pref_white_symbol_summary">"Quale simbolo del mana bianco visualizzare"</string>
-    <string name="pref_white_symbol_modern">"Era Glaciale"</string>
-    <string name="pref_white_symbol_old">"Edizione Limitata Alpha"</string>
-    <string name="pref_cat_list_general">"Liste Generiche"</string>
-    <string name="pref_undo_timeout_seconds_summary">"Numero di secondi per cui un elemento starà nello stato di annullamento prima di essere eliminato"</string>
-    <string name="pref_undo_timeout_seconds_title">"Timeout di Annullamento"</string>
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Slovacco"</string>
+<string name="pref_use_sound_instead_of_tts">"Usa suoni invece del motore TTS"</string>
+<string name="Equals">"Uguale"</string>
+<string name="DoesNotEqual">"Non è uguale"</string>
+<string name="Contains">"Contiene"</string>
+<string name="DoesNotContain">"Non contiene"</string>
+<string name="NoComparison">"Nessun confronto"</string>
+<string name="card_view_copied_to_clipboard">"Copiato negli appunti"</string>
+<string name="wishlist_type_order">"Ordine aggiunto"</string>
+<string name="pref_cat_decklist">"Lista mazzo"</string>
+<string name="pref_decklist_totals_summary">"Mostra il prezzo totale nell'editor del mazzo"</string>
+<string name="pref_tap_symbol_title">"Simbolo di tap"</string>
+<string name="pref_tap_symbol_summary">"Quale simbolo di tap visualizzare"</string>
+<string name="pref_tap_symbol_modern">"Ottava Edizione"</string>
+<string name="pref_tap_symbol_old">"Quarta Edizione"</string>
+<string name="pref_tap_symbol_older">"Edizione Rivisitata"</string>
+<string name="pref_white_symbol_title">"Simbolo del Mana Bianco"</string>
+<string name="pref_white_symbol_summary">"Quale simbolo del mana bianco visualizzare"</string>
+<string name="pref_white_symbol_modern">"Era Glaciale"</string>
+<string name="pref_white_symbol_old">"Edizione Limitata Alpha"</string>
+<string name="pref_cat_list_general">"Liste Generiche"</string>
+<string name="pref_undo_timeout_seconds_summary">"Numero di secondi per cui un elemento starà nello stato di annullamento prima di essere eliminato"</string>
+<string name="pref_undo_timeout_seconds_title">"Timeout di Annullamento"</string>
 
-    <!-- General Card List -->
-    <string name="cardlist_undo">"annulla"</string>
-    <string name="cardlist_delete_selected">"Elimina gli elementi selezionati"</string>
-    <string name="cardlist_item_deleted">"Rimosso"</string>
-    <string name="decklist_import_to_wishlist">"Importa la selezione nelle Carte Desiderate"</string>
-    <string name="decklist_save_as">"Salva Mazzo Come"</string>
-    <string name="decklist_saved_toast">"Mazzo %1$s salvato!"</string>
-    <string name="result_list_Add_to_decklist">"Aggiungi al mazzo"</string>
-    <string name="result_list_Add_to_wishlist">"Aggiungi a Carte Desiderate"</string>
-    <string name="pref_deck_price_summary">"Prezzo TCGPlayer da usare nel deck builder"</string>
-    <plurals name="decklist_cards_count">
-        <item quantity="one">"%1$d carta"</item>
-        <item quantity="other">"%1$d carte"</item>
-    </plurals>
+<!-- General Card List -->
+<string name="cardlist_undo">"annulla"</string>
+<string name="cardlist_delete_selected">"Elimina gli elementi selezionati"</string>
+<string name="cardlist_item_deleted">"Rimosso"</string>
+<string name="decklist_import_to_wishlist">"Importa la selezione nelle Carte Desiderate"</string>
+<string name="decklist_save_as">"Salva Mazzo Come"</string>
+<string name="decklist_saved_toast">"Mazzo %1$s salvato!"</string>
+<string name="result_list_Add_to_decklist">"Aggiungi al mazzo"</string>
+<string name="result_list_Add_to_wishlist">"Aggiungi a Carte Desiderate"</string>
+<string name="pref_deck_price_summary">"Prezzo TCGPlayer da usare nel deck builder"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d carta"</item>
+<item quantity="other">"%1$d carte"</item>
+</plurals>
+
+<!-- This is shown when a price download fails for an unknown reason -->
+<string name="price_error_unknown">"Errore nello scaricamento dei prezzi"</string>
+
+<!-- This is shown when a price download fails because the user isn't connected to the internet -->
+<string name="price_error_network">"Errore nello scaricamento dei prezzi [errore di rete]"</string>
+
+<!-- This is shown when a price download fails because there is a database error -->
+<string name="price_error_database">"Errore nello scaricamento dei prezzi [errore del database]"</string>
+
+<!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
+<string name="price_error_api_key">"Errore nello scaricamento dei prezzi [errore nelle API]"</string>
+
+<!-- This is shown when a price download fails because the user is looking up a card that has no paper printings, like Magic Online's Vintage Masters -->
+<string name="price_error_online_only">"La carta è disponibile solo online"</string>
+
+<!-- This is the "hint text" on the search page for the watermark field, like https://scryfall.com/card/rtr/164 has the Golgari watermark -->
+<string name="search_watermark">"Filigrana"</string>
+
+<!-- This is a pricing option shown many places. Previously the options were Low, Average, and High. Now Market is another option. See: https://store.tcgplayer.com/help/marketprice -->
+<string name="trader_Market">"Mercato"</string>
+
+<!-- Pretty much the same as pref_deck_price_summary or pref_trade_price_summary.
+This is shown in the settings menu for what price to display in the wishlist. -->
+<string name="pref_wishlist_price_summary">"Prezzo di TCGPlayer da usare nella lista carte desiderate"</string>
+
+<!-- This is the title for the dialog which displays deck legalities (Modern, Standard, Legacy, Pauper, etc). -->
+<string name="decklist_legality">"Legalità grimorio"</string>
+
+<!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
+Standard ....... Not Legal -->
+<string name="decklist_not_legal">"Non legale"</string>
 </resources>

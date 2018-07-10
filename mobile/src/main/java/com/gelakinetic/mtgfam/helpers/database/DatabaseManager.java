@@ -22,8 +22,9 @@ package com.gelakinetic.mtgfam.helpers.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.support.annotation.NonNull;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
 
 /**
  * All databases should be opened through this class, so that database access is thread-safe
@@ -38,7 +39,7 @@ public class DatabaseManager {
      *
      * @param context A singleton DatabaseHelper to open databases with, later
      */
-    public static synchronized void initializeInstance(Context context) {
+    public static synchronized void initializeInstances(Context context) {
         mDatabase.initializeInstance(context);
         mTransactionalDatabase.initializeInstance(context);
     }
@@ -50,8 +51,8 @@ public class DatabaseManager {
      * @param isTransactional Whether we should get a transactional instance or not
      * @return The DatabaseManager
      */
-    public static synchronized DatabaseManager getInstance(Context context,
-                                                           boolean isTransactional) {
+    private static synchronized DatabaseManager getInstance(Context context,
+                                                            boolean isTransactional) {
         if (isTransactional) {
             return mTransactionalDatabase.getInstance(context);
 
@@ -64,26 +65,56 @@ public class DatabaseManager {
     /**
      * Opens a database, either a transactional one or not
      *
+     * @param context         A context to construct a DatabaseHelper if necessary
      * @param isTransactional Whether or not this database operation is transactional
+     * @param handle          This is set to a value unique to this database access and must be used
+     *                        to close the access later
+     * @return A SQLiteDatabase object used for database access
+     * @throws FamiliarDbException if the database can't be opened
      */
-    public synchronized SQLiteDatabase openDatabase(boolean isTransactional) throws FamiliarDbException {
+    public static synchronized SQLiteDatabase openDatabase(Context context, boolean isTransactional,
+                                                           @NonNull FamiliarDbHandle handle) throws FamiliarDbException {
+        return getInstance(context, isTransactional).openDatabase(isTransactional, handle);
+    }
+
+    /**
+     * Opens a database, either a transactional one or not
+     *
+     * @param isTransactional Whether or not this database operation is transactional
+     * @param handle          This is set to a value unique to this database access and must be used
+     *                        to close the access later
+     * @return A SQLiteDatabase object used for database access
+     * @throws FamiliarDbException if the database can't be opened
+     */
+    private synchronized SQLiteDatabase openDatabase(boolean isTransactional,
+                                                     @NonNull FamiliarDbHandle handle) throws FamiliarDbException {
         if (isTransactional) {
-            return mTransactionalDatabase.openDatabase();
+            return mTransactionalDatabase.openDatabase(handle);
         } else {
-            return mDatabase.openDatabase();
+            return mDatabase.openDatabase(handle);
         }
     }
 
     /**
      * Close a database opened with this class
      *
-     * @param isTransactional Whether we should close the transactional database or not
+     * @param context A context to construct a DatabaseHelper if necessary
+     * @param handle  The handle from openDatabase, used to close this instance
      */
-    public synchronized void closeDatabase(boolean isTransactional) {
-        if (isTransactional) {
-            mTransactionalDatabase.closeDatabase();
+    public static synchronized void closeDatabase(Context context, @NonNull FamiliarDbHandle handle) {
+        getInstance(context, handle.isTransactional()).closeDatabase(handle);
+    }
+
+    /**
+     * Close a database opened with this class
+     *
+     * @param handle The handle from openDatabase, used to close this instance
+     */
+    private synchronized void closeDatabase(@NonNull FamiliarDbHandle handle) {
+        if (handle.isTransactional()) {
+            mTransactionalDatabase.closeDatabase(handle);
         } else {
-            mDatabase.closeDatabase();
+            mDatabase.closeDatabase(handle);
         }
     }
 
@@ -93,7 +124,7 @@ public class DatabaseManager {
      * entry points: a writable transactional one, and a readable one.
      */
     private static class AtomicDatabase {
-        private final AtomicInteger mOpenCounter = new AtomicInteger();
+        private final ArrayList<FamiliarDbHandle> mOpenHandles = new ArrayList<>();
         private final boolean mTransactional;
         private SQLiteDatabase mDatabase;
         private DatabaseManager mDatabaseManager;
@@ -104,7 +135,7 @@ public class DatabaseManager {
          *
          * @param isTransactional true if the object is transactional, false otherwise
          */
-        public AtomicDatabase(boolean isTransactional) {
+        AtomicDatabase(boolean isTransactional) {
             mTransactional = isTransactional;
         }
 
@@ -135,13 +166,26 @@ public class DatabaseManager {
         }
 
         /**
-         * Opens a database
+         * Opens a database and sets the handle through a parameter
          *
+         * @param handle This is set to a value unique to this database access and must be used
+         *               to close the access later
          * @return a SQLiteDatabase to query or whatever
+         * @throws FamiliarDbException if the database can't be opened
          */
-        public synchronized SQLiteDatabase openDatabase() throws FamiliarDbException {
+        synchronized SQLiteDatabase openDatabase(@NonNull FamiliarDbHandle handle) throws FamiliarDbException {
+            // Assign this open a handle
+            if (mOpenHandles.isEmpty()) {
+                // Start with a nonzero value
+                handle.setInfo(1, mTransactional);
+            } else {
+                // Or use one more than the last value
+                handle.setInfo(mOpenHandles.get(mOpenHandles.size() - 1).getHandle() + 1, mTransactional);
+            }
+
             try {
-                if (mOpenCounter.incrementAndGet() == 1) {
+                // Only open a database if one isn't open already, i.e. there are no handles
+                if (mOpenHandles.isEmpty()) {
                     // Opening new database
                     if (mTransactional) {
                         mDatabase = mDatabaseHelper.getWritableDatabase();
@@ -152,6 +196,8 @@ public class DatabaseManager {
                         mDatabase = mDatabaseHelper.getReadableDatabase();
                     }
                 }
+                // Add the handle to the collection of open handles only if the open was successful
+                mOpenHandles.add(handle);
                 return mDatabase;
             } catch (SQLiteException e) {
                 throw new FamiliarDbException(e);
@@ -160,13 +206,21 @@ public class DatabaseManager {
 
         /**
          * Close a database opened with this object
+         *
+         * @param handle The handle from openDatabase, used to close this instance
          */
-        public synchronized void closeDatabase() {
-            if (mOpenCounter.decrementAndGet() == 0) {
-                if (mTransactional) {
-                    mDatabase.execSQL("COMMIT");
+        synchronized void closeDatabase(@NonNull FamiliarDbHandle handle) {
+            // If there was a successful open with this handle
+            if (mOpenHandles.contains(handle)) {
+                // Remove the handle from the collection of open handles
+                mOpenHandles.remove(handle);
+                // Close the database
+                if (mOpenHandles.isEmpty()) {
+                    if (mTransactional) {
+                        mDatabase.execSQL("COMMIT");
+                    }
+                    mDatabase.close();
                 }
-                mDatabase.close();
             }
         }
     }

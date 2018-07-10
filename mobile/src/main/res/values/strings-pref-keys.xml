@@ -28,6 +28,7 @@
     <string name="key_greenMana" translatable="false">greenMana</string>
     <string name="key_colorlessMana" translatable="false">colorlessMana</string>
     <string name="key_spellCount" translatable="false">spellCount</string>
+    <string name="key_energy" translatable="false">energy</string>
     <string name="key_lastRulesUpdate" translatable="false">lastRulesUpdate</string>
     <string name="key_lastMTRUpdate" translatable="false">lastMTRUpdate</string>
     <string name="key_lastIPGUpdate" translatable="false">lastIPGUpdate</string>
@@ -60,6 +61,7 @@
     <string name="key_player_data" translatable="false">player_data</string>
     <string name="key_timerSound" translatable="false">timerSound</string>
     <string name="key_tradePrice" translatable="false">tradePrice</string>
+    <string name="key_wishlistPrice" translatable="false">wishlistPrice</string>
     <string name="key_date" translatable="false">date</string>
     <string name="key_lastUpdate" translatable="false">lastUpdate</string>
     <string name="key_lastTCGNameUpdate" translatable="false">lastTCGNameUpdate</string>
@@ -87,4 +89,9 @@
     <string name="key_undoTimeout" translatable="false">undo_timeout</string>
     <string name="key_showTotalPriceDecklistPref" translatable="false">showTotalPriceDecklistPref</string>
     <string name="key_deckPrice" translatable="false">deckPrice</string>
+    <string name="key_TcgpToken" translatable="false">tcgp_token</string>
+    <string name="key_TcgpTokenExpirationDate" translatable="false">tcgp_token_expiration_date</string>
+    <string name="key_LastDecklistLoaded" translatable="false">last_decklist_loaded</string>
+    <string name="key_LastTradeLoaded" translatable="false">last_trade_loaded</string>
+
 </resources>

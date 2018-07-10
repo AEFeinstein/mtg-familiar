@@ -63,10 +63,10 @@ class CardAndSetParser {
     /**
      * If a set has a patch, and doesn't exist in the database, this is called to parse an InputStream of JSON and add
      * it into the database.
-     *
+     * <p>
      * The JSON uses single character keys, which is a silly thing I did in the name of compression. The patches are
      * zipped anyway, so it doesn't matter much, but we're stuck with it.
-     *
+     * <p>
      * There is some special processing for weird power and toughness too
      *
      * @param reader     A JsonRead to parse from

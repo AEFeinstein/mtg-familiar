@@ -29,10 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -149,27 +147,24 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         adb.title(getResources().getString(R.string.wishlist_sort_by));
         adb.negativeText(R.string.dialog_cancel);
         adb.positiveText(getActivity().getResources().getString(R.string.dialog_ok));
-        adb.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                /* Reordering the entries reorders the pairs */
-                String orderByStr = "";
-                boolean first = true;
-                for (SortOption p : options) {
-                    if (!first) {
-                        orderByStr += ",";
-                    }
-                    orderByStr += (p.mDatabaseKey);
-                    if (p.mAscending) {
-                        orderByStr += " " + SQL_ASC;
-                    } else {
-                        orderByStr += " " + SQL_DESC;
-                    }
-                    first = false;
+        adb.onPositive((dialog, which) -> {
+            /* Reordering the entries reorders the pairs */
+            StringBuilder orderByStr = new StringBuilder();
+            boolean first = true;
+            for (SortOption p : options) {
+                if (!first) {
+                    orderByStr.append(",");
                 }
-                if (null != getParentFamiliarFragment()) {
-                    getParentFamiliarFragment().receiveSortOrder(orderByStr);
+                orderByStr.append(p.mDatabaseKey);
+                if (p.mAscending) {
+                    orderByStr.append(" ").append(SQL_ASC);
+                } else {
+                    orderByStr.append(" ").append(SQL_DESC);
                 }
+                first = false;
+            }
+            if (null != getParentFamiliarFragment()) {
+                getParentFamiliarFragment().receiveSortOrder(orderByStr.toString());
             }
         });
 
@@ -197,8 +192,9 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
          * @param viewType Unused
          * @return The newly inflated sortItemViewHolder
          */
+        @NonNull
         @Override
-        public sortItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public sortItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             /* This is where the individual views get inflated */
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sort_list_item, parent, false);
             return new sortItemViewHolder(view);
@@ -212,18 +208,15 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
          * @param position The item's position
          */
         @Override
-        public void onBindViewHolder(final sortItemViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final sortItemViewHolder holder, int position) {
             /* Fill the view with data */
             super.onBindViewHolder(holder, position);
             holder.mText.setText(mItemList.get(position).mName);
             holder.mCheckbox.setChecked(mItemList.get(position).mAscending);
-            holder.mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    int position = holder.getAdapterPosition();
-                    if (RecyclerView.NO_POSITION != position) {
-                        mItemList.get(position).mAscending = b;
-                    }
+            holder.mCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
+                int position1 = holder.getAdapterPosition();
+                if (RecyclerView.NO_POSITION != position1) {
+                    mItemList.get(position1).mAscending = b;
                 }
             });
             holder.itemView.setTag(mItemList.get(position));
@@ -265,7 +258,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
 
     public static class SortOption implements Serializable {
         final String mName;
-        boolean mAscending = true;
+        boolean mAscending;
         final String mDatabaseKey;
         final int mId;
 

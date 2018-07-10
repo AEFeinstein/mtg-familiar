@@ -20,10 +20,10 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
@@ -67,7 +67,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @return The view to be shown
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.deck_counter_frag, container, false);
@@ -97,44 +97,14 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
         mDeckCountText.setText("" + mDeckCount);
 
         /* Attach actions to all the buttons */
-        myFragmentView.findViewById(R.id.deck_counter_1).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(1);
-            }
-        });
-        myFragmentView.findViewById(R.id.deck_counter_2).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(2);
-            }
-        });
-        myFragmentView.findViewById(R.id.deck_counter_3).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(3);
-            }
-        });
-        myFragmentView.findViewById(R.id.deck_counter_4).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(4);
-            }
-        });
+        myFragmentView.findViewById(R.id.deck_counter_1).setOnClickListener(v -> updateCardCount(1));
+        myFragmentView.findViewById(R.id.deck_counter_2).setOnClickListener(v -> updateCardCount(2));
+        myFragmentView.findViewById(R.id.deck_counter_3).setOnClickListener(v -> updateCardCount(3));
+        myFragmentView.findViewById(R.id.deck_counter_4).setOnClickListener(v -> updateCardCount(4));
 
-        myFragmentView.findViewById(R.id.deck_counter_undo).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(COUNT_FLAG_UNDO);
-            }
-        });
+        myFragmentView.findViewById(R.id.deck_counter_undo).setOnClickListener(v -> updateCardCount(COUNT_FLAG_UNDO));
 
-        myFragmentView.findViewById(R.id.deck_counter_reset).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(COUNT_FLAG_RESET);
-            }
-        });
+        myFragmentView.findViewById(R.id.deck_counter_reset).setOnClickListener(v -> updateCardCount(COUNT_FLAG_RESET));
         return myFragmentView;
     }
 
@@ -158,7 +128,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
 
         outState.putInt(DECK_COUNT_KEY, mDeckCount);
         outState.putString(SEQUENCE_KEY, ArrayToString(mDeckCountSequence));
@@ -173,13 +143,13 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @return A String representation of the list
      */
     private String ArrayToString(ArrayList<Integer> list) {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         if (list != null) {
             for (Integer i : list) {
-                string += i + ",";
+                string.append(i).append(",");
             }
         }
-        return string;
+        return string.toString();
     }
 
     /**

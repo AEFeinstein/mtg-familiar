@@ -19,16 +19,24 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,7 +63,7 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @return The view to display
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Inflate the view, pull out UI elements */
         View view = inflater.inflate(R.layout.html_frag, container, false);
@@ -63,19 +71,33 @@ public class HtmlDocFragment extends FamiliarFragment {
         final WebView webView = view.findViewById(R.id.webview);
         final ProgressBar progressBar = view.findViewById(R.id.progress_bar);
 
-        /* The progress bar will spin until the web view is loaded */
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
+                /* The progress bar will spin until the web view is loaded */
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+                    getActivity().runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 }
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Uri uri = Uri.parse(url);
+                if (uri.getAuthority().toLowerCase().equals("gatherer.wizards.com")) {
+                    /* Display card links internally */
+                    startCardViewFrag(uri.getQueryParameter("name"));
+                } else {
+                    /* Otherwise launch links externally */
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    getContext().startActivity(i);
+                }
+                return true;
+            }
         });
+
+        /* Enable zoom */
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
 
         /* Get the document from the bundle, load it */
         File file = new File(getActivity().getFilesDir(), getArguments().getString(JudgesCornerFragment.HTML_DOC));
@@ -102,12 +124,32 @@ public class HtmlDocFragment extends FamiliarFragment {
         webView.loadDataWithBaseURL(null, html.toString(), "text/html", "utf-8", null);
 
         /* Set up the button to jump to the top of the document */
-        view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                webView.scrollTo(0, 0);
-            }
-        });
+        view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(v -> webView.scrollTo(0, 0));
 
         return view;
+    }
+
+    /**
+     * Convenience method to start a card view fragment.
+     *
+     * @param name The name of the card to launch
+     */
+    private void startCardViewFrag(String name) {
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            Bundle args = new Bundle();
+            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+            long cardIds[] = {CardDbAdapter.getIdFromName(name, database)};
+
+            /* Load the array of ids and position into the bundle, start the fragment */
+            args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
+            CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();
+            startNewFragment(cardViewPagerFragment, args);
+        } catch (SQLiteException | FamiliarDbException | IllegalStateException ignored) {
+            /* Eh */
+        } finally {
+            DatabaseManager.closeDatabase(getActivity(), handle);
+        }
     }
 }

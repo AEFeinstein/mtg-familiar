@@ -23,7 +23,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
@@ -88,12 +87,9 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                     getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.getActivity())
                             .title(R.string.search_formats)
                             .items((CharSequence[]) getParentSearchViewFragment().mFormatNames)
-                            .itemsCallbackSingleChoice(getParentSearchViewFragment().mSelectedFormat, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                    getParentSearchViewFragment().mSelectedFormat = which;
-                                    return true;
-                                }
+                            .itemsCallbackSingleChoice(getParentSearchViewFragment().mSelectedFormat, (dialog, itemView, which, text) -> {
+                                getParentSearchViewFragment().mSelectedFormat = which;
+                                return true;
                             })
                             .positiveText(R.string.dialog_ok)
                             .build();
@@ -108,12 +104,9 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                             .positiveText(R.string.dialog_ok)
                             .items((CharSequence[]) getParentSearchViewFragment().mRarityNames)
                             .alwaysCallMultiChoiceCallback()
-                            .itemsCallbackMultiChoice(toIntegerArray(getParentSearchViewFragment().mRarityCheckedIndices), new MaterialDialog.ListCallbackMultiChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                                    getParentSearchViewFragment().mRarityCheckedIndices = toIntArray(which);
-                                    return true;
-                                }
+                            .itemsCallbackMultiChoice(toIntegerArray(getParentSearchViewFragment().mRarityCheckedIndices), (dialog, which, text) -> {
+                                getParentSearchViewFragment().mRarityCheckedIndices = toIntArray(which);
+                                return true;
                             })
                             .build();
                     if (null != getParentSearchViewFragment()) {

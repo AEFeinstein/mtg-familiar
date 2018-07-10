@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -20,11 +19,11 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/trade_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/trade_row"
-    android:background="?attr/selectable_row">
+    android:background="?attr/selectable_row"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,20 +66,12 @@
             app:srcCompat="@drawable/glyph_foil" />
 
         <TextView
-            android:id="@+id/traderNumber"
+            android:id="@+id/traderRowPrice"
             style="@style/text.small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="@string/trader_default_number_of" />
-
-        <TextView
-            android:id="@+id/traderRowPrice"
-            style="@style/text.small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
             android:text="@string/default_price" />
 
     </LinearLayout>

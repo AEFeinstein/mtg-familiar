@@ -21,17 +21,15 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -90,21 +88,16 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
             case DIALOG_PRICE_SETTING: {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(getString(R.string.trader_Low),
-                                getString(R.string.trader_Average), getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentWishlistFragment().getPriceSetting() != which) {
-                                    getParentWishlistFragment().setPriceSetting(which);
-                                    PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentWishlistFragment().getPriceSetting()));
-                                    getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                                    getParentWishlistFragment().updateTotalPrices(0);
-                                }
-                                dialog.dismiss();
-                                return true;
+                        .items(getResources().getStringArray(R.array.trade_option_entries))
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
+                            if (getParentWishlistFragment().getPriceSetting().ordinal() != which) {
+                                getParentWishlistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
+                                PreferenceAdapter.setWishlistPrice(getContext(), getParentWishlistFragment().getPriceSetting());
+                                getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                getParentWishlistFragment().updateTotalPrices(0);
                             }
+                            dialog.dismiss();
+                            return true;
                         })
                         .build();
             }
@@ -113,19 +106,18 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .title(R.string.wishlist_empty_dialog_title)
                         .content(R.string.wishlist_empty_dialog_text)
                         .positiveText(R.string.dialog_ok)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                WishlistHelpers.ResetCards(getActivity());
+                        .onPositive((dialog, which) -> {
+                            WishlistHelpers.ResetCards(getActivity());
+                            synchronized (getParentWishlistFragment().mCompressedWishlist) {
                                 getParentWishlistFragment().mCompressedWishlist.clear();
-                                getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                                getParentWishlistFragment().updateTotalPrices(0);
-                                /* Clear input too */
-                                getParentWishlistFragment().clearCardNameInput();
-                                getParentWishlistFragment().clearCardNumberInput();
-                                getParentWishlistFragment().uncheckFoilCheckbox();
-                                dialog.dismiss();
                             }
+                            getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                            getParentWishlistFragment().updateTotalPrices(0);
+                            /* Clear input too */
+                            getParentWishlistFragment().clearCardNameInput();
+                            getParentWishlistFragment().clearCardNumberInput();
+                            getParentWishlistFragment().uncheckFoilCheckbox();
+                            dialog.dismiss();
                         })
                         .negativeText(R.string.dialog_cancel)
                         .cancelable(true)

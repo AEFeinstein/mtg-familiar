@@ -61,7 +61,7 @@ public abstract class NumberButtonOnClickListener implements View.OnClickListene
         onDialogNumberSet(number.intValue());
     }
 
-    public Integer getInitialValue() {
+    protected Integer getInitialValue() {
         return null;
     }
 
@@ -69,13 +69,13 @@ public abstract class NumberButtonOnClickListener implements View.OnClickListene
         return "";
     }
 
-    public Integer getMaxNumber() {
+    protected Integer getMaxNumber() {
         return 99;
     }
 
-    public Integer getMinNumber() {
+    protected Integer getMinNumber() {
         return 0;
     }
 
-    public abstract void onDialogNumberSet(Integer number);
+    protected abstract void onDialogNumberSet(Integer number);
 }

@@ -55,7 +55,6 @@
         android:orientation="horizontal">
 
         <SeekBar
-            android:id="@+id/seekBarPrefSeekBar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

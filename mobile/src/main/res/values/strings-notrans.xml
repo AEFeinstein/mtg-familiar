@@ -38,7 +38,6 @@
     <string name="mana_pool_zero" translatable="false">0</string>
 
     <!-- Card trading activity -->
-    <string name="trader_default_number_of" translatable="false">1x</string>
 
     <!-- Default language -->
     <string name="main_card_language" translatable="false">en</string>

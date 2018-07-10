@@ -26,6 +26,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -111,11 +112,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
         if (m9000Player != null) {
-            m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                public void onCompletion(MediaPlayer mp) {
-                    onUtteranceCompleted(LIFE_ANNOUNCE);
-                }
-            });
+            m9000Player.setOnCompletionListener(mp -> onUtteranceCompleted(LIFE_ANNOUNCE));
         }
     }
 
@@ -149,7 +146,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @return The inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mListSizeWidth = -1;
         mListSizeHeight = -1;
 
@@ -168,63 +165,40 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         }
         ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
         assert viewTreeObserver != null;
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            public void onGlobalLayout() {
-                if (isVisible()) {
-                    boolean changed = false;
-                    if (mListSizeHeight < mScrollView.getHeight()) {
-                        mListSizeHeight = mScrollView.getHeight();
-                        changed = true;
-                    }
-                    if (mListSizeWidth < mScrollView.getWidth()) {
-                        mListSizeWidth = mScrollView.getWidth();
-                        changed = true;
-                    }
-                    if (changed) {
-                        if (getActivity().getResources().getConfiguration().orientation
-                                == Configuration.ORIENTATION_LANDSCAPE) {
-                            if (mDisplayMode == DISPLAY_COMMANDER) {
-                                /* Conveniently takes care of re-adding the sized views in the right number of rows */
-                                changeDisplayMode(false);
-                            }
-                        }
-                        for (LcPlayer player : mPlayers) {
-                            player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                                    getActivity().getResources().getConfiguration().orientation
-                                            == Configuration.ORIENTATION_PORTRAIT
-                            );
+        viewTreeObserver.addOnGlobalLayoutListener(() -> {
+            if (isVisible()) {
+                boolean changed = false;
+                if (mListSizeHeight < mScrollView.getHeight()) {
+                    mListSizeHeight = mScrollView.getHeight();
+                    changed = true;
+                }
+                if (mListSizeWidth < mScrollView.getWidth()) {
+                    mListSizeWidth = mScrollView.getWidth();
+                    changed = true;
+                }
+                if (changed) {
+                    if (getActivity().getResources().getConfiguration().orientation
+                            == Configuration.ORIENTATION_LANDSCAPE) {
+                        if (mDisplayMode == DISPLAY_COMMANDER) {
+                            /* Conveniently takes care of re-adding the sized views in the right number of rows */
+                            changeDisplayMode(false);
                         }
                     }
+                    resizeAllPlayers();
                 }
             }
         });
 
         mPoisonButton = myFragmentView.findViewById(R.id.poison_button);
-        mPoisonButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                setStatDisplaying(STAT_POISON);
-            }
-        });
+        mPoisonButton.setOnClickListener(view -> setStatDisplaying(STAT_POISON));
 
         mLifeButton = myFragmentView.findViewById(R.id.life_button);
-        mLifeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                setStatDisplaying(STAT_LIFE);
-            }
-        });
+        mLifeButton.setOnClickListener(view -> setStatDisplaying(STAT_LIFE));
 
         mCommanderButton = myFragmentView.findViewById(R.id.commander_button);
-        mCommanderButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                setStatDisplaying(STAT_COMMANDER);
-            }
-        });
+        mCommanderButton.setOnClickListener(view -> setStatDisplaying(STAT_COMMANDER));
 
-        myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                showDialog(LifeCounterDialogFragment.DIALOG_RESET_CONFIRM);
-            }
-        });
+        myFragmentView.findViewById(R.id.reset_button).setOnClickListener(view -> showDialog(LifeCounterDialogFragment.DIALOG_RESET_CONFIRM));
 
         if (savedInstanceState != null) {
             mStatDisplaying = savedInstanceState.getInt(DISPLAY_MODE, STAT_LIFE);
@@ -240,7 +214,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(DISPLAY_MODE, mStatDisplaying);
         super.onSaveInstanceState(outState);
     }
@@ -543,7 +517,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             if (mPlayers.size() > 0 && null != mPlayers.get(0).mView) {
                 mCommanderPlayerView.addView(mPlayers.get(0).mView);
                 mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
-                        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+                                .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                        mPlayers.size() == 1);
             }
         } else {
             mCommanderPlayerView.setVisibility(View.GONE);
@@ -568,17 +543,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             return;
         }
         if (mDisplayMode == DISPLAY_COMMANDER) {
-            player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                        /* Show this player's info in mCommanderPlayerView */
-                    mCommanderPlayerView.removeAllViews();
-                    mCommanderPlayerView.addView(player.mView);
-                    player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                            getActivity().getResources().getConfiguration().orientation
-                                    == Configuration.ORIENTATION_PORTRAIT
-                    );
-                }
+            player.mCommanderRowView.setOnClickListener(view -> {
+                /* Show this player's info in mCommanderPlayerView */
+                mCommanderPlayerView.removeAllViews();
+                mCommanderPlayerView.addView(player.mView);
+                player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                        getActivity().getResources().getConfiguration().orientation
+                                == Configuration.ORIENTATION_PORTRAIT, mPlayers.size() == 1
+                );
             });
 
             if (mPlayers.size() == 1) {
@@ -587,10 +559,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         }
 
         /* If the size has already been measured, set the player's size */
-        if (mListSizeHeight != -1) {
-            player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                    getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-        }
+        resizeAllPlayers();
     }
 
     /**
@@ -655,6 +624,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         player.mDefaultLifeTotal = getDefaultLife();
         player.mLife = player.mDefaultLifeTotal;
 
+        resizeAllPlayers();
+
         mPlayers.add(player);
     }
 
@@ -679,7 +650,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 mLargestPlayerNumber = number;
             }
         } catch (NumberFormatException e) {
-                /* eat it */
+            /* eat it */
         }
 
         mPlayers.add(player);
@@ -833,12 +804,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     mTtsInit = true;
                     if (mIsSearchViewOpen) {
                         /* Search view is open, pend menu refresh */
-                        mAfterSearchClosedRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                getActivity().invalidateOptionsMenu();
-                            }
-                        };
+                        mAfterSearchClosedRunnable = () -> getActivity().invalidateOptionsMenu();
                     } else {
                         /* Redraw menu */
                         getActivity().invalidateOptionsMenu();
@@ -944,6 +910,19 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             }
         } else {
             mAudioManager.abandonAudioFocus(this);
+        }
+    }
+
+    /**
+     * Resize all players according to the measured screen size
+     */
+    public void resizeAllPlayers() {
+        if (mListSizeHeight != -1) {
+            for (LcPlayer player : mPlayers) {
+                player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                        getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                        mPlayers.size() == 1);
+            }
         }
     }
 }

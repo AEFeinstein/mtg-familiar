@@ -35,7 +35,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -46,13 +45,10 @@ import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
 
@@ -63,13 +59,7 @@ import java.util.ArrayList;
 public abstract class FamiliarListFragment extends FamiliarFragment {
 
     /* Pricing */
-    public static final int LOW_PRICE = 0;
-    public static final int AVG_PRICE = 1;
-    public static final int HIGH_PRICE = 2;
-    public static final int FOIL_PRICE = 3;
     static final String PRICE_FORMAT = "$%.02f";
-
-    private int mPriceFetchRequests = 0;
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -139,29 +129,19 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         // Then set up the checkbox
         mCheckboxFoil = fragmentView.findViewById(R.id.list_foil);
-        mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
+        mCheckboxFoil.setOnLongClickListener(view -> {
 
-            @Override
-            public boolean onLongClick(View view) {
-
-                /* Lock the checkbox on long click */
-                mCheckboxFoilLocked = true;
-                mCheckboxFoil.setChecked(true);
-                return true;
-
-            }
+            /* Lock the checkbox on long click */
+            mCheckboxFoilLocked = true;
+            mCheckboxFoil.setChecked(true);
+            return true;
 
         });
-        mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckboxFoil.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (!isChecked) {
-                    /* Unlock the checkbox when the user unchecks it */
-                    mCheckboxFoilLocked = false;
-                }
-
+            if (!isChecked) {
+                /* Unlock the checkbox when the user unchecks it */
+                mCheckboxFoilLocked = false;
             }
 
         });
@@ -172,7 +152,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         // Set up total price views
         mTotalPriceFields.clear();
         for (int resId : priceViewIds) {
-            mTotalPriceFields.add((TextView) fragmentView.findViewById(resId));
+            mTotalPriceFields.add(fragmentView.findViewById(resId));
         }
         mTotalPriceDividers.clear();
         if (null != priceDividerIds) {
@@ -229,7 +209,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Deselects all currently selected items from all the adapters
      */
-    public void adaptersDeselectAll() {
+    private void adaptersDeselectAll() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deselectAll();
         }
@@ -238,7 +218,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Sets all adapters in select mode
      */
-    public void adaptersSetAllSelectedMode() {
+    private void adaptersSetAllSelectedMode() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.setInSelectMode(true);
         }
@@ -310,10 +290,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         }
 
                         // Make a snackbar to undo this delete
-                        Snackbar.make(getFamiliarActivity().findViewById(R.id.fragment_container),
-                                "",
-                                PreferenceAdapter.getUndoTimeout(getContext()))
-                                .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+                        SnackbarWrapper.makeAndShowText(getFamiliarActivity(), "", PreferenceAdapter.getUndoTimeout(getContext()), R.string.cardlist_undo,
+                                new View.OnClickListener() {
                                     /**
                                      * When "Undo" is clicked, readd the removed items to the underlying list,
                                      * remove them from the undo list, and notify the adapter that it was changed
@@ -326,8 +304,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                             adapter.undoDelete();
                                         }
                                     }
-                                })
-                                .addCallback(new Snackbar.Callback() {
+                                },
+                                new Snackbar.Callback() {
                                     /**
                                      * When the snackbar is dismissed, depending on how it was dismissed, either
                                      * clear the undo buffer of all items and notify the adapter, or ignore it
@@ -359,8 +337,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                             }
                                         }
                                     }
-                                })
-                                .show();
+                                });
+
                         mode.finish();
                         if (shouldShowPrice()) {
                             updateTotalPrices(TradeFragment.BOTH);
@@ -372,7 +350,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
                                 ((DecklistFragment.DecklistDataAdapter) getCardDataAdapter(0)).getSelectedItems();
                         for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                            WishlistHelpers.addItemToWishlist(getContext(),
+                            WishlistHelpers.addItemToWishlist(getActivity(),
                                     info.convertToWishlist());
                         }
                         mode.finish();
@@ -475,124 +453,64 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public void loadPrice(final MtgCard data) {
 
         /* If the priceInfo is already loaded, don't bother performing a query */
-        if (data.priceInfo != null) {
-            if (data.foil) {
-                data.price = (int) (data.priceInfo.mFoilAverage * 100);
-            } else {
-                switch (getPriceSetting()) {
-                    case LOW_PRICE: {
-                        data.price = (int) (data.priceInfo.mLow * 100);
-                        break;
-                    }
-                    default:
-                    case AVG_PRICE: {
-                        data.price = (int) (data.priceInfo.mAverage * 100);
-                        break;
-                    }
-                    case HIGH_PRICE: {
-                        data.price = (int) (data.priceInfo.mHigh * 100);
-                        break;
-                    }
-                    case FOIL_PRICE: {
-                        data.price = (int) (data.priceInfo.mFoilAverage * 100);
-                        break;
-                    }
-                }
-            }
+        if (data.mPriceInfo != null) {
+            data.mPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getPriceSetting()) * 100);
         } else {
-            PriceFetchRequest priceRequest = new PriceFetchRequest(data.mName, data.setCode, data.mNumber, -1, getActivity());
-            mPriceFetchRequests++;
-            getFamiliarActivity().setLoading();
-            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.mName + "-" +
-                    data.setCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
-                /**
-                 * Loading the price for this card failed and threw a spiceException
-                 *
-                 * @param spiceException The exception thrown when trying to load this card's price
-                 */
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                /* because this can return when the fragment is in the background */
-                    if (FamiliarListFragment.this.isAdded()) {
-                        onCardPriceLookupFailure(data, spiceException);
-                        mPriceFetchRequests--;
-                        if (mPriceFetchRequests == 0) {
-                            getFamiliarActivity().clearLoading();
-                        }
-                        for (CardDataAdapter adapter : mCardDataAdapters) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-                /**
-                 * Loading the price for this card succeeded. Set it.
-                 *
-                 * @param result The price for this card
-                 */
-                @Override
-                public void onRequestSuccess(final PriceInfo result) {
-                    /* Sanity check */
-                    if (result == null) {
-                        data.priceInfo = null;
-                    } else {
-                        /* Set the PriceInfo object */
-                        data.priceInfo = result;
-
-                        /* Only reset the price to the downloaded one if the old price isn't custom */
-                        if (!data.customPrice) {
-                            if (data.foil) {
-                                data.price = (int) (result.mFoilAverage * 100);
+            try {
+                getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
+                        result -> {
+                            // This is not run on the UI thread
+                            /* Sanity check */
+                            if (result == null) {
+                                data.mPriceInfo = null;
+                                data.mMessage = getString(R.string.card_view_price_not_found);
                             } else {
-                                switch (getPriceSetting()) {
-                                    case LOW_PRICE: {
-                                        data.price = (int) (result.mLow * 100);
-                                        break;
-                                    }
-                                    default:
-                                    case AVG_PRICE: {
-                                        data.price = (int) (result.mAverage * 100);
-                                        break;
-                                    }
-                                    case HIGH_PRICE: {
-                                        data.price = (int) (result.mHigh * 100);
-                                        break;
-                                    }
-                                    case FOIL_PRICE: {
-                                        data.price = (int) (result.mFoilAverage * 100);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        /* Clear the message */
-                        data.message = null;
-                    }
+                                /* Set the PriceInfo object */
+                                data.mPriceInfo = result;
 
-                    /* because this can return when the fragment is in the background */
-                    if (FamiliarListFragment.this.isAdded()) {
-                        onCardPriceLookupSuccess(data, result);
-                        mPriceFetchRequests--;
-                        if (mPriceFetchRequests == 0) {
-                            getFamiliarActivity().clearLoading();
-                        }
-                        for (CardDataAdapter adapter : mCardDataAdapters) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            });
+                                /* Only reset the price to the downloaded one if the old price isn't custom */
+                                if (!data.mIsCustomPrice) {
+                                    data.mPrice = (int) (result.getPrice(data.mIsFoil, getPriceSetting()) * 100);
+                                }
+                                /* Clear the message */
+                                data.mMessage = null;
+                            }
+
+                            /* because this can return when the fragment is in the background */
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onCardPriceLookupSuccess(data, result);
+                            }
+                        },
+                        throwable -> {
+                            // This is not run on the UI thread
+                            data.mPriceInfo = null;
+                            data.mMessage = throwable.getLocalizedMessage();
+                            if (null == data.mMessage) {
+                                data.mMessage = throwable.getClass().toString();
+                            }
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onCardPriceLookupFailure(data, throwable);
+                            }
+                        },
+                        () -> {
+                            // This is run on the UI thread
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onAllPriceLookupsFinished();
+                            }
+                        });
+            } catch (java.lang.InstantiationException e) {
+                onCardPriceLookupFailure(data, e);
+            }
         }
     }
 
     /**
      * Called when a price load fails. Should contain fragment-specific code
      *
-     * @param data           The card for which the price lookup failed
-     * @param spiceException The exception that occured
+     * @param data      The card for which the price lookup failed
+     * @param exception The exception that occured
      */
-    protected abstract void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException);
+    protected abstract void onCardPriceLookupFailure(MtgCard data, Throwable exception);
 
     /**
      * Called when a price load succeeds. Should contain fragment-specific code
@@ -600,7 +518,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param data   The card for which the price lookup succeeded
      * @param result The price information
      */
-    protected abstract void onCardPriceLookupSuccess(MtgCard data, PriceInfo result);
+    protected abstract void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result);
+
+    /**
+     * Called on the UI thread when all price operations are finished
+     */
+    protected abstract void onAllPriceLookupsFinished();
 
     /**
      * Updates the total prices shown for the lists
@@ -617,10 +540,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * @return the current price setting
      */
-    public abstract int getPriceSetting();
+    protected abstract MarketPriceInfo.PriceType getPriceSetting();
 
     /**
      * @param priceSetting The price setting to write to preferences
      */
-    public abstract void setPriceSetting(int priceSetting);
+    public abstract void setPriceSetting(MarketPriceInfo.PriceType priceSetting);
 }

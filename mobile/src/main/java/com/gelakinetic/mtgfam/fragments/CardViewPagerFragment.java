@@ -87,7 +87,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      * @return The inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Instantiate a ViewPager and a PagerAdapter. */
         View v = inflater.inflate(R.layout.card_view_pager, container, false);
@@ -138,7 +138,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * @param fm      The FragmentManager which handles the fragments
          * @param cardIds The array of card IDs to make fragments with
          */
-        public CardViewPagerAdapter(FragmentManager fm, long[] cardIds) {
+        CardViewPagerAdapter(FragmentManager fm, long[] cardIds) {
             super(fm);
             this.mCardIds = cardIds;
         }
@@ -182,7 +182,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
         /**
          * @return Returns the current fragment being displayed by this adapter
          */
-        public CardViewFragment getCurrentFragment() {
+        CardViewFragment getCurrentFragment() {
             return mCurrentFragment;
         }
 
@@ -208,7 +208,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      * Just to be fancy, lets spice up the transformation
      * http://developer.android.com/training/animation/screen-slide.html
      */
-    public class DepthPageTransformer implements ViewPager.PageTransformer {
+    class DepthPageTransformer implements ViewPager.PageTransformer {
         private final float MIN_SCALE = 0.75f;
 
         /**
@@ -217,7 +217,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * @param view     The view being transformed
          * @param position Where the view currently is
          */
-        public void transformPage(View view, float position) {
+        public void transformPage(@NonNull View view, float position) {
             int pageWidth = view.getWidth();
 
             if (position < -1) { /* [-Infinity,-1)

@@ -89,113 +89,111 @@ public class ImageGetterHelper {
      * @return a custom ImageGetter
      */
     public static ImageGetter GlyphGetter(final Context context) {
-        return new ImageGetter() {
-            public Drawable getDrawable(String source) {
-                Drawable d = null;
-                source = source.replace("/", "");
+        return source -> {
+            Drawable d = null;
+            source = source.replace("/", "");
 
-                final int tapRes = PreferenceAdapter.getTapSymbol(context);
-                final int wRes = PreferenceAdapter.getWhiteSymbol(context);
+            final int tapRes = PreferenceAdapter.getTapSymbol(context);
+            final int wRes = PreferenceAdapter.getWhiteSymbol(context);
 
-                if (source.equalsIgnoreCase("w")) {
-                    d = ContextCompat.getDrawable(context, wRes);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
-                } else if (source.equalsIgnoreCase("u")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_u);
-                } else if (source.equalsIgnoreCase("b")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_b);
-                } else if (source.equalsIgnoreCase("r")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_r);
-                } else if (source.equalsIgnoreCase("g")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_g);
-                } else if (source.equalsIgnoreCase("t")) {
-                    d = ContextCompat.getDrawable(context, tapRes);
-                } else if (source.equalsIgnoreCase("q")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_untap);
-                } else if (source.equalsIgnoreCase("wu") || source.equalsIgnoreCase("uw")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_wu);
-                } else if (source.equalsIgnoreCase("ub") || source.equalsIgnoreCase("bu")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_ub);
-                } else if (source.equalsIgnoreCase("br") || source.equalsIgnoreCase("rb")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_br);
-                } else if (source.equalsIgnoreCase("rg") || source.equalsIgnoreCase("gr")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_rg);
-                } else if (source.equalsIgnoreCase("gw") || source.equalsIgnoreCase("wg")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_gw);
-                } else if (source.equalsIgnoreCase("wb") || source.equalsIgnoreCase("bw")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_wb);
-                } else if (source.equalsIgnoreCase("bg") || source.equalsIgnoreCase("gb")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_bg);
-                } else if (source.equalsIgnoreCase("gu") || source.equalsIgnoreCase("ug")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_gu);
-                } else if (source.equalsIgnoreCase("ur") || source.equalsIgnoreCase("ru")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_ur);
-                } else if (source.equalsIgnoreCase("rw") || source.equalsIgnoreCase("wr")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_rw);
-                } else if (source.equalsIgnoreCase("2w") || source.equalsIgnoreCase("w2")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_w2);
-                } else if (source.equalsIgnoreCase("2u") || source.equalsIgnoreCase("u2")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_u2);
-                } else if (source.equalsIgnoreCase("2b") || source.equalsIgnoreCase("b2")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_b2);
-                } else if (source.equalsIgnoreCase("2r") || source.equalsIgnoreCase("r2")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_r2);
-                } else if (source.equalsIgnoreCase("2g") || source.equalsIgnoreCase("g2")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_g2);
-                } else if (source.equalsIgnoreCase("s")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_s);
-                } else if (source.equalsIgnoreCase("pw") || source.equalsIgnoreCase("wp")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pw);
-                } else if (source.equalsIgnoreCase("pu") || source.equalsIgnoreCase("up")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pu);
-                } else if (source.equalsIgnoreCase("pb") || source.equalsIgnoreCase("bp")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pb);
-                } else if (source.equalsIgnoreCase("pr") || source.equalsIgnoreCase("rp")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pr);
-                } else if (source.equalsIgnoreCase("pg") || source.equalsIgnoreCase("gp")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pg);
-                } else if (source.equalsIgnoreCase("p")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_p);
-                } else if (source.equalsIgnoreCase("+oo")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_inf);
-                } else if (source.equalsIgnoreCase("100")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_100);
-                } else if (source.equalsIgnoreCase("1000000")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_1000000);
-                } else if (source.equalsIgnoreCase("hr") || source.equalsIgnoreCase("rh")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_hr);
-                } else if (source.equalsIgnoreCase("hw") || source.equalsIgnoreCase("wh")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_hw);
-                } else if (source.equalsIgnoreCase("c")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_c);
-                } else if (source.equalsIgnoreCase("chaos")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_chaos);
-                } else if (source.equalsIgnoreCase("z")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_z);
-                } else if (source.equalsIgnoreCase("y")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_y);
-                } else if (source.equalsIgnoreCase("x")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_x);
-                } else if (source.equalsIgnoreCase("h")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
-                } else if (source.equalsIgnoreCase("pwk")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pwk);
-                } else if (source.equalsIgnoreCase("e")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_e);
-                } else {
-                    for (int i = 0; i < drawableNumbers.length; i++) {
-                        if (source.equals(Integer.toString(i))) {
-                            d = ContextCompat.getDrawable(context, drawableNumbers[i]);
-                        }
+            if (source.equalsIgnoreCase("w")) {
+                d = ContextCompat.getDrawable(context, wRes);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
+            } else if (source.equalsIgnoreCase("u")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_u);
+            } else if (source.equalsIgnoreCase("b")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_b);
+            } else if (source.equalsIgnoreCase("r")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_r);
+            } else if (source.equalsIgnoreCase("g")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_g);
+            } else if (source.equalsIgnoreCase("t")) {
+                d = ContextCompat.getDrawable(context, tapRes);
+            } else if (source.equalsIgnoreCase("q")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_untap);
+            } else if (source.equalsIgnoreCase("wu") || source.equalsIgnoreCase("uw")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_wu);
+            } else if (source.equalsIgnoreCase("ub") || source.equalsIgnoreCase("bu")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_ub);
+            } else if (source.equalsIgnoreCase("br") || source.equalsIgnoreCase("rb")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_br);
+            } else if (source.equalsIgnoreCase("rg") || source.equalsIgnoreCase("gr")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_rg);
+            } else if (source.equalsIgnoreCase("gw") || source.equalsIgnoreCase("wg")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_gw);
+            } else if (source.equalsIgnoreCase("wb") || source.equalsIgnoreCase("bw")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_wb);
+            } else if (source.equalsIgnoreCase("bg") || source.equalsIgnoreCase("gb")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_bg);
+            } else if (source.equalsIgnoreCase("gu") || source.equalsIgnoreCase("ug")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_gu);
+            } else if (source.equalsIgnoreCase("ur") || source.equalsIgnoreCase("ru")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_ur);
+            } else if (source.equalsIgnoreCase("rw") || source.equalsIgnoreCase("wr")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_rw);
+            } else if (source.equalsIgnoreCase("2w") || source.equalsIgnoreCase("w2")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_w2);
+            } else if (source.equalsIgnoreCase("2u") || source.equalsIgnoreCase("u2")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_u2);
+            } else if (source.equalsIgnoreCase("2b") || source.equalsIgnoreCase("b2")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_b2);
+            } else if (source.equalsIgnoreCase("2r") || source.equalsIgnoreCase("r2")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_r2);
+            } else if (source.equalsIgnoreCase("2g") || source.equalsIgnoreCase("g2")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_g2);
+            } else if (source.equalsIgnoreCase("s")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_s);
+            } else if (source.equalsIgnoreCase("pw") || source.equalsIgnoreCase("wp")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_pw);
+            } else if (source.equalsIgnoreCase("pu") || source.equalsIgnoreCase("up")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_pu);
+            } else if (source.equalsIgnoreCase("pb") || source.equalsIgnoreCase("bp")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_pb);
+            } else if (source.equalsIgnoreCase("pr") || source.equalsIgnoreCase("rp")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_pr);
+            } else if (source.equalsIgnoreCase("pg") || source.equalsIgnoreCase("gp")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_pg);
+            } else if (source.equalsIgnoreCase("p")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_p);
+            } else if (source.equalsIgnoreCase("+oo")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_inf);
+            } else if (source.equalsIgnoreCase("100")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_100);
+            } else if (source.equalsIgnoreCase("1000000")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_1000000);
+            } else if (source.equalsIgnoreCase("hr") || source.equalsIgnoreCase("rh")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_hr);
+            } else if (source.equalsIgnoreCase("hw") || source.equalsIgnoreCase("wh")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_hw);
+            } else if (source.equalsIgnoreCase("c")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_c);
+            } else if (source.equalsIgnoreCase("chaos")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_chaos);
+            } else if (source.equalsIgnoreCase("z")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_z);
+            } else if (source.equalsIgnoreCase("y")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_y);
+            } else if (source.equalsIgnoreCase("x")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_x);
+            } else if (source.equalsIgnoreCase("h")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
+            } else if (source.equalsIgnoreCase("pwk")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_pwk);
+            } else if (source.equalsIgnoreCase("e")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_e);
+            } else {
+                for (int i = 0; i < drawableNumbers.length; i++) {
+                    if (source.equals(Integer.toString(i))) {
+                        d = ContextCompat.getDrawable(context, drawableNumbers[i]);
                     }
                 }
-
-                if (d == null) {
-                    return null;
-                }
-
-                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-                return d;
             }
+
+            if (d == null) {
+                return null;
+            }
+
+            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+            return d;
         };
     }
 }

@@ -26,21 +26,17 @@ import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.util.Pair;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
@@ -52,7 +48,9 @@ import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -113,28 +111,18 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
         switch (mDialogId) {
             case GET_IMAGE: {
-                if (getParentCardViewFragment().mCardBitmap == null) {
-                    return DontShowDialog();
-                }
 
-                Dialog dialog = new Dialog(getActivity());
+                Dialog dialog = new Dialog(getParentCardViewFragment().mActivity);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
                 dialog.setContentView(R.layout.card_view_image_dialog);
-
                 ImageView dialogImageView = dialog.findViewById(R.id.cardimage);
-                dialogImageView.setImageDrawable(getParentCardViewFragment().mCardBitmap);
 
-                dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        if (getParentCardViewFragment().mAsyncTask != null) {
-                            getParentCardViewFragment().mAsyncTask.cancel(true);
-                        }
-                        getParentCardViewFragment().mAsyncTask = getParentCardViewFragment().new saveCardImageTask();
-                        ((CardViewFragment.saveCardImageTask) getParentCardViewFragment().mAsyncTask).execute(CardViewFragment.MAIN_PAGE);
-                        return true;
-                    }
+                // Set the image loaded with Glide
+                dialogImageView.setImageDrawable(getParentCardViewFragment().getImageDrawable());
+
+                dialogImageView.setOnLongClickListener(view -> {
+                    getParentCardViewFragment().saveImageWithGlide(CardViewFragment.MAIN_PAGE);
+                    return true;
                 });
 
                 return dialog;
@@ -158,12 +146,12 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     fillMaps.add(map);
                 }
 
-                SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.card_view_legal_row,
+                SimpleAdapter adapter = new SimpleAdapter(getParentCardViewFragment().mActivity, fillMaps, R.layout.card_view_legal_row,
                         from, to);
-                ListView lv = new ListView(getActivity());
+                ListView lv = new ListView(getParentCardViewFragment().mActivity);
                 lv.setAdapter(adapter);
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
                 builder.customView(lv, false);
                 builder.title(R.string.card_view_legality);
                 return builder.build();
@@ -173,30 +161,38 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                @SuppressLint("InflateParams") View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
+                @SuppressLint("InflateParams") View v = getParentCardViewFragment().mActivity.getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
 
                 assert v != null; /* Because Android Studio */
-                TextView l = v.findViewById(R.id.low);
-                TextView m = v.findViewById(R.id.med);
-                TextView h = v.findViewById(R.id.high);
-                TextView f = v.findViewById(R.id.foil);
-                TextView priceLink = v.findViewById(R.id.pricelink);
 
-                l.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mLow));
-                m.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mAverage));
-                h.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mHigh));
-
-                if (getParentCardViewFragment().mPriceInfo.mFoilAverage != 0) {
-                    f.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mFoilAverage));
+                final String priceFormat = "$%1$,.2f";
+                MarketPriceInfo price = getParentCardViewFragment().mPriceInfo;
+                if (price.hasNormalPrice()) {
+                    ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.LOW)));
+                    ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MID)));
+                    ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.HIGH)));
+                    ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MARKET)));
                 } else {
-                    f.setVisibility(View.GONE);
-                    v.findViewById(R.id.foil_label).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_prices).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
                 }
+
+                if (price.hasFoilPrice()) {
+                    ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.LOW)));
+                    ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MID)));
+                    ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.HIGH)));
+                    ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MARKET)));
+                } else {
+                    v.findViewById(R.id.foil_prices).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
+                }
+
+                TextView priceLink = v.findViewById(R.id.pricelink);
                 priceLink.setMovementMethod(LinkMovementMethod.getInstance());
-                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.mUrl + "\">" +
+                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
                         getString(R.string.card_view_price_dialog_link) + "</a>"));
 
-                MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
+                MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
                 adb.customView(v, false);
                 adb.title(R.string.card_view_price_dialog_title);
                 return adb.build();
@@ -211,38 +207,34 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         return DontShowDialog();
                     }
                 }
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
                 builder.title(R.string.card_view_set_dialog_title);
                 builder.items((CharSequence[]) aSets);
-                builder.itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                        getParentCardViewFragment().setInfoFromID(aIds[position]);
-                    }
-                });
+                builder.itemsCallback((dialog, itemView, position, text) -> getParentCardViewFragment().setInfoFromID(aIds[position]));
                 return builder.build();
             }
             case CARD_RULINGS: {
                 if (null == getParentCardViewFragment() || getParentCardViewFragment().mRulingsArrayList == null) {
                     return DontShowDialog();
                 }
-                Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
+                Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getParentCardViewFragment().mActivity);
 
-                @SuppressLint("InflateParams") View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
+                @SuppressLint("InflateParams") View v = getParentCardViewFragment().mActivity.getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
                 assert v != null; /* Because Android Studio */
 
                 TextView textViewRules = v.findViewById(R.id.rules);
                 TextView textViewUrl = v.findViewById(R.id.url);
 
-                String message = "";
+                String message;
                 if (getParentCardViewFragment().mRulingsArrayList.size() == 0) {
                     message = getString(R.string.card_view_no_rulings);
                 } else {
+                    StringBuilder messageBuilder = new StringBuilder();
                     for (CardViewFragment.Ruling r : getParentCardViewFragment().mRulingsArrayList) {
-                        message += (r.toString() + "<br><br>");
+                        messageBuilder.append(r.toString()).append("<br><br>");
                     }
 
-                    message = message.replace("{Tap}", "{T}");
+                    message = messageBuilder.toString().replace("{Tap}", "{T}");
                 }
                 CharSequence messageGlyph = ImageGetterHelper.formatStringWithGlyphs(message, imgGetter);
 
@@ -251,10 +243,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
                 textViewUrl.setText(Html.fromHtml(
                         "<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-                                getParentCardViewFragment().mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
+                                getParentCardViewFragment().mCard.getMultiverseId() + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
                 builder.title(R.string.card_view_rulings);
                 builder.customView(v, false);
                 return builder.build();
@@ -263,7 +255,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 if (null == getParentCardViewFragment()) {
                     return DontShowDialog();
                 }
-                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCardName, getParentCardViewFragment(), false, false);
+                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCard.getName(), getParentCardViewFragment(), false, false);
                 if (dialog == null) {
                     getParentCardViewFragment().handleFamiliarDbException(false);
                     return DontShowDialog();
@@ -275,102 +267,89 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                final String cardName = getParentCardViewFragment().mCardName;
-                final String cardSet = getParentCardViewFragment().mSetCode;
+                final String cardName = getParentCardViewFragment().mCard.getName();
+                final String cardSet = getParentCardViewFragment().mCard.getExpansion();
                 final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
 
                 /* If there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getParentCardViewFragment().mActivity, R.string.decklist_toast_no_decks,
+                            SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(this.getParentCardViewFragment().mActivity)
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
+                        .itemsCallback((dialog, itemView, position, text) -> {
 
-                            @Override
-                            public void onSelection(
-                                    MaterialDialog dialog,
-                                    View itemView,
-                                    int position,
-                                    CharSequence text) {
-
+                            try {
                                 // Read the decklist
                                 String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
-                                ArrayList<Pair<MtgCard, Boolean>> decklist =
-                                        DecklistHelpers.ReadDecklist(getContext(), deckFileName);
+                                ArrayList<MtgCard> decklist =
+                                        DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 
                                 // Look through the decklist for any existing matches
                                 boolean entryIncremented = false;
-                                for (Pair<MtgCard, Boolean> deckEntry : decklist) {
-                                    if (!deckEntry.second && // not in the sideboard
-                                            deckEntry.first.mName.equals(cardName) &&
-                                            deckEntry.first.setCode.equals(cardSet)) {
+                                for (MtgCard deckEntry : decklist) {
+                                    if (!deckEntry.isSideboard() && // not in the sideboard
+                                            deckEntry.getName().equals(cardName) &&
+                                            deckEntry.getExpansion().equals(cardSet)) {
                                         // Increment the card already in the deck
-                                        deckEntry.first.numberOf++;
+                                        deckEntry.mNumberOf++;
                                         entryIncremented = true;
                                         break;
                                     }
                                 }
                                 if (!entryIncremented) {
                                     // Add a new card to the deck
-                                    decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
                                 }
 
                                 // Write the decklist back
-                                DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+                                DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
+                            } catch (FamiliarDbException e) {
+                                getParentCardViewFragment().handleFamiliarDbException(false);
                             }
-
                         })
                         .build();
             }
             case SHARE_CARD: {
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity)
                         .title(R.string.card_view_share_card)
                         .positiveText(R.string.search_text)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                View view = getParentCardViewFragment().getView();
-                                if (view == null) {
-                                    return;
-                                }
-                                SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
-                                SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
-                                String costText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
-                                String abilityText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
-                                String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
-                                        costText + '\n' +
-                                        ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.set)).getText().toString() + '\n' +
-                                        abilityText + '\n' +
-                                        ((TextView) view.findViewById(R.id.flavor)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.pt)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.artist)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.number)).getText().toString();
-                                Intent sendIntent = new Intent();
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, copyText);
-                                sendIntent.setType("text/plain");
-                                startActivity(sendIntent);
+                        .onPositive((dialog, which) -> {
+                            View view = getParentCardViewFragment().getView();
+                            if (view == null) {
+                                return;
                             }
+                            SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
+                            SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
+                            String costText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
+                            String abilityText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
+                            String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
+                                    costText + '\n' +
+                                    ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.set)).getText().toString() + '\n' +
+                                    abilityText + '\n' +
+                                    ((TextView) view.findViewById(R.id.flavor)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.pt)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.artist)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.number)).getText().toString();
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, copyText);
+                            sendIntent.setType("text/plain");
+                            startActivity(sendIntent);
                         })
                         .negativeText(R.string.card_view_image)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentCardViewFragment().runShareImageTask();
-                            }
-                        });
+                        .onNegative((dialog, which) -> getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE));
                 return builder.build();
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
-                if (null == getParentCardViewFragment() || getParentCardViewFragment().mTranslatedNames.isEmpty()) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mCard.getForeignPrintings().isEmpty()) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -381,12 +360,12 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* prepare the list of all translations */
                 List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                for (Card.ForeignPrinting fp : getParentCardViewFragment().mTranslatedNames) {
+                for (Card.ForeignPrinting fp : getParentCardViewFragment().mCard.getForeignPrintings()) {
                     HashMap<String, String> map = new HashMap<>();
 
                     /* Translate the language code into a readable language label */
                     String language = null;
-                    switch (fp.mLanguageCode) {
+                    switch (fp.getLanguageCode()) {
                         case Language.Chinese_Traditional: {
                             language = getString(R.string.pref_Chinese_trad);
                             break;
@@ -435,34 +414,31 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                     /* Add the language and translation */
                     map.put(from[0], language);
-                    map.put(from[1], fp.mName);
+                    map.put(from[1], fp.getName());
                     fillMaps.add(map);
                 }
 
-                SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.card_view_legal_row,
+                SimpleAdapter adapter = new SimpleAdapter(getParentCardViewFragment().mActivity, fillMaps, R.layout.card_view_legal_row,
                         from, to);
-                ListView lv = new ListView(getActivity());
+                ListView lv = new ListView(getParentCardViewFragment().mActivity);
                 lv.setAdapter(adapter);
-                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        /* Copy the translated name to the clipboard */
-                        ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
-                                getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-                        if (null != clipboard) {
-                            ClipData cd = new ClipData(
-                                    ((TextView) view.findViewById(R.id.format)).getText(),
-                                    new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                                    new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
-                            clipboard.setPrimaryClip(cd);
+                lv.setOnItemLongClickListener((parent, view, position, id) -> {
+                    /* Copy the translated name to the clipboard */
+                    ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
+                            getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+                    if (null != clipboard) {
+                        ClipData cd = new ClipData(
+                                ((TextView) view.findViewById(R.id.format)).getText(),
+                                new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                                new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
+                        clipboard.setPrimaryClip(cd);
 
-                            ToastWrapper.makeAndShowText(getActivity(), R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT);
-                        }
-                        return false;
+                        SnackbarWrapper.makeAndShowText(getParentCardViewFragment().mActivity, R.string.card_view_copied_to_clipboard, SnackbarWrapper.LENGTH_SHORT);
                     }
+                    return false;
                 });
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
                 builder.customView(lv, false);
                 builder.title(R.string.card_view_translated_dialog_title);
                 return builder.build();

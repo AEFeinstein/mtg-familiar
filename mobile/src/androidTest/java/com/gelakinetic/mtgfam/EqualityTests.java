@@ -4,7 +4,6 @@ import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -31,8 +30,12 @@ public class EqualityTests {
 
     @Before
     public void setUp() {
-        lightningBolt = CardHelpers.makeMtgCard(
-                mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, false, 1);
+        try {
+            lightningBolt = new MtgCard(
+                    mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, false, 1);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

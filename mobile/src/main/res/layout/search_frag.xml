@@ -19,13 +19,11 @@
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/master_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <ScrollView
-        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -133,7 +131,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/colorTitle"
                     style="@style/text.medium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -148,7 +145,6 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout5"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -162,7 +158,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout6"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -177,7 +172,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout7"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -192,7 +186,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout8"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -207,7 +200,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout9"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -222,7 +214,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout10"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -251,7 +242,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView"
                     style="@style/text.medium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -266,7 +256,6 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout13"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -280,7 +269,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout14"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -295,7 +283,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout15"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -310,7 +297,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout16"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -325,7 +311,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout17"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -340,7 +325,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout18"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -371,7 +355,6 @@
                 app:rowCount="3">
 
                 <TextView
-                    android:id="@+id/textView1"
                     style="@style/text.medium"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
@@ -399,7 +382,6 @@
                     app:layout_gravity="fill_horizontal" />
 
                 <TextView
-                    android:id="@+id/textView2"
                     style="@style/text.medium"
                     android:layout_width="0dp"
 
@@ -428,7 +410,6 @@
                     app:layout_gravity="fill_horizontal" />
 
                 <TextView
-                    android:id="@+id/textView3"
                     style="@style/text.medium"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
@@ -485,7 +466,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout11"
                 style="@android:style/Holo.ButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"

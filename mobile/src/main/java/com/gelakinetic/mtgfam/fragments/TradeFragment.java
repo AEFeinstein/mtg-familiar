@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,13 +40,12 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
 
@@ -74,12 +74,12 @@ public class TradeFragment extends FamiliarListFragment {
     private static final String AUTOSAVE_NAME = "autosave";
 
     /* Left List and Company */
-    public ArrayList<MtgCard> mListLeft;
+    public final ArrayList<MtgCard> mListLeft = new ArrayList<>();
 
     /* Right List and Company */
-    public ArrayList<MtgCard> mListRight;
+    public final ArrayList<MtgCard> mListRight = new ArrayList<>();
 
-    public String mCurrentTrade = "";
+    public String mCurrentTrade = AUTOSAVE_NAME;
 
     private int mOrderAddedIdx = 0;
 
@@ -97,7 +97,7 @@ public class TradeFragment extends FamiliarListFragment {
      */
     @Override
     public View onCreateView(
-            LayoutInflater inflater,
+            @NonNull LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState) {
 
@@ -106,10 +106,8 @@ public class TradeFragment extends FamiliarListFragment {
 
         assert myFragmentView != null;
 
-        mListLeft = new ArrayList<>();
         CardDataAdapter listAdapterLeft = new TradeDataAdapter(mListLeft, LEFT);
 
-        mListRight = new ArrayList<>();
         CardDataAdapter listAdapterRight = new TradeDataAdapter(mListRight, RIGHT);
 
         /* Call to set up our shared UI elements */
@@ -123,24 +121,10 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        addCardToTrade(LEFT);
-                    }
-
-                });
+                v -> addCardToTrade(LEFT));
 
         myFragmentView.findViewById(R.id.addCardRight).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        addCardToTrade(RIGHT);
-                    }
-
-                });
+                v -> addCardToTrade(RIGHT));
 
         return myFragmentView;
     }
@@ -160,39 +144,42 @@ public class TradeFragment extends FamiliarListFragment {
         final String cardName = getCardNameInput().toString();
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
         final boolean isFoil = checkboxFoilIsChecked();
-        final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, null, isFoil, numberOf);
+        try {
+            final MtgCard card = new MtgCard(getActivity(), cardName, null, isFoil, numberOf);
 
-        if (card == null) {
-            return;
+            card.setIndex(mOrderAddedIdx++);
+
+            switch (side) {
+                case LEFT: {
+                    synchronized (mListLeft) {
+                        mListLeft.add(0, card);
+                    }
+                    getCardDataAdapter(LEFT).notifyItemInserted(0);
+                    loadPrice(card);
+                    break;
+                }
+                case RIGHT: {
+                    synchronized (mListRight) {
+                        mListRight.add(0, card);
+                    }
+                    getCardDataAdapter(RIGHT).notifyItemInserted(0);
+                    loadPrice(card);
+                    break;
+                }
+                default: {
+                    return;
+                }
+            }
+
+            clearCardNameInput();
+            clearCardNumberInput();
+
+            uncheckFoilCheckbox();
+
+            sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
+        } catch (java.lang.InstantiationException e) {
+            /* Eat it */
         }
-
-        card.setIndex(mOrderAddedIdx++);
-
-        switch (side) {
-            case LEFT: {
-                mListLeft.add(0, card);
-                getCardDataAdapter(LEFT).notifyItemInserted(0);
-                loadPrice(card);
-                break;
-            }
-            case RIGHT: {
-                mListRight.add(0, card);
-                getCardDataAdapter(RIGHT).notifyItemInserted(0);
-                loadPrice(card);
-                break;
-            }
-            default: {
-                return;
-            }
-        }
-
-        clearCardNameInput();
-        clearCardNumberInput();
-
-        uncheckFoilCheckbox();
-
-        sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
-
     }
 
     /**
@@ -262,11 +249,11 @@ public class TradeFragment extends FamiliarListFragment {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_save_error,
-                    ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_save_error,
+                    SnackbarWrapper.LENGTH_LONG);
         } catch (IllegalArgumentException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_invalid_chars,
-                    ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_invalid_chars,
+                    SnackbarWrapper.LENGTH_LONG);
         }
 
         /* And resort to the expected order after saving */
@@ -281,48 +268,61 @@ public class TradeFragment extends FamiliarListFragment {
     public void loadTrade(String tradeName) {
         BufferedReader br = null;
         try {
-            /* Clear the current lists */
-            mListLeft.clear();
-            mListRight.clear();
+            synchronized (mListLeft) {
+                synchronized (mListRight) {
+                    /* Clear the current lists */
+                    mListLeft.clear();
+                    mListRight.clear();
 
-            /* Read each card, line by line, load prices along the way */
-            br = new BufferedReader(
-                    new InputStreamReader(this.getActivity().openFileInput(tradeName))
-            );
-            String line;
-            while ((line = br.readLine()) != null) {
-                try {
-                    MtgCard card = MtgCard.fromTradeString(line, getActivity());
-                    card.setIndex(mOrderAddedIdx++);
+                    /* Read each card, line by line, load prices along the way */
+                    br = new BufferedReader(
+                            new InputStreamReader(this.getActivity().openFileInput(tradeName))
+                    );
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        try {
+                            MtgCard card = MtgCard.fromTradeString(line, getActivity());
+                            card.setIndex(mOrderAddedIdx++);
 
-                    if (card.setName == null) {
-                        handleFamiliarDbException(false);
-                        return;
-                    }
-                    if (card.mSide == LEFT) {
-                        mListLeft.add(card);
-                        if (!card.customPrice) {
-                            loadPrice(card);
-                        }
-                    } else if (card.mSide == RIGHT) {
-                        mListRight.add(card);
-                        if (!card.customPrice) {
-                            loadPrice(card);
+                            if (card.mSide == LEFT) {
+                                mListLeft.add(card);
+                            } else if (card.mSide == RIGHT) {
+                                mListRight.add(card);
+                            }
+                        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                            // This card line is junk, ignore it
                         }
                     }
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                    // This card line is junk, ignore it
                 }
             }
         } catch (FileNotFoundException e) {
             /* Do nothing, the autosave doesn't exist */
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
-                    ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
+                    SnackbarWrapper.LENGTH_LONG);
         } finally {
             if (br != null) {
                 IOUtils.closeQuietly(br);
             }
+        }
+
+        // Now that all the file IO is done, hit the database twice, once for each side
+        try {
+            MtgCard.initCardListFromDb(getContext(), mListLeft);
+            for (MtgCard card : mListLeft) {
+                if (!card.mIsCustomPrice) {
+                    loadPrice(card);
+                }
+            }
+
+            MtgCard.initCardListFromDb(getContext(), mListRight);
+            for (MtgCard card : mListRight) {
+                if (!card.mIsCustomPrice) {
+                    loadPrice(card);
+                }
+            }
+        } catch (FamiliarDbException fde) {
+            handleFamiliarDbException(true);
         }
     }
 
@@ -405,8 +405,8 @@ public class TradeFragment extends FamiliarListFragment {
         try {
             startActivity(Intent.createChooser(sendIntent, getString(R.string.trader_share)));
         } catch (android.content.ActivityNotFoundException ex) {
-            ToastWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
-                    ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
+                    SnackbarWrapper.LENGTH_SHORT);
         }
     }
 
@@ -426,8 +426,14 @@ public class TradeFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        loadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 
+        String tradeToLoad = PreferenceAdapter.getLastLoadedTrade(getContext());
+        if (!tradeToLoad.isEmpty()) {
+            mCurrentTrade = tradeToLoad;
+            loadTrade(mCurrentTrade + TRADE_EXTENSION);
+        } else {
+            loadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        }
     }
 
     /**
@@ -437,18 +443,27 @@ public class TradeFragment extends FamiliarListFragment {
     public void onPause() {
 
         super.onPause();
-        saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        if (!mCurrentTrade.isEmpty()) {
+            PreferenceAdapter.setLastLoadedTrade(getContext(), mCurrentTrade);
+            saveTrade(mCurrentTrade + TRADE_EXTENSION);
+        } else {
+            saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        }
 
     }
 
     @Override
-    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
-        data.message = spiceException.getLocalizedMessage();
-        data.priceInfo = null;
+    protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
+        // Do nothing, wait until all prices are fetched
     }
 
     @Override
-    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+    protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
+        // Do nothing, wait until all prices are fetched
+    }
+
+    @Override
+    protected void onAllPriceLookupsFinished() {
         updateTotalPrices(BOTH);
         try {
             sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
@@ -471,9 +486,9 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as
                    "bad," (incomplete) */
                 for (MtgCard data : mListLeft) {
-                    totalCards += data.numberOf;
+                    totalCards += data.mNumberOf;
                     if (data.hasPrice()) {
-                        totalPrice += data.numberOf * (data.price / 100.0f);
+                        totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
                     } else {
                         hasBadValues = true;
                     }
@@ -496,9 +511,9 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as "bad,"
                    (incomplete) */
                 for (MtgCard data : mListRight) {
-                    totalCards += data.numberOf;
+                    totalCards += data.mNumberOf;
                     if (data.hasPrice()) {
-                        totalPrice += data.numberOf * (data.price / 100.0f);
+                        totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
                     } else {
                         hasBadValues = true;
                     }
@@ -524,13 +539,13 @@ public class TradeFragment extends FamiliarListFragment {
     }
 
     @Override
-    public int getPriceSetting() {
-        return Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
+    public MarketPriceInfo.PriceType getPriceSetting() {
+        return PreferenceAdapter.getTradePrice(getContext());
     }
 
     @Override
-    public void setPriceSetting(int priceSetting) {
-        PreferenceAdapter.setTradePrice(getContext(), Integer.toString(priceSetting));
+    public void setPriceSetting(MarketPriceInfo.PriceType priceSetting) {
+        PreferenceAdapter.setTradePrice(getContext(), priceSetting);
     }
 
     /**
@@ -550,8 +565,12 @@ public class TradeFragment extends FamiliarListFragment {
     private void sortTrades(String sortOrder) {
         /* If no sort type specified, return */
         TradeComparator tradeComparator = new TradeComparator(sortOrder);
-        Collections.sort(mListLeft, tradeComparator);
-        Collections.sort(mListRight, tradeComparator);
+        synchronized (mListLeft) {
+            Collections.sort(mListLeft, tradeComparator);
+        }
+        synchronized (mListRight) {
+            Collections.sort(mListRight, tradeComparator);
+        }
         getCardDataAdapter(LEFT).notifyDataSetChanged();
         getCardDataAdapter(RIGHT).notifyDataSetChanged();
     }
@@ -591,38 +610,38 @@ public class TradeFragment extends FamiliarListFragment {
             /* Iterate over all the sort options, starting with the high priority ones */
             for (SortOrderDialogFragment.SortOption option : options) {
                 try {
-                /* Compare the entries based on the key */
+                    /* Compare the entries based on the key */
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = card1.mName.compareTo(card2.mName);
+                            retVal = card1.getName().compareTo(card2.getName());
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = card1.mColor.compareTo(card2.mColor);
+                            retVal = card1.getColor().compareTo(card2.getColor());
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = card1.mType.compareTo(card2.mType);
+                            retVal = card1.getType().compareTo(card2.getType());
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = card1.mCmc - card2.mCmc;
+                            retVal = Integer.compare(card1.getCmc(), card2.getCmc());
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(card1.mPower, card2.mPower);
+                            retVal = Float.compare(card1.getPower(), card2.getPower());
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(card1.mToughness, card2.mToughness);
+                            retVal = Float.compare(card1.getToughness(), card2.getToughness());
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = card1.mExpansion.compareTo(card2.mExpansion);
+                            retVal = card1.getExpansion().compareTo(card2.getExpansion());
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
-                            retVal = Double.compare(card1.price, card2.price);
+                            retVal = Double.compare(card1.mPrice, card2.mPrice);
                             break;
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
@@ -659,7 +678,6 @@ public class TradeFragment extends FamiliarListFragment {
     class TradeViewHolder extends CardDataViewHolder {
 
         private final TextView mCardSet;
-        private final TextView mCardNumberOf;
         private final ImageView mCardFoil;
         private final TextView mCardPrice;
         private final int mSide;
@@ -669,7 +687,6 @@ public class TradeFragment extends FamiliarListFragment {
             super(view, R.layout.trader_row, TradeFragment.this.getCardDataAdapter(side), TradeFragment.this);
 
             mCardSet = itemView.findViewById(R.id.traderRowSet);
-            mCardNumberOf = itemView.findViewById(R.id.traderNumber);
             mCardFoil = itemView.findViewById(R.id.traderRowFoil);
             mCardPrice = itemView.findViewById(R.id.traderRowPrice);
 
@@ -701,8 +718,9 @@ public class TradeFragment extends FamiliarListFragment {
             this.side = side;
         }
 
+        @NonNull
         @Override
-        public TradeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public TradeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             return new TradeViewHolder(viewGroup, side);
         }
 
@@ -711,11 +729,15 @@ public class TradeFragment extends FamiliarListFragment {
             TradeComparator tradeComparator = new TradeComparator(PreferenceAdapter.getTradeSortOrder(getContext()));
             switch (side) {
                 case LEFT: {
-                    Collections.sort(mListLeft, tradeComparator);
+                    synchronized (mListLeft) {
+                        Collections.sort(mListLeft, tradeComparator);
+                    }
                     break;
                 }
                 case RIGHT: {
-                    Collections.sort(mListRight, tradeComparator);
+                    synchronized (mListRight) {
+                        Collections.sort(mListRight, tradeComparator);
+                    }
                     break;
                 }
             }
@@ -723,19 +745,18 @@ public class TradeFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void onBindViewHolder(TradeViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull TradeViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final MtgCard item = getItem(position);
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
-            holder.setCardName(item.mName);
-            holder.mCardSet.setText(item.setName);
-            holder.mCardNumberOf.setText(item.hasPrice() ? item.numberOf + "x" : "");
-            holder.mCardFoil.setVisibility(item.foil ? View.VISIBLE : View.GONE);
-            holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.message);
+            holder.setCardName(item.getName());
+            holder.mCardSet.setText(item.getSetName());
+            holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
-                if (item.customPrice) {
+                holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());
+                if (item.mIsCustomPrice) {
                     holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                             R.color.material_green_500));
                 } else {
@@ -743,6 +764,7 @@ public class TradeFragment extends FamiliarListFragment {
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
+                holder.mCardPrice.setText(item.mNumberOf + "x " + item.mMessage);
                 holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.material_red_500));
             }

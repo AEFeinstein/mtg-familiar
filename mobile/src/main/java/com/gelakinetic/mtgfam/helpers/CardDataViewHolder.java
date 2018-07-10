@@ -45,8 +45,8 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
      * @param adapter     The adapter which displays this ViewHolder
      * @param fragment    The fragment which contains the list which contains this ViewHolder
      */
-    public CardDataViewHolder(ViewGroup view, @LayoutRes final int layoutRowId, CardDataAdapter adapter,
-                              FamiliarListFragment fragment) {
+    protected CardDataViewHolder(ViewGroup view, @LayoutRes final int layoutRowId, CardDataAdapter adapter,
+                                 FamiliarListFragment fragment) {
         // The inflated view is set to itemView
         super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
         mCardName = itemView.findViewById(R.id.card_name);
@@ -77,12 +77,12 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
      * @param view     The View that was clicked
      * @param position The position of the View that was clicked in the adapter
      */
-    abstract public void onClickNotSelectMode(View view, int position);
+    protected abstract void onClickNotSelectMode(View view, int position);
 
     /**
      * @return The card name for the object displayed in this ViewHolder, from the TextView
      */
-    public String getCardName() {
+    protected String getCardName() {
         return mCardName.getText().toString();
     }
 

@@ -23,19 +23,17 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.ProfileFragment;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -82,12 +80,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                 final EditText dciEditText = view.findViewById(R.id.text_entry);
                 dciEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                view.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dciEditText.setText("");
-                    }
-                });
+                view.findViewById(R.id.clear_button).setOnClickListener(view1 -> dciEditText.setText(""));
 
                 final String strDCI = PreferenceAdapter.getDCINumber(getContext());
 
@@ -96,33 +89,27 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(getActivity())
                         .title(R.string.profile_update_dci_dialog_title)
                         .positiveText(R.string.dialog_ok)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                String strNumber = dciEditText.getText().toString();
+                        .onPositive((dialog, which) -> {
+                            String strNumber = dciEditText.getText().toString();
 
-                                if (strNumber.isEmpty()) {
-                                    ToastWrapper.makeAndShowText(getActivity(),
-                                            R.string.profile_invalid_dci,
-                                            ToastWrapper.LENGTH_SHORT);
+                            if (strNumber.isEmpty()) {
+                                SnackbarWrapper.makeAndShowText(getActivity(),
+                                        R.string.profile_invalid_dci,
+                                        SnackbarWrapper.LENGTH_SHORT);
 
-                                    return;
-                                }
+                                return;
+                            }
 
-                                PreferenceAdapter.setDCINumber(getContext(), strNumber);
-                                if (null != getParentProfileFragment()) {
-                                    getParentProfileFragment().mDCINumber = strNumber;
-                                    getParentProfileFragment().checkDCINumber();
-                                }
+                            PreferenceAdapter.setDCINumber(getContext(), strNumber);
+                            if (null != getParentProfileFragment()) {
+                                getParentProfileFragment().mDCINumber = strNumber;
+                                getParentProfileFragment().checkDCINumber();
                             }
                         })
                         .negativeText(R.string.dialog_cancel)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                if (null != getParentProfileFragment()) {
-                                    getParentProfileFragment().checkDCINumber();
-                                }
+                        .onNegative((dialog, which) -> {
+                            if (null != getParentProfileFragment()) {
+                                getParentProfileFragment().checkDCINumber();
                             }
                         })
                         .customView(view, false)

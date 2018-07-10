@@ -30,7 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/search_name"
-        android:selectAllOnFocus="true" />
+        android:selectAllOnFocus="true"
+        android:inputType="text" />
 
     <LinearLayout
         style="@style/forty_eight"

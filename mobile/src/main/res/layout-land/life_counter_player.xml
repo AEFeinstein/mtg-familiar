@@ -29,7 +29,6 @@
         android:background="?attr/color_drawer_divider_item" />
 
     <LinearLayout
-        android:id="@+id/nplayer_row"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginBottom="4dp"
@@ -75,7 +74,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/player_history_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
@@ -92,7 +90,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/buttonLayout"
             style="@android:style/Holo.ButtonBar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

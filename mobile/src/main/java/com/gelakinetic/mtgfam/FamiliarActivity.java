@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -32,13 +33,13 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,21 +61,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
+import com.gelakinetic.mtgfam.fragments.DeckCounterFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.GatheringsFragment;
+import com.gelakinetic.mtgfam.fragments.HtmlDocFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
@@ -89,19 +95,17 @@ import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetcher;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
-import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -115,6 +119,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Locale;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
 public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
@@ -152,35 +159,31 @@ public class FamiliarActivity extends AppCompatActivity {
             "&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
     /* Timer to determine user inactivity for screen dimming in the life counter */
     private static final long INACTIVITY_MS = 30000;
-    private static final int MESSAGE_CLEAR = 0;
-    private static final int MESSAGE_INIT_DISK_CACHE = 1;
-    private static final int MESSAGE_FLUSH = 2;
-    private static final int MESSAGE_CLOSE = 3;
-    private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
-    public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
+    public final MarketPriceFetcher mMarketPriceStore = new MarketPriceFetcher(this);
+
     /* What the drawer menu will be */
     private final DrawerEntry[] mPageEntries = {
-            new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
-            new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false),
-            new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false),
-            new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
-            new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
-            new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
-            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_deck, false),
-            new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
-            new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
-            new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
-            new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
-            new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
-            new DrawerEntry(0, 0, true),
-            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
-            new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
-            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
-            new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
-            new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-            new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false),
-            new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false),
+            new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false, new Class[]{SearchViewFragment.class, ResultListFragment.class, CardViewPagerFragment.class, CardViewFragment.class}),
+            new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false, new Class[]{LifeCounterFragment.class, GatheringsFragment.class}),
+            new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false, new Class[]{ManaPoolFragment.class}),
+            new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false, new Class[]{DiceFragment.class}),
+            new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false, new Class[]{TradeFragment.class}),
+            new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false, new Class[]{WishlistFragment.class}),
+            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_deck, false, new Class[]{DecklistFragment.class}),
+            new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false, new Class[]{RoundTimerFragment.class}),
+            new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false, new Class[]{RulesFragment.class}),
+            new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false, new Class[]{JudgesCornerFragment.class, DeckCounterFragment.class, HtmlDocFragment.class}),
+            new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false, new Class[]{MoJhoStoFragment.class}),
+            new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false, new Class[]{ProfileFragment.class}),
+            new DrawerEntry(0, 0, true, null),
+            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false, null),
+            new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false, null),
+            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false, null),
+            new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false, null),
+            new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false, null),
+            new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false, null),
+            new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false, null),
     };
     private final Handler mInactivityHandler = new Handler();
     /* Drawer elements */
@@ -188,44 +191,28 @@ public class FamiliarActivity extends AppCompatActivity {
     public ListView mDrawerList;
     public boolean mIsMenuVisible;
 
-    /* Image caching */
-    public ImageCache mImageCache;
     /* Listen for changes to preferences */
-    private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if (s.equals(getString(R.string.key_widgetButtons))) {
-                Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
-                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                assert AppWidgetManager.getInstance(getApplication()) != null;
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
-                assert appWidgetManager != null;
-                int ids[] = appWidgetManager.getAppWidgetIds(
-                        new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
-                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                sendBroadcast(intent);
-            } else if (s.equals(getString(R.string.key_theme)) || s.equals(getString(R.string.key_language))) {
-                /* Restart the activity for theme & language changes */
-                FamiliarActivity.this.finish();
-                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
-            } else if (s.equals(getString(R.string.key_imageCacheSize))) {
-                /* Close the old cache */
-                if (mImageCache != null) {
-                    mImageCache.flush();
-                    mImageCache.close();
-                }
-
-                /* Set up the image cache */
-                ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
-                cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-                cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(FamiliarActivity.this);
-                addImageCache(getSupportFragmentManager(), cacheParams);
-            }
+    private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = (sharedPreferences, s) -> {
+        if (s.equals(getString(R.string.key_widgetButtons))) {
+            Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            assert AppWidgetManager.getInstance(getApplication()) != null;
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
+            assert appWidgetManager != null;
+            int ids[] = appWidgetManager.getAppWidgetIds(
+                    new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            sendBroadcast(intent);
+        } else if (s.equals(getString(R.string.key_theme)) || s.equals(getString(R.string.key_language))) {
+            /* Restart the activity for theme & language changes */
+            FamiliarActivity.this.finish();
+            startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
         }
     };
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
-    private IndeterminateRefreshLayout mRefreshLayout;
+    private SmoothProgressBar mSmoothProgressBar;
+    private boolean mIsLoading = false;
     /* Used to pass results between fragments */
     private Bundle mFragResults;
     /* Timer setup */
@@ -283,14 +270,11 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private int mCurrentFrag;
     private boolean mUserInactive = false;
-    private final Runnable userInactive = new Runnable() {
-        @Override
-        public void run() {
-            mUserInactive = true;
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-            if (fragment instanceof FamiliarFragment) {
-                ((FamiliarFragment) fragment).onUserInactive();
-            }
+    private final Runnable userInactive = () -> {
+        mUserInactive = true;
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        if (fragment instanceof FamiliarFragment) {
+            ((FamiliarFragment) fragment).onUserInactive();
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
@@ -426,22 +410,12 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Start the Spice Manager when the activity starts.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mSpiceManager.start(this);
-    }
-
-    /**
      * Stop the Spice Manager when the activity stops.
      */
     @Override
     protected void onStop() {
         super.onStop();
-        mSpiceManager.shouldStop();
-        ToastWrapper.cancelToast();
+        SnackbarWrapper.cancelSnackbar();
     }
 
     @Override
@@ -508,14 +482,37 @@ public class FamiliarActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        DatabaseManager.initializeInstance(getApplicationContext());
+        DatabaseManager.initializeInstances(getApplicationContext());
 
-        mRefreshLayout = findViewById(R.id.fragment_container);
-        mRefreshLayout.setColors(
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic)));
+        mSmoothProgressBar = findViewById(R.id.smooth_progress_bar);
+        mSmoothProgressBar.setIndeterminateDrawable(new SmoothProgressDrawable.Builder(this)
+                .colors(new int[]{
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic))})
+                .interpolator(new AccelerateDecelerateInterpolator())
+                .sectionsCount(4)
+                .separatorLength(0)
+                .progressiveStartSpeed(1.5f)
+                .progressiveStopSpeed(1.5f)
+                .progressiveStart(true)
+                .strokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()))
+                .build());
+
+        mSmoothProgressBar.setSmoothProgressDrawableCallbacks(new SmoothProgressDrawable.Callbacks() {
+            @Override
+            public void onStop() {
+                mSmoothProgressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onStart() {
+                mSmoothProgressBar.setVisibility(View.VISIBLE);
+            }
+        });
+        mSmoothProgressBar.setVisibility(View.GONE);
+        clearLoading();
 
         /* Set default preferences manually so that the listener doesn't do weird things on init */
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -546,124 +543,112 @@ public class FamiliarActivity extends AppCompatActivity {
         mPagesAdapter = new DrawerEntryArrayAdapter(this);
 
         mDrawerList.setAdapter(mPagesAdapter);
-        mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                boolean shouldCloseDrawer = false;
-                switch (mPageEntries[i].mNameResource) {
-                    case R.string.main_force_update_title: {
-                        if (getNetworkState(FamiliarActivity.this, true) != -1) {
-                            try {
-                                SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true);
-                                CardDbAdapter.dropCreateDB(database);
-                                PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
-                                PreferenceAdapter.setLastIPGUpdate(FamiliarActivity.this, 0);
-                                PreferenceAdapter.setLastMTRUpdate(FamiliarActivity.this, 0);
-                                PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
-                                PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
-                                PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
-                                startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                            } catch (FamiliarDbException e) {
-                                e.printStackTrace();
-                            }
-                            DatabaseManager.getInstance(FamiliarActivity.this, true).closeDatabase(true);
-                        }
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                }
-
-                mDrawerList.setItemChecked(mCurrentFrag, true);
-                if (shouldCloseDrawer) {
-                    (new Handler()).postDelayed(new Runnable() {
-                        public void run() {
-                            mDrawerLayout.closeDrawer(mDrawerList);
-                        }
-                    }, 50);
-                    return true;
-                }
-                return false;
-            }
-        });
-        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                /* FamiliarFragments will automatically close the drawer when they hit onResume().
-                   It's more precise than a delayed handler. Other options have to close the drawer
-                   themselves */
-                boolean shouldCloseDrawer = false;
-                switch (mPageEntries[i].mNameResource) {
-                    case R.string.main_extras:
-                    case R.string.main_pages: {
-                        /* It's a header */
-                        break; /* don't close the drawer or change a selection */
-                    }
-                    case R.string.main_mana_pool:
-                    case R.string.main_dice:
-                    case R.string.main_trade:
-                    case R.string.main_wishlist:
-                    case R.string.main_decklist:
-                    case R.string.main_timer:
-                    case R.string.main_rules:
-                    case R.string.main_judges_corner:
-                    case R.string.main_mojhosto:
-                    case R.string.main_card_search:
-                    case R.string.main_life_counter:
-                    case R.string.main_profile: {
-                        selectItem(mPageEntries[i].mNameResource, null, true, false);
-                        break;
-                    }
-                    case R.string.main_settings_title: {
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.addToBackStack(null);
-                        ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
-                        ft.commitAllowingStateLoss();
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                    case R.string.main_force_update_title: {
-                        if (getNetworkState(FamiliarActivity.this, true) != -1) {
+        mDrawerList.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            boolean shouldCloseDrawer = false;
+            switch (mPageEntries[i].mNameResource) {
+                case R.string.main_force_update_title: {
+                    if (getNetworkState(FamiliarActivity.this, true) != -1) {
+                        FamiliarDbHandle handle = new FamiliarDbHandle();
+                        try {
+                            SQLiteDatabase database = DatabaseManager.openDatabase(FamiliarActivity.this, true, handle);
+                            CardDbAdapter.dropCreateDB(database);
                             PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
+                            PreferenceAdapter.setLastIPGUpdate(FamiliarActivity.this, 0);
+                            PreferenceAdapter.setLastMTRUpdate(FamiliarActivity.this, 0);
+                            PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
+                            PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
+                            PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
                             startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                        } catch (SQLiteException | FamiliarDbException e) {
+                            e.printStackTrace();
+                        } finally {
+                            DatabaseManager.closeDatabase(FamiliarActivity.this, handle);
                         }
-                        shouldCloseDrawer = true;
-                        break;
                     }
-                    case R.string.main_donate_title: {
-                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_DONATE);
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                    case R.string.main_about: {
-                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_ABOUT);
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                    case R.string.main_whats_new_title: {
-                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                    case R.string.main_export_data_title: {
-                        ZipUtils.exportData(FamiliarActivity.this);
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                    case R.string.main_import_data_title: {
-                        ZipUtils.importData(FamiliarActivity.this);
-                        shouldCloseDrawer = true;
-                        break;
-                    }
+                    shouldCloseDrawer = true;
+                    break;
                 }
+            }
 
-                mDrawerList.setItemChecked(mCurrentFrag, true);
-                if (shouldCloseDrawer) {
-                    (new Handler()).postDelayed(new Runnable() {
-                        public void run() {
-                            mDrawerLayout.closeDrawer(mDrawerList);
-                        }
-                    }, 50);
+            mDrawerList.setItemChecked(mCurrentFrag, true);
+            if (shouldCloseDrawer) {
+                (new Handler()).postDelayed(() -> mDrawerLayout.closeDrawer(mDrawerList), 50);
+                return true;
+            }
+            return false;
+        });
+        mDrawerList.setOnItemClickListener((adapterView, view, i, l) -> {
+            /* FamiliarFragments will automatically close the drawer when they hit onResume().
+               It's more precise than a delayed handler. Other options have to close the drawer
+               themselves */
+            boolean shouldCloseDrawer = false;
+            switch (mPageEntries[i].mNameResource) {
+                case R.string.main_extras:
+                case R.string.main_pages: {
+                    /* It's a header */
+                    break; /* don't close the drawer or change a selection */
                 }
+                case R.string.main_mana_pool:
+                case R.string.main_dice:
+                case R.string.main_trade:
+                case R.string.main_wishlist:
+                case R.string.main_decklist:
+                case R.string.main_timer:
+                case R.string.main_rules:
+                case R.string.main_judges_corner:
+                case R.string.main_mojhosto:
+                case R.string.main_card_search:
+                case R.string.main_life_counter:
+                case R.string.main_profile: {
+                    selectItem(mPageEntries[i].mNameResource, null, true, false);
+                    break;
+                }
+                case R.string.main_settings_title: {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
+                    ft.commitAllowingStateLoss();
+                    shouldCloseDrawer = true;
+                    break;
+                }
+                case R.string.main_force_update_title: {
+                    if (getNetworkState(FamiliarActivity.this, true) != -1) {
+                        PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
+                        startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                    }
+                    shouldCloseDrawer = true;
+                    break;
+                }
+                case R.string.main_donate_title: {
+                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_DONATE);
+                    shouldCloseDrawer = true;
+                    break;
+                }
+                case R.string.main_about: {
+                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_ABOUT);
+                    shouldCloseDrawer = true;
+                    break;
+                }
+                case R.string.main_whats_new_title: {
+                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
+                    shouldCloseDrawer = true;
+                    break;
+                }
+                case R.string.main_export_data_title: {
+                    ZipUtils.exportData(FamiliarActivity.this);
+                    shouldCloseDrawer = true;
+                    break;
+                }
+                case R.string.main_import_data_title: {
+                    ZipUtils.importData(FamiliarActivity.this);
+                    shouldCloseDrawer = true;
+                    break;
+                }
+            }
+
+            mDrawerList.setItemChecked(mCurrentFrag, true);
+            if (shouldCloseDrawer) {
+                (new Handler()).postDelayed(() -> mDrawerLayout.closeDrawer(mDrawerList), 50);
             }
         });
 
@@ -725,7 +710,7 @@ public class FamiliarActivity extends AppCompatActivity {
          * appropriate fragment */
         /* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is
          * null */
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && getIntent() != null) {
             isDeepLink = processIntent(getIntent());
         }
 
@@ -737,43 +722,69 @@ public class FamiliarActivity extends AppCompatActivity {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
                 int lastVersion = PreferenceAdapter.getLastVersion(this);
-                if (pInfo.versionCode != lastVersion &&
-                        !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
-                        !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
-                        !(lastVersion == 52 && pInfo.versionCode == 53)) { // Don't show 52 -> 53, it was just a quick bugfix release
-                    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices
-                     * will exist*/
-                    try {
-                        mSpiceManager.removeAllDataFromCache();
-                    } catch (NullPointerException e) {
-                        /* eat it. tasty */
-                    }
-                    if (lastVersion != 0) {
+                if (pInfo.versionCode != lastVersion) {
+
+                    // Show the changelog dialog, sometimes
+                    if (lastVersion != 0 &&
+                            !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
+                            !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
+                            !(lastVersion == 52 && pInfo.versionCode == 53) && // Don't show 52 -> 53, it was just a quick bugfix release
+                            !(lastVersion == 54 && pInfo.versionCode == 55) && // Don't show 54 -> 55, it was just a quick bugfix release
+                            !(lastVersion == 55 && pInfo.versionCode == 56) && // Don't show 55 -> 56, it was just a quick bugfix release
+                            !(lastVersion == 56 && pInfo.versionCode == 57)    // Don't show 56 -> 57, it was just a quick bugfix release
+                            ) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
-                    PreferenceAdapter.setLastVersion(this, pInfo.versionCode);
 
                     /* Clear the mtr and ipg on update, to replace them with the newly colored
                      *  versions, but only if we're updating to 3.0.1 (v24) */
-                    if (pInfo.versionCode <= 24) {
+                    if (lastVersion < 24) {
                         File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
                         File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                         if (mtr.exists()) {
                             if (!mtr.delete()) {
-                                ToastWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                             if (!ipg.delete()) {
-                                ToastWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                             if (!jar.delete()) {
-                                ToastWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                         }
                     }
+
+                    // When upgrading from 53 or below, clear out both the internal and external cache
+                    // Version 54 added in new caching for images and prices
+                    if (lastVersion < 54) {
+                        File cacheDir = getCacheDir();
+                        if (null != cacheDir && cacheDir.exists()) {
+                            File listFiles[] = cacheDir.listFiles();
+                            if (null != listFiles) {
+                                for (File cachedFile : listFiles) {
+                                    //noinspection ResultOfMethodCallIgnored
+                                    cachedFile.delete();
+                                }
+                            }
+                        }
+
+                        cacheDir = getExternalCacheDir();
+                        if (null != cacheDir && cacheDir.exists()) {
+                            File listFiles[] = cacheDir.listFiles();
+                            if (null != listFiles) {
+                                for (File cachedFile : listFiles) {
+                                    //noinspection ResultOfMethodCallIgnored
+                                    cachedFile.delete();
+                                }
+                            }
+                        }
+                    }
+
+                    PreferenceAdapter.setLastVersion(this, pInfo.versionCode);
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 /* Eat it, don't show change log */
@@ -792,172 +803,204 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         }
 
-        /* Set up the image cache */
-        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this, IMAGE_CACHE_DIR);
-        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-        cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(this);
-        addImageCache(getSupportFragmentManager(), cacheParams);
+        // Uncomment this to run a test to lookup all prices for all cards
+        // (new LookupAllPricesTest()).execute(this);
     }
 
-    private boolean processIntent(Intent intent) {
+    private boolean processIntent(@NonNull Intent intent) {
         boolean isDeepLink = false;
 
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            /* Do a search by name, launched from the quick search */
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Bundle args = new Bundle();
-            SearchCriteria sc = new SearchCriteria();
-            sc.name = query;
-            args.putSerializable(SearchViewFragment.CRITERIA, sc);
-            selectItem(R.string.main_card_search, args, false, true); /* Don't clear backstack, do force the intent */
-
-        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-
-            boolean shouldSelectItem = true;
-
-            Uri data = intent.getData();
-            Bundle args = new Bundle();
-
-            if (null == data || null == data.getAuthority()) {
-                ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
-                this.finish();
-                return false;
+        String action;
+        try {
+            action = intent.getAction();
+            if (null == action) {
+                action = Intent.ACTION_MAIN;
             }
+        } catch (NullPointerException e) {
+            action = Intent.ACTION_MAIN;
+        }
+        switch (action) {
+            case Intent.ACTION_SEARCH: {
+                /* Do a search by name, launched from the quick search */
+                String query = intent.getStringExtra(SearchManager.QUERY);
+                Bundle args = new Bundle();
+                SearchCriteria sc = new SearchCriteria();
+                sc.name = query;
+                args.putSerializable(SearchViewFragment.CRITERIA, sc);
+                selectItem(R.string.main_card_search, args, false, true); /* Don't clear backstack, do force the intent */
 
-            boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
-            if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
-                try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
-                    String queryParam;
-                    if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
-                        Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
-                                new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                        if (cursor.getCount() != 0) {
-                            isDeepLink = true;
-                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                    new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                        }
-                        cursor.close();
-                        if (args.size() == 0) {
-                            throw new Exception("Not Found");
-                        }
-                    } else if ((queryParam = data.getQueryParameter("name")) != null) {
-                        Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
-                                Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, database);
-                        if (cursor.getCount() != 0) {
-                            isDeepLink = true;
-                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                    new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                        }
-                        cursor.close();
-                        if (args.size() == 0) {
-                            throw new Exception("Not Found");
-                        }
-                    } else {
-                        throw new Exception("Not Found");
-                    }
-                } catch (Exception e) {
-                    /* empty cursor, just return */
-                    ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                break;
+            }
+            case Intent.ACTION_VIEW: {
+
+                boolean shouldSelectItem = true;
+
+                Uri data = intent.getData();
+                Bundle args = new Bundle();
+
+                if (null == data || null == data.getAuthority()) {
+                    SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                     this.finish();
-                    shouldSelectItem = false;
-                } finally {
-                    DatabaseManager.getInstance(this, false).closeDatabase(false);
+                    return false;
                 }
-            } else if (data.getAuthority().contains("CardSearchProvider")) {
-                /* User clicked a card in the quick search autocomplete, jump right to it */
-                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                        new long[]{Long.parseLong(data.getLastPathSegment())});
-                shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
-            } else {
-                /* User clicked a deep link, jump to the card(s) */
-                isDeepLink = true;
 
-                try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
+                boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
+                if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
                     Cursor cursor = null;
-                    boolean screenLaunched = false;
-                    if (data.getScheme().toLowerCase().equals("card") &&
-                            data.getAuthority().toLowerCase().equals("multiverseid")) {
-                        if (data.getLastPathSegment() == null) {
-                            /* Home screen deep link */
-                            launchHomeScreen();
-                            screenLaunched = true;
-                            shouldSelectItem = false;
+                    FamiliarDbHandle fromUrlHandle = new FamiliarDbHandle();
+                    try {
+                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, fromUrlHandle);
+                        String queryParam;
+                        if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
+                            cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
+                                    new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                            if (cursor.getCount() != 0) {
+                                isDeepLink = true;
+                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            }
+                            if (args.size() == 0) {
+                                throw new Exception("Not Found");
+                            }
+                        } else if ((queryParam = data.getQueryParameter("name")) != null) {
+                            cursor = CardDbAdapter.fetchCardByName(queryParam,
+                                    Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, false, database);
+                            if (cursor.getCount() != 0) {
+                                isDeepLink = true;
+                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            }
+                            if (args.size() == 0) {
+                                throw new Exception("Not Found");
+                            }
                         } else {
-                            try {
-                                /* Don't clear the fragment stack for internal links (thanks Meld
-                                 * cards) */
-                                if (data.getPathSegments().contains("internal")) {
-                                    shouldClearFragmentStack = false;
+                            throw new Exception("Not Found");
+                        }
+                    } catch (Exception e) {
+                        /* empty cursor, just return */
+                        SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
+                        this.finish();
+                        shouldSelectItem = false;
+                    } finally {
+                        if (null != cursor) {
+                            cursor.close();
+                        }
+                        DatabaseManager.closeDatabase(this, fromUrlHandle);
+                    }
+                } else if (data.getAuthority().contains("CardSearchProvider")) {
+                    /* User clicked a card in the quick search autocomplete, jump right to it */
+                    args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                            new long[]{Long.parseLong(data.getLastPathSegment())});
+                    shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
+                } else {
+                    /* User clicked a deep link, jump to the card(s) */
+                    isDeepLink = true;
+
+                    Cursor cursor = null;
+                    FamiliarDbHandle deepLinkHandle = new FamiliarDbHandle();
+                    try {
+                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, deepLinkHandle);
+                        boolean screenLaunched = false;
+                        if (data.getScheme().toLowerCase().equals("card") &&
+                                data.getAuthority().toLowerCase().equals("multiverseid")) {
+                            if (data.getLastPathSegment() == null) {
+                                /* Home screen deep link */
+                                launchHomeScreen();
+                                screenLaunched = true;
+                                shouldSelectItem = false;
+                            } else {
+                                try {
+                                    /* Don't clear the fragment stack for internal links (thanks Meld
+                                     * cards) */
+                                    if (data.getPathSegments().contains("internal")) {
+                                        shouldClearFragmentStack = false;
+                                    }
+                                    cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
+                                            new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                                } catch (NumberFormatException e) {
+                                    cursor = null;
                                 }
-                                cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
-                                        new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                            } catch (NumberFormatException e) {
-                                cursor = null;
                             }
                         }
-                    }
 
-                    if (cursor != null) {
-                        if (cursor.getCount() != 0) {
-                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                    new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                        } else {
-                            /* empty cursor, just return */
-                            ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                        if (cursor != null) {
+                            if (cursor.getCount() != 0) {
+                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            } else {
+                                /* empty cursor, just return */
+                                SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
+                                this.finish();
+                                shouldSelectItem = false;
+                            }
+                        } else if (!screenLaunched) {
+                            /* null cursor, just return */
+                            SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                             this.finish();
                             shouldSelectItem = false;
                         }
-                        cursor.close();
-                    } else if (!screenLaunched) {
-                        /* null cursor, just return */
-                        ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
-                        this.finish();
-                        shouldSelectItem = false;
+                    } catch (SQLiteException | FamiliarDbException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (null != cursor) {
+                            cursor.close();
+                        }
+                        DatabaseManager.closeDatabase(this, deepLinkHandle);
                     }
-                } catch (FamiliarDbException e) {
-                    e.printStackTrace();
                 }
-                DatabaseManager.getInstance(this, false).closeDatabase(false);
+                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+                if (shouldSelectItem) {
+                    selectItem(R.string.main_card_search, args, shouldClearFragmentStack, true);
+                }
+                break;
             }
-            args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-            if (shouldSelectItem) {
-                selectItem(R.string.main_card_search, args, shouldClearFragmentStack, true);
-            }
-        } else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
-            selectItem(R.string.main_timer, null, true, false);
-        } else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
-            selectItem(R.string.main_card_search, null, true, false);
-        } else if (ACTION_LIFE.equals(intent.getAction())) {
-            selectItem(R.string.main_life_counter, null, true, false);
-        } else if (ACTION_DICE.equals(intent.getAction())) {
-            selectItem(R.string.main_dice, null, true, false);
-        } else if (ACTION_TRADE.equals(intent.getAction())) {
-            selectItem(R.string.main_trade, null, true, false);
-        } else if (ACTION_MANA.equals(intent.getAction())) {
-            selectItem(R.string.main_mana_pool, null, true, false);
-        } else if (ACTION_WISH.equals(intent.getAction())) {
-            selectItem(R.string.main_wishlist, null, true, false);
-        } else if (ACTION_RULES.equals(intent.getAction())) {
-            selectItem(R.string.main_rules, null, true, false);
-        } else if (ACTION_JUDGE.equals(intent.getAction())) {
-            selectItem(R.string.main_judges_corner, null, true, false);
-        } else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
-            selectItem(R.string.main_mojhosto, null, true, false);
-        } else if (ACTION_PROFILE.equals(intent.getAction())) {
-            selectItem(R.string.main_profile, null, true, false);
-        } else if (ACTION_DECKLIST.equals(intent.getAction())) {
-            selectItem(R.string.main_decklist, null, true, false);
-        } else if (Intent.ACTION_MAIN.equals(intent.getAction())) {
-            /* App launched as regular, show the default fragment if there isn't one already */
-            if (getSupportFragmentManager().getFragments() == null ||
-                    getSupportFragmentManager().getFragments().isEmpty()) {
-                launchHomeScreen();
-            }
-        } else {
-            /* Some unknown intent, just finish */
-            finish();
+            case ACTION_ROUND_TIMER:
+                selectItem(R.string.main_timer, null, true, false);
+                break;
+            case ACTION_CARD_SEARCH:
+                selectItem(R.string.main_card_search, null, true, false);
+                break;
+            case ACTION_LIFE:
+                selectItem(R.string.main_life_counter, null, true, false);
+                break;
+            case ACTION_DICE:
+                selectItem(R.string.main_dice, null, true, false);
+                break;
+            case ACTION_TRADE:
+                selectItem(R.string.main_trade, null, true, false);
+                break;
+            case ACTION_MANA:
+                selectItem(R.string.main_mana_pool, null, true, false);
+                break;
+            case ACTION_WISH:
+                selectItem(R.string.main_wishlist, null, true, false);
+                break;
+            case ACTION_RULES:
+                selectItem(R.string.main_rules, null, true, false);
+                break;
+            case ACTION_JUDGE:
+                selectItem(R.string.main_judges_corner, null, true, false);
+                break;
+            case ACTION_MOJHOSTO:
+                selectItem(R.string.main_mojhosto, null, true, false);
+                break;
+            case ACTION_PROFILE:
+                selectItem(R.string.main_profile, null, true, false);
+                break;
+            case ACTION_DECKLIST:
+                selectItem(R.string.main_decklist, null, true, false);
+                break;
+            case Intent.ACTION_MAIN:
+                /* App launched as regular, show the default fragment if there isn't one already */
+                if (getSupportFragmentManager().getFragments() == null ||
+                        getSupportFragmentManager().getFragments().isEmpty()) {
+                    launchHomeScreen();
+                }
+                break;
+            default:
+                /* Some unknown intent, just finish */
+                finish();
+                break;
         }
 
         mDrawerList.setItemChecked(mCurrentFrag, true);
@@ -1142,6 +1185,26 @@ public class FamiliarActivity extends AppCompatActivity {
 
             /* Color the icon when the fragment changes */
             mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
+        }
+    }
+
+    /**
+     * When a FamiliarFragment resumes, if it was below another FamiliarFragment on the backstack,
+     * call this to reselect the drawer entry based on the class
+     *
+     * @param aClass The class that resumed and should have the associated entry selected
+     */
+    public void selectDrawerEntry(Class<? extends FamiliarFragment> aClass) {
+        // Look through all the entries
+        for (int position = 0; position < mPageEntries.length; position++) {
+            // Check if the entry expects the current class
+            if (mPageEntries[position].isClass(aClass)) {
+                // If it does, set the position and select the entry
+                mCurrentFrag = position;
+                mPagesAdapter.colorDrawerEntry(mPageEntries[mCurrentFrag].getTextView());
+                mDrawerList.setItemChecked(mCurrentFrag, true);
+                return;
+            }
         }
     }
 
@@ -1438,8 +1501,8 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_FRAG, mCurrentFrag);
-        outState.putBoolean(IS_REFRESHING, mRefreshLayout.mRefreshing);
-        mRefreshLayout.setRefreshing(false);
+        outState.putBoolean(IS_REFRESHING, mIsLoading);
+        clearLoading();
         super.onSaveInstanceState(outState);
 
         FamiliarActivity.logBundleSize("OSSI " + this.getClass().getName(), outState);
@@ -1457,7 +1520,11 @@ public class FamiliarActivity extends AppCompatActivity {
             mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);
             mDrawerList.setItemChecked(mCurrentFrag, true);
 
-            mRefreshLayout.setRefreshing(savedInstanceState.getBoolean(IS_REFRESHING));
+            if (savedInstanceState.getBoolean(IS_REFRESHING)) {
+                setLoading();
+            } else {
+                clearLoading();
+            }
         }
     }
 
@@ -1465,14 +1532,20 @@ public class FamiliarActivity extends AppCompatActivity {
      * Show the indeterminate loading bar.
      */
     public void setLoading() {
-        mRefreshLayout.setRefreshing(true);
+        if (!mIsLoading) {
+            mSmoothProgressBar.progressiveStart();
+            mIsLoading = true;
+        }
     }
 
     /**
      * Hide the indeterminate loading bar.
      */
     public void clearLoading() {
-        mRefreshLayout.setRefreshing(false);
+        if (mIsLoading) {
+            mSmoothProgressBar.progressiveStop();
+            mIsLoading = false;
+        }
     }
 
     /**
@@ -1493,17 +1566,17 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * Checks the networks state.
      *
-     * @param context         the context where this is being called
+     * @param activity        the activity to show the Snackbar in
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like
      * ConnectivityManager.TYPE_WIFI
      */
-    public static int getNetworkState(Context context, boolean shouldShowToast) {
+    public static int getNetworkState(Activity activity, boolean shouldShowToast) {
         try {
-            ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager conMan = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (null == conMan) {
                 if (shouldShowToast) {
-                    ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                    SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
                 }
                 return -1;
             }
@@ -1513,49 +1586,14 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
             }
             if (shouldShowToast) {
-                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
             }
             return -1;
-        }
-    }
-
-    /*
-     * Image Caching
-     */
-
-    private void addImageCache(FragmentManager fragmentManager,
-                               ImageCache.ImageCacheParams cacheParams) {
-        mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
-        new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
-    }
-
-    private void initDiskCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.initDiskCache();
-        }
-    }
-
-    private void clearCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.clearCache();
-        }
-    }
-
-    private void flushCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.flush();
-        }
-    }
-
-    private void closeCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.close();
-            mImageCache = null;
         }
     }
 
@@ -1597,24 +1635,38 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * This nested class encapsulates the necessary information for an entry in the drawer menu.
      */
-    public class DrawerEntry {
+    class DrawerEntry {
         final int mNameResource;
         final int mIconAttr;
         final boolean mIsDivider;
+        private final Class[] mFragClasses;
         TextView textView;
 
-        public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
+        DrawerEntry(int nameResource, int iconResource, boolean isHeader, Class fragments[]) {
             mNameResource = nameResource;
             mIconAttr = iconResource;
             mIsDivider = isHeader;
+            mFragClasses = fragments;
         }
 
-        public void setTextView(TextView textView) {
+        void setTextView(TextView textView) {
             this.textView = textView;
         }
 
-        public TextView getTextView() {
+        TextView getTextView() {
             return textView;
+        }
+
+        boolean isClass(Class<? extends FamiliarFragment> aClass) {
+            if (null == mFragClasses) {
+                return false;
+            }
+            for (Class fragClass : mFragClasses) {
+                if (aClass.equals(fragClass)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
@@ -1622,7 +1674,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * This nested class is the adapter which populates the listView in the drawer menu. It handles
      * both entries and headers.
      */
-    public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
+    class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
         private Drawable mHighlightedDrawable;
 
         /**
@@ -1631,7 +1683,7 @@ public class FamiliarActivity extends AppCompatActivity {
          *
          * @param context The application's context, used to inflate views later.
          */
-        public DrawerEntryArrayAdapter(Context context) {
+        DrawerEntryArrayAdapter(Context context) {
             super(context, R.layout.drawer_list_item, mPageEntries);
         }
 
@@ -1700,28 +1752,6 @@ public class FamiliarActivity extends AppCompatActivity {
                 mHighlightedDrawable = textView.getCompoundDrawables()[0];
                 mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
             }
-        }
-    }
-
-    private class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            switch ((Integer) params[0]) {
-                case MESSAGE_CLEAR:
-                    clearCacheInternal();
-                    break;
-                case MESSAGE_INIT_DISK_CACHE:
-                    initDiskCacheInternal();
-                    break;
-                case MESSAGE_FLUSH:
-                    flushCacheInternal();
-                    break;
-                case MESSAGE_CLOSE:
-                    closeCacheInternal();
-                    break;
-            }
-            return null;
         }
     }
 

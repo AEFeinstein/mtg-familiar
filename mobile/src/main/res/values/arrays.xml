@@ -62,7 +62,7 @@
         <item>7-*</item>
         <item>*^2</item>
         <item>X</item>
-        <item>?</item>
+        <item>&amp;</item>
         <item>0.5</item>
         <item>1.5</item>
         <item>2.5</item>
@@ -121,11 +121,13 @@
         <item>@string/trader_Low</item>
         <item>@string/trader_Average</item>
         <item>@string/trader_High</item>
+        <item>@string/trader_Market</item>
     </string-array>
     <string-array name="trade_option_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
     <string-array name="set_spinner">
         <item>@string/search_Most_recent_printing</item>
