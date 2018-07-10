@@ -427,13 +427,13 @@ public class TradeFragment extends FamiliarListFragment {
 
         super.onResume();
 
-        String tradeToLoad = PreferenceAdapter.getLastLoadedTrade(getContext());
-        if (!tradeToLoad.isEmpty()) {
-            mCurrentTrade = tradeToLoad;
-            loadTrade(mCurrentTrade + TRADE_EXTENSION);
-        } else {
-            loadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        // Get the last loaded trade
+        mCurrentTrade = PreferenceAdapter.getLastLoadedTrade(getContext());
+        if (mCurrentTrade.isEmpty()) {
+            // If it's empty, use autosave instead
+            mCurrentTrade = AUTOSAVE_NAME;
         }
+        loadTrade(mCurrentTrade + TRADE_EXTENSION);
     }
 
     /**
@@ -443,13 +443,13 @@ public class TradeFragment extends FamiliarListFragment {
     public void onPause() {
 
         super.onPause();
-        if (!mCurrentTrade.isEmpty()) {
-            PreferenceAdapter.setLastLoadedTrade(getContext(), mCurrentTrade);
-            saveTrade(mCurrentTrade + TRADE_EXTENSION);
-        } else {
-            saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        // If for some reason there is no trade name, use autosave
+        if (mCurrentTrade.isEmpty()) {
+            mCurrentTrade = AUTOSAVE_NAME;
         }
-
+        // Save the current name and trade
+        PreferenceAdapter.setLastLoadedTrade(getContext(), mCurrentTrade);
+        saveTrade(mCurrentTrade + TRADE_EXTENSION);
     }
 
     @Override
