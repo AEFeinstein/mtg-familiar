@@ -292,6 +292,14 @@ public class ResultListFragment extends FamiliarFragment {
         return myFragmentView;
     }
 
+    /**
+     * TODO doc
+     * TODO don't use bundle?
+     *
+     * @param args
+     * @param database
+     * @throws FamiliarDbException
+     */
     private void doSearch(Bundle args, SQLiteDatabase database) throws FamiliarDbException {
         long id;
         /* This is just the multiverse ID, from a TutorCards search */
@@ -410,6 +418,7 @@ public class ResultListFragment extends FamiliarFragment {
      */
     private void startCardViewFrag(long id) throws FamiliarDbException {
         try {
+            // TODO don't use bundle?
             Bundle args = new Bundle();
             int cardPosition = 0;
 

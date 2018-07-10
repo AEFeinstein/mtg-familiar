@@ -42,6 +42,8 @@ import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -1509,6 +1511,8 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
         //as we removed them before the parent saved instance state, so our adding them in
         //onRestoreInstanceState is good.
         addListeners();
+
+        FamiliarActivity.logBundleSize("OSSI " + this.getClass().getName(), state);
 
         return state;
     }

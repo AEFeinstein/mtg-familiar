@@ -118,8 +118,11 @@ public abstract class FamiliarFragment extends Fragment {
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        if (outState.isEmpty()) {
+            outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        }
         super.onSaveInstanceState(outState);
+        FamiliarActivity.logBundleSize("OSSI " + this.getClass().getName(), outState);
     }
 
     /**
@@ -232,7 +235,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param frag The fragment to start
      * @param args Any arguments which the fragment takes
      */
-    public void startNewFragment(Fragment frag, Bundle args) {
+    public void startNewFragment(FamiliarFragment frag, Bundle args) {
         try {
             FragmentManager fm = getActivity().getSupportFragmentManager();
             if (fm != null) {
@@ -344,4 +347,14 @@ public abstract class FamiliarFragment extends Fragment {
     public void receiveSortOrder(String orderByStr) {
     }
 
+    /**
+     * Override setArguments to also log the size of the arguments being set
+     *
+     * @param args Arguments to set
+     */
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        FamiliarActivity.logBundleSize("SA " + this.getClass().getName(), args);
+    }
 }
