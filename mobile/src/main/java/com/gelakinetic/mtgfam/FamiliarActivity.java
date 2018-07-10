@@ -1800,6 +1800,23 @@ public class FamiliarActivity extends AppCompatActivity {
             int size = parcel.dataSize();
             parcel.recycle();
             FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + Integer.toString(size) + " bytes");
+
+            StringBuilder toPrint = new StringBuilder();
+            toPrint.append("\r\n\r\n");
+            printBundleContents(toPrint, outState, 0);
+            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleContents", toPrint.toString());
+        }
+    }
+
+    private static void printBundleContents(StringBuilder toPrint, Bundle outState, int recursionLevel) {
+        for (String key : outState.keySet()) {
+            for (int i = 0; i < recursionLevel; i++) {
+                toPrint.append("  ");
+            }
+            toPrint.append(key).append(" :: ").append(outState.get(key).getClass().getName()).append("\r\n");
+            if (outState.get(key) instanceof Bundle) {
+                printBundleContents(toPrint, (Bundle) outState.get(key), recursionLevel + 1);
+            }
         }
     }
 

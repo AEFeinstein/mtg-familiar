@@ -254,8 +254,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBundle(FRAGMENT_TAG, saveState());
+        super.onSaveInstanceState(outState);
     }
 
     /**
