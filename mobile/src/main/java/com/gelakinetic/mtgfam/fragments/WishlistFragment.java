@@ -94,13 +94,14 @@ public class WishlistFragment extends FamiliarListFragment {
         };
 
         /* Make sure to initialize shared members */
-        initializeMembers(
-                myFragmentView,
-                new int[]{R.id.cardlist},
-                new CardDataAdapter[]{new WishlistDataAdapter(mCompressedWishlist)},
-                new int[]{R.id.priceText}, new int[]{R.id.divider_total_price},
-                R.menu.action_mode_menu, addCardListener);
-
+        synchronized (mCompressedWishlist) {
+            initializeMembers(
+                    myFragmentView,
+                    new int[]{R.id.cardlist},
+                    new CardDataAdapter[]{new WishlistDataAdapter(mCompressedWishlist)},
+                    new int[]{R.id.priceText}, new int[]{R.id.divider_total_price},
+                    R.menu.action_mode_menu, addCardListener);
+        }
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(view -> addCardToWishlist());
 
         return myFragmentView;
@@ -111,7 +112,9 @@ public class WishlistFragment extends FamiliarListFragment {
         super.onPause();
         /* unsort, then save the wishlist */
         sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-        WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+        synchronized (mCompressedWishlist) {
+            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+        }
     }
 
     /**
@@ -134,20 +137,20 @@ public class WishlistFragment extends FamiliarListFragment {
             CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
             /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-            if (mCompressedWishlist.contains(wrapped)) {
-                CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
-                boolean added = false;
-                for (IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mSetCode.equals(card.getExpansion()) && isi.mIsFoil.equals(card.mIsFoil)) {
-                        added = true;
-                        isi.mNumberOf++;
+            synchronized (mCompressedWishlist) {
+                if (mCompressedWishlist.contains(wrapped)) {
+                    CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
+                    boolean added = false;
+                    for (IndividualSetInfo isi : cwi.mInfo) {
+                        if (isi.mSetCode.equals(card.getExpansion()) && isi.mIsFoil.equals(card.mIsFoil)) {
+                            added = true;
+                            isi.mNumberOf++;
+                        }
                     }
-                }
-                if (!added) {
-                    cwi.add(card);
-                }
-            } else {
-                synchronized (mCompressedWishlist) {
+                    if (!added) {
+                        cwi.add(card);
+                    }
+                } else {
                     mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
                 }
             }
@@ -292,8 +295,10 @@ public class WishlistFragment extends FamiliarListFragment {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(),
-                        mShowCardInfo, mShowIndividualPrices, getPriceSetting()));
+                synchronized (mCompressedWishlist) {
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(),
+                            mShowCardInfo, mShowIndividualPrices, getPriceSetting()));
+                }
                 sendIntent.setType("text/plain");
 
                 try {
@@ -344,19 +349,21 @@ public class WishlistFragment extends FamiliarListFragment {
 
     @Override
     protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
-        for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-            if (cwi.getName().equals(data.getName())) {
-                /* Find all foil and non foil compressed items with the same set code */
-                for (IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mSetCode.equals(data.getExpansion())) {
-                        /* Set the price as null and the message as the exception */
-                        if (null != exception.getLocalizedMessage()) {
-                            isi.mMessage = exception.getLocalizedMessage();
-                        } else {
-                            isi.mMessage = exception.getClass().getSimpleName();
+        synchronized (mCompressedWishlist) {
+            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+                if (cwi.getName().equals(data.getName())) {
+                    /* Find all foil and non foil compressed items with the same set code */
+                    for (IndividualSetInfo isi : cwi.mInfo) {
+                        if (isi.mSetCode.equals(data.getExpansion())) {
+                            /* Set the price as null and the message as the exception */
+                            if (null != exception.getLocalizedMessage()) {
+                                isi.mMessage = exception.getLocalizedMessage();
+                            } else {
+                                isi.mMessage = exception.getClass().getSimpleName();
+                            }
+                            isi.mPrice = null;
+                            return;
                         }
-                        isi.mPrice = null;
-                        return;
                     }
                 }
             }
@@ -396,11 +403,12 @@ public class WishlistFragment extends FamiliarListFragment {
     public void updateTotalPrices(int side) {
         if (shouldShowPrice()) {
             float totalPrice = 0;
-
-            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                for (IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mPrice != null) {
-                        totalPrice += (isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf);
+            synchronized (mCompressedWishlist) {
+                for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+                    for (IndividualSetInfo isi : cwi.mInfo) {
+                        if (isi.mPrice != null) {
+                            totalPrice += (isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf);
+                        }
                     }
                 }
             }
@@ -476,7 +484,9 @@ public class WishlistFragment extends FamiliarListFragment {
         public void onClickNotSelectMode(View view, int position) {
             // Make sure the wishlist is written first in the proper order
             sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            synchronized (mCompressedWishlist) {
+                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            }
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
 
             // Then show the dialog
@@ -514,7 +524,9 @@ public class WishlistFragment extends FamiliarListFragment {
         protected void onItemRemovedFinal() {
             // Unsort, save, then sort the wishlist
             sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            synchronized (mCompressedWishlist) {
+                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            }
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
         }
 

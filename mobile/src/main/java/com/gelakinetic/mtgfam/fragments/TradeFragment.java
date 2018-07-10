@@ -106,18 +106,21 @@ public class TradeFragment extends FamiliarListFragment {
 
         assert myFragmentView != null;
 
-        CardDataAdapter listAdapterLeft = new TradeDataAdapter(mListLeft, LEFT);
+        synchronized (mListRight) {
+            synchronized (mListLeft) {
+                CardDataAdapter listAdapterLeft = new TradeDataAdapter(mListLeft, LEFT);
+                CardDataAdapter listAdapterRight = new TradeDataAdapter(mListRight, RIGHT);
 
-        CardDataAdapter listAdapterRight = new TradeDataAdapter(mListRight, RIGHT);
-
-        /* Call to set up our shared UI elements */
-        initializeMembers(
-                myFragmentView,
-                new int[]{R.id.tradeListLeft, R.id.tradeListRight},
-                new CardDataAdapter[]{listAdapterLeft, listAdapterRight},
-                new int[]{R.id.priceTextLeft, R.id.priceTextRight},
-                new int[]{R.id.priceDividerLeft, R.id.priceDividerRight}, R.menu.action_mode_menu,
-                null);
+                /* Call to set up our shared UI elements */
+                initializeMembers(
+                        myFragmentView,
+                        new int[]{R.id.tradeListLeft, R.id.tradeListRight},
+                        new CardDataAdapter[]{listAdapterLeft, listAdapterRight},
+                        new int[]{R.id.priceTextLeft, R.id.priceTextRight},
+                        new int[]{R.id.priceDividerLeft, R.id.priceDividerRight}, R.menu.action_mode_menu,
+                        null);
+            }
+        }
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
@@ -240,11 +243,15 @@ public class TradeFragment extends FamiliarListFragment {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
             fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
 
-            for (MtgCard cd : mListLeft) {
-                fos.write(cd.toTradeString(LEFT).getBytes());
+            synchronized (mListLeft) {
+                for (MtgCard cd : mListLeft) {
+                    fos.write(cd.toTradeString(LEFT).getBytes());
+                }
             }
-            for (MtgCard cd : mListRight) {
-                fos.write(cd.toTradeString(RIGHT).getBytes());
+            synchronized (mListRight) {
+                for (MtgCard cd : mListRight) {
+                    fos.write(cd.toTradeString(RIGHT).getBytes());
+                }
             }
 
             fos.close();
@@ -308,17 +315,21 @@ public class TradeFragment extends FamiliarListFragment {
 
         // Now that all the file IO is done, hit the database twice, once for each side
         try {
-            MtgCard.initCardListFromDb(getContext(), mListLeft);
-            for (MtgCard card : mListLeft) {
-                if (!card.mIsCustomPrice) {
-                    loadPrice(card);
+            synchronized (mListLeft) {
+                MtgCard.initCardListFromDb(getContext(), mListLeft);
+                for (MtgCard card : mListLeft) {
+                    if (!card.mIsCustomPrice) {
+                        loadPrice(card);
+                    }
                 }
             }
 
-            MtgCard.initCardListFromDb(getContext(), mListRight);
-            for (MtgCard card : mListRight) {
-                if (!card.mIsCustomPrice) {
-                    loadPrice(card);
+            synchronized (mListRight) {
+                MtgCard.initCardListFromDb(getContext(), mListRight);
+                for (MtgCard card : mListRight) {
+                    if (!card.mIsCustomPrice) {
+                        loadPrice(card);
+                    }
                 }
             }
         } catch (FamiliarDbException fde) {
@@ -380,8 +391,10 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Add all the cards to the StringBuilder from the left, tallying the price */
         float totalPrice = 0;
-        for (MtgCard card : mListLeft) {
-            totalPrice += (card.toTradeShareString(sb, getString(R.string.wishlist_foil)) / 100.0f);
+        synchronized (mListLeft) {
+            for (MtgCard card : mListLeft) {
+                totalPrice += (card.toTradeShareString(sb, getString(R.string.wishlist_foil)) / 100.0f);
+            }
         }
         sb.append(String.format(Locale.US, PRICE_FORMAT + "%n", totalPrice));
 
@@ -390,8 +403,10 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Add all the cards to the StringBuilder from the right, tallying the price */
         totalPrice = 0;
-        for (MtgCard card : mListRight) {
-            totalPrice += (card.toTradeShareString(sb, getString(R.string.wishlist_foil)) / 100.0f);
+        synchronized (mListRight) {
+            for (MtgCard card : mListRight) {
+                totalPrice += (card.toTradeShareString(sb, getString(R.string.wishlist_foil)) / 100.0f);
+            }
         }
         sb.append(String.format(Locale.US, PRICE_FORMAT, totalPrice));
 
@@ -485,12 +500,14 @@ public class TradeFragment extends FamiliarListFragment {
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as
                    "bad," (incomplete) */
-                for (MtgCard data : mListLeft) {
-                    totalCards += data.mNumberOf;
-                    if (data.hasPrice()) {
-                        totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
-                    } else {
-                        hasBadValues = true;
+                synchronized (mListLeft) {
+                    for (MtgCard data : mListLeft) {
+                        totalCards += data.mNumberOf;
+                        if (data.hasPrice()) {
+                            totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
+                        } else {
+                            hasBadValues = true;
+                        }
                     }
                 }
 
@@ -510,12 +527,14 @@ public class TradeFragment extends FamiliarListFragment {
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as "bad,"
                    (incomplete) */
-                for (MtgCard data : mListRight) {
-                    totalCards += data.mNumberOf;
-                    if (data.hasPrice()) {
-                        totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
-                    } else {
-                        hasBadValues = true;
+                synchronized (mListRight) {
+                    for (MtgCard data : mListRight) {
+                        totalCards += data.mNumberOf;
+                        if (data.hasPrice()) {
+                            totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
+                        } else {
+                            hasBadValues = true;
+                        }
                     }
                 }
 

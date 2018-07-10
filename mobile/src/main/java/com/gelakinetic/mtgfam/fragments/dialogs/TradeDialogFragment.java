@@ -108,298 +108,302 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             case DIALOG_UPDATE_CARD: {
                 /* Get some final references */
                 final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
-                final TradeFragment.TradeDataAdapter aaSide = (TradeFragment.TradeDataAdapter) (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT) : getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
-                if (positionForDialog >= lSide.size() || positionForDialog < 0) {
-                    return DontShowDialog();
-                }
-                final boolean oldFoil = lSide.get(positionForDialog).mIsFoil;
+                synchronized (lSide) {
 
-                /* Inflate the view and pull out UI elements */
-                @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
-                        null, false);
-                assert view != null;
-                final CheckBox foilCheckbox = view.findViewById(R.id.traderDialogFoil);
-                final EditText numberOf = view.findViewById(R.id.traderDialogNumber);
-                final EditText priceText = view.findViewById(R.id.traderDialogPrice);
-
-                /* Set initial values */
-                String numberOfStr = String.valueOf(lSide.get(positionForDialog).mNumberOf);
-                numberOf.setText(numberOfStr);
-                numberOf.setSelection(numberOfStr.length());
-                foilCheckbox.setChecked(oldFoil);
-                String priceNumberStr = lSide.get(positionForDialog).hasPrice() ?
-                        lSide.get(positionForDialog).getPriceString().substring(1) : "";
-                priceText.setText(priceNumberStr);
-                priceText.setSelection(priceNumberStr.length());
-
-                /* Only show the foil checkbox if the card can be foil */
-                FamiliarDbHandle canBeFoilHandle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, canBeFoilHandle);
-                    if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).getExpansion(), database)) {
-                        view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
-                    } else {
-                        view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
+                    final TradeFragment.TradeDataAdapter aaSide = (TradeFragment.TradeDataAdapter) (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT) : getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
+                    if (positionForDialog >= lSide.size() || positionForDialog < 0) {
+                        return DontShowDialog();
                     }
-                } catch (SQLiteException | FamiliarDbException e) {
-                    /* Err on the side of foil */
-                    foilCheckbox.setVisibility(View.VISIBLE);
-                } finally {
-                    DatabaseManager.closeDatabase(getActivity(), canBeFoilHandle);
-                }
+                    final boolean oldFoil = lSide.get(positionForDialog).mIsFoil;
 
-                /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
-                foilCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
-                    lSide.get(positionForDialog).mIsFoil = b;
-                    if (!lSide.get(positionForDialog).mIsCustomPrice) {
-                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
-                        priceText.setText(lSide.get(positionForDialog).hasPrice() ?
-                                lSide.get(positionForDialog).getPriceString().substring(1) : "");
-                    }
-                });
+                    /* Inflate the view and pull out UI elements */
+                    @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
+                            null, false);
+                    assert view != null;
+                    final CheckBox foilCheckbox = view.findViewById(R.id.traderDialogFoil);
+                    final EditText numberOf = view.findViewById(R.id.traderDialogNumber);
+                    final EditText priceText = view.findViewById(R.id.traderDialogPrice);
 
-                /* Set up the button to remove this card from the trade */
-                view.findViewById(R.id.traderDialogRemove).setOnClickListener(v -> {
-                    synchronized (lSide) {
-                        lSide.remove(positionForDialog);
-                    }
-                    aaSide.notifyDataSetChanged();
-                    getParentTradeFragment().updateTotalPrices(sideForDialog);
-                    getParentTradeFragment().removeDialog(getFragmentManager());
-                });
+                    /* Set initial values */
+                    String numberOfStr = String.valueOf(lSide.get(positionForDialog).mNumberOf);
+                    numberOf.setText(numberOfStr);
+                    numberOf.setSelection(numberOfStr.length());
+                    foilCheckbox.setChecked(oldFoil);
+                    String priceNumberStr = lSide.get(positionForDialog).hasPrice() ?
+                            lSide.get(positionForDialog).getPriceString().substring(1) : "";
+                    priceText.setText(priceNumberStr);
+                    priceText.setSelection(priceNumberStr.length());
 
-                /* If this has a custom price, show the button to default the price */
-                view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(v -> {
-                    lSide.get(positionForDialog).mIsCustomPrice = false;
-                    /* This loads the price if necessary, or uses cached info */
-                    getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
-                    int price = lSide.get(positionForDialog).mPrice;
-                    priceText.setText(String.format(Locale.US, "%d.%02d", price / 100, price % 100));
-
-                    aaSide.notifyDataSetChanged();
-                    getParentTradeFragment().updateTotalPrices(sideForDialog);
-                });
-
-                /* Create the callback for when the dialog is successfully closed or when the card
-                 * info is shown or when the set is changed
-                 */
-                MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
-                    /* Grab a reference to the card */
-                    MtgCard data = lSide.get(positionForDialog);
-
-                    /* Assume non-custom price */
-                    data.mIsCustomPrice = false;
-
-                    /* Set this card's foil option */
-                    data.mIsFoil = foilCheckbox.isChecked();
-
-                    /* validate number of cards text */
-                    if (numberOf.length() == 0) {
-                        data.mNumberOf = 1;
-                    } else {
-                        /* Set the numberOf */
-                        assert numberOf.getEditableText() != null;
-                        try {
-                            data.mNumberOf =
-                                    (Integer.parseInt(numberOf.getEditableText().toString()));
-                        } catch (NumberFormatException e) {
-                            data.mNumberOf = 1;
-                        }
-                    }
-
-                    /* validate the price text */
-                    assert priceText.getText() != null;
-                    String userInputPrice = priceText.getText().toString();
-
-                    /* If the input price is blank, set it to zero */
-                    if (userInputPrice.length() == 0) {
-                        data.mIsCustomPrice = true;
-                        data.mPrice = 0;
-                    } else {
-                        /* Attempt to parse the price */
-                        try {
-                            data.mPrice = (int) (Double.parseDouble(userInputPrice) * 100);
-                        } catch (NumberFormatException e) {
-                            data.mIsCustomPrice = true;
-                            data.mPrice = 0;
-                        }
-                    }
-
-                    /* Check if the user hand-modified the price by comparing the current price
-                     * to the cached price */
-                    int oldPrice;
-                    if (data.mPriceInfo != null) {
-                        oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
-
-                        if (oldPrice != data.mPrice) {
-                            data.mIsCustomPrice = true;
-                        }
-                    } else {
-                        data.mIsCustomPrice = true;
-                    }
-
-                    /* Notify things to update */
-                    aaSide.notifyDataSetChanged();
-                    getParentTradeFragment().updateTotalPrices(sideForDialog);
-                };
-
-                /* Set up the button to show info about this card */
-                view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
-                    onPositiveCallback.onClick(null, null);
-                    Cursor cursor = null;
-                    FamiliarDbHandle infoHandle = new FamiliarDbHandle();
+                    /* Only show the foil checkbox if the card can be foil */
+                    FamiliarDbHandle canBeFoilHandle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, infoHandle);
-
-                        /* Get the card ID, and send it to a new CardViewPagerFragment */
-                        cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).getName(),
-                                lSide.get(positionForDialog).getExpansion(), Collections.singletonList(
-                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
-
-                        Bundle args = new Bundle();
-                        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
-                                cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                        args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-
-                        CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                        getParentTradeFragment().startNewFragment(cvpFrag, args);
-                    } catch (SQLiteException | FamiliarDbException e) {
-                        getParentTradeFragment().handleFamiliarDbException(false);
-                    } finally {
-                        if (null != cursor) {
-                            cursor.close();
+                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, canBeFoilHandle);
+                        if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).getExpansion(), database)) {
+                            view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
+                        } else {
+                            view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
                         }
-                        DatabaseManager.closeDatabase(getActivity(), infoHandle);
+                    } catch (SQLiteException | FamiliarDbException e) {
+                        /* Err on the side of foil */
+                        foilCheckbox.setVisibility(View.VISIBLE);
+                    } finally {
+                        DatabaseManager.closeDatabase(getActivity(), canBeFoilHandle);
                     }
-                    getParentTradeFragment().removeDialog(getFragmentManager());
-                });
 
-                /* Set up the button to change the set of this card */
-                view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> {
-                    onPositiveCallback.onClick(null, null);
-                    getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
-                });
-
-                return new MaterialDialog.Builder(this.getActivity())
-                        .title(lSide.get(positionForDialog).getName())
-                        .customView(view, false)
-                        .positiveText(R.string.dialog_done)
-                        .onPositive(onPositiveCallback)
-                        .negativeText(R.string.dialog_cancel)
-                        .onNegative((dialog, which) -> {
-                            // Revert any foil changes
-                            lSide.get(positionForDialog).mIsFoil = oldFoil;
+                    /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
+                    foilCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
+                        synchronized (lSide) {
+                            lSide.get(positionForDialog).mIsFoil = b;
                             if (!lSide.get(positionForDialog).mIsCustomPrice) {
                                 getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
                                 priceText.setText(lSide.get(positionForDialog).hasPrice() ?
                                         lSide.get(positionForDialog).getPriceString().substring(1) : "");
                             }
-                        })
-                        .build();
+                        }
+                    });
+
+                    /* Set up the button to remove this card from the trade */
+                    view.findViewById(R.id.traderDialogRemove).setOnClickListener(v -> {
+                        synchronized (lSide) {
+                            lSide.remove(positionForDialog);
+                        }
+                        aaSide.notifyDataSetChanged();
+                        getParentTradeFragment().updateTotalPrices(sideForDialog);
+                        getParentTradeFragment().removeDialog(getFragmentManager());
+                    });
+
+                    /* If this has a custom price, show the button to default the price */
+                    view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(v -> {
+                        synchronized (lSide) {
+                            lSide.get(positionForDialog).mIsCustomPrice = false;
+                            /* This loads the price if necessary, or uses cached info */
+                            getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
+                            int price = lSide.get(positionForDialog).mPrice;
+                            priceText.setText(String.format(Locale.US, "%d.%02d", price / 100, price % 100));
+                        }
+
+                        aaSide.notifyDataSetChanged();
+                        getParentTradeFragment().updateTotalPrices(sideForDialog);
+                    });
+
+                    /* Create the callback for when the dialog is successfully closed or when the card
+                     * info is shown or when the set is changed
+                     */
+                    MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
+                        /* Grab a reference to the card */
+                        synchronized (lSide) {
+                            MtgCard data = lSide.get(positionForDialog);
+
+                            /* Assume non-custom price */
+                            data.mIsCustomPrice = false;
+
+                            /* Set this card's foil option */
+                            data.mIsFoil = foilCheckbox.isChecked();
+
+                            /* validate number of cards text */
+                            if (numberOf.length() == 0) {
+                                data.mNumberOf = 1;
+                            } else {
+                                /* Set the numberOf */
+                                assert numberOf.getEditableText() != null;
+                                try {
+                                    data.mNumberOf =
+                                            (Integer.parseInt(numberOf.getEditableText().toString()));
+                                } catch (NumberFormatException e) {
+                                    data.mNumberOf = 1;
+                                }
+                            }
+
+                            /* validate the price text */
+                            assert priceText.getText() != null;
+                            String userInputPrice = priceText.getText().toString();
+
+                            /* If the input price is blank, set it to zero */
+                            if (userInputPrice.length() == 0) {
+                                data.mIsCustomPrice = true;
+                                data.mPrice = 0;
+                            } else {
+                                /* Attempt to parse the price */
+                                try {
+                                    data.mPrice = (int) (Double.parseDouble(userInputPrice) * 100);
+                                } catch (NumberFormatException e) {
+                                    data.mIsCustomPrice = true;
+                                    data.mPrice = 0;
+                                }
+                            }
+
+                            /* Check if the user hand-modified the price by comparing the current price
+                             * to the cached price */
+                            int oldPrice;
+                            if (data.mPriceInfo != null) {
+                                oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
+
+                                if (oldPrice != data.mPrice) {
+                                    data.mIsCustomPrice = true;
+                                }
+                            } else {
+                                data.mIsCustomPrice = true;
+                            }
+                        }
+
+                        /* Notify things to update */
+                        aaSide.notifyDataSetChanged();
+                        getParentTradeFragment().updateTotalPrices(sideForDialog);
+                    };
+
+                    /* Set up the button to show info about this card */
+                    view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
+                        onPositiveCallback.onClick(null, null);
+                        Cursor cursor = null;
+                        FamiliarDbHandle infoHandle = new FamiliarDbHandle();
+                        try {
+                            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, infoHandle);
+
+                            synchronized (lSide) {
+                                /* Get the card ID, and send it to a new CardViewPagerFragment */
+                                cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).getName(),
+                                        lSide.get(positionForDialog).getExpansion(), Collections.singletonList(
+                                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
+                            }
+
+                            Bundle args = new Bundle();
+                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
+                                    cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+
+                            CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                            getParentTradeFragment().startNewFragment(cvpFrag, args);
+                        } catch (SQLiteException | FamiliarDbException e) {
+                            getParentTradeFragment().handleFamiliarDbException(false);
+                        } finally {
+                            if (null != cursor) {
+                                cursor.close();
+                            }
+                            DatabaseManager.closeDatabase(getActivity(), infoHandle);
+                        }
+                        getParentTradeFragment().removeDialog(getFragmentManager());
+                    });
+
+                    /* Set up the button to change the set of this card */
+                    view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> {
+                        onPositiveCallback.onClick(null, null);
+                        getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
+                    });
+
+                    return new MaterialDialog.Builder(this.getActivity())
+                            .title(lSide.get(positionForDialog).getName())
+                            .customView(view, false)
+                            .positiveText(R.string.dialog_done)
+                            .onPositive(onPositiveCallback)
+                            .negativeText(R.string.dialog_cancel)
+                            .onNegative((dialog, which) -> {
+                                // Revert any foil changes
+                                lSide.get(positionForDialog).mIsFoil = oldFoil;
+                                if (!lSide.get(positionForDialog).mIsCustomPrice) {
+                                    getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
+                                    priceText.setText(lSide.get(positionForDialog).hasPrice() ?
+                                            lSide.get(positionForDialog).getPriceString().substring(1) : "");
+                                }
+                            })
+                            .build();
+                }
             }
             case DIALOG_CHANGE_SET: {
                 /* Make sure positionForDialog is in bounds */
-                int max;
-                if (sideForDialog == TradeFragment.LEFT) {
-                    max = getParentTradeFragment().mListLeft.size();
-                } else {
-                    max = getParentTradeFragment().mListRight.size();
-                }
-                if (positionForDialog < 0 || positionForDialog >= max) {
-                    return DontShowDialog();
-                }
+                final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
+                synchronized (lSide) {
+                    if (positionForDialog < 0 || positionForDialog >= lSide.size()) {
+                        return DontShowDialog();
+                    }
 
-                /* Get the card */
-                MtgCard data = (sideForDialog == TradeFragment.LEFT ?
-                        getParentTradeFragment().mListLeft.get(positionForDialog) : getParentTradeFragment().mListRight.get(positionForDialog));
+                    /* Get the card */
+                    MtgCard data = lSide.get(positionForDialog);
 
-                Set<String> sets = new LinkedHashSet<>();
-                Set<String> setCodes = new LinkedHashSet<>();
-                Cursor cards = null;
-                FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, fetchCardHandle);
-                    /* Query the database for all versions of this card */
-                    cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                            CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, database);
-                    /* Build set names and set codes */
-                    while (!cards.isAfterLast()) {
-                        if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)))) {
-                            setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
+                    Set<String> sets = new LinkedHashSet<>();
+                    Set<String> setCodes = new LinkedHashSet<>();
+                    Cursor cards = null;
+                    FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
+                    try {
+                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, fetchCardHandle);
+                        /* Query the database for all versions of this card */
+                        cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
+                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, database);
+                        /* Build set names and set codes */
+                        while (!cards.isAfterLast()) {
+                            if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)))) {
+                                setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
+                            }
+                            cards.moveToNext();
                         }
-                        cards.moveToNext();
+                    } catch (SQLiteException | FamiliarDbException e) {
+                        /* Don't show the dialog, but pop a toast */
+                        getParentTradeFragment().handleFamiliarDbException(true);
+                        return DontShowDialog();
+                    } finally {
+                        if (null != cards) {
+                            cards.close();
+                        }
+                        DatabaseManager.closeDatabase(getActivity(), fetchCardHandle);
                     }
-                } catch (SQLiteException | FamiliarDbException e) {
-                    /* Don't show the dialog, but pop a toast */
-                    getParentTradeFragment().handleFamiliarDbException(true);
-                    return DontShowDialog();
-                } finally {
-                    if (null != cards) {
-                        cards.close();
-                    }
-                    DatabaseManager.closeDatabase(getActivity(), fetchCardHandle);
+
+                    /* Turn set names and set codes into arrays */
+                    final String[] aSets = sets.toArray(new String[sets.size()]);
+                    final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
+
+                    /* Build and return the dialog */
+                    return new MaterialDialog.Builder(getActivity())
+                            .title(R.string.card_view_set_dialog_title)
+                            .items((CharSequence[]) aSets)
+                            .itemsCallback((dialog, itemView, position, text) -> {
+
+                                /* Make sure positionForDialog is in bounds */
+                                synchronized (lSide) {
+                                    int max1 = lSide.size();
+
+                                    if (positionForDialog < 0 || positionForDialog >= max1) {
+                                        return;
+                                    }
+
+                                    String name = lSide.get(positionForDialog).getName();
+                                    String set = aSetCodes[position];
+                                    int numberOf = lSide.get(positionForDialog).mNumberOf;
+
+                                    /* See if the new set can be foil */
+                                    FamiliarDbHandle foilHandle = new FamiliarDbHandle();
+                                    boolean isFoil = lSide.get(positionForDialog).mIsFoil;
+                                    try {
+                                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
+                                        if (!CardDbAdapter.canBeFoil(set, database)) {
+                                            isFoil = false;
+                                        }
+                                    } catch (SQLiteException | FamiliarDbException e) {
+                                        isFoil = false;
+                                    } finally {
+                                        DatabaseManager.closeDatabase(getActivity(), foilHandle);
+                                    }
+
+                                    try {
+                                        lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
+
+                                        /* Reload and notify the adapter */
+                                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
+                                        /* Figure out what we're updating */
+                                        TradeFragment.TradeDataAdapter adapter;
+                                        if (sideForDialog == TradeFragment.LEFT) {
+                                            adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
+                                        } else {
+                                            adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    } catch (java.lang.InstantiationException e) {
+                                        /* Eat it */
+                                    }
+                                }
+                            })
+                            .build();
                 }
-
-                /* Turn set names and set codes into arrays */
-                final String[] aSets = sets.toArray(new String[sets.size()]);
-                final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
-
-                /* Build and return the dialog */
-                return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.card_view_set_dialog_title)
-                        .items((CharSequence[]) aSets)
-                        .itemsCallback((dialog, itemView, position, text) -> {
-                            /* Figure out what we're updating */
-                            final ArrayList<MtgCard> list = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
-                            TradeFragment.TradeDataAdapter adapter;
-
-                            /* Make sure positionForDialog is in bounds */
-                            int max1;
-
-                            if (sideForDialog == TradeFragment.LEFT) {
-                                max1 = getParentTradeFragment().mListLeft.size();
-                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
-                            } else {
-                                max1 = getParentTradeFragment().mListRight.size();
-                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
-                            }
-
-                            if (positionForDialog < 0 || positionForDialog >= max1) {
-                                return;
-                            }
-
-                            String name = list.get(positionForDialog).getName();
-                            String set = aSetCodes[position];
-                            int numberOf = list.get(positionForDialog).mNumberOf;
-
-                            /* See if the new set can be foil */
-                            FamiliarDbHandle foilHandle = new FamiliarDbHandle();
-                            boolean isFoil = list.get(positionForDialog).mIsFoil;
-                            try {
-                                SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
-                                if (!CardDbAdapter.canBeFoil(set, database)) {
-                                    isFoil = false;
-                                }
-                            } catch (SQLiteException | FamiliarDbException e) {
-                                isFoil = false;
-                            } finally {
-                                DatabaseManager.closeDatabase(getActivity(), foilHandle);
-                            }
-
-                            try {
-                                synchronized (list) {
-                                    list.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
-                                }
-                                /* Reload and notify the adapter */
-                                getParentTradeFragment().loadPrice(list.get(positionForDialog));
-                                adapter.notifyDataSetChanged();
-                            } catch (java.lang.InstantiationException e) {
-                                /* Eat it */
-                            }
-                        })
-                        .build();
             }
             case DIALOG_PRICE_SETTING: {
                 /* Build the dialog with some choices */
@@ -411,18 +415,22 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
 
                                 /* Update ALL the prices! */
-                                for (MtgCard data : getParentTradeFragment().mListLeft) {
-                                    if (!data.mIsCustomPrice) {
-                                        data.mMessage = getString(R.string.wishlist_loading);
-                                        getParentTradeFragment().loadPrice(data);
+                                synchronized (getParentTradeFragment().mListLeft) {
+                                    for (MtgCard data : getParentTradeFragment().mListLeft) {
+                                        if (!data.mIsCustomPrice) {
+                                            data.mMessage = getString(R.string.wishlist_loading);
+                                            getParentTradeFragment().loadPrice(data);
+                                        }
                                     }
                                 }
                                 getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
 
-                                for (MtgCard data : getParentTradeFragment().mListRight) {
-                                    if (!data.mIsCustomPrice) {
-                                        data.mMessage = getString(R.string.wishlist_loading);
-                                        getParentTradeFragment().loadPrice(data);
+                                synchronized (getParentTradeFragment().mListRight) {
+                                    for (MtgCard data : getParentTradeFragment().mListRight) {
+                                        if (!data.mIsCustomPrice) {
+                                            data.mMessage = getString(R.string.wishlist_loading);
+                                            getParentTradeFragment().loadPrice(data);
+                                        }
                                     }
                                 }
                                 getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();

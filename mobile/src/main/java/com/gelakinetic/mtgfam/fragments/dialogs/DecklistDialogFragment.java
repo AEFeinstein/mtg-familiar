@@ -125,11 +125,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                             if (deckName.length() == 0 || deckName.equals("")) {
                                 return;
                             }
-                            DecklistHelpers.WriteCompressedDecklist(
-                                    getActivity(),
-                                    getParentDecklistFragment().mCompressedDecklist,
-                                    deckName + DecklistFragment.DECK_EXTENSION
-                            );
+                            synchronized (getParentDecklistFragment().mCompressedDecklist) {
+                                DecklistHelpers.WriteCompressedDecklist(
+                                        getActivity(),
+                                        getParentDecklistFragment().mCompressedDecklist,
+                                        deckName + DecklistFragment.DECK_EXTENSION
+                                );
+                            }
                             getParentDecklistFragment().mCurrentDeck = deckName;
                             getParentDecklistFragment().mDeckName.setText(deckName);
 
@@ -158,12 +160,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .itemsCallback((dialog, itemView, position, text) -> {
 
                             /* First save the current deck */
-                            DecklistHelpers.WriteCompressedDecklist(
-                                    getActivity(),
-                                    getParentDecklistFragment().mCompressedDecklist,
-                                    getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION
-                            );
-
+                            synchronized (getParentDecklistFragment().mCompressedDecklist) {
+                                DecklistHelpers.WriteCompressedDecklist(
+                                        getActivity(),
+                                        getParentDecklistFragment().mCompressedDecklist,
+                                        getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION
+                                );
+                            }
                             /* Then read the next one */
                             getParentDecklistFragment()
                                     .readAndCompressDecklist(null, deckNames[position]);
@@ -225,11 +228,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                     R.string.decklist_unnamed_deck
                             );
                             getParentDecklistFragment().mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
-                            DecklistHelpers.WriteCompressedDecklist(
-                                    getActivity(),
-                                    getParentDecklistFragment().mCompressedDecklist,
-                                    getParentDecklistFragment().getCurrentDeckName()
-                            );
+                            synchronized (getParentDecklistFragment().mCompressedDecklist) {
+                                DecklistHelpers.WriteCompressedDecklist(
+                                        getActivity(),
+                                        getParentDecklistFragment().mCompressedDecklist,
+                                        getParentDecklistFragment().getCurrentDeckName()
+                                );
+                            }
                             getParentDecklistFragment().clearCardNameInput();
                             getParentDecklistFragment().clearCardNumberInput();
                             getParentDecklistFragment().uncheckFoilCheckbox();
