@@ -297,7 +297,7 @@ public class TradeFragment extends FamiliarListFragment {
             }
         } catch (FileNotFoundException e) {
             /* Do nothing, the autosave doesn't exist */
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
                     SnackbarWrapper.LENGTH_LONG);
         } finally {
