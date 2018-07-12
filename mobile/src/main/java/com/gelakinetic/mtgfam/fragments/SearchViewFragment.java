@@ -82,7 +82,7 @@ import java.util.Map;
 public class SearchViewFragment extends FamiliarFragment {
 
     /* String keys */
-    public static final String CRITERIA = "criteria";
+    public static final String CRITERIA_FLAG = "criteria_flag";
 
     /* Default search file */
     private static final String DEFAULT_CRITERIA_FILE = "defaultSearchCriteria.ser";
@@ -299,7 +299,8 @@ public class SearchViewFragment extends FamiliarFragment {
             SearchCriteria searchCriteria = new SearchCriteria();
             searchCriteria.name = ((TextView) view.findViewById(R.id.text1)).getText().toString();
             Bundle args = new Bundle();
-            args.putSerializable(CRITERIA, searchCriteria);
+            args.putBoolean(CRITERIA_FLAG, true);
+            PreferenceAdapter.setSearchCriteria(getContext(), searchCriteria);
             ResultListFragment rlFrag = new ResultListFragment();
             startNewFragment(rlFrag, args);
         });
@@ -510,7 +511,8 @@ public class SearchViewFragment extends FamiliarFragment {
     private void doSearch() {
         SearchCriteria searchCriteria = parseForm();
         Bundle args = new Bundle();
-        args.putSerializable(CRITERIA, searchCriteria);
+        args.putBoolean(CRITERIA_FLAG, true);
+        PreferenceAdapter.setSearchCriteria(getContext(), searchCriteria);
         ResultListFragment rlFrag = new ResultListFragment();
         startNewFragment(rlFrag, args);
     }

@@ -826,7 +826,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 Bundle args = new Bundle();
                 SearchCriteria sc = new SearchCriteria();
                 sc.name = query;
-                args.putSerializable(SearchViewFragment.CRITERIA, sc);
+                args.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
+                PreferenceAdapter.setSearchCriteria(this, sc);
                 selectItem(R.string.main_card_search, args, false, true); /* Don't clear backstack, do force the intent */
 
                 break;
@@ -1094,7 +1095,7 @@ public class FamiliarActivity extends AppCompatActivity {
                  * directly */
                 if (args != null && args.containsKey(CardViewPagerFragment.CARD_ID_ARRAY)) {
                     newFrag = new CardViewPagerFragment();
-                } else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
+                } else if (args != null && args.containsKey(SearchViewFragment.CRITERIA_FLAG)) {
                     newFrag = new ResultListFragment();
                 } else {
                     newFrag = new SearchViewFragment();

@@ -256,7 +256,8 @@ public class CardViewFragment extends FamiliarFragment {
             assert mSetTextView.getText() != null;
             setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
             Bundle arguments = new Bundle();
-            arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
+            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
+            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
             ResultListFragment rlFrag = new ResultListFragment();
             startNewFragment(rlFrag, arguments);
         });
