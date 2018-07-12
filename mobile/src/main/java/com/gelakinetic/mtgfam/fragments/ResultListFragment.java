@@ -340,7 +340,7 @@ public class ResultListFragment extends FamiliarFragment {
                     CardDbAdapter.KEY_ABILITY, CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
                     CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CMC, CardDbAdapter.KEY_COLOR};
 
-            SearchCriteria criteria = (SearchCriteria) args.getSerializable(SearchViewFragment.CRITERIA);
+            SearchCriteria criteria = PreferenceAdapter.getSearchCriteria(getContext());
             assert criteria != null; /* Because Android Studio */
             boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
                     criteria.setLogic == CardDbAdapter.FIRST_PRINTING);

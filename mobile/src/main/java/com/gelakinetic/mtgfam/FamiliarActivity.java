@@ -826,7 +826,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 Bundle args = new Bundle();
                 SearchCriteria sc = new SearchCriteria();
                 sc.name = query;
-                args.putSerializable(SearchViewFragment.CRITERIA, sc);
+                args.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
+                PreferenceAdapter.setSearchCriteria(this, sc);
                 selectItem(R.string.main_card_search, args, false, true); /* Don't clear backstack, do force the intent */
 
                 break;
@@ -1094,7 +1095,7 @@ public class FamiliarActivity extends AppCompatActivity {
                  * directly */
                 if (args != null && args.containsKey(CardViewPagerFragment.CARD_ID_ARRAY)) {
                     newFrag = new CardViewPagerFragment();
-                } else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
+                } else if (args != null && args.containsKey(SearchViewFragment.CRITERIA_FLAG)) {
                     newFrag = new ResultListFragment();
                 } else {
                     newFrag = new SearchViewFragment();
@@ -1800,6 +1801,23 @@ public class FamiliarActivity extends AppCompatActivity {
             int size = parcel.dataSize();
             parcel.recycle();
             FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + Integer.toString(size) + " bytes");
+
+            StringBuilder toPrint = new StringBuilder();
+            toPrint.append("\r\n\r\n");
+            printBundleContents(toPrint, outState, 0);
+            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleContents", toPrint.toString());
+        }
+    }
+
+    private static void printBundleContents(StringBuilder toPrint, Bundle outState, int recursionLevel) {
+        for (String key : outState.keySet()) {
+            for (int i = 0; i < recursionLevel; i++) {
+                toPrint.append("  ");
+            }
+            toPrint.append(key).append(" :: ").append(outState.get(key).getClass().getName()).append("\r\n");
+            if (outState.get(key) instanceof Bundle) {
+                printBundleContents(toPrint, (Bundle) outState.get(key), recursionLevel + 1);
+            }
         }
     }
 

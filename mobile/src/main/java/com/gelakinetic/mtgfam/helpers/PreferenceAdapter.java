@@ -31,6 +31,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
+import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -992,4 +993,23 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
+    public static void setSearchCriteria(@Nullable Context context, SearchCriteria searchCriteria) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_SearchCriteria), (new Gson()).toJson(searchCriteria));
+        edit.apply();
+    }
+
+    public static SearchCriteria getSearchCriteria(@Nullable Context context) {
+        if (null == context) {
+            return new SearchCriteria();
+        }
+
+        return (new Gson()).fromJson(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_SearchCriteria), "{}"),
+                SearchCriteria.class);
+    }
 }
