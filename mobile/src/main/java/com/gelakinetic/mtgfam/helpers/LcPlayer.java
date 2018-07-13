@@ -511,15 +511,19 @@ public class LcPlayer {
      *
      * @param mGridLayoutWidth  The width of the GridLayout in which to put the player's view
      * @param mGridLayoutHeight The height of the GridLayout in which to put the player's view
-     * @param mDisplayMode      either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
+     * @param numRows           The number of rows for the compact view
+     * @param numCols           The number of columns for the compact view
+     * @param displayMode       either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
+     * @param isPortrait        The orientation of the device
+     * @param isSingle          true if this is the only player, false otherwise
      */
-    public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode, boolean isPortrait, boolean isSingle) {
+    public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int numRows, int numCols, int displayMode, boolean isPortrait, boolean isSingle) {
 
         if (null == mView) {
             return;
         }
 
-        switch (mDisplayMode) {
+        switch (displayMode) {
             case LifeCounterFragment.DISPLAY_NORMAL: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
                 if (null != params) {
@@ -540,13 +544,8 @@ public class LcPlayer {
             case LifeCounterFragment.DISPLAY_COMPACT: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
                 if (null != params) {
-                    if (isPortrait) {
-                        params.width = mGridLayoutWidth / 2;
-                        params.height = mGridLayoutHeight / 2;
-                    } else {
-                        params.width = mGridLayoutWidth / 4;
-                        params.height = mGridLayoutHeight;
-                    }
+                    params.width = mGridLayoutWidth / numCols;
+                    params.height = mGridLayoutHeight / numRows;
                     mView.setLayoutParams(params);
                 }
                 break;
