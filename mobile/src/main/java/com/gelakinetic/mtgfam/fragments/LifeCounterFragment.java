@@ -91,7 +91,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private int mListSizeWidth = -1;
     private int mListSizeHeight = -1;
     private int mNumCols = 2;
-    private int mNumRows = 2;
+    private int mNumRows = 1;
     public int mLargestPlayerNumber = 0;
     /* TTS variables */
     private TextToSpeech mTts;
@@ -180,7 +180,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 if (mListSizeWidth < mScrollView.getWidth()) {
                     mListSizeWidth = mScrollView.getWidth();
                     float width = ViewUtil.convertPixelsToDp(mListSizeWidth, getContext());
-                    mNumCols = Math.max((int) Math.floor(width / 160f), mNumCols);
+                    mNumCols = Math.max((int) Math.floor(width / 150f), mNumCols);
                     changed = true;
                 }
                 if (changed) {
