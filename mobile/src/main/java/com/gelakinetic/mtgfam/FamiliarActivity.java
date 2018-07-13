@@ -1410,6 +1410,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        findViewById(R.id.toolbar).setOnClickListener(v -> selectItem(R.string.main_timer, null, false, false));
     }
 
     /**
@@ -1422,6 +1423,7 @@ public class FamiliarActivity extends AppCompatActivity {
         mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        findViewById(R.id.toolbar).setOnClickListener(null);
     }
 
     /**
