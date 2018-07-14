@@ -136,9 +136,9 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                         // Debug print
                         String priceStr = "";
                         if (marketPriceInfo.hasNormalPrice()) {
-                            priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MARKET));
+                            priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MARKET).price);
                         } else if (marketPriceInfo.hasFoilPrice()) {
-                            priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET));
+                            priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET).price);
                         }
                         Log.d(DAPT_TAG, "Success [" + toLookup.getExpansion() + "] " + toLookup.getName() + " in " + elapsed + "ms : " + priceStr);
 

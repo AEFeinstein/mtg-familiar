@@ -154,22 +154,32 @@ public class MarketPriceInfo {
         mProductUrl = details[0].url + "?pk=MTGFAMILIA";
     }
 
+    public class PriceAndFoil {
+        public final boolean isFoil;
+        public final double price;
+
+        PriceAndFoil(double _price, boolean _isFoil) {
+            isFoil = _isFoil;
+            price = _price;
+        }
+    }
+
     /**
      * Get a price from this object. If only foil or normal options are available, that price
      * will be returned regardless of the isFoil parameter
      *
      * @param isFoil    true to return the foil type, false to return the normal price (if those prices exist)
      * @param priceType LOW, MID, HIGH, or MARKET
-     * @return The double price in dollars, or 0 of none was found
+     * @return The double price in dollars, or 0 of none was found, and if the card is foil or not
      */
-    public double getPrice(boolean isFoil, PriceType priceType) {
+    public PriceAndFoil getPrice(boolean isFoil, PriceType priceType) {
         /* Protection if a card only has foil or normal price, or if it didn't load */
         if (null == mNormalPrice && null != mFoilPrice) {
             isFoil = true;
         } else if (null == mFoilPrice && null != mNormalPrice) {
             isFoil = false;
         } else if (null == mFoilPrice) {
-            return 0;
+            return new PriceAndFoil(0, false);
         }
 
         Price priceInfo;
@@ -205,7 +215,7 @@ public class MarketPriceInfo {
             toReturn = priceInfo.market;
         }
 
-        return toReturn;
+        return new PriceAndFoil(toReturn, isFoil);
     }
 
     /**

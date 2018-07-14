@@ -236,7 +236,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                              * to the cached price */
                             int oldPrice;
                             if (data.mPriceInfo != null) {
-                                oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
+                                oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()).price * 100);
 
                                 if (oldPrice != data.mPrice) {
                                     data.mIsCustomPrice = true;
