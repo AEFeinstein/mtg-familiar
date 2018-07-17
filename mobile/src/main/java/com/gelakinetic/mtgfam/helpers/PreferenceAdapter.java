@@ -26,13 +26,16 @@ import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.v4.util.LongSparseArray;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -1011,5 +1014,27 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return (new Gson()).fromJson(
                 PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_SearchCriteria), "{}"),
                 SearchCriteria.class);
+    }
+
+    public static void setGroups(@Nullable Context context, LongSparseArray<String> groups) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_tcgpGroups), (new Gson()).toJson(groups));
+        edit.apply();
+    }
+
+    public static LongSparseArray<String> getGroups(@Nullable Context context) {
+        if (null == context) {
+            return new LongSparseArray<>();
+        }
+
+        Type type = new TypeToken<LongSparseArray<String>>() {
+        }.getType();
+        return (new Gson()).fromJson(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tcgpGroups), "{}"),
+                type);
     }
 }

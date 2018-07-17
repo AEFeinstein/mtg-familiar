@@ -35,8 +35,8 @@ public class ProductDetails {
         public final long productId;
         public final String productName;
         public final String image;
-        public final CatalogData.CatalogDataItem category;
-        public final Group group;
+        public final long categoryId;
+        public final long groupId;
         public final String url;
         public final String modifiedOn; // Date modifiedOn;
         public final Conditions productConditions[];
@@ -48,8 +48,8 @@ public class ProductDetails {
             productId = 0;
             productName = null;
             image = null;
-            category = null;
-            group = null;
+            categoryId = -1;
+            groupId = -1;
             url = null;
             modifiedOn = null;
             productConditions = null;
