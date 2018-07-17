@@ -97,7 +97,7 @@ public class TcgpApi {
 
     private static final int CATEGORY_ID_MAGIC = 1;
 
-    private static final String TCGP_VERSION = "v1.9.0";
+    private static final String TCGP_VERSION = "v1.10.0";
     private String mAccessToken;
 
     public void setToken(String tokenStr) {
