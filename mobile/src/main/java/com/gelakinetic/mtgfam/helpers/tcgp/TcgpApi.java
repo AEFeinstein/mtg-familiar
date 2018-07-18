@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CatalogData;
+import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategoryGroups;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.GetProductInformationOptions;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
@@ -96,7 +97,7 @@ public class TcgpApi {
 
     private static final int CATEGORY_ID_MAGIC = 1;
 
-    private static final String TCGP_VERSION = "v1.9.0";
+    private static final String TCGP_VERSION = "v1.10.0";
     private String mAccessToken;
 
     public void setToken(String tokenStr) {
@@ -464,6 +465,59 @@ public class TcgpApi {
             inStream.close();
             conn.disconnect();
             return details;
+        }
+        // No access token
+        return null;
+    }
+
+    /**
+     * Return a paged list of all CategoryGroups for Magic expansions
+     *
+     * @param offset The offset for this query. The 0th index in this array will be used and updated
+     * @return The CategoryGroups retrieved from the API
+     * @throws IOException If something goes wrong with the network
+     */
+    public CategoryGroups getCategoryGroups(int[] offset) throws IOException {
+        // Make sure we have an access token first
+        if (null != mAccessToken) {
+
+            // Return 100 items at a time
+            int limit = 100;
+
+            // Create the connection with default options and headers
+            HttpURLConnection conn = (HttpURLConnection) new URL(
+                    "https://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/groups" +
+                            "?offset=" + offset[0] + "&limit=" + limit).openConnection();
+            setDefaultOptions(conn, HttpMethod.GET);
+            addHeaders(conn);
+
+            // Get the response stream. This opens the connection
+            InputStream inStream;
+            try {
+                inStream = conn.getInputStream();
+            } catch (FileNotFoundException e) {
+                inStream = conn.getErrorStream();
+                if (null == inStream) {
+                    conn.disconnect();
+                    // Return an empty, not null, object
+                    return new CategoryGroups();
+                }
+            }
+
+            // Parse the json out of the response and save it
+            CategoryGroups groups = new Gson()
+                    .fromJson(new InputStreamReader(inStream), CategoryGroups.class);
+
+            // Clean up
+            inStream.close();
+            conn.disconnect();
+
+            // Increment the offset for the next call
+            if (null != groups.results) {
+                offset[0] += groups.results.length;
+            }
+
+            return groups;
         }
         // No access token
         return null;

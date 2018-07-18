@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Handler;
+import android.support.v4.util.LongSparseArray;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -33,6 +34,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
+import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategoryGroups;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
@@ -58,6 +60,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -240,7 +243,9 @@ public class MarketPriceFetcher {
                                             long bestResult[] = {details.results[0].productId};
                                             // Look through all results for a perfect match
                                             for (ProductDetails.Details searchResult : details.results) {
-                                                if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase())) {
+                                                String expansion = getExpansionFromGroupId(api, context, searchResult.groupId);
+                                                if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase()) &&
+                                                        ((null == expansion) || expansion.toLowerCase().equals(tcgSetName.toLowerCase()))) {
                                                     // Found a perfect match!
                                                     bestResult[0] = searchResult.productId;
                                                     break;
@@ -374,6 +379,44 @@ public class MarketPriceFetcher {
                 .persister(persister)
                 .networkBeforeStale()
                 .open();
+    }
+
+    /**
+     * Given a group ID, return the string expansion name. If it doesn't exist, use the API to
+     * download a list of all group IDs and names, then save the map to the disk
+     *
+     * @param api     The TcgpApi to query for group names
+     * @param context The context to access SharedPreferences
+     * @param groupId The group ID to query for
+     * @return The String name of the given group ID, or null
+     */
+    @Nullable
+    private String getExpansionFromGroupId(TcgpApi api, FamiliarActivity context, long groupId) throws IOException {
+        LongSparseArray<String> map = PreferenceAdapter.getGroups(context);
+        String expansionName = map.get(groupId);
+        if (null == expansionName) {
+            // Group is missing, download them all
+            map.clear();
+            int offset[] = {0};
+            while (true) {
+                CategoryGroups groups = api.getCategoryGroups(offset);
+                // If there are errors or no groups left, break the loop
+                if (groups.errors.length > 0 || groups.results.length == 0) {
+                    break;
+                }
+                // Add all groups to the map
+                for (CategoryGroups.Group group : groups.results) {
+                    map.put(group.groupId, group.name);
+                }
+            }
+            // Now that all groups have been downloaded, save them to the disk
+            PreferenceAdapter.setGroups(context, map);
+
+            // Now that the map is downloaded, try again
+            expansionName = map.get(groupId);
+        }
+        // Return the String
+        return expansionName;
     }
 
     /**
