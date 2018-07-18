@@ -215,7 +215,7 @@ public class WishlistHelpers {
                 /* Attempt to append the price */
                 if (sharePrice && isi.mPrice != null) {
                     double price;
-                    price = isi.mPrice.getPrice(isi.mIsFoil, priceOption);
+                    price = isi.mPrice.getPrice(isi.mIsFoil, priceOption).price;
                     if (price != 0) {
                         readableWishlist
                                 .append(", $")
@@ -302,7 +302,7 @@ public class WishlistHelpers {
 
             for (IndividualSetInfo isi : mInfo) {
                 try {
-                    sumWish += (isi.mPrice.getPrice(isi.mIsFoil, priceSetting) * isi.mNumberOf);
+                    sumWish += (isi.mPrice.getPrice(isi.mIsFoil, priceSetting).price * isi.mNumberOf);
                 } catch (NullPointerException e) {
                     /* eat it, no price is loaded */
                 }

@@ -746,7 +746,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.header == null) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                         if (isi.mPrice != null) {
-                            totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf;
+                            totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price * isi.mNumberOf;
                         }
                     }
                 }

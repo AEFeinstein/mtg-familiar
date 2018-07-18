@@ -168,20 +168,20 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 final String priceFormat = "$%1$,.2f";
                 MarketPriceInfo price = getParentCardViewFragment().mPriceInfo;
                 if (price.hasNormalPrice()) {
-                    ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.LOW)));
-                    ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MID)));
-                    ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.HIGH)));
-                    ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MARKET)));
+                    ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.LOW).price));
+                    ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MID).price));
+                    ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.HIGH).price));
+                    ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MARKET).price));
                 } else {
                     v.findViewById(R.id.normal_prices).setVisibility(View.GONE);
                     v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
                 }
 
                 if (price.hasFoilPrice()) {
-                    ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.LOW)));
-                    ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MID)));
-                    ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.HIGH)));
-                    ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MARKET)));
+                    ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.LOW).price));
+                    ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MID).price));
+                    ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.HIGH).price));
+                    ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MARKET).price));
                 } else {
                     v.findViewById(R.id.foil_prices).setVisibility(View.GONE);
                     v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);

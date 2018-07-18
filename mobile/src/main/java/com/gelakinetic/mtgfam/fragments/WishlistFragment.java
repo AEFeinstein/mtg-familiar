@@ -407,7 +407,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                     for (IndividualSetInfo isi : cwi.mInfo) {
                         if (isi.mPrice != null) {
-                            totalPrice += (isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf);
+                            totalPrice += (isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price * isi.mNumberOf);
                         }
                     }
                 }
@@ -641,6 +641,23 @@ public class WishlistFragment extends FamiliarListFragment {
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
                         ContextCompat.getColor(getContext(), getResourceIdFromAttr(color)));
 
+                /* Show individual prices and number of each card, or message if price does not exist, if desired */
+                TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
+                if (mShowIndividualPrices) {
+                    double price;
+                    if (isi.mPrice == null || (price = isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price) == 0) {
+                        priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
+                        priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
+                    } else {
+                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, price));
+                        priceText.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
+                        isi.mIsFoil = isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).isFoil;
+                    }
+                } else {
+                    /* Just show the number of */
+                    priceText.setText("x" + isi.mNumberOf);
+                }
+
                 /* Show or hide the foil indicator */
                 if (isi.mIsFoil) {
                     setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
@@ -648,21 +665,6 @@ public class WishlistFragment extends FamiliarListFragment {
                     setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
                 }
 
-                /* Show individual prices and number of each card, or message if price does not exist, if desired */
-                TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
-                if (mShowIndividualPrices) {
-                    double price;
-                    if (isi.mPrice == null || (price = isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting())) == 0) {
-                        priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                        priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
-                    } else {
-                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, price));
-                        priceText.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
-                    }
-                } else {
-                    /* Just show the number of */
-                    priceText.setText("x" + isi.mNumberOf);
-                }
                 /* Add the view to the linear layout */
                 holder.mWishlistSets.addView(setRow);
             }
