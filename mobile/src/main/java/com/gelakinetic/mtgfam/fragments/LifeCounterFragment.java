@@ -49,6 +49,7 @@ import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.CommanderEntry;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.view.ViewUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,6 +90,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private View mScrollView;
     private int mListSizeWidth = -1;
     private int mListSizeHeight = -1;
+    private int mNumCols = 2;
+    private int mNumRows = 1;
     public int mLargestPlayerNumber = 0;
     /* TTS variables */
     private TextToSpeech mTts;
@@ -170,20 +173,18 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 boolean changed = false;
                 if (mListSizeHeight < mScrollView.getHeight()) {
                     mListSizeHeight = mScrollView.getHeight();
+                    float height = ViewUtil.convertPixelsToDp(mListSizeHeight, getContext());
+                    mNumRows = Math.max((int) Math.floor(height / 220f), mNumRows);
                     changed = true;
                 }
                 if (mListSizeWidth < mScrollView.getWidth()) {
                     mListSizeWidth = mScrollView.getWidth();
+                    float width = ViewUtil.convertPixelsToDp(mListSizeWidth, getContext());
+                    mNumCols = Math.max((int) Math.floor(width / 150f), mNumCols);
                     changed = true;
                 }
                 if (changed) {
-                    if (getActivity().getResources().getConfiguration().orientation
-                            == Configuration.ORIENTATION_LANDSCAPE) {
-                        if (mDisplayMode == DISPLAY_COMMANDER) {
-                            /* Conveniently takes care of re-adding the sized views in the right number of rows */
-                            changeDisplayMode(false);
-                        }
-                    }
+                    changeDisplayMode(false);
                     resizeAllPlayers();
                 }
             }
@@ -451,7 +452,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     break;
                 case DISPLAY_COMPACT:
                     mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-                    mGridLayout.setColumnCount(2);
+                    mGridLayout.setColumnCount(mNumCols);
                     mGridLayout.setRowCount(GridLayout.UNDEFINED);
                     break;
                 case DISPLAY_COMMANDER:
@@ -463,14 +464,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         } else {
             switch (mDisplayMode) {
                 case DISPLAY_NORMAL:
-                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+                    mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     mGridLayout.setRowCount(1);
                     break;
                 case DISPLAY_COMPACT:
-                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+                    mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
-                    mGridLayout.setRowCount(1);
+                    mGridLayout.setRowCount(mNumRows);
                     break;
                 case DISPLAY_COMMANDER:
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
@@ -516,7 +517,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             mCommanderPlayerView.removeAllViews();
             if (mPlayers.size() > 0 && null != mPlayers.get(0).mView) {
                 mCommanderPlayerView.addView(mPlayers.get(0).mView);
-                mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
+                mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode, getActivity().getResources()
                                 .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
                         mPlayers.size() == 1);
             }
@@ -547,7 +548,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 /* Show this player's info in mCommanderPlayerView */
                 mCommanderPlayerView.removeAllViews();
                 mCommanderPlayerView.addView(player.mView);
-                player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                player.setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode,
                         getActivity().getResources().getConfiguration().orientation
                                 == Configuration.ORIENTATION_PORTRAIT, mPlayers.size() == 1
                 );
@@ -919,7 +920,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     public void resizeAllPlayers() {
         if (mListSizeHeight != -1) {
             for (LcPlayer player : mPlayers) {
-                player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                player.setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode,
                         getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
                         mPlayers.size() == 1);
             }
