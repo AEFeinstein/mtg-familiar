@@ -244,11 +244,18 @@ public class MarketPriceFetcher {
                                             // Look through all results for a perfect match
                                             for (ProductDetails.Details searchResult : details.results) {
                                                 String expansion = getExpansionFromGroupId(api, context, searchResult.groupId);
-                                                if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase()) &&
-                                                        ((null == expansion) || expansion.toLowerCase().equals(tcgSetName.toLowerCase()))) {
-                                                    // Found a perfect match!
-                                                    bestResult[0] = searchResult.productId;
-                                                    break;
+                                                if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase())) {
+                                                    if (null != expansion && null != tcgSetName) {
+                                                        if (expansion.toLowerCase().equals(tcgCardName.toLowerCase())) {
+                                                            // Found a perfect match, including expansion!
+                                                            bestResult[0] = searchResult.productId;
+                                                            break;
+                                                        }
+                                                    } else {
+                                                        // Found a perfect match, no expansion to match!
+                                                        bestResult[0] = searchResult.productId;
+                                                        break;
+                                                    }
                                                 }
                                             }
                                             ProductMarketPrice price = api.getProductMarketPrice(bestResult);
