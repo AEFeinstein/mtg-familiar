@@ -1535,20 +1535,24 @@ public class FamiliarActivity extends AppCompatActivity {
      * Show the indeterminate loading bar.
      */
     public void setLoading() {
-        if (!mIsLoading) {
-            mSmoothProgressBar.progressiveStart();
-            mIsLoading = true;
-        }
+        runOnUiThread(() -> {
+            if (!mIsLoading) {
+                mSmoothProgressBar.progressiveStart();
+                mIsLoading = true;
+            }
+        });
     }
 
     /**
      * Hide the indeterminate loading bar.
      */
     public void clearLoading() {
-        if (mIsLoading) {
-            mSmoothProgressBar.progressiveStop();
-            mIsLoading = false;
-        }
+        runOnUiThread(() -> {
+            if (mIsLoading) {
+                mSmoothProgressBar.progressiveStop();
+                mIsLoading = false;
+            }
+        });
     }
 
     /**

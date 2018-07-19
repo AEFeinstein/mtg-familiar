@@ -39,7 +39,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
+public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
 
     private static final String DAPT_TAG = "DAPT";
     private int totalElapsedSuccess = 0;
@@ -76,9 +76,6 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
             // Eh
         }
 
-        // Make a fetcher
-        MarketPriceFetcher fetcher = new MarketPriceFetcher(activity);
-
         try {
             // Search for all cards
             SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, mHandle);
@@ -101,7 +98,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                 allCards.moveToFirst();
 
                 // Try to lookup all prices
-                lookupCard(fetcher, allCards, activity);
+                lookupCard(activity.mMarketPriceStore, allCards, activity);
             }
         } catch (SQLiteException | FamiliarDbException e) {
             e.printStackTrace();
