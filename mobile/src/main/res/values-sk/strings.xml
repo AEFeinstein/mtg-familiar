@@ -491,11 +491,7 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_unnamed_deck">"Nepomenovaný balík"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Pridaný Pauper formát&lt;br&gt;
-- Pridané vyhľadávanie podľa vodoznaku&lt;br&gt;
-- Pridaná kontrola legality balíka&lt;br&gt;
-- Prídaná TCGPlayer.com Market Price"</string>
-<string name="card_view_send_to">"Zdieľať obrázok cez"</string>
+    <string name="card_view_send_to">"Zdieľať obrázok cez"</string>
 <string name="card_view_translated_dialog_title">"Preložený názov karty"</string>
 <string name="pref_Portuguese">"Portugalský (Brazílsky)"</string>
 <string name="pref_Chinese">"Čínsky zjednodušený"</string>

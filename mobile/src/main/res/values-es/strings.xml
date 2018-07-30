@@ -486,11 +486,7 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_unnamed_deck">"Mazo sin nombre"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Añadido el formato Pauper.&lt;br&gt;
-- Añadida la búsqueda por marca de agua.&lt;br&gt;
-- Añadida comprobación de legalidad de mazos.&lt;br&gt;
-- Añadidos precios de mercado de TCGPlayer.com"</string>
-<string name="card_view_send_to">"Compartir imagen con"</string>
+    <string name="card_view_send_to">"Compartir imagen con"</string>
 <string name="card_view_translated_dialog_title">"Nombre de Carta Traducido"</string>
 <string name="pref_Portuguese">"Portugués (Brasil)"</string>
 <string name="pref_Chinese">"Chino simplificado"</string>

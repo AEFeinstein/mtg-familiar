@@ -490,10 +490,7 @@ Liście Życzeń"</string>
 <string name="decklist_unnamed_deck">"Talia bez nazwy"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Dodano format Pauper&lt;br&gt;
-- Dodano opcję szukania po znaku wodnym&lt;br&gt;
-- Dodano opcję sprawdzenia zgodności decku&lt;br&gt;"</string>
-<string name="card_view_send_to">"Udostępnij obrazek przy użyciu"</string>
+    <string name="card_view_send_to">"Udostępnij obrazek przy użyciu"</string>
 <string name="card_view_translated_dialog_title">"Przetłumaczona nazwa karty"</string>
 <string name="pref_Portuguese">"Portugalski (Brazylijski)"</string>
 <string name="pref_Chinese">"Uproszczony Chiński"</string>

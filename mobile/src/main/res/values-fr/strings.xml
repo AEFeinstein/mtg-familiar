@@ -483,11 +483,7 @@ Bonne chance, et bon jeu!
 <string name="decklist_unnamed_deck">"Deck Sans Nom"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Ajout du format \"Pauper\"&lt;br&gt;
-- Ajout de la recherche par filigrane&lt;br&gt;
-- Ajout de la vérification de la légalité du deck&lt;br&gt;
-- Ajout du prix du marché de TCGPlayer.com"</string>
-<string name="card_view_send_to">"Partager l'image avec"</string>
+    <string name="card_view_send_to">"Partager l'image avec"</string>
 <string name="card_view_translated_dialog_title">"Nom de carte traduit"</string>
 <string name="pref_Portuguese">"Portuguais (Brésil)"</string>
 <string name="pref_Chinese">"Chinois Simplifié"</string>

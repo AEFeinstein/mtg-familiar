@@ -483,12 +483,7 @@ Buona fortuna, e divertiti!
 <string name="decklist_unnamed_deck">"Grimorio senza nome"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Aggiunto il formato Pauper&lt;br&gt;
-- Aggiunta ricerca per filigrana&lt;br&gt;
-- Aggiunti controlli sulla legalità dei grimori&lt;br&gt;
-- Aggiunti i prezzi da TCGPlayer.com
-"</string>
-<string name="card_view_send_to">"Condividi l'immagine usando"</string>
+    <string name="card_view_send_to">"Condividi l'immagine usando"</string>
 <string name="card_view_translated_dialog_title">"Nome della carta tradotto"</string>
 <string name="pref_Portuguese">"Portoghese(Brasile)"</string>
 <string name="pref_Chinese">"Cinese Semplificato"</string>

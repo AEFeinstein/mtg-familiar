@@ -484,11 +484,7 @@ Boa sorte, e divirtam-se!
 <string name="decklist_unnamed_deck">"Deck Sem Nome"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Adicionado formato Pauper&lt;br&gt;
-- Adicionado busca por marca d'água&lt;br&gt;
-- Adicionado avaliador de legalidade de decks&lt;br&gt;
-- Adicionado preço de mercado do TCGPlayer.com"</string>
-<string name="card_view_send_to">"Compartilhar imagem usando"</string>
+    <string name="card_view_send_to">"Compartilhar imagem usando"</string>
 <string name="card_view_translated_dialog_title">"Nome da Carta Traduzido"</string>
 <string name="pref_Portuguese">"Português (Brasil)"</string>
 <string name="pref_Chinese">"Chinês Simplificado"</string>

@@ -500,11 +500,7 @@ Viel Glück und viel Spaß!
 <string name="decklist_unnamed_deck">"Unbenanntes Deck"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Pauper Format hinzugefügt&lt;br&gt;
-- Suche über Wasserzeichen hinzugefügt&lt;br&gt;
-- Deck Legalität Überprüfungen hinzugefügt&lt;br&gt;
-- TCGPlayer.com Market Preise hinzugefügt"</string>
-<string name="card_view_send_to">"Bild teilen via"</string>
+    <string name="card_view_send_to">"Bild teilen via"</string>
 <string name="card_view_translated_dialog_title">"Übersetzter Kartenname"</string>
 <string name="pref_Portuguese">"Português"</string>
 <string name="pref_Chinese">"Chinesisch vereinfacht"</string>
