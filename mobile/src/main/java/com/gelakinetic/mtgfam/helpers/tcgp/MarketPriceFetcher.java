@@ -246,7 +246,7 @@ public class MarketPriceFetcher {
                                                 String expansion = getExpansionFromGroupId(api, context, searchResult.groupId);
                                                 if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase())) {
                                                     if (null != expansion && null != tcgSetName) {
-                                                        if (expansion.toLowerCase().equals(tcgCardName.toLowerCase())) {
+                                                        if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
                                                             // Found a perfect match, including expansion!
                                                             bestResult[0] = searchResult.productId;
                                                             break;
