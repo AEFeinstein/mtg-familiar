@@ -22,7 +22,7 @@ MTG Familiar is an Android app which has a suite of tools to play Magic: The Gat
 - Press the build button
 
 ## Get it
-[![Google Play](https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=com.gelakinetic.mtgfam)
+<a href="https://play.google.com/store/apps/details?id=com.gelakinetic.mtgfam" alt="Google Play"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="240"></a>
 <a href="https://f-droid.org/repository/browse/?fdid=com.gelakinetic.mtgfam"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png" alt="F-Droid"></a>
 
 ## Show Support
