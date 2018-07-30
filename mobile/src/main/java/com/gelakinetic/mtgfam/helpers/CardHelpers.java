@@ -145,34 +145,46 @@ public class CardHelpers {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, db);
 
-            Set<String> foilSets;
-            foilSets = CardDbAdapter.getFoilSets(db);
+            Set<String> foilSets = CardDbAdapter.getFoilSets(db);
 
             /* For each card, add it to the wishlist view */
             while (!cards.isAfterLast()) {
                 String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
                 String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
 
-                /* Inflate a row and fill it with stuff */
-                View listDialogRow = createDialogRow(
-                        fragment,
-                        setName,
-                        targetCardNumberOfs.get(setCode),
-                        false,
-                        linearLayout);
-                linearLayout.addView(listDialogRow);
-                potentialSetCodes.add(setCode);
-
-                /* If this card has a foil version, add that too */
-                if (foilSets.contains(setCode)) {
-                    View wishlistRowFoil = createDialogRow(
+                if (targetFoilCardNumberOfs.keySet().contains(setCode) && !foilSets.contains(setCode)) {
+                    // The card is foil, but the set isn't. This happens for foil-only sets like Masterpieces
+                    // Add a non-foil row
+                    View wishlistRow = createDialogRow(
                             fragment,
                             setName,
                             targetFoilCardNumberOfs.get(setCode),
-                            true,
+                            false,
                             linearLayout);
-                    linearLayout.addView(wishlistRowFoil);
+                    linearLayout.addView(wishlistRow);
                     potentialSetCodes.add(setCode);
+                } else {
+                    /* Inflate a row and fill it with stuff */
+                    View listDialogRow = createDialogRow(
+                            fragment,
+                            setName,
+                            targetCardNumberOfs.get(setCode),
+                            false,
+                            linearLayout);
+                    linearLayout.addView(listDialogRow);
+                    potentialSetCodes.add(setCode);
+
+                    /* If this card has a foil version, add that too */
+                    if (foilSets.contains(setCode)) {
+                        View wishlistRowFoil = createDialogRow(
+                                fragment,
+                                setName,
+                                targetFoilCardNumberOfs.get(setCode),
+                                true,
+                                linearLayout);
+                        linearLayout.addView(wishlistRowFoil);
+                        potentialSetCodes.add(setCode);
+                    }
                 }
 
                 cards.moveToNext();
