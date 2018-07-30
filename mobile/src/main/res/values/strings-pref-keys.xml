@@ -94,6 +94,7 @@
     <string name="key_LastDecklistLoaded" translatable="false">last_decklist_loaded</string>
     <string name="key_LastTradeLoaded" translatable="false">last_trade_loaded</string>
     <string name="key_SearchCriteria" translatable="false">search_criteria</string>
+    <string name="key_SearchCriteriaPerm" translatable="false">search_criteria_permanent</string>
     <string name="key_tcgpGroups" translatable="false">tcgp_groups</string>
 
 </resources>

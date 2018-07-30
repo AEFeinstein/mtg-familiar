@@ -996,23 +996,51 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
+    public static void setSearchViewCriteria(@Nullable Context context, SearchCriteria searchCriteria) {
+        if (null == context) {
+            return;
+        }
+        saveCriteria(context, searchCriteria, context.getString(R.string.key_SearchCriteriaPerm));
+    }
+
+    public static SearchCriteria getSearchViewCriteria(@Nullable Context context) {
+        if (null == context) {
+            return new SearchCriteria();
+        }
+        return LoadCriteria(context, context.getString(R.string.key_SearchCriteriaPerm));
+    }
+
     public static void setSearchCriteria(@Nullable Context context, SearchCriteria searchCriteria) {
         if (null == context) {
             return;
         }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_SearchCriteria), (new Gson()).toJson(searchCriteria));
-        edit.apply();
+        saveCriteria(context, searchCriteria, context.getString(R.string.key_SearchCriteria));
     }
 
     public static SearchCriteria getSearchCriteria(@Nullable Context context) {
         if (null == context) {
             return new SearchCriteria();
         }
+        return LoadCriteria(context, context.getString(R.string.key_SearchCriteria));
+    }
+
+    private static void saveCriteria(@Nullable Context context, SearchCriteria searchCriteria, String key) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(key, (new Gson()).toJson(searchCriteria));
+        edit.apply();
+    }
+
+    private static SearchCriteria LoadCriteria(@Nullable Context context, String key) {
+        if (null == context) {
+            return new SearchCriteria();
+        }
 
         return (new Gson()).fromJson(
-                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_SearchCriteria), "{}"),
+                PreferenceManager.getDefaultSharedPreferences(context).getString(key, "{}"),
                 SearchCriteria.class);
     }
 

@@ -480,6 +480,13 @@ public class SearchViewFragment extends FamiliarFragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Save the search criteria
+        PreferenceAdapter.setSearchViewCriteria(getContext(), parseForm());
+    }
+
     /**
      * Generic onResume. Catches when consolidation is changed in preferences
      */
@@ -490,6 +497,9 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Do we want to consolidate different printings of the same card in results, or not? */
         boolean consolidate = PreferenceAdapter.getConsolidateSearch(getContext());
         mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
+
+        // Load the saved criteria
+        setFieldsFromCriteria(PreferenceAdapter.getSearchViewCriteria(getContext()));
     }
 
     /**
@@ -509,10 +519,9 @@ public class SearchViewFragment extends FamiliarFragment {
      * This function creates a results fragment, sends it the search criteria, and starts it
      */
     private void doSearch() {
-        SearchCriteria searchCriteria = parseForm();
         Bundle args = new Bundle();
         args.putBoolean(CRITERIA_FLAG, true);
-        PreferenceAdapter.setSearchCriteria(getContext(), searchCriteria);
+        PreferenceAdapter.setSearchCriteria(getContext(), parseForm());
         ResultListFragment rlFrag = new ResultListFragment();
         startNewFragment(rlFrag, args);
     }
@@ -816,11 +825,10 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void persistOptions() {
         try {
-            SearchCriteria searchCriteria = parseForm();
             FileOutputStream fileStream = this.getActivity()
                     .openFileOutput(DEFAULT_CRITERIA_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fileStream);
-            os.writeObject(searchCriteria);
+            os.writeObject(parseForm());
             os.close();
         } catch (IOException e) {
             SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, SnackbarWrapper.LENGTH_LONG);
@@ -837,156 +845,177 @@ public class SearchViewFragment extends FamiliarFragment {
             SearchCriteria criteria = (SearchCriteria) oInputStream.readObject();
             oInputStream.close();
 
-            mNameField.setText(criteria.name);
-
-            if (null != criteria.superTypes && criteria.superTypes.size() > 0) {
-                for (String supertype : criteria.superTypes) {
-                    mSupertypeField.addObject(supertype);
-                }
-            } else {
-                mSupertypeField.clearTextAndTokens();
-            }
-
-            if (null != criteria.subTypes && criteria.subTypes.size() > 0) {
-                for (String subtype : criteria.subTypes) {
-                    mSubtypeField.addObject(subtype);
-                }
-            } else {
-                mSubtypeField.clearTextAndTokens();
-            }
-
-            mTextField.setText(criteria.text);
-            mArtistField.setText(criteria.artist);
-            mWatermarkField.setText(criteria.watermark);
-            mFlavorField.setText(criteria.flavor);
-            mCollectorsNumberField.setText(criteria.collectorsNumber);
-
-            if (criteria.color != null) {
-                mCheckboxW.setChecked(criteria.color.contains("W"));
-                mCheckboxU.setChecked(criteria.color.contains("U"));
-                mCheckboxB.setChecked(criteria.color.contains("B"));
-                mCheckboxR.setChecked(criteria.color.contains("R"));
-                mCheckboxG.setChecked(criteria.color.contains("G"));
-                mCheckboxL.setChecked(criteria.color.contains("L"));
-            }
-            mColorSpinner.setSelection(criteria.colorLogic);
-
-            if (criteria.colorIdentity != null) {
-                mCheckboxWIdentity.setChecked(criteria.colorIdentity.contains("W"));
-                mCheckboxUIdentity.setChecked(criteria.colorIdentity.contains("U"));
-                mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
-                mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
-                mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
-                mCheckboxLIdentity.setChecked(criteria.colorIdentity.contains("L"));
-            }
-            mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
-
-            mTextSpinner.setSelection(criteria.textLogic);
-            mTypeSpinner.setSelection(criteria.typeLogic);
-            mSetSpinner.setSelection(criteria.setLogic);
-
-            List<String> logicChoices = Arrays.asList(getResources().getStringArray(R.array.logic_spinner));
-            mPowLogic.setSelection(logicChoices.indexOf(criteria.powLogic));
-            List<String> ptList = Arrays.asList(getResources().getStringArray(R.array.pt_spinner));
-            float p = criteria.powChoice;
-            if (p != CardDbAdapter.NO_ONE_CARES) {
-                if (p == CardDbAdapter.STAR)
-                    mPowChoice.setSelection(ptList.indexOf("*"));
-                else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                    mPowChoice.setSelection(ptList.indexOf("1+*"));
-                else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                    mPowChoice.setSelection(ptList.indexOf("2+*"));
-                else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                    mPowChoice.setSelection(ptList.indexOf("7-*"));
-                else if (p == CardDbAdapter.STAR_SQUARED)
-                    mPowChoice.setSelection(ptList.indexOf("*^2"));
-                else if (p == CardDbAdapter.X)
-                    mPowChoice.setSelection(ptList.indexOf("X"));
-                else if (p == CardDbAdapter.QUESTION_MARK)
-                    mPowChoice.setSelection(ptList.indexOf("?"));
-                else if (p == CardDbAdapter.INFINITY)
-                    mPowChoice.setSelection(ptList.indexOf("∞"));
-                else {
-                    if (p == (int) p) {
-                        mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
-                    } else {
-                        mPowChoice.setSelection(ptList.indexOf(p + ""));
-                    }
-                }
-            }
-            mTouLogic.setSelection(logicChoices.indexOf(criteria.touLogic));
-            float t = criteria.touChoice;
-            if (t != CardDbAdapter.NO_ONE_CARES) {
-                if (t == CardDbAdapter.STAR)
-                    mTouChoice.setSelection(ptList.indexOf("*"));
-                else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                    mTouChoice.setSelection(ptList.indexOf("1+*"));
-                else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                    mTouChoice.setSelection(ptList.indexOf("2+*"));
-                else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                    mTouChoice.setSelection(ptList.indexOf("7-*"));
-                else if (t == CardDbAdapter.STAR_SQUARED)
-                    mTouChoice.setSelection(ptList.indexOf("*^2"));
-                else if (t == CardDbAdapter.X)
-                    mTouChoice.setSelection(ptList.indexOf("X"));
-                else if (t == CardDbAdapter.QUESTION_MARK)
-                    mTouChoice.setSelection(ptList.indexOf("?"));
-                else if (t == CardDbAdapter.INFINITY)
-                    mTouChoice.setSelection(ptList.indexOf("∞"));
-                else {
-                    if (t == (int) t) {
-                        mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));
-                    } else {
-                        mTouChoice.setSelection(ptList.indexOf(t + ""));
-                    }
-                }
-            }
-            mCmcLogic.setSelection(logicChoices.indexOf(criteria.cmcLogic));
-            mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
-                    .indexOf(String.valueOf(criteria.cmc)));
-
-            if (criteria.sets != null && criteria.sets.size() > 0) {
-                /* Get a list of the persisted sets */
-                for (String set : criteria.sets) {
-                    mSetField.addObject(set);
-                }
-            } else {
-                mSetField.clearTextAndTokens();
-            }
-            if (criteria.manaCost != null && criteria.manaCost.size() > 0) {
-                for (String mana : criteria.manaCost) {
-                    mManaCostTextView.addObject(mana);
-                }
-            } else {
-                mManaCostTextView.clearTextAndTokens();
-            }
-            mManaComparisonSpinner.setSelection(criteria.manaCostLogic.ordinal());
-            if (mFormatNames != null) {
-                mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
-            }
-
-            if (criteria.rarity != null) {
-                ArrayList<Integer> rarityCheckedIndicesTmp = new ArrayList<>();
-                /* For each rarity */
-                for (int i = 0; i < mRarityNames.length; i++) {
-                    /* If the persisted options contain that rarity */
-                    if (criteria.rarity.contains(mRarityNames[i].charAt(0) + "")) {
-                        /* Save that index */
-                        rarityCheckedIndicesTmp.add(i);
-                    }
-                }
-                mRarityCheckedIndices = new int[rarityCheckedIndicesTmp.size()];
-                for (int i = 0; i < mRarityCheckedIndices.length; i++) {
-                    mRarityCheckedIndices[i] = rarityCheckedIndicesTmp.get(i);
-                }
-            }
-
-            this.removeDialog(getFragmentManager());
-            checkDialogButtonColors();
-
+            setFieldsFromCriteria(criteria);
         } catch (IOException | ClassNotFoundException e) {
             SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, SnackbarWrapper.LENGTH_LONG);
         }
+    }
+
+    private void setFieldsFromCriteria(SearchCriteria criteria) {
+
+        /* Set name */
+        if (null != criteria.name) {
+            mNameField.setText(criteria.name);
+        }
+
+        /* Set type fields */
+        if (null != criteria.superTypes && criteria.superTypes.size() > 0) {
+            for (String supertype : criteria.superTypes) {
+                mSupertypeField.addObject(supertype);
+            }
+        } else {
+            mSupertypeField.clearTextAndTokens();
+        }
+        if (null != criteria.subTypes && criteria.subTypes.size() > 0) {
+            for (String subtype : criteria.subTypes) {
+                mSubtypeField.addObject(subtype);
+            }
+        } else {
+            mSubtypeField.clearTextAndTokens();
+        }
+        mTypeSpinner.setSelection(criteria.typeLogic);
+
+        /* Set text fields */
+        mTextField.setText(criteria.text);
+        mTextSpinner.setSelection(criteria.textLogic);
+
+        /* Set color fields */
+        if (criteria.color != null) {
+            mCheckboxW.setChecked(criteria.color.contains("W"));
+            mCheckboxU.setChecked(criteria.color.contains("U"));
+            mCheckboxB.setChecked(criteria.color.contains("B"));
+            mCheckboxR.setChecked(criteria.color.contains("R"));
+            mCheckboxG.setChecked(criteria.color.contains("G"));
+            mCheckboxL.setChecked(criteria.color.contains("L"));
+        }
+        mColorSpinner.setSelection(criteria.colorLogic);
+
+        if (criteria.colorIdentity != null) {
+            mCheckboxWIdentity.setChecked(criteria.colorIdentity.contains("W"));
+            mCheckboxUIdentity.setChecked(criteria.colorIdentity.contains("U"));
+            mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
+            mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
+            mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
+            mCheckboxLIdentity.setChecked(criteria.colorIdentity.contains("L"));
+        }
+        mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
+
+        /* Set power and toughness fields */
+        List<String> logicChoices = Arrays.asList(getResources().getStringArray(R.array.logic_spinner));
+        mPowLogic.setSelection(logicChoices.indexOf(criteria.powLogic));
+        List<String> ptList = Arrays.asList(getResources().getStringArray(R.array.pt_spinner));
+        float p = criteria.powChoice;
+        if (p != CardDbAdapter.NO_ONE_CARES) {
+            if (p == CardDbAdapter.STAR)
+                mPowChoice.setSelection(ptList.indexOf("*"));
+            else if (p == CardDbAdapter.ONE_PLUS_STAR)
+                mPowChoice.setSelection(ptList.indexOf("1+*"));
+            else if (p == CardDbAdapter.TWO_PLUS_STAR)
+                mPowChoice.setSelection(ptList.indexOf("2+*"));
+            else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
+                mPowChoice.setSelection(ptList.indexOf("7-*"));
+            else if (p == CardDbAdapter.STAR_SQUARED)
+                mPowChoice.setSelection(ptList.indexOf("*^2"));
+            else if (p == CardDbAdapter.X)
+                mPowChoice.setSelection(ptList.indexOf("X"));
+            else if (p == CardDbAdapter.QUESTION_MARK)
+                mPowChoice.setSelection(ptList.indexOf("?"));
+            else if (p == CardDbAdapter.INFINITY)
+                mPowChoice.setSelection(ptList.indexOf("∞"));
+            else {
+                if (p == (int) p) {
+                    mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
+                } else {
+                    mPowChoice.setSelection(ptList.indexOf(p + ""));
+                }
+            }
+        }
+        mTouLogic.setSelection(logicChoices.indexOf(criteria.touLogic));
+        float t = criteria.touChoice;
+        if (t != CardDbAdapter.NO_ONE_CARES) {
+            if (t == CardDbAdapter.STAR)
+                mTouChoice.setSelection(ptList.indexOf("*"));
+            else if (t == CardDbAdapter.ONE_PLUS_STAR)
+                mTouChoice.setSelection(ptList.indexOf("1+*"));
+            else if (t == CardDbAdapter.TWO_PLUS_STAR)
+                mTouChoice.setSelection(ptList.indexOf("2+*"));
+            else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
+                mTouChoice.setSelection(ptList.indexOf("7-*"));
+            else if (t == CardDbAdapter.STAR_SQUARED)
+                mTouChoice.setSelection(ptList.indexOf("*^2"));
+            else if (t == CardDbAdapter.X)
+                mTouChoice.setSelection(ptList.indexOf("X"));
+            else if (t == CardDbAdapter.QUESTION_MARK)
+                mTouChoice.setSelection(ptList.indexOf("?"));
+            else if (t == CardDbAdapter.INFINITY)
+                mTouChoice.setSelection(ptList.indexOf("∞"));
+            else {
+                if (t == (int) t) {
+                    mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));
+                } else {
+                    mTouChoice.setSelection(ptList.indexOf(t + ""));
+                }
+            }
+        }
+
+        /* Set CMC fields */
+        mCmcLogic.setSelection(logicChoices.indexOf(criteria.cmcLogic));
+        mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
+                .indexOf(String.valueOf(criteria.cmc)));
+
+        /* Set mana fields */
+        if (criteria.manaCost != null && criteria.manaCost.size() > 0) {
+            for (String mana : criteria.manaCost) {
+                mManaCostTextView.addObject(mana);
+            }
+        } else {
+            mManaCostTextView.clearTextAndTokens();
+        }
+        if (null != criteria.manaCostLogic) {
+            mManaComparisonSpinner.setSelection(criteria.manaCostLogic.ordinal());
+        }
+
+        /* set format */
+        if (mFormatNames != null) {
+            mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
+        }
+
+        /* Set rarity */
+        if (criteria.rarity != null) {
+            ArrayList<Integer> rarityCheckedIndicesTmp = new ArrayList<>();
+            /* For each rarity */
+            for (int i = 0; i < mRarityNames.length; i++) {
+                /* If the persisted options contain that rarity */
+                if (criteria.rarity.contains(mRarityNames[i].charAt(0) + "")) {
+                    /* Save that index */
+                    rarityCheckedIndicesTmp.add(i);
+                }
+            }
+            mRarityCheckedIndices = new int[rarityCheckedIndicesTmp.size()];
+            for (int i = 0; i < mRarityCheckedIndices.length; i++) {
+                mRarityCheckedIndices[i] = rarityCheckedIndicesTmp.get(i);
+            }
+        }
+
+        /* Set expansions */
+        if (criteria.sets != null && criteria.sets.size() > 0) {
+            /* Get a list of the persisted sets */
+            for (String set : criteria.sets) {
+                mSetField.addObject(set);
+            }
+        } else {
+            mSetField.clearTextAndTokens();
+        }
+        mSetSpinner.setSelection(criteria.setLogic);
+
+        /* Set text fields at the end */
+        mWatermarkField.setText(criteria.watermark);
+        mFlavorField.setText(criteria.flavor);
+        mArtistField.setText(criteria.artist);
+        mCollectorsNumberField.setText(criteria.collectorsNumber);
+
+        this.removeDialog(getFragmentManager());
+        checkDialogButtonColors();
     }
 
     /**
