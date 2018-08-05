@@ -205,9 +205,8 @@ public class CardHelpers {
             try {
                 if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                     /* Read the wishlist */
-                    list = new ArrayList<>();
                     ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
-                    list.addAll(wishlist);
+                    list = new ArrayList<>(wishlist);
                 } else {
                     list = DecklistHelpers.ReadDecklist(
                             activity,
@@ -259,9 +258,8 @@ public class CardHelpers {
             }
 
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-                ArrayList<MtgCard> wishlist = new ArrayList<>();
                 /* Turn it back in to a plain ArrayList */
-                wishlist.addAll(list);
+                ArrayList<MtgCard> wishlist = new ArrayList<>(list);
                 /* Write the wishlist */
                 WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
                 /* notify the fragment of a change in the wishlist */

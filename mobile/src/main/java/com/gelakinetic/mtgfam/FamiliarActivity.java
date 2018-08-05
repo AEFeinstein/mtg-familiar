@@ -1769,7 +1769,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param tag   The tag for this message
      * @param msg   The message to log
      */
-    public static void DebugLog(int level, String tag, String msg) {
+    private static void DebugLog(int level, String tag, String msg) {
         if (BuildConfig.DEBUG) {
             switch (level) {
                 case Log.VERBOSE:

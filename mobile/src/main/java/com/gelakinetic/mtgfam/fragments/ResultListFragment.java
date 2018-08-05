@@ -58,7 +58,6 @@ import java.util.Random;
 public class ResultListFragment extends FamiliarFragment {
 
     /* Constants for bundled arguments */
-    private static final String CARD_ID = "id";
     public static final String CARD_ID_0 = "id0";
     public static final String CARD_ID_1 = "id1";
     public static final String CARD_ID_2 = "id2";
@@ -293,41 +292,19 @@ public class ResultListFragment extends FamiliarFragment {
     }
 
     /**
-     * TODO doc
-     * TODO don't use bundle?
+     * Search the database for cards and store the result in mCursor, a global variable
      *
-     * @param args
-     * @param database
-     * @throws FamiliarDbException
+     * @param args     A bundle which may contain card IDs. If it does not, then use
+     *                 PreferenceAdapter.getSearchCriteria() to get parameters to search with
+     * @param database The database to search
+     * @throws FamiliarDbException If there is a database error
      */
     private void doSearch(Bundle args, SQLiteDatabase database) throws FamiliarDbException {
         long id;
-        /* This is just the multiverse ID, from a TutorCards search */
-        if ((id = args.getLong(CARD_ID)) != 0L) {
-            mCursor = CardDbAdapter.fetchCardByMultiverseId(id, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUPERTYPE,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUBTYPE,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MANACOST,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_POWER,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_TOUGHNESS,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_LOYALTY,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ABILITY,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_FLAVOR,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ARTIST,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MULTIVERSEID
-            }, database);
-        }
         /* If "id0" exists, then it's three cards and they should be merged
          * Otherwise, do a search with the given criteria
          */
-        else if ((id = args.getLong(CARD_ID_0)) != 0L) {
+        if ((id = args.getLong(CARD_ID_0)) != 0L) {
             long id1 = args.getLong(CARD_ID_1);
             long id2 = args.getLong(CARD_ID_2);
             mCursor = CardDbAdapter.fetchCards(new long[]{id, id1, id2},

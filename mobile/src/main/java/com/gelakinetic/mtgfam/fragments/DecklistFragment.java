@@ -89,7 +89,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     public static final String[] LEGALITY_DIAOG_FROM = new String[]{"format", "status"};
     public static final int[] LEGALITY_DIALOG_TO = new int[]{R.id.format, R.id.status};
-    public List<HashMap<String, String>> legalityMap = new ArrayList<>();
+    public final List<HashMap<String, String>> legalityMap = new ArrayList<>();
 
     static class LegalityCheckerTask extends AsyncTask<DecklistFragment, Void, DecklistFragment> {
 
@@ -106,7 +106,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
                     boolean deckIsLegal = true;
-                    String deckLegality = "";
+                    String deckLegality;
                     String format =
                             cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
                     synchronized (parentFrag.mCompressedDecklist) {

@@ -144,7 +144,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Loaded in a Spice Service */
     public MarketPriceInfo mPriceInfo;
-    public String mErrorMessage;
+    private String mErrorMessage;
 
     /* Card info, used to build the URL to fetch the picture */
     public MtgCard mCard;

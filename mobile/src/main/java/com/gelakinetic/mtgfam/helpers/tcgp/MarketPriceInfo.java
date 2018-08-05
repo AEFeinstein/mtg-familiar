@@ -71,7 +71,7 @@ public class MarketPriceInfo {
          *
          * @param price The object to copy
          */
-        public Price(Price price) {
+        Price(Price price) {
             if (null != price) {
                 low = price.low;
                 mid = price.mid;
@@ -183,7 +183,7 @@ public class MarketPriceInfo {
         }
 
         Price priceInfo;
-        double toReturn = 0;
+        double toReturn;
         if (isFoil) {
             priceInfo = mFoilPrice;
         } else {
