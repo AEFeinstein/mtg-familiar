@@ -21,6 +21,22 @@ MTG Familiar is an Android app which has a suite of tools to play Magic: The Gat
 - Check out this project with Android Studio's VCS tools
 - Press the build button
 
+## How to Update the Internal Database
+1. Launch an Android Emulator
+2. Run MTG Familiar on said Emulator
+3. Force Update the database in Familiar running in the emulator
+4. Run the following script to pull off and compress the database
+  ~~~~
+  rm data datagz
+  adb root
+  adb pull /data/data/com.gelakinetic.mtgfam/databases/data
+  adb pull /data/data/com.gelakinetic.mtgfam.debug/databases/data
+  gzip -c -f --best data > datagz
+  ~~~~
+5. Copy ```datagz``` into the ```/mobile/src/main/res/raw directory```
+6. Increment ```DATABASE_VERSION``` in ```/mobile/src/main/java/com/gelakinetic/mtgfam/helpers/database/CardDbAdapter.java```
+7. Rename and copy any new Magic Tournament Rules, Infraction Procedure Guide, or Judging at Regular documents into ```/mobile/src/main/res/raw```. This isn't really the database, but it's nice
+
 ## Get it
 <a href="https://play.google.com/store/apps/details?id=com.gelakinetic.mtgfam" alt="Google Play"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="240"></a>
 <a href="https://f-droid.org/repository/browse/?fdid=com.gelakinetic.mtgfam"><img src="https://f-droid.org/wiki/images/0/06/F-Droid-button_get-it-on.png" alt="F-Droid"></a>
