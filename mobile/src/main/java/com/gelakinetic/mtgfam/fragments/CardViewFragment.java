@@ -116,7 +116,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Where the card image is loaded to */
     public static final int MAIN_PAGE = 1;
-    private static final int DIALOG = 2;
+    // private static final int DIALOG = 2; DEPRECATED!!
     public static final int SHARE = 3;
     /* Used to store the String when copying to clipboard */
     private String mCopyString;
@@ -217,7 +217,10 @@ public class CardViewFragment extends FamiliarFragment {
             Bundle savedInstanceState) {
 
         try {
-            mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
+            FamiliarFragment fragment = ((FamiliarFragment) getParentFragment());
+            if (null != fragment) {
+                mActivity = fragment.getFamiliarActivity();
+            }
         } catch (NullPointerException e) {
             mActivity = getFamiliarActivity();
         }
@@ -432,7 +435,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(loyalty, false));
             } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
                 boolean shouldShowSign = mCard.getText().contains("Augment {") && mSetTextView.getText().equals("UST");
-                mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign) + "/" + CardDbAdapter.getPrintedPTL(t, shouldShowSign));
+                mPowTouTextView.setText(String.format("%s/%s", CardDbAdapter.getPrintedPTL(p, shouldShowSign), CardDbAdapter.getPrintedPTL(t, shouldShowSign)));
             } else {
                 mPowTouTextView.setText("");
             }
@@ -1076,7 +1079,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchLegalityTask();
-                ((FetchLegalityTask) mAsyncTask).execute((Void[]) null);
+                ((FetchLegalityTask) mAsyncTask).execute(this);
                 return true;
             }
             case R.id.cardrulings: {
@@ -1089,7 +1092,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchRulingsTask();
-                ((FetchRulingsTask) mAsyncTask).execute((Void[]) null);
+                ((FetchRulingsTask) mAsyncTask).execute(this);
                 return true;
             }
             case R.id.addtowishlist: {
@@ -1186,7 +1189,7 @@ public class CardViewFragment extends FamiliarFragment {
      * This private class handles asking the database about the legality of a card, and will
      * eventually show the information in a Dialog.
      */
-    private class FetchLegalityTask extends AsyncTask<Void, Void, Void> {
+    private static class FetchLegalityTask extends AsyncTask<CardViewFragment, Void, CardViewFragment> {
 
         /**
          * Queries the data in the database to see what sets this card is legal in.
@@ -1195,56 +1198,57 @@ public class CardViewFragment extends FamiliarFragment {
          * @return unused
          */
         @Override
-        protected Void doInBackground(Void... params) {
+        protected CardViewFragment doInBackground(CardViewFragment... params) {
 
+            CardViewFragment frag = params[0];
             Cursor cFormats = null;
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
-                SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
+                SQLiteDatabase database = DatabaseManager.openDatabase(frag.mActivity, false, handle);
                 cFormats = CardDbAdapter.fetchAllFormats(database);
-                mFormats = new String[cFormats.getCount()];
-                mLegalities = new String[cFormats.getCount()];
+                frag.mFormats = new String[cFormats.getCount()];
+                frag.mLegalities = new String[cFormats.getCount()];
 
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
-                    mFormats[i] =
+                    frag.mFormats[i] =
                             cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
-                    switch (CardDbAdapter.checkLegality(mCard.getName(), mFormats[i], database)) {
+                    switch (CardDbAdapter.checkLegality(frag.mCard.getName(), frag.mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
-                            mLegalities[i] = getString(R.string.card_view_legal);
+                            frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
                             break;
                         case CardDbAdapter.RESTRICTED:
                             /* For backwards compatibility, we list cards that are legal in
                              * commander, but can't be the commander as Restricted in the legality
                              * file.  This prevents older version of the app from throwing an
                              * IllegalStateException if we try including a new legality. */
-                            if (mFormats[i].equalsIgnoreCase("Commander") ||
-                                    mFormats[i].equalsIgnoreCase("Brawl")) {
-                                mLegalities[i] = getString(R.string.card_view_no_commander);
+                            if (frag.mFormats[i].equalsIgnoreCase("Commander") ||
+                                    frag.mFormats[i].equalsIgnoreCase("Brawl")) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_no_commander);
                             } else {
-                                mLegalities[i] = getString(R.string.card_view_restricted);
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_restricted);
                             }
                             break;
                         case CardDbAdapter.BANNED:
-                            mLegalities[i] = getString(R.string.card_view_banned);
+                            frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
                             break;
                         default:
-                            mLegalities[i] = getString(R.string.error);
+                            frag.mLegalities[i] = frag.getString(R.string.error);
                             break;
                     }
                     cFormats.moveToNext();
                 }
             } catch (SQLiteException | FamiliarDbException e) {
-                CardViewFragment.this.handleFamiliarDbException(false);
-                mLegalities = null;
+                frag.handleFamiliarDbException(false);
+                frag.mLegalities = null;
             } finally {
                 if (null != cFormats) {
                     cFormats.close();
                 }
-                DatabaseManager.closeDatabase(mActivity, handle);
+                DatabaseManager.closeDatabase(frag.mActivity, handle);
             }
 
-            return null;
+            return frag;
         }
 
         /**
@@ -1253,20 +1257,20 @@ public class CardViewFragment extends FamiliarFragment {
          * @param result unused
          */
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(CardViewFragment result) {
             try {
-                showDialog(CardViewDialogFragment.GET_LEGALITY);
+                result.showDialog(CardViewDialogFragment.GET_LEGALITY);
             } catch (IllegalStateException e) {
                 /* eat it */
             }
-            mActivity.clearLoading();
+            result.mActivity.clearLoading();
         }
     }
 
     /**
      * This private class fetches rulings about this card from gatherer.wizards.com.
      */
-    private class FetchRulingsTask extends AsyncTask<Void, Void, Void> {
+    private static class FetchRulingsTask extends AsyncTask<CardViewFragment, Void, CardViewFragment> {
 
         String mErrorMessage = null;
 
@@ -1279,15 +1283,16 @@ public class CardViewFragment extends FamiliarFragment {
          */
         @Override
         @SuppressWarnings("SpellCheckingInspection")
-        protected Void doInBackground(Void... params) {
+        protected CardViewFragment doInBackground(CardViewFragment... params) {
 
+            CardViewFragment frag = params[0];
             URL url;
             InputStream is = null;
 
-            mRulingsArrayList = new ArrayList<>();
+            frag.mRulingsArrayList = new ArrayList<>();
             try {
-                url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mCard.getMultiverseId());
-                is = FamiliarActivity.getHttpInputStream(url, null, getContext());
+                url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
+                is = FamiliarActivity.getHttpInputStream(url, null, frag.getContext());
                 if (is == null) {
                     throw new IOException("null stream");
                 }
@@ -1310,7 +1315,7 @@ public class CardViewFragment extends FamiliarFragment {
                         symbol.html(symbolString);
                     }
                     Ruling r = new Ruling(date, rulingText.text());
-                    mRulingsArrayList.add(r);
+                    frag.mRulingsArrayList.add(r);
                 }
             } catch (Exception ioe) {
                 mErrorMessage = ioe.getLocalizedMessage();
@@ -1324,7 +1329,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
-            return null;
+            return frag;
         }
 
         /**
@@ -1333,19 +1338,19 @@ public class CardViewFragment extends FamiliarFragment {
          * @param result unused
          */
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(CardViewFragment result) {
 
             if (mErrorMessage == null) {
                 try {
-                    showDialog(CardViewDialogFragment.CARD_RULINGS);
+                    result.showDialog(CardViewDialogFragment.CARD_RULINGS);
                 } catch (IllegalStateException e) {
                     /* eat it */
                 }
             } else {
-                removeDialog(getFragmentManager());
-                SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
+                result.removeDialog(result.getFragmentManager());
+                SnackbarWrapper.makeAndShowText(result.mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
             }
-            mActivity.clearLoading();
+            result.mActivity.clearLoading();
         }
     }
 

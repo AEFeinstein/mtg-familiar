@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -315,134 +316,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mManaCostTextView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         /* Get a bunch of database info in a background task */
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                /* Only actually get data if the arrays are null */
-                Cursor formatCursor = null;
-                Cursor setCursor = null;
-                FamiliarDbHandle handle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
-                    if (mSetNames == null) {
-                        /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                        setCursor = CardDbAdapter.fetchAllSets(database);
-                        setCursor.moveToFirst();
-
-                        mSetNames = new String[setCursor.getCount()];
-                        mSetSymbols = new String[setCursor.getCount()];
-
-                        /* If this wasn't persisted, create it new */
-                        if (mSetCheckedIndices == null) {
-                            mSetCheckedIndices = new int[0];
-                        }
-
-                        for (int i = 0; i < setCursor.getCount(); i++) {
-                            mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
-                            mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-                            setCursor.moveToNext();
-                        }
-                    }
-
-                    if (mFormatNames == null) {
-                        /* Query the database for all formats and fill the arrays to populate the list of choices with */
-                        formatCursor = CardDbAdapter.fetchAllFormats(database);
-                        formatCursor.moveToFirst();
-
-                        mFormatNames = new String[formatCursor.getCount()];
-
-                        for (int i = 0; i < formatCursor.getCount(); i++) {
-                            mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-                            formatCursor.moveToNext();
-                        }
-                    }
-
-                    if (mSupertypes == null) {
-                        String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
-                        mSupertypes = tokenStringsFromTypes(supertypes);
-                    }
-
-                    if (mSubtypes == null) {
-                        String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
-                        mSubtypes = tokenStringsFromTypes(subtypes);
-                    }
-
-                    if (mArtists == null) {
-                        mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_ARTIST, false, database);
-                    }
-
-                    if (mWatermarks == null) {
-                        mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_WATERMARK, false, database);
-                    }
-                } catch (SQLiteException | FamiliarDbException e) {
-                    handleFamiliarDbException(false);
-                } finally {
-                    if (null != setCursor) {
-                        setCursor.close();
-                    }
-                    if (null != formatCursor) {
-                        formatCursor.close();
-                    }
-                    DatabaseManager.closeDatabase(getActivity(), handle);
-                }
-
-                return null;
-            }
-
-            private String[] tokenStringsFromTypes(String[] types) {
-                String tokenStrings[] = new String[types.length * 2];
-                System.arraycopy(types, 0, tokenStrings, 0, types.length);
-                for (int i = 0; i < types.length; i++) {
-                    tokenStrings[types.length + i] = CardDbAdapter.EXCLUDE_TOKEN + types[i];
-                }
-                return tokenStrings;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                try {
-                    getActivity().runOnUiThread(() -> {
-                        /* set the autocomplete for supertypes */
-                        if (null != mSupertypes) {
-                            ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                            mSupertypeField.setAdapter(supertypeAdapter);
-                        }
-
-                        if (null != mSubtypes) {
-                            /* set the autocomplete for subtypes */
-                            ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                            mSubtypeField.setAdapter(subtypeAdapter);
-                        }
-
-                        if (null != mArtists) {
-                            /* set the autocomplete for sets */
-                            final SetAdapter setAdapter = new SetAdapter();
-                            mSetField.setAdapter(setAdapter);
-                            /* set the autocomplete for artists */
-                            ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
-                            mArtistField.setThreshold(1);
-                            mArtistField.setAdapter(artistAdapter);
-                        }
-
-                        if (null != mWatermarks) {
-                            /* set the autocomplete for watermarks */
-                            ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
-                            mWatermarkField.setThreshold(1);
-                            mWatermarkField.setAdapter(watermarkAdapter);
-                        }
-                    });
-                } catch (NullPointerException e) {
-                    /* If the UI thread isn't here, eat it */
-                }
-            }
-        }.execute();
+        new BuildAutocompleteTask().execute(this);
 
         /* set the search button! */
         searchButton.setOnClickListener(v -> doSearch());
@@ -451,14 +325,145 @@ public class SearchViewFragment extends FamiliarFragment {
         return myFragmentView;
     }
 
-    private class SetAdapter extends ArrayAdapter<String> {
+    private static class BuildAutocompleteTask extends AsyncTask<SearchViewFragment, Void, SearchViewFragment> {
+        @Override
+        protected SearchViewFragment doInBackground(SearchViewFragment... frags) {
+
+            SearchViewFragment frag = frags[0];
+            /* Only actually get data if the arrays are null */
+            Cursor formatCursor = null;
+            Cursor setCursor = null;
+            FamiliarDbHandle handle = new FamiliarDbHandle();
+            try {
+                SQLiteDatabase database = DatabaseManager.openDatabase(frag.getActivity(), false, handle);
+                if (frag.mSetNames == null) {
+                    /* Query the database for all sets and fill the arrays to populate the list of choices with */
+                    setCursor = CardDbAdapter.fetchAllSets(database);
+                    setCursor.moveToFirst();
+
+                    frag.mSetNames = new String[setCursor.getCount()];
+                    frag.mSetSymbols = new String[setCursor.getCount()];
+
+                    /* If this wasn't persisted, create it new */
+                    if (frag.mSetCheckedIndices == null) {
+                        frag.mSetCheckedIndices = new int[0];
+                    }
+
+                    for (int i = 0; i < setCursor.getCount(); i++) {
+                        frag.mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
+                        frag.mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        setCursor.moveToNext();
+                    }
+                }
+
+                if (frag.mFormatNames == null) {
+                    /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                    formatCursor = CardDbAdapter.fetchAllFormats(database);
+                    formatCursor.moveToFirst();
+
+                    frag.mFormatNames = new String[formatCursor.getCount()];
+
+                    for (int i = 0; i < formatCursor.getCount(); i++) {
+                        frag.mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        formatCursor.moveToNext();
+                    }
+                }
+
+                if (frag.mSupertypes == null) {
+                    String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
+                    frag.mSupertypes = tokenStringsFromTypes(supertypes);
+                }
+
+                if (frag.mSubtypes == null) {
+                    String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
+                    frag.mSubtypes = tokenStringsFromTypes(subtypes);
+                }
+
+                if (frag.mArtists == null) {
+                    frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_ARTIST, false, database);
+                }
+
+                if (frag.mWatermarks == null) {
+                    frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_WATERMARK, false, database);
+                }
+            } catch (SQLiteException | FamiliarDbException e) {
+                frag.handleFamiliarDbException(false);
+            } finally {
+                if (null != setCursor) {
+                    setCursor.close();
+                }
+                if (null != formatCursor) {
+                    formatCursor.close();
+                }
+                DatabaseManager.closeDatabase(frag.getActivity(), handle);
+            }
+
+            return frag;
+        }
+
+        private String[] tokenStringsFromTypes(String[] types) {
+            String tokenStrings[] = new String[types.length * 2];
+            System.arraycopy(types, 0, tokenStrings, 0, types.length);
+            for (int i = 0; i < types.length; i++) {
+                tokenStrings[types.length + i] = CardDbAdapter.EXCLUDE_TOKEN + types[i];
+            }
+            return tokenStrings;
+        }
+
+        @Override
+        protected void onPostExecute(SearchViewFragment frag) {
+            super.onPostExecute(frag);
+            Activity activity = frag.getActivity();
+            if (null == activity) {
+                return;
+            }
+            try {
+                /* set the autocomplete for supertypes */
+                if (null != frag.mSupertypes) {
+                    ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
+                            frag.getActivity(), R.layout.list_item_1, frag.mSupertypes);
+                    frag.mSupertypeField.setAdapter(supertypeAdapter);
+                }
+
+                if (null != frag.mSubtypes) {
+                    /* set the autocomplete for subtypes */
+                    ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
+                            frag.getActivity(), R.layout.list_item_1, frag.mSubtypes);
+                    frag.mSubtypeField.setAdapter(subtypeAdapter);
+                }
+
+                if (null != frag.mArtists) {
+                    /* set the autocomplete for sets */
+                    final SetAdapter setAdapter = new SetAdapter(frag);
+                    frag.mSetField.setAdapter(setAdapter);
+                    /* set the autocomplete for artists */
+                    ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
+                            frag.getActivity(), R.layout.list_item_1, frag.mArtists);
+                    frag.mArtistField.setThreshold(1);
+                    frag.mArtistField.setAdapter(artistAdapter);
+                }
+
+                if (null != frag.mWatermarks) {
+                    /* set the autocomplete for watermarks */
+                    ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
+                            frag.getActivity(), R.layout.list_item_1, frag.mWatermarks);
+                    frag.mWatermarkField.setThreshold(1);
+                    frag.mWatermarkField.setAdapter(watermarkAdapter);
+                }
+            } catch (NullPointerException e) {
+                /* If the UI thread isn't here, eat it */
+            }
+        }
+    }
+
+    private static class SetAdapter extends ArrayAdapter<String> {
         final Map<String, String> symbolsByAutocomplete = new LinkedHashMap<>();
 
-        SetAdapter() {
-            super(SearchViewFragment.this.getActivity(), R.layout.list_item_1);
-            for (int index = 0; index < mSetSymbols.length; index++) {
-                String autocomplete = "[" + mSetSymbols[index] + "] " + mSetNames[index];
-                String set = mSetSymbols[index];
+        SetAdapter(SearchViewFragment frag) {
+            super(frag.getActivity(), R.layout.list_item_1);
+            for (int index = 0; index < frag.mSetSymbols.length; index++) {
+                String autocomplete = "[" + frag.mSetSymbols[index] + "] " + frag.mSetNames[index];
+                String set = frag.mSetSymbols[index];
                 symbolsByAutocomplete.put(autocomplete, set);
                 this.add(autocomplete);
             }
