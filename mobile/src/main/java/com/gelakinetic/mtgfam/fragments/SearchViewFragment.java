@@ -489,7 +489,11 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onPause() {
         super.onPause();
         // Save the search criteria
-        PreferenceAdapter.setSearchViewCriteria(getContext(), parseForm());
+        try {
+            PreferenceAdapter.setSearchViewCriteria(getContext(), parseForm());
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+            /* Eat it */
+        }
     }
 
     /**
@@ -526,9 +530,13 @@ public class SearchViewFragment extends FamiliarFragment {
     private void doSearch() {
         Bundle args = new Bundle();
         args.putBoolean(CRITERIA_FLAG, true);
-        PreferenceAdapter.setSearchCriteria(getContext(), parseForm());
-        ResultListFragment rlFrag = new ResultListFragment();
-        startNewFragment(rlFrag, args);
+        try {
+            PreferenceAdapter.setSearchCriteria(getContext(), parseForm());
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, args);
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.judges_corner_error, SnackbarWrapper.LENGTH_SHORT);
+        }
     }
 
     /**
@@ -536,7 +544,7 @@ public class SearchViewFragment extends FamiliarFragment {
      *
      * @return a SearchCriteria with what the user wants to search for
      */
-    private SearchCriteria parseForm() {
+    private SearchCriteria parseForm() throws ArrayIndexOutOfBoundsException, NullPointerException {
         SearchCriteria searchCriteria = new SearchCriteria();
 
         /* Because Android Studio whines */
@@ -835,7 +843,7 @@ public class SearchViewFragment extends FamiliarFragment {
             ObjectOutputStream os = new ObjectOutputStream(fileStream);
             os.writeObject(parseForm());
             os.close();
-        } catch (IOException e) {
+        } catch (IOException | ArrayIndexOutOfBoundsException | NullPointerException e) {
             SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, SnackbarWrapper.LENGTH_LONG);
         }
     }
