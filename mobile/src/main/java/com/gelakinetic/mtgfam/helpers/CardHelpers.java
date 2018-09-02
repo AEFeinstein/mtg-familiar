@@ -201,6 +201,7 @@ public class CardHelpers {
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
 
             ArrayList<MtgCard> list;
+            ArrayList<String> nonFoilSets = null;
 
             try {
                 if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
@@ -216,6 +217,16 @@ public class CardHelpers {
                 }
             } catch (FamiliarDbException e) {
                 return;
+            }
+
+            FamiliarDbHandle handle = new FamiliarDbHandle();
+            try {
+                SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
+                nonFoilSets = CardDbAdapter.getNonFoilSets(database);
+            } catch (SQLiteException | FamiliarDbException | IllegalStateException ignored) {
+                /* Eh */
+            } finally {
+                DatabaseManager.closeDatabase(activity, handle);
             }
 
             /* Add the cards listed in the dialog to the wishlist */
@@ -241,15 +252,17 @@ public class CardHelpers {
                 for (int j = 0; j < list.size(); j++) {
                     if (card.getName().equals(list.get(j).getName())
                             && card.isSideboard() == list.get(j).isSideboard()
-                            && card.getExpansion().equals(list.get(j).getExpansion())
-                            && card.mIsFoil == list.get(j).mIsFoil) {
-                        if (card.mNumberOf == 0) {
-                            list.remove(j);
-                            j--;
-                        } else {
-                            list.get(j).mNumberOf = card.mNumberOf;
+                            && card.getExpansion().equals(list.get(j).getExpansion())) {
+                        if (card.mIsFoil == list.get(j).mIsFoil ||
+                                nonFoilSets.contains(card.getExpansion())) {
+                            if (card.mNumberOf == 0) {
+                                list.remove(j);
+                                j--;
+                            } else {
+                                list.get(j).mNumberOf = card.mNumberOf;
+                            }
+                            added = true;
                         }
-                        added = true;
                     }
                 }
                 if (!added && card.mNumberOf > 0) {

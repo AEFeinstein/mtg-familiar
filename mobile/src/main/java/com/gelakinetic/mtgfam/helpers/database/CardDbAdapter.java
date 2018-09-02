@@ -2017,6 +2017,42 @@ public class CardDbAdapter {
         }
     }
 
+    /**
+     * @param database The database to query with
+     * @return A list of all the sets which do not have foils (or are only foil)
+     * @throws FamiliarDbException If something goes terribly wrong
+     */
+    public static ArrayList<String> getNonFoilSets(SQLiteDatabase database) throws FamiliarDbException {
+        Cursor c = null;
+        ArrayList<String> nonFoilSets = new ArrayList<>();
+        try {
+            String sql = "SELECT " + KEY_CODE +
+                    " FROM " + DATABASE_TABLE_SETS +
+                    " WHERE " + KEY_CAN_BE_FOIL + " = 0;";
+            c = database.rawQuery(sql, null);
+            c.moveToFirst();
+
+            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
+            if (c.getCount() == 0) {
+                return nonFoilSets;
+            }
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                nonFoilSets.add(c.getString(c.getColumnIndex(KEY_CODE)));
+                c.moveToNext();
+            }
+
+            return nonFoilSets;
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        } finally {
+            if (null != c) {
+                c.close();
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                            //
     //                             DATABASE_TABLE_LEGAL_SETS Functions                            //
