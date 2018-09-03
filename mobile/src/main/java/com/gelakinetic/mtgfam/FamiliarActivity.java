@@ -1816,14 +1816,18 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     private static void printBundleContents(StringBuilder toPrint, Bundle outState, int recursionLevel) {
-        for (String key : outState.keySet()) {
-            for (int i = 0; i < recursionLevel; i++) {
-                toPrint.append("  ");
+        try {
+            for (String key : outState.keySet()) {
+                for (int i = 0; i < recursionLevel; i++) {
+                    toPrint.append("  ");
+                }
+                toPrint.append(key).append(" :: ").append(outState.get(key).getClass().getName()).append("\r\n");
+                if (outState.get(key) instanceof Bundle) {
+                    printBundleContents(toPrint, (Bundle) outState.get(key), recursionLevel + 1);
+                }
             }
-            toPrint.append(key).append(" :: ").append(outState.get(key).getClass().getName()).append("\r\n");
-            if (outState.get(key) instanceof Bundle) {
-                printBundleContents(toPrint, (Bundle) outState.get(key), recursionLevel + 1);
-            }
+        } catch (NullPointerException e) {
+            // eat it
         }
     }
 

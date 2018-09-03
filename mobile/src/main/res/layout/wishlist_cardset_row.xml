@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -38,14 +37,16 @@
         android:layout_height="match_parent"
         app:srcCompat="@drawable/glyph_foil" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
     <TextView
         android:id="@+id/wishlistRowPrice"
         style="@style/text.small"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="right"
         android:maxLines="1"
         android:text="@string/default_price" />
 
