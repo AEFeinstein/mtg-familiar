@@ -20,6 +20,8 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -49,7 +51,9 @@ import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
@@ -132,6 +136,17 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
+        ArrayList<String> nonFoilSets;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            SQLiteDatabase database = DatabaseManager.openDatabase(getContext(), false, handle);
+            nonFoilSets = CardDbAdapter.getNonFoilSets(database);
+        } catch (SQLiteException | FamiliarDbException | IllegalStateException ignored) {
+            nonFoilSets = new ArrayList<>();
+        } finally {
+            DatabaseManager.closeDatabase(getContext(), handle);
+        }
+
         try {
             MtgCard card = new MtgCard(getActivity(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
             CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
@@ -142,7 +157,8 @@ public class WishlistFragment extends FamiliarListFragment {
                     CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
                     boolean added = false;
                     for (IndividualSetInfo isi : cwi.mInfo) {
-                        if (isi.mSetCode.equals(card.getExpansion()) && isi.mIsFoil.equals(card.mIsFoil)) {
+                        if (isi.mSetCode.equals(card.getExpansion()) &&
+                                (isi.mIsFoil.equals(card.mIsFoil) || nonFoilSets.contains(isi.mSetCode))) {
                             added = true;
                             isi.mNumberOf++;
                         }

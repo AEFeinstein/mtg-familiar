@@ -224,7 +224,7 @@ public class CardHelpers {
                 SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
                 nonFoilSets = CardDbAdapter.getNonFoilSets(database);
             } catch (SQLiteException | FamiliarDbException | IllegalStateException ignored) {
-                /* Eh */
+                nonFoilSets = new ArrayList<>();
             } finally {
                 DatabaseManager.closeDatabase(activity, handle);
             }

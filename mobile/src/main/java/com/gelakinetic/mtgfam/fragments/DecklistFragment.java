@@ -291,6 +291,17 @@ public class DecklistFragment extends FamiliarListFragment {
             return;
         }
 
+        ArrayList<String> nonFoilSets;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            SQLiteDatabase database = DatabaseManager.openDatabase(getContext(), false, handle);
+            nonFoilSets = CardDbAdapter.getNonFoilSets(database);
+        } catch (SQLiteException | FamiliarDbException | IllegalStateException ignored) {
+            nonFoilSets = new ArrayList<>();
+        } finally {
+            DatabaseManager.closeDatabase(getContext(), handle);
+        }
+
         final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(getCardNumberInput());
         try {
@@ -309,7 +320,8 @@ public class DecklistFragment extends FamiliarListFragment {
                             mCompressedDecklist.get(firstIndex);
                     for (int i = 0; i < firstCard.mInfo.size(); i++) {
                         CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
-                        if (firstIsi.mSetCode.equals(card.getExpansion()) && firstIsi.mIsFoil.equals(card.mIsFoil)) {
+                        if (firstIsi.mSetCode.equals(card.getExpansion()) &&
+                                (firstIsi.mIsFoil.equals(card.mIsFoil) || nonFoilSets.contains(firstIsi.mSetCode))) {
                             firstIsi.mNumberOf++;
                             added = true;
                             break;
