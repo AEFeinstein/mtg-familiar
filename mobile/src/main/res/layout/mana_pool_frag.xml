@@ -12,332 +12,203 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 --><!-- Not useless, it centers the view vertically --><!--suppress AndroidLintUselessParent -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
 
-    <ScrollView
+    <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/add_mana"
+        android:layout_centerInParent="true"
+        app:alignContent="center"
+        app:alignItems="center"
+        app:flexWrap="wrap"
+        app:justifyContent="center">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/white_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_w"/>
+
+            <TextView
+                android:id="@+id/white_readout"
+                style="@style/contrast_mana_pool_text"
+                tools:text="7"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/blue_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_u"/>
+
+            <TextView
+                android:id="@+id/blue_readout"
+                style="@style/mana_pool_text"
+                tools:text="8"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/black_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_b"/>
+
+            <TextView
+                android:id="@+id/black_readout"
+                style="@style/mana_pool_text"
+                tools:text="9"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/red_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_r"/>
+
+            <TextView
+                android:id="@+id/red_readout"
+                style="@style/mana_pool_text"
+                tools:text="10"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/green_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_g"/>
+
+            <TextView
+                android:id="@+id/green_readout"
+                style="@style/mana_pool_text"
+                tools:text="11"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/colorless_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_c"/>
+
+            <TextView
+                android:id="@+id/colorless_readout"
+                style="@style/contrast_mana_pool_text"
+                tools:text="12"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/energy_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_e"/>
+
+            <TextView
+                android:id="@+id/energy_readout"
+                style="@style/contrast_mana_pool_text"
+                tools:text="13"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/spell_minus"
+                style="@style/mana_image_large"
+                app:srcCompat="@drawable/glyph_spell2"/>
+
+            <TextView
+                android:id="@+id/spell_readout"
+                style="@style/contrast_mana_pool_text"
+                tools:text="14"/>
+        </FrameLayout>
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/add_mana"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:animateLayoutChanges="true"
+        app:alignContent="center"
+        app:alignItems="center"
+        app:flexWrap="wrap"
+        app:justifyContent="center">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/white_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_w"/>
 
-            <!-- white -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/blue_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_u"/>
 
-                <Button
-                    android:id="@+id/white_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/black_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_b"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_w" />
+        <ImageView
+            android:id="@+id/red_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_r"/>
 
-                <TextView
-                    android:id="@+id/white_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
+        <ImageView
+            android:id="@+id/green_plus"
+            style="@style/mana_image_small"
+            app:srcCompat="@drawable/glyph_g"/>
 
-                <Button
-                    android:id="@+id/white_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/colorless_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_c"/>
 
-            </LinearLayout>
-            <!-- blue -->
+        <ImageView
+            android:id="@+id/energy_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_e"/>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/spell_plus"
+            style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
+            app:srcCompat="@drawable/glyph_spell2"/>
 
-                <Button
-                    android:id="@+id/blue_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
+    </com.google.android.flexbox.FlexboxLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-
-                    app:srcCompat="@drawable/glyph_u" />
-
-                <TextView
-                    android:id="@+id/blue_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/blue_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-            <!-- black -->
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/black_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_b" />
-
-                <TextView
-                    android:id="@+id/black_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/black_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-            <!-- red -->
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/red_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_r" />
-
-                <TextView
-                    android:id="@+id/red_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/red_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-            <!-- green -->
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/green_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_g" />
-
-                <TextView
-                    android:id="@+id/green_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/green_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-            <!-- colorless -->
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/colorless_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_c" />
-
-                <TextView
-                    android:id="@+id/colorless_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/colorless_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Energy -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/energy_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_e" />
-
-                <TextView
-                    android:id="@+id/energy_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/energy_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- spell -->
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/spell_minus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_minus"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    app:srcCompat="@drawable/glyph_spell" />
-
-                <TextView
-                    android:id="@+id/spell_readout"
-                    style="@style/text.xxlarge"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/mana_pool_zero" />
-
-                <Button
-                    android:id="@+id/spell_plus"
-                    style="?attr/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/mana_pool_plus"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
 </RelativeLayout>

@@ -19,6 +19,10 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -29,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
@@ -36,15 +41,18 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Stack;
 
 public class ManaPoolFragment extends FamiliarFragment {
 
     private class ManaPoolItem {
 
-        private int mCount;
+        private final ImageView mPlus;
+        private final ImageView mMinus;
         private final TextView mReadout;
         @StringRes
         private final int mKeyResId;
+        private int mCount;
 
         /**
          * Create a mana pool item
@@ -60,17 +68,31 @@ public class ManaPoolFragment extends FamiliarFragment {
             mCount = 0;
             mReadout = parent.findViewById(readoutResId);
             mKeyResId = keyResId;
-            parent.findViewById(plusResId).setOnClickListener((View v) -> {
-                mCount++;
-                updateReadout();
+            mPlus = parent.findViewById(plusResId);
+            mMinus = parent.findViewById(minusResId);
+            mPlus.setOnClickListener((View v) -> {
+                increaseCount();
             });
-            parent.findViewById(minusResId).setOnClickListener((View v) -> {
-                mCount--;
-                if (mCount < 0) {
-                    mCount = 0;
-                }
-                updateReadout();
+            mMinus.setOnClickListener((View v) -> {
+                decreaseCount();
             });
+        }
+
+        private void increaseCount() {
+            mCount++;
+            updateVisibility();
+            startMovingManaAnimation(this, mPlus, mMinus, mPlus.getDrawable(), true);
+        }
+
+        private void decreaseCount() {
+            mCount--;
+            if (mCount < 0) {
+                mCount = 0;
+                return;
+            }
+            updateVisibility();
+            updateReadout();
+            startMovingManaAnimation(this, mMinus, mPlus, mPlus.getDrawable(), false);
         }
 
         /**
@@ -79,13 +101,23 @@ public class ManaPoolFragment extends FamiliarFragment {
         void clearCount() {
             mCount = 0;
             updateReadout();
+            updateVisibility();
         }
 
         /**
          * Update the readout with the current count
          */
         void updateReadout() {
-            mReadout.setText(String.format(Locale.getDefault(), "%d", mCount));
+            if (mCount == 0) {
+                mReadout.setText("");
+            }
+            else {
+                mReadout.setText(String.format(Locale.getDefault(), "%d", mCount));
+            }
+        }
+
+        private void updateVisibility() {
+            mMinus.animate().alpha(mCount == 0 ? 0.1f : 1.0f);
         }
 
         /**
@@ -94,6 +126,7 @@ public class ManaPoolFragment extends FamiliarFragment {
         void loadCount() {
             mCount = PreferenceAdapter.getMana(getContext(), mKeyResId);
             updateReadout();
+            updateVisibility();
         }
 
         /**
@@ -105,6 +138,8 @@ public class ManaPoolFragment extends FamiliarFragment {
     }
 
     private final ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
+    private final Stack<ImageView> mMovingMana = new Stack<>();
+    private ViewGroup mParentView;
 
     /**
      * Create the view and set up the buttons
@@ -119,30 +154,109 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myFragmentView = inflater.inflate(R.layout.mana_pool_frag, container, false);
+        mParentView = (ViewGroup) inflater.inflate(R.layout.mana_pool_frag, container, false);
 
         /* Clear out the mana pool items, just in case */
         mManaPoolItems.clear();
 
         /* Create and save all the mana pool items */
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.white_plus, R.id.white_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.white_plus, R.id.white_minus,
                 R.id.white_readout, R.string.key_whiteMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.blue_plus, R.id.blue_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.blue_plus, R.id.blue_minus,
                 R.id.blue_readout, R.string.key_blueMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.black_plus, R.id.black_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.black_plus, R.id.black_minus,
                 R.id.black_readout, R.string.key_blackMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.red_plus, R.id.red_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.red_plus, R.id.red_minus,
                 R.id.red_readout, R.string.key_redMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.green_plus, R.id.green_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.green_plus, R.id.green_minus,
                 R.id.green_readout, R.string.key_greenMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.colorless_plus, R.id.colorless_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.colorless_plus, R.id.colorless_minus,
                 R.id.colorless_readout, R.string.key_colorlessMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.energy_plus, R.id.energy_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.energy_plus, R.id.energy_minus,
                 R.id.energy_readout, R.string.key_energy));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.spell_plus, R.id.spell_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.spell_plus, R.id.spell_minus,
                 R.id.spell_readout, R.string.key_spellCount));
 
-        return myFragmentView;
+        return mParentView;
+    }
+
+    /**
+     *
+     * Show an animation of mana moving into or out of the pool.
+     *
+     * @param from
+     * @param to
+     * @param drawable
+     * @param grow
+     */
+    private void startMovingManaAnimation(ManaPoolItem item,
+                                          ImageView from,
+                                          ImageView to,
+                                          Drawable drawable,
+                                          boolean grow) {
+
+        ImageView imageView = getMovingManaImageView();
+
+        mParentView.addView(imageView);
+        imageView.setImageDrawable(drawable);
+
+        Rect fromBounds = getRectForView(from);
+        Rect toBounds = getRectForView(to);
+        float startingScale = grow ? 1.0f : 2.0f;
+        float endingScale = grow ? 2.0f : 0.75f;
+        final int halfWidth = drawable.getIntrinsicWidth() / 2;
+        final int halfHeight = drawable.getIntrinsicHeight() / 2;
+
+        imageView.setX(fromBounds.centerX() - halfWidth);
+        imageView.setY(fromBounds.centerY() - halfHeight);
+        imageView.setScaleX(startingScale);
+        imageView.setScaleY(startingScale);
+        imageView.setAlpha(1.0f);
+        imageView.animate()
+                .x(toBounds.centerX() - halfWidth)
+                .y(toBounds.centerY() - halfHeight)
+                .scaleX(endingScale)
+                .scaleY(endingScale)
+                .alpha(0.5f)
+                .setDuration(450)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(final Animator animation) {
+                        mParentView.removeView(imageView);
+                        mMovingMana.push(imageView);
+                        item.updateReadout();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(final Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+                });
+    }
+
+    @NonNull
+    /**
+     * Returns the Bounds of the view relative to the root view of the Fragment.
+     * https://stackoverflow.com/a/36740277
+     */
+    private Rect getRectForView(final View view) {
+        Rect fromBounds = new Rect();
+        view.getDrawingRect(fromBounds);
+        mParentView.offsetDescendantRectToMyCoords(view, fromBounds);
+        return fromBounds;
+    }
+
+    /**
+     *
+     * @return An ImageView from the Stack or a new ImageView if the Stack is empty.
+     */
+    private ImageView getMovingManaImageView() {
+        if (mMovingMana.isEmpty()) {
+            return new ImageView(getContext());
+        }
+        else {
+            return mMovingMana.pop();
+        }
     }
 
     /**
