@@ -558,4 +558,5 @@ Good luck, and have fun!
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="decklist_export">Export Deck</string>
     <string name="decklist_export_dec">.dec</string>
+    <string name="decklist_export_cardsphere">Cardsphere</string>
 </resources>
