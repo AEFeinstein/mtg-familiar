@@ -591,6 +591,11 @@ public class DecklistFragment extends FamiliarListFragment {
                 String deck = CardHelpers.cardListToCSV(mCompressedDecklist);
                 return createExportedFile(deck, "csv");
             }
+            case R.id.deck_menu_export_deckbox: {
+                final String deckboxHeaders = "Count,Name,Edition,Foil\n";
+                String deck = CardHelpers.cardListToCSV(mCompressedDecklist, deckboxHeaders);
+                return createExportedFile(deck, "csv");
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }

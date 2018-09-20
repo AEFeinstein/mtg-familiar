@@ -605,23 +605,34 @@ public class CardHelpers {
     }
 
     /**
-     * Generates a CSV from a list of {@link MtgCard}.
+     * Generates a CSV from a list of {@link MtgCard}, with the given headers.
      * @param mtgCards a list of MtgCards.
+     * @param csvHeader the csv headers as a string, as they appear in the csv
      * @return a CSV formatted String of the cards from the list.
      */
-    public static String cardListToCSV(List<? extends MtgCard> mtgCards) {
-        // todo: Deckbox and PucaTrade use CSV also, but slightly different headers
-        final String csvHeader = "Tradelist Count,Name,Edition,Foil\n";
+    public static String cardListToCSV(List<? extends MtgCard> mtgCards, String csvHeader) {
         StringBuilder csvFile = new StringBuilder(csvHeader);
         for (MtgCard card : mtgCards) {
             csvFile.append(card.mNumberOf).append(",");
             csvFile.append(card.getName()).append(",");
-            // todo: we need to check set names, they aren't exactly uniformly named in the
-            // databases for the websites
+            /* todo: Unify Edition Names
+             * we need to check set names, they aren't exactly uniformly named in the databases
+             * for the websites
+             */
             csvFile.append(card.mSetName).append(",");
             csvFile.append(card.mIsFoil ? "F" : "").append("\n");
         }
         return csvFile.toString();
+    }
+
+    /**
+     * Generate a default CSV from a list of {@link MtgCard}
+     * @param mtgCards a list of MtgCards.
+     * @return a CSV formatted String of the cards from the list.
+     */
+    public static String cardListToCSV(List<? extends MtgCard> mtgCards) {
+        final String csvHeader = "Tradelist Count,Name,Edition,Foil\n";
+        return cardListToCSV(mtgCards, csvHeader);
     }
 
     /**

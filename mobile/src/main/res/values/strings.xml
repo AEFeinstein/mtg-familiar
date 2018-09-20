@@ -559,4 +559,6 @@ Good luck, and have fun!
     <string name="decklist_export">Export Deck</string>
     <string name="decklist_export_dec">.dec</string>
     <string name="decklist_export_cardsphere">Cardsphere</string>
+    <string name="decklist_export_deckbox">Deckbox</string>
+    <string name="decklist_export_tappedout">TappedOut</string>
 </resources>
