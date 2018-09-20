@@ -98,7 +98,7 @@ public class DecklistHelpers {
                         cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
                         /* If the card is a sideboard card, add the sideboard marking */
-                        if (cdi.mIsSideboard) {
+                        if (cdi.isSideboard()) {
                             cardString = "SB:" + cardString;
                         }
                         fos.write(cardString.getBytes());
@@ -171,7 +171,7 @@ public class DecklistHelpers {
                 readableDecklist.append(cdi.header).append("\r\n");
             } else {
                 for (IndividualSetInfo isi : cdi.mInfo) {
-                    if (cdi.mIsSideboard) {
+                    if (cdi.isSideboard()) {
                         readableDecklist.append("SB: ");
                     }
                     readableDecklist
@@ -220,7 +220,6 @@ public class DecklistHelpers {
      */
     public static class CompressedDecklistInfo extends CardHelpers.CompressedCardInfo {
 
-        public final boolean mIsSideboard;
         public String header;
 
         /**
@@ -231,7 +230,6 @@ public class DecklistHelpers {
          */
         public CompressedDecklistInfo(MtgCard card, boolean isSideboard) {
             super(card);
-            mIsSideboard = isSideboard;
         }
 
         public CompressedWishlistInfo convertToWishlist() {
@@ -256,7 +254,7 @@ public class DecklistHelpers {
                 return (header != null && !header.isEmpty() &&
                         header.equals(cdi.header)) ||
                         (mName != null && !mName.isEmpty() &&
-                                mName.equals(cdi.mName) && (mIsSideboard == cdi.mIsSideboard));
+                                mName.equals(cdi.mName) && (this.isSideboard() == cdi.isSideboard()));
             }
             return super.equals(o);
         }
@@ -265,7 +263,7 @@ public class DecklistHelpers {
         public int hashCode() {
             int hash = 23;
             hash = hash * 31 + super.hashCode();
-            return hash * 31 + ((Boolean) mIsSideboard).hashCode();
+            return hash * 31 + ((Boolean) this.isSideboard()).hashCode();
         }
 
     }

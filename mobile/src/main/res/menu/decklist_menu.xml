@@ -89,4 +89,20 @@
 
     </item>
 
+    <!-- todo: make an icon for this -->
+    <item
+        android:id="@+id/deck_menu_import"
+        android:title="@string/decklist_import"
+        app:showAsAction="ifRoom">
+
+        <menu>
+
+            <item
+                android:id="@+id/deck_menu_import_dec"
+                android:title="@string/decklist_export_dec" />
+
+        </menu>
+
+    </item>
+
 </menu>

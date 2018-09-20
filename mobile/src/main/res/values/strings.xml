@@ -561,4 +561,5 @@ Good luck, and have fun!
     <string name="decklist_export_cardsphere">Cardsphere</string>
     <string name="decklist_export_deckbox">Deckbox</string>
     <string name="decklist_export_tappedout">TappedOut</string>
+    <string name="decklist_import">Import Deck</string>
 </resources>

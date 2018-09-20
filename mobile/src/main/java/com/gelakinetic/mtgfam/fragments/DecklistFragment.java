@@ -707,7 +707,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (!cdi.getName().equals("") /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                         && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
-                    if (cdi.mIsSideboard /* it is in the sideboard */
+                    if (cdi.isSideboard() /* it is in the sideboard */
                             /* The sideboard header isn't already there */
                             && !insertHeaderAt(i, cardHeaders[0])) {
                         break;
@@ -837,7 +837,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /* if we aren't in select mode, open a dialog to edit this card */
             final CompressedDecklistInfo item = mCompressedDecklist.get(position);
             showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                    item.getName(), item.mIsSideboard);
+                    item.getName(), item.isSideboard());
         }
 
     }
@@ -982,11 +982,11 @@ public class DecklistFragment extends FamiliarListFragment {
                     continue;
                 }
                 if (    /* The type is not above -1 OR is not in the sideboard */
-                        (!(typeIndex > -1) || !cdi.mIsSideboard)
+                        (!(typeIndex > -1) || !cdi.isSideboard())
                                 /* The type is above -1 OR the card is in the sideboard */
-                                && (typeIndex > -1 || cdi.mIsSideboard)
+                                && (typeIndex > -1 || cdi.isSideboard())
                                 /* The card is in the sideboard OR the card is the wanted type */
-                                && (cdi.mIsSideboard || cdi.getType().contains(types[typeIndex]))) {
+                                && (cdi.isSideboard() || cdi.getType().contains(types[typeIndex]))) {
                     /* There of course are edge cases */
                     final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]
                             .equals(types[5]);
