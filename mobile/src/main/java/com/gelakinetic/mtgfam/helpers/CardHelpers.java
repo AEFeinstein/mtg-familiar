@@ -668,26 +668,21 @@ public class CardHelpers {
         return deck.toString();
     }
 
+    /**
+     * Turn a dec file into a deck list
+     *
+     * @param decFile the dec file to parse
+     * @return a List of CompressedDecklistInfo based on the dec file
+     */
     public static List<CompressedDecklistInfo> decToDecklist(File decFile) {
+        List<CompressedDecklistInfo> deckList = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(decFile));
-            List<CompressedDecklistInfo> deckList = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
-                /*
-
-                the next line is a lie. it can start with "SB:"
-
-                a card definition always starts with a number, no formatting (4, 50, 5000) and is
-                always an integer
-
-                then there are two fields that can be swapped:
-
-                card name. these can have spaces in them, so splitting by a space is not possible
-
-                card set. this is encapsulated in []. This doesn't HAVE to be there
-
-                 */
+                // todo: Parse comment lines?
+                // mtgtop8 has comment lines for deck name, pilot name, and format
+                // do we want to add these to the deck list?
                 if (Character.isDigit(line.charAt(0)) || line.startsWith("SB:")) {
                     boolean isSideboard = false;
                     int numberOf;
@@ -703,6 +698,7 @@ public class CardHelpers {
                     int bracketIndex = line.indexOf('[');
                     if (bracketIndex >= 0) {
                         int endBracket = line.indexOf(']');
+                        // todo: MtgCard takes a set code, but this can be a set name, fix it
                         setName = line.substring(bracketIndex + 1, line.indexOf(']'));
                         if (bracketIndex > 0) {
                             cardName = line.substring(0, bracketIndex).trim();
@@ -710,15 +706,29 @@ public class CardHelpers {
                             cardName = line.substring(endBracket + 1).trim();
                         }
                     }
+                    try {
+                        deckList.add(
+                                new CompressedDecklistInfo(
+                                        cardName,
+                                        setName,
+                                        false,
+                                        numberOf,
+                                        isSideboard
+                                )
+                        );
+                    } catch (InstantiationException ie) {
+                        // Just don't add the card.
+                    }
                 }
             }
-            return deckList;
         } catch (FileNotFoundException fnf) {
             return null; // todo: Clarify what this value should be
-            // Is this correct? Should I return an empty list instead? Or should it return whatever it could pick up?
+            // Is this correct? Should I return an empty list instead? Or should it return whatever
+            // it could pick up?
         } catch (IOException ioe) {
             return null; // todo: see line ~717
-        }
+        } // todo: Catch, log, finally return deckList?
+        return deckList;
     }
 
 }

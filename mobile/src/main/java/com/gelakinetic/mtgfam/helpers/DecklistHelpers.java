@@ -232,6 +232,21 @@ public class DecklistHelpers {
             super(card);
         }
 
+        public CompressedDecklistInfo(
+                String cardName,
+                String cardSet,
+                boolean isFoil,
+                int numberOf,
+                boolean isSideboard) throws InstantiationException {
+            super(new MtgCard(
+                    cardName,
+                    cardSet,
+                    isFoil,
+                    numberOf,
+                    isSideboard
+            ));
+        }
+
         public CompressedWishlistInfo convertToWishlist() {
             final CompressedWishlistInfo wishlist = new CompressedWishlistInfo(this, 0);
             wishlist.mInfo.clear();
