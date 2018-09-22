@@ -26,10 +26,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,10 +59,6 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -603,69 +597,12 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 mLegalityCheckerTask = new LegalityCheckerTask();
                 mLegalityCheckerTask.execute(this);
-                }
-            case R.id.deck_menu_export_dec: {
-                String deck = CardHelpers.cardListToDec(mCompressedDecklist);
-                return createExportedFile(deck, "dec");
-            }
-            case R.id.deck_menu_export_cardsphere: {
-                String deck = CardHelpers.cardListToCSV(mCompressedDecklist);
-                return createExportedFile(deck, "csv");
-            }
-            case R.id.deck_menu_export_deckbox: {
-                final String deckboxHeaders = "Count,Name,Edition,Foil\n";
-                String deck = CardHelpers.cardListToCSV(mCompressedDecklist, deckboxHeaders);
-                return createExportedFile(deck, "csv");
             }
             default: {
                 return super.onOptionsItemSelected(item);
             }
         }
 
-    }
-
-    /**
-     * Creates a text-based file with the given data of the given extension
-     * @param data what to be written to the file
-     * @param fileExtension extension of file without a period
-     * @return true if the file was created and written, false otherwise
-     */
-    private boolean createExportedFile(String data, String fileExtension) {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            String fileName = mCurrentDeck;
-            if ("".equals(fileName)) {
-                fileName = "unnamed_deck";
-            }
-            File file = new File(Environment.getExternalStorageDirectory(),
-                    getString(R.string.app_name));
-            if (!file.exists()) {
-                if (!file.mkdirs()) {
-                    SnackbarWrapper.makeAndShowText(getActivity(),
-                            getString(R.string.card_view_unable_to_create_dir), // todo: proper message
-                            Snackbar.LENGTH_LONG);
-                    return false;
-                }
-            }
-            file = new File(file, fileName + '.' + fileExtension);
-            FileOutputStream outputStream;
-            try {
-                outputStream = new FileOutputStream(file);
-                outputStream.write(data.getBytes());
-                outputStream.close();
-                SnackbarWrapper.makeAndShowText(getActivity(),
-                        getString(R.string.decklist_saved_toast, file.getPath()), // todo: make sure this is the right message
-                        Snackbar.LENGTH_SHORT);
-            } catch (FileNotFoundException fnf) {
-                // todo: write error saying that the file could not be created/written to
-                return false;
-            } catch (IOException ioe) {
-                // todo: write error saying there was an error writing or closing the file
-                return false;
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -728,7 +665,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (!cdi.getName().equals("") /* We only want entries that have a card attached */
                             && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                             && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
-                        if (cdi.isSideboard() /* it is in the sideboard */
+                        if (cdi.mIsSideboard /* it is in the sideboard */
                                 /* The sideboard header isn't already there */
                                 && !insertHeaderAt(i, cardHeaders[0])) {
                             break;
@@ -864,7 +801,7 @@ public class DecklistFragment extends FamiliarListFragment {
             synchronized (mCompressedDecklist) {
                 final CompressedDecklistInfo item = mCompressedDecklist.get(position);
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                        item.getName(), item.isSideboard());
+                        item.getName(), item.mIsSideboard);
             }
         }
     }
@@ -1011,11 +948,11 @@ public class DecklistFragment extends FamiliarListFragment {
                     continue;
                 }
                 if (    /* The type is not above -1 OR is not in the sideboard */
-                        (!(typeIndex > -1) || !cdi.isSideboard())
+                        (!(typeIndex > -1) || !cdi.mIsSideboard)
                                 /* The type is above -1 OR the card is in the sideboard */
-                                && (typeIndex > -1 || cdi.isSideboard())
+                                && (typeIndex > -1 || cdi.mIsSideboard)
                                 /* The card is in the sideboard OR the card is the wanted type */
-                                && (cdi.isSideboard() || cdi.getType().contains(types[typeIndex]))) {
+                                && (cdi.mIsSideboard || cdi.getType().contains(types[typeIndex]))) {
                     /* There of course are edge cases */
                     final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]
                             .equals(types[5]);

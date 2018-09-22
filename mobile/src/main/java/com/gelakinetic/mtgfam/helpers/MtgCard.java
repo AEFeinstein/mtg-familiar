@@ -783,9 +783,4 @@ public class MtgCard extends Card {
     public boolean isSideboard() {
         return mIsSideboard;
     }
-
-    public void setIsSideboard(boolean isSideboard) {
-        this.mIsSideboard = isSideboard;
-    }
-
 }
