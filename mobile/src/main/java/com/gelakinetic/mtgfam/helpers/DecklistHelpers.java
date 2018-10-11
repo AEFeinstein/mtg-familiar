@@ -54,6 +54,7 @@ public class DecklistHelpers {
             String fileName) {
 
         try {
+            fileName = sanitizeFilename(fileName);
             FileOutputStream fos = activity.openFileOutput(fileName, Context.MODE_PRIVATE);
             for (MtgCard m : lDecklist) {
                 String cardString = m.toWishlistString();
@@ -87,8 +88,7 @@ public class DecklistHelpers {
         }
         try {
 
-            final String newFileName =
-                    fileName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
+            final String newFileName = sanitizeFilename(fileName);
             FileOutputStream fos = activity.openFileOutput(newFileName, Context.MODE_PRIVATE);
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */
@@ -127,7 +127,7 @@ public class DecklistHelpers {
         try {
             String line;
             // Sanitize the deckname before loading in case it was saved improperly on an earlier version of Familiar
-            deckName = deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
+            deckName = sanitizeFilename(deckName);
             try (BufferedReader br = new BufferedReader(new InputStreamReader(activity.openFileInput(deckName)))) {
                 boolean isSideboard;
                 /* Read each line as a card, and add them to the ArrayList */
@@ -154,6 +154,10 @@ public class DecklistHelpers {
         }
         return lDecklist;
 
+    }
+
+    private static String sanitizeFilename(String deckName) {
+        return deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
     }
 
     public static String getSharableDecklist(
