@@ -49,6 +49,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/player_name"
+                style="@style/text.large"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="@string/life_counter_default_name" />
+
+            <TextView
                 android:id="@+id/player_readout"
                 style="@style/text.xxxlarge"
                 android:layout_width="wrap_content"
@@ -57,14 +65,6 @@
                 android:layout_marginBottom="-10dp"
                 android:maxLines="1"
                 android:text="@string/life_counter_twenty" />
-
-            <TextView
-                android:id="@+id/player_name"
-                style="@style/text.large"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:text="@string/life_counter_default_name" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
