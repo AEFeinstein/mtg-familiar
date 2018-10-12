@@ -60,6 +60,7 @@ public class LcPlayer {
     public int mPoison = 0;
     public String mName;
     public int mCommanderCasting = 0;
+    public int mCommanderExperienceCounter = 0;
     public int mDefaultLifeTotal = LifeCounterFragment.DEFAULT_LIFE;
     /* The player's View to be drawn in the LifeCounterFragment */
     public View mView;
@@ -96,6 +97,7 @@ public class LcPlayer {
     public TextView mCommanderNameTextView;
     private TextView mCommanderReadoutTextView;
     private Button mCommanderCastingButton;
+    private Button mCommanderExperienceCountersButton;
     private ListView mHistoryList;
 
     /**
@@ -309,6 +311,7 @@ public class LcPlayer {
                 assert mView != null;
                 mHistoryList = mView.findViewById(R.id.player_history);
                 mCommanderCastingButton = mView.findViewById(R.id.commanderCast);
+                mCommanderExperienceCountersButton = mView.findViewById(R.id.commanderExperienceCounter);
 
                 /* Make new adapters */
                 mHistoryLifeAdapter = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_LIFE);
@@ -316,23 +319,10 @@ public class LcPlayer {
                         = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_POISON);
                 mCommanderDamageAdapter = new CommanderDamageAdapter(mFragment.getActivity());
 
-                /* If it's commander, also inflate the entry to display in the grid, and set up the casting button */
+                /* If it's commander, also inflate the entry to display in the grid, and set up the casting and experience counter button */
                 if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
-                    mView.findViewById(R.id.commanderCastText).setVisibility(View.VISIBLE);
-                    mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
-                    mCommanderCastingButton.setVisibility(View.VISIBLE);
-                    mCommanderCastingButton.setOnClickListener(view -> {
-                        mCommanderCasting++;
-                        mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
-                    });
-                    mCommanderCastingButton.setOnLongClickListener(view -> {
-                        mCommanderCasting--;
-                        if (mCommanderCasting < 0) {
-                            mCommanderCasting = 0;
-                        }
-                        mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
-                        return true;
-                    });
+                    setupCommanderCastingButton();
+                    setupCommanderExperienceCounterButton();
 
                     mCommanderRowView = LayoutInflater.from(
                             mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, playersView, false);
@@ -343,10 +333,13 @@ public class LcPlayer {
                     }
                     mCommanderReadoutTextView = mCommanderRowView.findViewById(R.id.player_readout);
                 }
-                /* otherwise hide the commander casting button */
+                /* otherwise hide the commander casting and experience counter button */
                 else {
                     mView.findViewById(R.id.commanderCastText).setVisibility(View.GONE);
                     mCommanderCastingButton.setVisibility(View.GONE);
+
+                    mView.findViewById(R.id.commanderExperienceCounterText).setVisibility(View.GONE);
+                    mCommanderExperienceCountersButton.setVisibility(View.GONE);
                 }
 
                 break;
@@ -397,6 +390,42 @@ public class LcPlayer {
         } else {
             return mView;
         }
+    }
+
+    private void setupCommanderCastingButton() {
+        mView.findViewById(R.id.commanderCastText).setVisibility(View.VISIBLE);
+        mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
+        mCommanderCastingButton.setVisibility(View.VISIBLE);
+        mCommanderCastingButton.setOnClickListener(view -> {
+            mCommanderCasting++;
+            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
+        });
+        mCommanderCastingButton.setOnLongClickListener(view -> {
+            mCommanderCasting--;
+            if (mCommanderCasting < 0) {
+                mCommanderCasting = 0;
+            }
+            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
+            return true;
+        });
+    }
+
+    private void setupCommanderExperienceCounterButton() {
+        mView.findViewById(R.id.commanderExperienceCounterText).setVisibility(View.VISIBLE);
+        mCommanderExperienceCountersButton.setText(formatInt(mCommanderExperienceCounter, false));
+        mCommanderExperienceCountersButton.setVisibility(View.VISIBLE);
+        mCommanderExperienceCountersButton.setOnClickListener(view -> {
+            mCommanderExperienceCounter++;
+            mCommanderExperienceCountersButton.setText(formatInt(mCommanderExperienceCounter, false));
+        });
+        mCommanderExperienceCountersButton.setOnLongClickListener(view -> {
+            mCommanderExperienceCounter--;
+            if (mCommanderExperienceCounter < 0) {
+                mCommanderExperienceCounter = 0;
+            }
+            mCommanderExperienceCountersButton.setText(formatInt(mCommanderExperienceCounter, false));
+            return true;
+        });
     }
 
     /**
@@ -503,6 +532,10 @@ public class LcPlayer {
         changeValue(0, true);
         if (mCommanderCastingButton != null) {
             mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
+        }
+
+        if (mCommanderExperienceCountersButton != null) {
+            mCommanderExperienceCountersButton.setText(formatInt(mCommanderExperienceCounter, false));
         }
     }
 
