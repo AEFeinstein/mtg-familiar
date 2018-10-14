@@ -442,7 +442,7 @@ public class LcPlayer {
 
     /**
      * Returns a string containing all the player data in the form:
-     * name; life; life History; poison; poison History; default Life; commander History; commander casting
+     * name; life; life History; poison; poison History; default Life; commander History; commander casting; commander experience
      * The history entries are comma delimited
      *
      * @return A string of player data
@@ -494,6 +494,8 @@ public class LcPlayer {
 
         data.append(";");
         data.append(mCommanderCasting);
+        data.append(";");
+        data.append(mCommanderExperienceCounter);
         data.append(";\n");
 
         return data.toString();
@@ -508,6 +510,7 @@ public class LcPlayer {
         mLife = mDefaultLifeTotal;
         mPoison = 0;
         mCommanderCasting = 0;
+        mCommanderExperienceCounter = 0;
 
         for (CommanderEntry entry : mCommanderDamage) {
             entry.mLife = 0;
