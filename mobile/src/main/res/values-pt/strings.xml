@@ -562,4 +562,5 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"Ilegal"</string>
+    <string name="life_counter_commander_experience_counter" translatable="false">Marcadores de experiência</string>
 </resources>
