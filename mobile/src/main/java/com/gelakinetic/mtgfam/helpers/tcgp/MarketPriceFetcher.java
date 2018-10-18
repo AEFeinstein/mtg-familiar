@@ -241,6 +241,8 @@ public class MarketPriceFetcher {
                                         if (details.results.length > 0) {
                                             // Assume the first result is the best result
                                             long bestResult[] = {details.results[0].productId};
+                                            String bestUrl = "";
+                                            boolean okResultFound = false;
                                             // Look through all results for a perfect match
                                             for (ProductDetails.Details searchResult : details.results) {
                                                 String expansion = getExpansionFromGroupId(api, context, searchResult.groupId);
@@ -249,19 +251,37 @@ public class MarketPriceFetcher {
                                                         if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
                                                             // Found a perfect match, including expansion!
                                                             bestResult[0] = searchResult.productId;
+                                                            bestUrl = searchResult.url;
                                                             break;
                                                         }
                                                     } else {
                                                         // Found a perfect match, no expansion to match!
                                                         bestResult[0] = searchResult.productId;
+                                                        bestUrl = searchResult.url;
                                                         break;
+                                                    }
+                                                } else if (!okResultFound && searchResult.productName.toLowerCase().startsWith(tcgCardName.toLowerCase())) {
+                                                    if (null != expansion && null != tcgSetName) {
+                                                        if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
+                                                            // Found a good match, including expansion!
+                                                            // Set it but keep searching for a perfect match
+                                                            bestResult[0] = searchResult.productId;
+                                                            bestUrl = searchResult.url;
+                                                            okResultFound = true;
+                                                        }
+                                                    } else {
+                                                        // Found a good match, no expansion to match!
+                                                        // Set it but keep searching for a perfect match
+                                                        bestResult[0] = searchResult.productId;
+                                                        bestUrl = searchResult.url;
+                                                        okResultFound = true;
                                                     }
                                                 }
                                             }
                                             ProductMarketPrice price = api.getProductMarketPrice(bestResult);
                                             if (price.results.length > 0) {
                                                 /* Return a new MarketPriceInfo */
-                                                return Single.just(new MarketPriceInfo(price.results, details.results));
+                                                return Single.just(new MarketPriceInfo(price.results, bestUrl));
                                             } else if (price.errors.length > 0) {
                                                 /* Return the error returned by TCGPlayer */
                                                 return Single.error(new Throwable(price.errors[0]));

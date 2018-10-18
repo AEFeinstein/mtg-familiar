@@ -19,7 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 
 public class MarketPriceInfo {
@@ -120,9 +119,9 @@ public class MarketPriceInfo {
      * Create a MarketPriceInfo object from data retrieved from the TCGPlayer.com API
      *
      * @param results The MarketPrice results retrieved from the API. This contains prices.
-     * @param details The Details retrieved from the API. This contains the URL.
+     * @param url     The URL for this card
      */
-    public MarketPriceInfo(ProductMarketPrice.MarketPrice[] results, ProductDetails.Details[] details) {
+    public MarketPriceInfo(ProductMarketPrice.MarketPrice[] results, String url) {
         ProductMarketPrice.MarketPrice foilPrice = null;
         ProductMarketPrice.MarketPrice normalPrice = null;
         for (ProductMarketPrice.MarketPrice marketPrice : results) {
@@ -151,7 +150,7 @@ public class MarketPriceInfo {
         }
 
         /* Set the URL from the details */
-        mProductUrl = details[0].url + "?pk=MTGFAMILIA";
+        mProductUrl = url + "?pk=MTGFAMILIA";
     }
 
     public class PriceAndFoil {
