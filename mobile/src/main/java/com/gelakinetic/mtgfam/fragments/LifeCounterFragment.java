@@ -762,6 +762,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 player.mCommanderCasting = 0;
             }
 
+            try {
+                player.mCommanderExperienceCounter = Integer.parseInt(data[8]);
+            } catch (Exception e) {
+                player.mCommanderExperienceCounter = 0;
+            }
+
             mPlayers.add(player);
         } catch (ArrayIndexOutOfBoundsException e) {
             /* Eat it */

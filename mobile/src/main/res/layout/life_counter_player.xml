@@ -18,6 +18,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -31,10 +32,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="4dp"
         android:layout_weight="1"
         android:baselineAligned="false"
         android:orientation="horizontal">
@@ -60,14 +61,14 @@
                 style="@style/text.xxxlarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-10dp"
                 android:layout_marginTop="-10dp"
+                android:layout_marginBottom="-10dp"
                 android:maxLines="1"
                 android:text="@string/life_counter_twenty" />
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -137,27 +138,62 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/CommanderButtons"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/commanderCastText"
-                    style="@style/text.medium"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/life_counter_commander_cast" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/commanderCast"
-                    style="?attr/button"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="@string/mana_pool_zero"
-                    android:textStyle="bold"
-                    android:visibility="visible" />
+                    <TextView
+                        android:id="@+id/commanderCastText"
+                        style="@style/text.medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/life_counter_commander_cast" />
+
+                    <Button
+                        android:id="@+id/commanderCast"
+                        style="?attr/button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="@string/mana_pool_zero"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/commanderExperienceCounterText"
+                        style="@style/text.medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/life_counter_commander_experience_counter" />
+
+                    <Button
+                        android:id="@+id/commanderExperienceCounter"
+                        style="?attr/button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="@string/mana_pool_zero"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+                </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
