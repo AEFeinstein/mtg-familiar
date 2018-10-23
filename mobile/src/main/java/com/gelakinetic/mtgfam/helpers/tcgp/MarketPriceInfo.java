@@ -150,7 +150,7 @@ public class MarketPriceInfo {
         }
 
         /* Set the URL from the details */
-        mProductUrl = url + "?pk=MTGFAMILIA";
+        mProductUrl = url + "?partner=MTGFAMILIA";
     }
 
     public class PriceAndFoil {
