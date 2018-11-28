@@ -1065,4 +1065,12 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
                 PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tcgpGroups), "{}"),
                 type);
     }
+
+    /* Persist search options */
+    public static synchronized boolean getPersistSearchOptions(@Nullable Context context) {
+        if (null == context) {
+            return true;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_persistSearch), true);
+    }
 }

@@ -121,6 +121,14 @@
     <!-- Search and results preferences -->
     <PreferenceScreen android:title="@string/main_card_search">
 
+        <PreferenceCategory android:title="@string/main_card_search">
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/key_persistSearch"
+                android:summary="@string/pref_persist_search_summary"
+                android:title="@string/pref_persist_search_title" />
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_cat_result_list">
 
             <CheckBoxPreference

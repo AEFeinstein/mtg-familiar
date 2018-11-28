@@ -489,10 +489,13 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onPause() {
         super.onPause();
         // Save the search criteria
-        try {
-            PreferenceAdapter.setSearchViewCriteria(getContext(), parseForm());
-        } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
-            /* Eat it */
+        if(PreferenceAdapter.getPersistSearchOptions(getContext())) {
+            // TODO also clear all tokens
+            try {
+                PreferenceAdapter.setSearchViewCriteria(getContext(), parseForm());
+            } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
+                /* Eat it */
+            }
         }
     }
 
@@ -508,7 +511,9 @@ public class SearchViewFragment extends FamiliarFragment {
         mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
 
         // Load the saved criteria
-        setFieldsFromCriteria(PreferenceAdapter.getSearchViewCriteria(getContext()));
+        if(PreferenceAdapter.getPersistSearchOptions(getContext())) {
+            setFieldsFromCriteria(PreferenceAdapter.getSearchViewCriteria(getContext()));
+        }
     }
 
     /**
