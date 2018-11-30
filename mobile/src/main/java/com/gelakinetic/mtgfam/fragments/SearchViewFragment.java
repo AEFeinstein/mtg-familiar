@@ -61,6 +61,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
+import com.gelakinetic.mtgfam.helpers.view.ATokenTextView;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
 import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
@@ -489,10 +490,10 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onPause() {
         super.onPause();
         // Save the search criteria
-        if(PreferenceAdapter.getPersistSearchOptions(getContext())) {
-            // TODO also clear all tokens
+        if (PreferenceAdapter.getPersistSearchOptions(getContext())) {
             try {
                 PreferenceAdapter.setSearchViewCriteria(getContext(), parseForm());
+                clear();
             } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
                 /* Eat it */
             }
@@ -511,7 +512,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
 
         // Load the saved criteria
-        if(PreferenceAdapter.getPersistSearchOptions(getContext())) {
+        if (PreferenceAdapter.getPersistSearchOptions(getContext())) {
             setFieldsFromCriteria(PreferenceAdapter.getSearchViewCriteria(getContext()));
         }
     }
@@ -789,14 +790,14 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        mSupertypeField.clearTextAndTokens();
-        mSubtypeField.clearTextAndTokens();
+        clearTextAndTokens(mSupertypeField);
+        clearTextAndTokens(mSubtypeField);
         mTextField.setText("");
         mArtistField.setText("");
         mWatermarkField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
-        mSetField.clearTextAndTokens();
+        clearTextAndTokens(mSetField);
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -825,7 +826,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
-        mManaCostTextView.clearTextAndTokens();
+        clearTextAndTokens(mManaCostTextView);
         mManaComparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
 
         if (mSetCheckedIndices != null) {
@@ -836,6 +837,20 @@ public class SearchViewFragment extends FamiliarFragment {
         this.removeDialog(getFragmentManager());
 
         checkDialogButtonColors();
+    }
+
+    /**
+     * This helper function clears all tokens and text from an ATokenTextView
+     *
+     * @param field The ATokenTextView to clear everything from
+     */
+    private void clearTextAndTokens(ATokenTextView field) {
+        while (!field.getObjects().isEmpty()) {
+            field.removeObjectSync(field.getObjects().get(0));
+        }
+        field.clearCompletionText();
+        field.clearComposingText();
+        field.clearListSelection();
     }
 
     /**
@@ -879,17 +894,17 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Set type fields */
         if (null != criteria.superTypes && criteria.superTypes.size() > 0) {
             for (String supertype : criteria.superTypes) {
-                mSupertypeField.addObject(supertype);
+                mSupertypeField.addObjectSync(supertype);
             }
         } else {
-            mSupertypeField.clearTextAndTokens();
+            clearTextAndTokens(mSupertypeField);
         }
         if (null != criteria.subTypes && criteria.subTypes.size() > 0) {
             for (String subtype : criteria.subTypes) {
-                mSubtypeField.addObject(subtype);
+                mSubtypeField.addObjectSync(subtype);
             }
         } else {
-            mSubtypeField.clearTextAndTokens();
+            clearTextAndTokens(mSubtypeField);
         }
         mTypeSpinner.setSelection(criteria.typeLogic);
 
@@ -984,10 +999,10 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Set mana fields */
         if (criteria.manaCost != null && criteria.manaCost.size() > 0) {
             for (String mana : criteria.manaCost) {
-                mManaCostTextView.addObject(mana);
+                mManaCostTextView.addObjectSync(mana);
             }
         } else {
-            mManaCostTextView.clearTextAndTokens();
+            clearTextAndTokens(mManaCostTextView);
         }
         if (null != criteria.manaCostLogic) {
             mManaComparisonSpinner.setSelection(criteria.manaCostLogic.ordinal());
@@ -1019,10 +1034,10 @@ public class SearchViewFragment extends FamiliarFragment {
         if (criteria.sets != null && criteria.sets.size() > 0) {
             /* Get a list of the persisted sets */
             for (String set : criteria.sets) {
-                mSetField.addObject(set);
+                mSetField.addObjectSync(set);
             }
         } else {
-            mSetField.clearTextAndTokens();
+            clearTextAndTokens(mSetField);
         }
         mSetSpinner.setSelection(criteria.setLogic);
 
