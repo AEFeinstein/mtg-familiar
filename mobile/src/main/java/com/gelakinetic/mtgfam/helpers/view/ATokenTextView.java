@@ -29,6 +29,7 @@ import com.tokenautocomplete.TokenCompleteTextView;
 public abstract class ATokenTextView extends TokenCompleteTextView<String> {
 
     private boolean handleDismiss = false;
+    boolean mAllowDuplicates = false;
 
     public ATokenTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -85,5 +86,20 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
         if (handleDismiss) {
             super.dismissDropDown();
         }
+    }
+
+    /**
+     * This checks if tokens should be added or not. If duplicates aren't allowed, dont add any
+     * tokens which have already been added
+     *
+     * @param token The token which is trying to be added
+     * @return true to allow this token to be added, false otherwise
+     */
+    @Override
+    public boolean shouldIgnoreToken(String token) {
+        if (!mAllowDuplicates) {
+            return getObjects().contains(token);
+        }
+        return false;
     }
 }

@@ -98,7 +98,7 @@ public class ManaCostTextView extends ATokenTextView {
 
     public ManaCostTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.allowDuplicates(true);
+        mAllowDuplicates = true;
         ManaSymbolAdapter manaSymbolAdapter = new ManaSymbolAdapter();
         this.setAdapter(manaSymbolAdapter);
     }
