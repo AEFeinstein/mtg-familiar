@@ -33,7 +33,7 @@ public class CompletionView extends ATokenTextView {
 
     public CompletionView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.allowDuplicates(false);
+        mAllowDuplicates = false;
         this.preventFreeFormText(true);
         this.setTokenClickStyle(TokenClickStyle.Delete);
         this.performBestGuess(true);
