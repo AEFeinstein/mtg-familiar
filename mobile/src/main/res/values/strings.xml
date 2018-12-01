@@ -439,6 +439,8 @@ Good luck, and have fun!
     <string name="pref_cat_result_list">"Result List"</string>
     <string name="pref_consolidate_title">"Consolidate Results"</string>
     <string name="pref_consolidate_summary">"Only show the most recent printing of a card"</string>
+    <string name="pref_persist_search_title">"Save Search Options"</string>
+    <string name="pref_persist_search_summary">"Save search options when leaving the search page"</string>
     <string name="pref_show_set_title">"Show Set"</string>
     <string name="pref_show_mana_title">"Show Mana Cost"</string>
     <string name="pref_show_type_title">"Show Type/Subtype"</string>
