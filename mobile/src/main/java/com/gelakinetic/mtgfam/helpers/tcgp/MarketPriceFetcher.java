@@ -246,7 +246,7 @@ public class MarketPriceFetcher {
                                             // Look through all results for a perfect match
                                             for (ProductDetails.Details searchResult : details.results) {
                                                 String expansion = getExpansionFromGroupId(api, context, searchResult.groupId);
-                                                if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase())) {
+                                                if (searchResult.name.toLowerCase().equals(tcgCardName.toLowerCase())) {
                                                     if (null != expansion && null != tcgSetName) {
                                                         if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
                                                             // Found a perfect match, including expansion!
@@ -260,7 +260,7 @@ public class MarketPriceFetcher {
                                                         bestUrl = searchResult.url;
                                                         break;
                                                     }
-                                                } else if (!okResultFound && searchResult.productName.toLowerCase().startsWith(tcgCardName.toLowerCase())) {
+                                                } else if (!okResultFound && searchResult.name.toLowerCase().startsWith(tcgCardName.toLowerCase())) {
                                                     if (null != expansion && null != tcgSetName) {
                                                         if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
                                                             // Found a good match, including expansion!

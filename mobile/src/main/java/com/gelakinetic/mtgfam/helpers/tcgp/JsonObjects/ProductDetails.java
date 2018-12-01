@@ -33,86 +33,22 @@ public class ProductDetails {
 
     public static class Details {
         public final long productId;
-        public final String productName;
-        public final String image;
+        public final String name;
+        public final String cleanName;
+        public final String imageUrl;
         public final long categoryId;
         public final long groupId;
         public final String url;
         public final String modifiedOn; // Date modifiedOn;
-        public final Conditions productConditions[];
-        public final int imageCount;
-        public final PresaleInfo presaleInfo;
-        public final ExtendedData extendedData[];
 
         public Details() {
             productId = 0;
-            productName = null;
-            image = null;
+            name = null;
+            cleanName = null;
+            imageUrl = null;
             categoryId = -1;
             groupId = -1;
             url = null;
-            modifiedOn = null;
-            productConditions = null;
-            imageCount = 0;
-            presaleInfo = null;
-            extendedData = null;
-        }
-    }
-
-    public static class Conditions {
-        public final long productConditionId;
-        public final String name;
-        public final String language;
-        public final boolean isFoil;
-
-        public Conditions() {
-            productConditionId = 0;
-            name = null;
-            language = null;
-            isFoil = false;
-        }
-    }
-
-    public static class PresaleInfo {
-        public final boolean isPresale;
-        public final String releasedOn; // Date releasedOn;
-        public final String note;
-
-        public PresaleInfo() {
-            isPresale = false;
-            releasedOn = null;
-            note = null;
-        }
-    }
-
-    public static class ExtendedData {
-        public final String name;
-        public final String displayName;
-        public final String value;
-
-        public ExtendedData() {
-            name = null;
-            displayName = null;
-            value = null;
-        }
-    }
-
-    public static class Group {
-        public final long groupId;
-        public final String name;
-        public final String abbreviation;
-        public final boolean supplemental;
-        public final String publishedOn;
-        public final CatalogData.CatalogDataItem category;
-        public final String modifiedOn; // Date modifiedOn;
-
-        public Group() {
-            groupId = 0;
-            name = null;
-            abbreviation = null;
-            supplemental = false;
-            publishedOn = null;
-            category = null;
             modifiedOn = null;
         }
     }

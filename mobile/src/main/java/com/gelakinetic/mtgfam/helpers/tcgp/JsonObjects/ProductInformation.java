@@ -25,8 +25,10 @@ public class ProductInformation {
     public final boolean success;
     public final String errors[];
     public final long results[];
+    public Object aggregates[]; // TODO what is this?
 
     public ProductInformation() {
+        aggregates = new Object[]{};
         totalItems = 0;
         success = false;
         errors = new String[]{};
