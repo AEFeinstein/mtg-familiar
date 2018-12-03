@@ -293,7 +293,8 @@ Mana pool will also be cleared."</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Add Card"</string>
-    <string name="trader_save">"Save Trade"</string>
+    <string name="trader_new">"New Trade"</string>
+    <string name="trader_save_as">"Save Trade As"</string>
     <string name="trader_load">"Load Trade"</string>
     <string name="trader_delete">"Delete Trade"</string>
     <string name="trader_edit_dialog_remove">"Remove"</string>

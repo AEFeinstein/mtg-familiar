@@ -355,8 +355,12 @@ public class TradeFragment extends FamiliarListFragment {
                 showDialog(TradeDialogFragment.DIALOG_PRICE_SETTING, 0, 0);
                 return true;
             }
-            case R.id.trader_menu_save: {
-                showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE, 0, 0);
+            case R.id.trader_menu_save_as: {
+                showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE_AS, 0, 0);
+                return true;
+            }
+            case R.id.trader_menu_new: {
+                showDialog(TradeDialogFragment.DIALOG_NEW_TRADE, 0, 0);
                 return true;
             }
             case R.id.trader_menu_load: {
@@ -592,6 +596,28 @@ public class TradeFragment extends FamiliarListFragment {
         }
         getCardDataAdapter(LEFT).notifyDataSetChanged();
         getCardDataAdapter(RIGHT).notifyDataSetChanged();
+    }
+
+    /**
+     * Clear the current trade
+     */
+    public void clearTrade(boolean preserveName) {
+        /* Clear the arrays and tell everything to update */
+        if (!preserveName) {
+            mCurrentTrade = "";
+        }
+        synchronized (mListRight) {
+            mListRight.clear();
+        }
+        synchronized (mListLeft) {
+            mListLeft.clear();
+        }
+        getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
+        getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
+        updateTotalPrices(TradeFragment.BOTH);
+        clearCardNameInput();
+        clearCardNumberInput();
+        uncheckFoilCheckbox();
     }
 
     private static class TradeComparator implements Comparator<MtgCard>, Serializable {

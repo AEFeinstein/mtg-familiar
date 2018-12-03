@@ -25,14 +25,9 @@
         android:title="@string/search_clear_fields"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/trader_menu_settings"
-        android:icon="@drawable/ic_menu_import_export"
-        android:title="@string/wishlist_set_pricing"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/trader_menu_save"
-        android:icon="@drawable/ic_menu_save"
-        android:title="@string/trader_save"
+        android:id="@+id/trader_menu_new"
+        android:icon="@drawable/ic_menu_trade"
+        android:title="@string/trader_new"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_load"
@@ -40,9 +35,19 @@
         android:title="@string/trader_load"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/trader_menu_save_as"
+        android:icon="@drawable/ic_menu_save"
+        android:title="@string/trader_save_as"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/trader_menu_delete"
         android:icon="@drawable/ic_menu_delete"
         android:title="@string/trader_delete"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/trader_menu_settings"
+        android:icon="@drawable/ic_menu_import_export"
+        android:title="@string/wishlist_set_pricing"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_sort"

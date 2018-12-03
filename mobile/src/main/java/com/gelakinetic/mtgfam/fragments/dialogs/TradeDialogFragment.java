@@ -63,12 +63,13 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     /* Dialog Constants */
     public static final int DIALOG_UPDATE_CARD = 1;
     public static final int DIALOG_PRICE_SETTING = 2;
-    public static final int DIALOG_SAVE_TRADE = 3;
+    public static final int DIALOG_SAVE_TRADE_AS = 3;
     public static final int DIALOG_LOAD_TRADE = 4;
     public static final int DIALOG_DELETE_TRADE = 5;
     public static final int DIALOG_CONFIRMATION = 6;
     private static final int DIALOG_CHANGE_SET = 7;
     public static final int DIALOG_SORT = 8;
+    public static final int DIALOG_NEW_TRADE = 9;
 
     /* Extra argument keys */
     public static final String ID_POSITION = "Position";
@@ -445,7 +446,45 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         })
                         .build();
             }
-            case DIALOG_SAVE_TRADE: {
+            case DIALOG_NEW_TRADE: {
+                /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
+                        .inflate(R.layout.alert_dialog_text_entry, null, false);
+                assert textEntryView != null;
+                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
+                textEntryView.findViewById(R.id.clear_button).setVisibility(View.GONE);
+
+                Dialog dialog = new MaterialDialog.Builder(getActivity())
+                        .title(R.string.trader_new)
+                        .customView(textEntryView, false)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive((dialog1, which) -> {
+                            if (nameInput.getText() == null) {
+                                return;
+                            }
+                            String tradeName = nameInput.getText().toString();
+
+                            /* Don't bother saving if there is no name */
+                            if (tradeName.length() == 0) {
+                                return;
+                            }
+
+                            // Save the current trade
+                            getParentTradeFragment().saveTrade(getParentTradeFragment().mCurrentTrade + TradeFragment.TRADE_EXTENSION);
+
+                            // Clear the current trade
+                            getParentTradeFragment().clearTrade(false);
+
+                            // Create the new trade
+                            getParentTradeFragment().mCurrentTrade = tradeName;
+                            getParentTradeFragment().saveTrade(tradeName + TradeFragment.TRADE_EXTENSION);
+                        })
+                        .negativeText(R.string.dialog_cancel)
+                        .build();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                return dialog;
+            }
+            case DIALOG_SAVE_TRADE_AS: {
                 /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
                 @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
@@ -456,7 +495,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
                 Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(R.string.trader_save)
+                        .title(R.string.trader_save_as)
                         .customView(textEntryView, false)
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog1, which) -> {
@@ -526,6 +565,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             if (!toDelete.delete()) {
                                 SnackbarWrapper.makeAndShowText(getActivity(), toDelete.getName() + " " +
                                         getString(R.string.not_deleted), SnackbarWrapper.LENGTH_LONG);
+                            } else if (getParentTradeFragment().mCurrentTrade.equals(tradeNames[position])) {
+                                getParentTradeFragment().clearTrade(false);
                             }
                         })
                         .build();
@@ -536,20 +577,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .content(R.string.trader_clear_dialog_text)
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog, which) -> {
-                            /* Clear the arrays and tell everything to update */
-                            getParentTradeFragment().mCurrentTrade = "";
-                            synchronized (getParentTradeFragment().mListRight) {
-                                getParentTradeFragment().mListRight.clear();
-                            }
-                            synchronized (getParentTradeFragment().mListLeft) {
-                                getParentTradeFragment().mListLeft.clear();
-                            }
-                            getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
-                            getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
-                            getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
-                            getParentTradeFragment().clearCardNameInput();
-                            getParentTradeFragment().clearCardNumberInput();
-                            getParentTradeFragment().uncheckFoilCheckbox();
+                            getParentTradeFragment().clearTrade(true);
                             dialog.dismiss();
                         })
                         .negativeText(R.string.dialog_cancel)
