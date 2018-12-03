@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -531,6 +530,7 @@ Good luck, and have fun!
     <string name="decklist_artifacts">"Artifacts"</string>
     <string name="decklist_lands">"Lands"</string>
     <string name="decklist_edit_dialog_title_end">"in the deck"</string>
+    <string name="decklist_new">"New Deck"</string>
     <string name="decklist_delete">"Delete Deck"</string>
     <string name="decklist_save">"Save Deck"</string>
     <string name="decklist_load">"Load Deck"</string>

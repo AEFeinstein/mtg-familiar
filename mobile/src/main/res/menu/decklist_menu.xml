@@ -27,20 +27,19 @@
         android:title="@string/decklist_clear"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/deck_menu_save"
-        android:icon="@drawable/ic_menu_save"
-        android:title="@string/decklist_save"
-        app:showAsAction="ifRoom" />
-    <!-- todo: icon for save as -->
-    <item
-        android:id="@+id/deck_menu_save_as"
-        android:icon="@drawable/ic_menu_save"
-        android:title="@string/decklist_save_as"
+        android:id="@+id/deck_menu_new"
+        android:icon="@drawable/ic_menu_decklist"
+        android:title="@string/decklist_new"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_load"
         android:icon="@drawable/ic_menu_folder_open"
         android:title="@string/decklist_load"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deck_menu_save_as"
+        android:icon="@drawable/ic_menu_save"
+        android:title="@string/decklist_save_as"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_delete"
