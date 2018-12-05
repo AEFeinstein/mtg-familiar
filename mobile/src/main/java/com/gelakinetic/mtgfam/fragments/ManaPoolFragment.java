@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.NumberButtonOnClickListener;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.util.ArrayList;
@@ -70,6 +71,23 @@ public class ManaPoolFragment extends FamiliarFragment {
                     mCount = 0;
                 }
                 updateReadout();
+            });
+            mReadout.setOnClickListener(new NumberButtonOnClickListener(ManaPoolFragment.this) {
+                @Override
+                public void onDialogNumberSet(Integer number) {
+                    mCount = number;
+                    updateReadout();
+                }
+
+                @Override
+                public Integer getMinNumber() {
+                    return 0;
+                }
+
+                @Override
+                public Integer getInitialValue() {
+                    return mCount;
+                }
             });
         }
 
