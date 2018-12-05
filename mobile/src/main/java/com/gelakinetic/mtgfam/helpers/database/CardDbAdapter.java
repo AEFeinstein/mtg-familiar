@@ -509,6 +509,8 @@ public class CardDbAdapter {
     /**
      * Given a list of KEY_ID values, return a cursor with all of a cards' information.
      *
+     * TODO online only pref
+     *
      * @param ids        A list of ids for cards to fetch
      * @param orderByStr A string of keys and directions to order this query by
      * @param database   The database to query
@@ -544,6 +546,8 @@ public class CardDbAdapter {
 
     /**
      * Given a card's name, return a cursor with all of that card's requested information.
+     *
+     * TODO online only pref
      *
      * @param name        The name of the card to query
      * @param fields      The requested information about the card
@@ -592,6 +596,8 @@ public class CardDbAdapter {
     /**
      * Given a multiverse ID, return a cursor with all of that card's requested information.
      *
+     * TODO online only pref
+     *
      * @param multiverseId The card's multivers ID
      * @param fields       The requested information about the card
      * @param database     The database to query
@@ -626,6 +632,8 @@ public class CardDbAdapter {
 
     /**
      * Given a card name and set code, return a cursor with that card's requested data.
+     *
+     * TODO online only pref
      *
      * @param name    The card's name
      * @param setCode The card's set code
@@ -667,6 +675,8 @@ public class CardDbAdapter {
 
     /**
      * Given a list of cards, fetch all the database info about them in a single query
+     *
+     * TODO online only pref
      *
      * @param cards A list of cards to fetch info for
      * @param mDb   The database to query
@@ -723,6 +733,8 @@ public class CardDbAdapter {
     /**
      * Given a card name, return the KEY_ID for that card.
      *
+     * TODO online only pref
+     *
      * @param name The name of the card
      * @param mDb  The database to query
      * @return The KEY_ID value, or -1 if it isn't found
@@ -762,6 +774,8 @@ public class CardDbAdapter {
     /**
      * This function will query the database with the information in criteria and return a cursor
      * with the requested data.
+     *
+     * TODO online only pref
      *
      * @param criteria    The criteria used to build the query
      * @param backface    Whether or not the results should include the 'b' side of multicards
@@ -1256,6 +1270,8 @@ public class CardDbAdapter {
     /**
      * Given a set and a card number, return the KEY_ID for that card.
      *
+     * TODO online only pref
+     *
      * @param set    The set code
      * @param number The number to look up
      * @param mDb    The database to query
@@ -1287,6 +1303,8 @@ public class CardDbAdapter {
     /**
      * Returns a card name queried by set and collector's number.
      *
+     * TODO online only pref
+     *
      * @param set    The set code
      * @param number The number to look up
      * @param mDb    The database to query
@@ -1316,6 +1334,8 @@ public class CardDbAdapter {
     /**
      * Given a card name, find the ID for that card in the database
      *
+     * TODO online only pref
+     *
      * @param name The name of the card to search for
      * @return The ID in the database
      */
@@ -1339,6 +1359,8 @@ public class CardDbAdapter {
 
     /**
      * Returns a Cursor positioned at the word specified by rowId.
+     *
+     * TODO online only pref
      *
      * @param rowId   id of word to retrieve
      * @param columns The columns to include, if null then all are included
@@ -1379,6 +1401,8 @@ public class CardDbAdapter {
     /**
      * Returns a Cursor over all words that match the given query.
      *
+     * TODO online only pref
+     *
      * @param query The string to search for
      * @param mDb   The database to query
      * @return Cursor over all words that match, or null if none found.
@@ -1414,41 +1438,10 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card name and the set it's from, return the card's multiverse ID.
-     *
-     * @param name    The card's name
-     * @param setCode The set code for this card
-     * @param mDb     The database to query
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static int getMultiverseIdFromNameAndSet(String name, String setCode, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        String statement = "SELECT " + KEY_MULTIVERSEID + " from "
-                + DATABASE_TABLE_CARDS + " WHERE " + KEY_NAME_NO_ACCENT + " = "
-                + sanitizeString(name, true) + " COLLATE NOCASE AND " + KEY_SET + " = '" + setCode + "'";
-
-        Cursor c = null;
-        try {
-            c = mDb.rawQuery(statement, null);
-
-            if (c.getCount() > 0) {
-                c.moveToFirst();
-                return c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
-            } else {
-                return -1;
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
-        }
-    }
-
-    /**
      * Given a multiverseId for a multicard, return the full card name, which has each half of the
      * card separated by "//".
+     *
+     * TODO online only pref
      *
      * @param multiverseId The multiverse id to search for
      * @param isAscending  Whether the query should be sorted in ascending or descending order
@@ -1605,6 +1598,8 @@ public class CardDbAdapter {
      * I messed up with Duel Deck Anthologies. Each deck should have had its own set code, rather
      * than grouping them all together. This function fixes any saved cards when loaded.
      *
+     * TODO online only pref
+     *
      * @param name     The name of the card to get the correct set code for
      * @param setCode  The incorrect set code (i.e. DD3)
      * @param database A database to query
@@ -1658,6 +1653,8 @@ public class CardDbAdapter {
 
     /**
      * Given a Cursor pointed at a card, return the full type line (sub - super) for that card.
+     *
+     * TODO online only pref
      *
      * @param cCardById The cursor pointing to a card
      * @return A String with the full type line

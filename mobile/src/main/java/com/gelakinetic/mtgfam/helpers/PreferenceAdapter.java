@@ -1073,4 +1073,12 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         }
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_persistSearch), true);
     }
+
+    /* Persist search options */
+    public static synchronized boolean getHideOnlineOnly(@Nullable Context context) {
+        if (null == context) {
+            return true;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_hideOnlineCards), false);
+    }
 }

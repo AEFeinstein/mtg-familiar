@@ -441,6 +441,8 @@ Good luck, and have fun!
     <string name="pref_consolidate_summary">"Only show the most recent printing of a card"</string>
     <string name="pref_persist_search_title">"Save Search Options"</string>
     <string name="pref_persist_search_summary">"Save search options when leaving the search page"</string>
+    <string name="pref_hide_online_title">"Hide Online Only Cards"</string>
+    <string name="pref_hide_online_summary">"Don't show online only cards anywhere"</string>
     <string name="pref_show_set_title">"Show Set"</string>
     <string name="pref_show_mana_title">"Show Mana Cost"</string>
     <string name="pref_show_type_title">"Show Type/Subtype"</string>
