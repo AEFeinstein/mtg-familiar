@@ -544,6 +544,10 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* handle item selection */
         switch (item.getItemId()) {
+            case R.id.deck_menu_new: {
+                showDialog(DecklistDialogFragment.DIALOG_NEW_DECK, null, false);
+                return true;
+            }
             case R.id.deck_menu_save_as: {
                 showDialog(DecklistDialogFragment.DIALOG_SAVE_DECK_AS, null, false);
                 return true;
@@ -579,16 +583,6 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 return true;
             }
-            case R.id.deck_menu_save: {
-                String currentDeckName = getCurrentDeckName();
-                synchronized (mCompressedDecklist) {
-                    DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist,
-                            currentDeckName);
-                }
-                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
-                        currentDeckName), SnackbarWrapper.LENGTH_SHORT);
-                return true;
-            }
             case R.id.deck_menu_legality: {
                 getFamiliarActivity().setLoading();
 
@@ -603,6 +597,55 @@ public class DecklistFragment extends FamiliarListFragment {
             }
         }
 
+    }
+
+    /**
+     * Save the current deck to the disk
+     *
+     * @param showSnackbar
+     */
+    public void saveCurrentDeck(boolean showSnackbar) {
+        String currentDeckName = getCurrentDeckName();
+        synchronized (mCompressedDecklist) {
+            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist,
+                    currentDeckName);
+        }
+        if (showSnackbar) {
+            SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
+                    currentDeckName), SnackbarWrapper.LENGTH_SHORT);
+        }
+    }
+
+    /**
+     * Remove the deck from RAM and clean up the fragment. Doesn't delete the deck
+     *
+     * @param preserveName
+     */
+    public void clearDeck(boolean preserveName) {
+        /* do some cleaning up */
+        if (!preserveName) {
+            mCurrentDeck = AUTOSAVE_NAME;
+        }
+        synchronized (mCompressedDecklist) {
+            mCompressedDecklist.clear();
+        }
+        getCardDataAdapter(0).notifyDataSetChanged();
+        if (!preserveName) {
+            mDeckName.setText(
+                    R.string.decklist_unnamed_deck
+            );
+        }
+        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
+        synchronized (mCompressedDecklist) {
+            DecklistHelpers.WriteCompressedDecklist(
+                    getActivity(),
+                    mCompressedDecklist,
+                    getCurrentDeckName()
+            );
+        }
+        clearCardNameInput();
+        clearCardNumberInput();
+        uncheckFoilCheckbox();
     }
 
     /**

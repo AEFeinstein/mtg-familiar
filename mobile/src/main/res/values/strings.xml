@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -294,7 +293,8 @@ Mana pool will also be cleared."</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Add Card"</string>
-    <string name="trader_save">"Save Trade"</string>
+    <string name="trader_new">"New Trade"</string>
+    <string name="trader_save_as">"Save Trade As"</string>
     <string name="trader_load">"Load Trade"</string>
     <string name="trader_delete">"Delete Trade"</string>
     <string name="trader_edit_dialog_remove">"Remove"</string>
@@ -531,6 +531,7 @@ Good luck, and have fun!
     <string name="decklist_artifacts">"Artifacts"</string>
     <string name="decklist_lands">"Lands"</string>
     <string name="decklist_edit_dialog_title_end">"in the deck"</string>
+    <string name="decklist_new">"New Deck"</string>
     <string name="decklist_delete">"Delete Deck"</string>
     <string name="decklist_save">"Save Deck"</string>
     <string name="decklist_load">"Load Deck"</string>
