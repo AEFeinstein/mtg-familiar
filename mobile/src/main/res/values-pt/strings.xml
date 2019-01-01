@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Pesquisar Nomes"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
@@ -27,11 +28,13 @@
 <string name="not_deleted">"não excluída"</string>
 <string name="no_network">"A rede não está disponível"</string>
 <string name="filter_title_view_card">"Vizualizar Carta"</string>
+<string name="tutor_cards_notice">"Potencializado por TutorCards"</string>
+<string name="tutor_cards_fail">"TutorCards não localizado"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PÁGINAS"</string>
 <string name="main_extras">"EXTRAS"</string>
-<string name="main_card_search">"Procurar Carta"</string>
+<string name="main_card_search">"Busca de Cartas"</string>
 <string name="main_life_counter">"Marcador de Vida"</string>
 <string name="main_mana_pool">"Reserva de Mana"</string>
 <string name="main_dice">"Dados"</string>
@@ -39,23 +42,25 @@
 <string name="main_wishlist">"Lista de Desejos"</string>
 <string name="main_timer">"Cronômetro da Rodada"</string>
 <string name="main_rules">"Regras"</string>
-<string name="main_judges_corner">"Juiz de Canto"</string>
-<string name="main_mojhosto">"MoJhoSto Básico"</string>
-<string name="main_decklist">"Montador de Decks"</string>
-<string name="main_force_update_title">"Force uma Atualização"</string>
-<string name="main_settings_title">"Definições"</string>
+<string name="main_judges_corner">"Canto do Juiz"</string>
+<string name="main_mojhosto">"MoJhoSto Basic"</string>
+<string name="main_decklist">"Construtor de Decks"</string>
+<string name="main_force_update_title">"Forçar Atualização"</string>
+<string name="main_settings_title">"Configurações"</string>
 <string name="main_donate_title">"Doar"</string>
-<string name="main_donate_dialog_title">"Doações para desenvolvedores"</string>
+
+<!-- This is a bit strange, "Doações" is more like donations, I'd recommend putting "Doe para os desenvolvedores" -->
+<string name="main_donate_dialog_title">"Doe para os Desenvolvedores"</string>
 <string name="main_profile">"Perfil"</string>
-<string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? €1000? €10.000? &lt;br&gt;
+<string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? U$ 1.000? U$ 10.000? &lt;br&gt;
 &lt;br&gt;
 Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;
 &lt;br&gt;
-Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada euro que recebemos. &lt;br&gt;
+Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada dólar extra que recebemos. &lt;br&gt;
 &lt;br&gt;
-Temos que manter nosso combustível de desenvolvimento, OK? &lt;br&gt;
+Temos um hábito de draftar para alimentar, OK? &lt;br&gt;
 &lt;br&gt;
-pode pressionar o botão abaixo e doar através do Paypal. € 1 é bom, 5 € são melhores. Você me entende. &lt;br&gt;
+Você pode pressionar o botão abaixo para doar através do Paypal. U$ 1 já ajuda. U$ 5 ajuda ainda mais. E por aí vai. &lt;br&gt;
 &lt;br&gt;
 Então, quão generoso você está sentindo-se hoje?
 "</string>
@@ -68,52 +73,50 @@ Então, quão generoso você está sentindo-se hoje?
 <string name="main_export_fail">"Falha ao salvar dados no cartão SD"</string>
 <string name="main_import_data_title">"Importar Dados do SD"</string>
 <string name="main_import_success">"Dados importados com sucesso"</string>
-<string name="main_import_fail">"Importação falhou. Por favor, coloque MTGFamiliarBackup.zip no diretório raiz do seu cartão SD."</string>
+<string name="main_import_fail">"A importação falhou. Por favor, coloque MTGFamiliarBackup.zip no diretório raiz do seu cartão SD."</string>
 <string name="main_about">"Sobre"</string>
-
 <string name="main_about_text">"Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
 &lt;br&gt;
-Por favor envie perguntas, comentários, preocupações e elogios a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;.&lt;br&gt;
+Por favor envie perguntas, comentários, preocupações e elogios a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com&lt;/a&gt;.
 &lt;br&gt;
-Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta &lt;/a&gt; no Google+.&lt;br&gt;
 &lt;br&gt;
-Junte-se à &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;, um projeto open source &lt;/a&gt; no GitHub.&lt;br&gt;
+Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta&lt;/a&gt; no Google+.&lt;br&gt;
 &lt;br&gt;
-Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR.&lt;br&gt;
+Junte-se ao &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projeto código aberto&lt;/a&gt; no GitHub.&lt;br&gt;
+&lt;br&gt;
+Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR.&lt;br&gt;
 &lt;br&gt;
 Obrigado a todos os tradutores, incluindo, mas não limitado a, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, e Sebastian.&lt;br&gt;
 &lt;br&gt;
-Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;).&lt;br&gt;
+Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt;Bluewizard.net&lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
 &lt;br&gt;
-Obrigado ao reddit  s &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback.&lt;br&gt;
+Obrigado à comunidade &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt;/r/magictcg&lt;/a&gt; do reddit por testes e feedback.&lt;br&gt;
 &lt;br&gt;
-agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\"http://www.wizards.com/magic \"&gt; Wizards of the Coast. &lt;/a&gt;&lt;br&gt;
+Agradecimento especial a Richard Garfield  e o resto do pessoal na &lt;a href =\"http://www.wizards.com/magic \"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 -gelakinetic&lt;br&gt;
 &lt;br&gt;
-Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+Magic the Gathering e cartas de Magic the Gathering são ™ &amp; ©  da Wizards of the Coast LLC.&lt;br&gt;
 &lt;br&gt;
-&lt;a href = \"https://github.com/octo-online/robospice\"&gt; Robospice &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;&lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;&lt;br&gt;
 &lt;br&gt;
-&lt;a href = \"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; usado sob a licença MIT&lt;/a&gt;.&lt;br&gt;
+&lt;a href =https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; usado sob a licença do MIT&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
+&lt;a href =https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
+&lt;a href=https://github.com/jpardogo/PagerSlidingTabStrip&gt;PagerSlidingTabStrip&lt;/a &gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.
+&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; usado sob a BSD, em parte MIT, licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; usado sob a licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
+Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 +&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; usado sob a BSD, part MIT, licença Apache, Versão 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
+mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt;.&lt;br&gt;
+
 "</string>
 <string name="main_drawer_open">"Abrir coluna de navegação"</string>
 <string name="main_drawer_close">"Fechar coluna de navegação"</string>
@@ -122,7 +125,7 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 
 <!-- Search activity -->
 <string name="search_name">"Nome"</string>
-<string name="search_supertype">"(Super) Tipo"</string>
+<string name="search_supertype">"(Super)Tipo"</string>
 <string name="search_subtype">"Subtipo"</string>
 <string name="search_text">"Texto"</string>
 <string name="search_power">"Poder"</string>
@@ -145,14 +148,14 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="search_load_defaults">"Carregar Valores Padrões"</string>
 <string name="search_toast_no_results">"Não foram encontrados resultados."</string>
 <plurals name="search_toast_results">
-<item quantity="one">"%1$d resultados de busca."</item>
+<item quantity="one">"%1$d resultado de busca."</item>
 <item quantity="other">"%1$d resultados de busca."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Não foi possível salvar suas opções de pesquisa."</string>
 <string name="search_toast_cannot_load">"Não foi possível carregar opções de pesquisa."</string>
 <string name="search_All_types">"Todos os tipos"</string>
 <string name="search_Any_types">"Qualquer tipo(s)"</string>
-<string name="search_NOT_any_selected_types">"Nenhum dos tipos selecionados"</string>
+<string name="search_NOT_any_selected_types">"NENHUM dos tipos selecionados"</string>
 <string name="search_All_words">"Todas as palavras"</string>
 <string name="search_Any_words">"Qualquer palavra(s)"</string>
 <string name="search_Exact_phrase">"Frase exata"</string>
@@ -172,7 +175,8 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="search_Rare">"Rara"</string>
 <string name="search_Mythic">"Mítica"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_mana_cost">"Custo de Mana"</string>
+<string name="search_type">"Tipo"</string>
+<string name="search_mana_cost">"Custo de Mana"</string>
 <string name="search_collectors_number">"Número de Colecionador"</string>
 <string name="search_color_title">"Cor"</string>
 <string name="search_color_identity_title">"Identidade de Cor"</string>
@@ -203,9 +207,10 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_no_pictures_folder">"Não é possível localizar a pasta de imagens, por favor tente novamente."</string>
 <string name="card_view_unable_to_create_dir">"Não foi possível criar o diretório para salvar imagens, por favor tente novamente."</string>
 <string name="card_view_unable_to_create_file">"Não foi possível criar o arquivo de imagem, por favor tente novamente."</string>
-    <string name="card_view_unable_to_save_image">"Falha ao salvar a imagem, por favor tente novamente."</string>
+<string name="card_view_no_image">"Não foi possível localizar a imagem para salvar, por favor tente novamente."</string>
+<string name="card_view_unable_to_save_image">"Falha ao salvar a imagem, por favor tente novamente."</string>
 <string name="card_view_save_failure">"Houve um erro ao salvar a imagem, por favor tente novamente."</string>
-<string name="card_view_image_saved">"Imagem salva em"</string>
+<string name="card_view_image_saved">"Imagem salva em "</string>
 <string name="card_view_share_card">"Compartilhar Carta"</string>
 
 <!-- Life counter activity -->
@@ -217,7 +222,7 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="life_counter_add_player">"Adicionar um Jogador"</string>
 <string name="life_counter_gathering_dialog_title">"Selecione um Grupo de Jogadores"</string>
 <string name="life_counter_clear_dialog_text">"Limpar totais de vida ou jogadores?
-Reserva de mana também serão apagados."</string>
+Reservas de mana também serão apagadas."</string>
 <string name="life_counter_edit_name_dialog_title">"Digite o Nome"</string>
 <string name="life_counter_Commander">"Commander"</string>
 <string name="life_counter_Compact">"Compacto"</string>
@@ -229,10 +234,10 @@ Reserva de mana também serão apagados."</string>
 <item quantity="other">"%1$s tem %2$d de vida."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
-<item quantity="one">"%1$s tem %2$d contador de veneno."</item>
-<item quantity="other">"%1$s tem %2$d contadores de veneno."</item>
+<item quantity="one">"%1$s tem %2$d marcador de veneno."</item>
+<item quantity="other">"%1$s tem %2$d marcadores de veneno."</item>
 </plurals>
-<string name="life_counter_over_9000">"acima de 9000"</string>
+<string name="life_counter_over_9000">"mais de 9000"</string>
 <string name="life_counter_edh_dialog_title">"Dano do Comandante de %1$s"</string>
 <string name="life_counter_edit_life_dialog_title">"Digite a Vida"</string>
 <string name="life_counter_edit_poison_dialog_title">"Digite o Veneno"</string>
@@ -255,7 +260,10 @@ Reserva de mana também serão apagados."</string>
 <string name="dice_tails">"Coroa"</string>
 
 <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">"Limpar Tudo"</string>
+<string name="mana_pool_error_toast">"Falha ao carregar reserva de mana!"</string>
+
+<!-- Mana pool activity -->
+<string name="mana_pool_clear_all">"Limpar Tudo"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Adicionar Carta"</string>
@@ -266,6 +274,8 @@ Reserva de mana também serão apagados."</string>
 <string name="trader_edit_dialog_reset_price">"Resetar Preço"</string>
 <string name="trader_clear_dialog_title">"Limpar Troca"</string>
 <string name="trader_clear_dialog_text">"Tem certeza de que deseja apagar a troca atual?"</string>
+<string name="trader_select_dialog_title">"Selecione um Troca"</string>
+<string name="trader_delete_dialog_title">"Excluir uma Troca"</string>
 <string name="trader_edit_dialog_info">"Informação da Carta"</string>
 <string name="trader_toast_no_trades">"Você não tem trocas salvas."</string>
 <string name="trader_toast_save_error">"A troca não poderia ser salva; por favor, tente novamente."</string>
@@ -273,7 +283,7 @@ Reserva de mana também serão apagados."</string>
 <string name="trader_Low">"Baixo"</string>
 <string name="trader_Average">"Médio"</string>
 <string name="trader_High">"Alto"</string>
-<string name="trader_sort">"Organizar Troca"</string>
+<string name="trader_sort">"Ordenar Troca"</string>
 <string name="trader_share">"Compartilhar Troca"</string>
 <string name="trade_share_title">"Troca"</string>
 
@@ -285,7 +295,7 @@ Reserva de mana também serão apagados."</string>
 <string name="wishlist_empty_dialog_text">"Tem certeza de que deseja esvaziar sua lista de desejos?"</string>
 <string name="wishlist_edit_dialog_title_end">"na Lista de Desejos"</string>
 <string name="wishlist_loading">"Carregando"</string>
-<string name="wishlist_share_title">"Lista de desejos MTG Familiar"</string>
+<string name="wishlist_share_title">"Lista de Desejos MTG Familiar"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar Lista de Desejos"</string>
 <string name="wishlist_type_price">"Preço"</string>
@@ -327,7 +337,6 @@ Reserva de mana também serão apagados."</string>
 <!-- Profile activity -->
 <string name="profile_update_dci">"Atualizar Número de DCI"</string>
 <string name="profile_remove_dci">"Excluir Número de DCI"</string>
-
 <string name="profile_update_dci_dialog_title">"Digite seu número de DCI"</string>
 <string name="profile_invalid_dci">"Número de DCI inválido digitado"</string>
 <string name="profile_no_dci">"Você não digitou o número de DCI"</string>
@@ -335,32 +344,34 @@ Reserva de mana também serão apagados."</string>
 
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Regras de MoJhoSto Basic"</string>
-<string name="mojhosto_rules_text">"MoJhoSto é um formato casual do Magic Online Vanguard. &lt;br&gt;
+<string name="mojhosto_rules_text">"MoJhoSto é um formato Vanguard casual do Magic Online.&lt;br&gt;
 &lt;br&gt;
-Para jogar, cada jogador deve ter um deck que tem apenas 60 terrenos básicos. &lt;br&gt;
+Para jogar, cada jogador deve ter um deck formado por apenas 60 terrenos básicos.&lt;br&gt;
 &lt;br&gt;
-Cada jogador começa com três Vanguard's. Momir Vig, Jhoira e Stonehewer gigante &lt;br&gt;
+Cada jogador começa com três Vanguard's: Momir Vig, Jhoira e Stonehewer Giant.&lt;br&gt;
 &lt;br&gt;
-Estes Vanguardas ajustm a quantidade de cartas inicial e o tamanho máximo da sua mão (9) e a vida inicial (19). &lt;br&gt;
+Estes Vanguardas ajustam a quantidade de cartas inicial e o tamanho máximo da sua mão (9) e a vida inicial (19).&lt;br&gt;
 &lt;br&gt;
-Qualquer habilidade de uma carta do Vanguard é jogada exatamente igual a de um card de Magic. &lt;br&gt;
+Qualquer habilidade de uma carta de Vanguard é jogada exatamente igual a de um card de Magic no campo de batalha. &lt;br&gt;
 &lt;br&gt;
-No entanto, essas habilidades são incolores, e os danos dados a eles não está atrelado a nenhum dano de qualquer tipo de permanente ou qualquer fonte de qualquer cor. &lt;br&gt;
+No entanto, essas habilidades são incolores, e dano delas não é dano de permanente ou de uma fonte com cor.&lt;br&gt;
 &lt;br&gt;
-Uma carta Vanguard não é um card Magic, por isso, não é afetado por mágicas ou habilidades. &lt;br&gt;
+Uma carta de Vanguard não é uma carta Magic, por isso, não é afetado por mágicas ou habilidades. &lt;br&gt;
 &lt;br&gt;
-Você pode clicar em cada imagem para ver o Vanguard. &lt;br&gt;
+Você pode clicar em cada imagem para ver a carta de Vanguard.&lt;br&gt;
 &lt;br&gt;
-Você pode ler as regras a qualquer momento no menu. &lt;br&gt;
+Você pode ler as regras a qualquer momento a partir do menu.&lt;br&gt;
 &lt;br&gt;
 Recomendamos o uso de papel e lápis para acompanhar o andamento do jogo. Infelizmente, O MTG Familiar não pode trazer à tona as cartas reais. &lt;br&gt;
 &lt;br&gt;
 Boa sorte, e divirtam-se!
 "</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC ="</string>
 <string name="mojhosto_random_creature">"Criatura Aleatória"</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
 <string name="mojhosto_random_equipment">"Equipamento Aleatório"</string>
 <string name="mojhosto_random_instants">"Mágicas Instantâneas Aleatórias"</string>
@@ -369,6 +380,8 @@ Boa sorte, e divirtam-se!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Configurações Gerais"</string>
+<string name="pref_screen_search">"Pesquisa e Resultados"</string>
+<string name="pref_screen_trade_wishlist">"Trocas e Desejos"</string>
 <string name="pref_cat_default_fragment">"Página Padrão"</string>
 <string name="pref_default_fragment_mode_summary">"A primeira coisa que você vê quando você abre o aplicativo"</string>
 <string name="pref_cat_updates">"Atualizações do Banco de Dados"</string>
@@ -382,7 +395,6 @@ Boa sorte, e divirtam-se!
 <string name="pref_card_language_title">"Idioma da Imagem da Carta"</string>
 <string name="pref_card_language_summary">"Escolha o idioma usado para pegar a imagem da carta"</string>
 <string name="pref_cat_life_screen">"Configurações de Exibição"</string>
-
 <string name="pref_wake_lock_title">"Evitar Bloqueio de Tela"</string>
 <string name="pref_wake_lock_summary">"Força com que a exibição do contador de vida nunca durma"</string>
 <string name="pref_dim_lock_summary">"Reduz o brilho da tela depois de inatividade"</string>
@@ -484,7 +496,11 @@ Boa sorte, e divirtam-se!
 <string name="decklist_unnamed_deck">"Deck Sem Nome"</string>
 
 <!-- "Added Slovak Translation" was added -->
-    <string name="card_view_send_to">"Compartilhar imagem usando"</string>
+<string name="main_whats_new_text">"- Adicionado formato Pauper&lt;br&gt;
+- Adicionado busca por marca d'água&lt;br&gt;
+- Adicionado avaliador de legalidade de decks&lt;br&gt;
+- Adicionado preço de mercado do TCGPlayer.com"</string>
+<string name="card_view_send_to">"Compartilhar imagem usando"</string>
 <string name="card_view_translated_dialog_title">"Nome da Carta Traduzido"</string>
 <string name="pref_Portuguese">"Português (Brasil)"</string>
 <string name="pref_Chinese">"Chinês Simplificado"</string>
@@ -562,5 +578,12 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"Ilegal"</string>
-    <string name="life_counter_commander_experience_counter" translatable="false">Marcadores de experiência</string>
+<string name="pref_persist_search_title">"Salvar Opções de Pesquisa"</string>
+<string name="pref_persist_search_summary">"Salvar opções de pesquisa quando sair da página de pesquisa"</string>
+<string name="life_counter_commander_experience_counter">"Contadores de Expêriencia"</string>
+<string name="trader_new">"Nova Troca"</string>
+<string name="trader_save_as">"Salvar Troca Como"</string>
+<string name="pref_hide_online_title">"Esconder Cartas Exclusivamente Online"</string>
+<string name="pref_hide_online_summary">"Nunca mostrar cartas exclusivamente online"</string>
+<string name="decklist_new">"Novo Deck"</string>
 </resources>
