@@ -30,10 +30,8 @@
 <string name="not_deleted">"nevymazané"</string>
 <string name="no_network">"Sieť nie je k dispozícii"</string>
 <string name="filter_title_view_card">"Zobraziť kartu"</string>
-<string name="tutor_cards_notice">"Powered by TutorCards"</string>
-<string name="tutor_cards_fail">"TutorCards nie je v dosahu"</string>
 
-<!-- Main menu activity -->
+    <!-- Main menu activity -->
 <string name="main_pages">"STRÁNKY"</string>
 <string name="main_extras">"DOPLNKY"</string>
 <string name="main_card_search">"Vyhľadávanie"</string>
@@ -182,8 +180,7 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Typ"</string>
-<string name="search_mana_cost">"Manová cena"</string>
+    <string name="search_mana_cost">"Manová cena"</string>
 <string name="search_collectors_number">"Zberateľské číslo"</string>
 <string name="search_color_title">"Farba"</string>
 <string name="search_color_identity_title">"Farebná identita"</string>
@@ -214,8 +211,7 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
 <string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
 <string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
-<string name="card_view_no_image">"Nepodarilo sa nájsť obrázok na uloženie, prosím skúste to znova."</string>
-<string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
+    <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
 <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
 <string name="card_view_share_card">"Zdieľať kartu"</string>
@@ -271,23 +267,19 @@ Manapool bude tiež vymazaný."</string>
 <string name="dice_tails">"orol"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
 
-<!-- Mana pool activity -->
+    <!-- Mana pool activity -->
 <string name="mana_pool_clear_all">"Vymazať všetko"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Pridať kartu"</string>
-<string name="trader_save">"Uložiť výmenu"</string>
-<string name="trader_load">"Načítať výmenu"</string>
+    <string name="trader_load">"Načítať výmenu"</string>
 <string name="trader_delete">"Zmazať výmenu"</string>
 <string name="trader_edit_dialog_remove">"Odstrániť"</string>
 <string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
 <string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
 <string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
-<string name="trader_select_dialog_title">"Vyberte výmenu"</string>
-<string name="trader_delete_dialog_title">"Zmazať výmenu"</string>
-<string name="trader_edit_dialog_info">"Podrobnosti"</string>
+    <string name="trader_edit_dialog_info">"Podrobnosti"</string>
 <string name="trader_toast_no_trades">"Nemáte žiadne uložené výmeny."</string>
 <string name="trader_toast_save_error">"Výmenu sa nepodarilo uložiť; prosím skúste to znova."</string>
 <string name="trader_toast_invalid_chars">"Názvy výmien nesmú obsahovať znak ('/')."</string>
@@ -388,9 +380,7 @@ Veľa šťastia a zabavte sa!"</string>
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Všeobecné nastavenia"</string>
-<string name="pref_screen_search">"Vyhľadávanie"</string>
-<string name="pref_screen_trade_wishlist">"Výmena a Zoznam želaní"</string>
-<string name="pref_cat_default_fragment">"Predvolená stránka"</string>
+    <string name="pref_cat_default_fragment">"Predvolená stránka"</string>
 <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
 <string name="pref_cat_updates">"Aktualizácie databázy"</string>
 <string name="pref_auto_updates_title">"Automatické aktualizácie"</string>

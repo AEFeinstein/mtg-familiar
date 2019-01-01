@@ -28,10 +28,8 @@
 <string name="not_deleted">"non supprimé"</string>
 <string name="no_network">"Réseau non disponible"</string>
 <string name="filter_title_view_card">"Vue Carte"</string>
-<string name="tutor_cards_notice">"Optimisé par TutorCards"</string>
-<string name="tutor_cards_fail">"TutorCards inaccessible"</string>
 
-<!-- Main menu activity -->
+    <!-- Main menu activity -->
 <string name="main_pages">"PAGES"</string>
 <string name="main_extras">"EXTRAS"</string>
 <string name="main_card_search">"Chercher Carte"</string>
@@ -172,8 +170,7 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythique"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Type"</string>
-<string name="search_mana_cost">"Coût Mana"</string>
+    <string name="search_mana_cost">"Coût Mana"</string>
 <string name="search_collectors_number">"Numéro de collection"</string>
 <string name="search_color_title">"Couleur"</string>
 <string name="search_color_identity_title">"Identité Couleur"</string>
@@ -204,8 +201,7 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="card_view_no_pictures_folder">"Impossible de trouver le répertoire des images, veuillez essayer à nouveau."</string>
 <string name="card_view_unable_to_create_dir">"Impossible de créer le répertoire pour contenir les images, veuillez essayer à nouveau."</string>
 <string name="card_view_unable_to_create_file">"Impossible de créer le fichier image, veuillez essayer à nouveau."</string>
-<string name="card_view_no_image">"Impossible de trouver l'image à sauver, veuillez essayer à nouveau."</string>
-<string name="card_view_unable_to_save_image">"Impossible de sauver l'image, veuillez essayer à nouveau."</string>
+    <string name="card_view_unable_to_save_image">"Impossible de sauver l'image, veuillez essayer à nouveau."</string>
 <string name="card_view_save_failure">"Echec lors de la sauvegarde de l'image, veuillez essayer à nouveau."</string>
 <string name="card_view_image_saved">"Image sauvée à"</string>
 <string name="card_view_share_card">"Partager Carte"</string>
@@ -257,23 +253,19 @@ La réserve de mana sera aussi vidée."</string>
 <string name="dice_tails">"pile"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Echec du chargement de la Réserve de Mana!"</string>
 
-<!-- Mana pool activity -->
+    <!-- Mana pool activity -->
 <string name="mana_pool_clear_all">"Tout effacer"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Ajouter Carte"</string>
-<string name="trader_save">"Sauver Echange"</string>
-<string name="trader_load">"Charger Echange"</string>
+    <string name="trader_load">"Charger Echange"</string>
 <string name="trader_delete">"Supprimer Echange"</string>
 <string name="trader_edit_dialog_remove">"Enlever"</string>
 <string name="trader_edit_dialog_reset_price">"Réinitialiser Prix"</string>
 <string name="trader_clear_dialog_title">"Vider Echange"</string>
 <string name="trader_clear_dialog_text">"Etes-vous sûr de vouloir vider l'échange actuel?"</string>
-<string name="trader_select_dialog_title">"Choisir un échange"</string>
-<string name="trader_delete_dialog_title">"Supprimer un échange"</string>
-<string name="trader_edit_dialog_info">"Informations de carte"</string>
+    <string name="trader_edit_dialog_info">"Informations de carte"</string>
 <string name="trader_toast_no_trades">"Vous n'avez aucun échange sauvé."</string>
 <string name="trader_toast_save_error">"L'échange n'a pu être sauvé; veuillez réessayer."</string>
 <string name="trader_toast_invalid_chars">"Les noms d'échanges ne peuvent contenir le caractère de séparation des chemins ('/')."</string>
@@ -379,9 +371,7 @@ Bonne chance, et bon jeu!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Paramètres généraux"</string>
-<string name="pref_screen_search">"Recherche &amp; Résultats"</string>
-<string name="pref_screen_trade_wishlist">"Echange &amp; Liste de voeux"</string>
-<string name="pref_cat_default_fragment">"Page par défaut"</string>
+    <string name="pref_cat_default_fragment">"Page par défaut"</string>
 <string name="pref_default_fragment_mode_summary">"La première chose que vous voyez quand l'application démarre"</string>
 <string name="pref_cat_updates">"Mise à jour des données"</string>
 <string name="pref_auto_updates_title">"Mise à jour automatique"</string>

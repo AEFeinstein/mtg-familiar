@@ -30,10 +30,8 @@
 <string name="not_deleted">"no se ha borrrado"</string>
 <string name="no_network">"Red no disponible."</string>
 <string name="filter_title_view_card">"Ver carta"</string>
-<string name="tutor_cards_notice">"Funciona con TutorCards"</string>
-<string name="tutor_cards_fail">"Imposible conectar con TutorCards"</string>
 
-<!-- Main menu activity -->
+    <!-- Main menu activity -->
 <string name="main_pages">"PÁGINAS"</string>
 <string name="main_extras">"EXTRAS"</string>
 <string name="main_card_search">"Buscar carta"</string>
@@ -174,8 +172,7 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="search_Rare">"Rara"</string>
 <string name="search_Mythic">"Mítica"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Tipo"</string>
-<string name="search_mana_cost">"Coste de Maná"</string>
+    <string name="search_mana_cost">"Coste de Maná"</string>
 <string name="search_collectors_number">"Número de coleccionista"</string>
 <string name="search_color_title">"Color"</string>
 <string name="search_color_identity_title">"​Identidad de ​color"</string>
@@ -206,8 +203,7 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_no_pictures_folder">"No se puede encontrar la carpeta de imágenes. Prueba otra vez."</string>
 <string name="card_view_unable_to_create_dir">"No se puede crear el directorio para guardar imagénes. Prueba otra vez."</string>
 <string name="card_view_unable_to_create_file">"No se puede crear el archivo de imagen. Prueba otra vez."</string>
-<string name="card_view_no_image">"No se puede encontrar la imagen para guardar. Prueba otra vez."</string>
-<string name="card_view_unable_to_save_image">"No se pudo guardar la imagen. Prueba otra vez."</string>
+    <string name="card_view_unable_to_save_image">"No se pudo guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_save_failure">"Ha habido un error al guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_image_saved">"Imagen guardada en"</string>
 <string name="card_view_share_card">"Compartir la carta"</string>
@@ -259,23 +255,19 @@ La reserva de maná también será vaciada."</string>
 <string name="dice_tails">"cruz"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"¡La reserva de maná falló al cargar!"</string>
 
-<!-- Mana pool activity -->
+    <!-- Mana pool activity -->
 <string name="mana_pool_clear_all">"Borrar todo"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Añadir carta"</string>
-<string name="trader_save">"Guardar intercambio"</string>
-<string name="trader_load">"Cargar intercambio"</string>
+    <string name="trader_load">"Cargar intercambio"</string>
 <string name="trader_delete">"Eliminar intercambio"</string>
 <string name="trader_edit_dialog_remove">"Eliminar intercambio"</string>
 <string name="trader_edit_dialog_reset_price">"Reiniciar precio"</string>
 <string name="trader_clear_dialog_title">"Limpiar intercambio"</string>
 <string name="trader_clear_dialog_text">"¿Seguro que quieres limpiar el intercambio actual?"</string>
-<string name="trader_select_dialog_title">"Seleccionar un intercambio"</string>
-<string name="trader_delete_dialog_title">"Borrar un intercambio"</string>
-<string name="trader_edit_dialog_info">"Información de carta"</string>
+    <string name="trader_edit_dialog_info">"Información de carta"</string>
 <string name="trader_toast_no_trades">"No tienes ningún intercambio guardado."</string>
 <string name="trader_toast_save_error">"El intercambio no pudo ser guardado; por favor, prueba otra vez."</string>
 <string name="trader_toast_invalid_chars">"Los nombres de intercambios no pueden contener el separador de ruta ('/')."</string>
@@ -381,9 +373,7 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Ajustes generales"</string>
-<string name="pref_screen_search">"Búsqueda y resultados"</string>
-<string name="pref_screen_trade_wishlist">"Intercambios y lista de deseos"</string>
-<string name="pref_cat_default_fragment">"Página por defecto"</string>
+    <string name="pref_cat_default_fragment">"Página por defecto"</string>
 <string name="pref_default_fragment_mode_summary">"La primera cosa que ves cuando abres la aplicación"</string>
 <string name="pref_cat_updates">"Actualizaciones de la base de datos"</string>
 <string name="pref_auto_updates_title">"Actualizaciones automáticas"</string>

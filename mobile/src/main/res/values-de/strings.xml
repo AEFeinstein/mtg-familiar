@@ -34,10 +34,8 @@
 <string name="not_deleted">"nicht gelöscht"</string>
 <string name="no_network">"Netzwerk nicht verfügbar"</string>
 <string name="filter_title_view_card">"Karte ansehen"</string>
-<string name="tutor_cards_notice">"Ermöglicht durch TutorCards"</string>
-<string name="tutor_cards_fail">"TutorCards ist nicht erreichbar"</string>
 
-<!-- Main menu activity -->
+    <!-- Main menu activity -->
 <string name="main_pages">"SEITEN"</string>
 <string name="main_extras">"EXTRAS"</string>
 <string name="main_card_search">"Kartensuche"</string>
@@ -186,8 +184,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Typ"</string>
-<string name="search_mana_cost">"Manakosten"</string>
+    <string name="search_mana_cost">"Manakosten"</string>
 <string name="search_collectors_number">"Sammlernummer"</string>
 <string name="search_color_title">"Farbe"</string>
 <string name="search_color_identity_title">"Farbidentität"</string>
@@ -220,8 +217,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_no_pictures_folder">"Bilderordner konnte nicht gefunden werden. Bitte versuche es erneut."</string>
 <string name="card_view_unable_to_create_dir">"Verzeichnis zum Speichern der Bilder konnte nicht erstellt werden. Bitte versuche es erneut."</string>
 <string name="card_view_unable_to_create_file">"Bilddatei konnte nicht erstellt werden. Bitte versuche es erneut."</string>
-<string name="card_view_no_image">"Konnte das zu speichernde Bild nicht finden. Bitte versuche es erneut."</string>
-<string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
+    <string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_save_failure">"Bild konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_image_saved">"Bild gespeichert unter"</string>
 <string name="card_view_share_card">"Karte teilen"</string>
@@ -274,23 +270,19 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="dice_tails">"Zahl"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Manavorrat konnte nicht geladen werden!"</string>
 
-<!-- Mana pool activity -->
+    <!-- Mana pool activity -->
 <string name="mana_pool_clear_all">"Alles löschen"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Karte hinzufügen"</string>
-<string name="trader_save">"Tausch speichern"</string>
-<string name="trader_load">"Tausch laden"</string>
+    <string name="trader_load">"Tausch laden"</string>
 <string name="trader_delete">"Tausch löschen"</string>
 <string name="trader_edit_dialog_remove">"Entfernen"</string>
 <string name="trader_edit_dialog_reset_price">"Preis zurücksetzen"</string>
 <string name="trader_clear_dialog_title">"Tausch leeren"</string>
 <string name="trader_clear_dialog_text">"Bist du sicher, dass du den aktuellen Tausch leeren möchtest?"</string>
-<string name="trader_select_dialog_title">"Tausch auswählen"</string>
-<string name="trader_delete_dialog_title">"Tausch löschen"</string>
-<string name="trader_edit_dialog_info">"Karteninformation"</string>
+    <string name="trader_edit_dialog_info">"Karteninformation"</string>
 <string name="trader_toast_no_trades">"Du hast keine gespeicherten Tausche."</string>
 <string name="trader_toast_save_error">"Tausch konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="trader_toast_invalid_chars">"Tauschnamen dürfen kein '/' enthalten."</string>
@@ -392,9 +384,7 @@ Viel Glück und viel Spaß!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Allgemeine Einstellungen"</string>
-<string name="pref_screen_search">"Suche und Ergebnisse"</string>
-<string name="pref_screen_trade_wishlist">"Tausch &amp; Wunschliste"</string>
-<string name="pref_cat_default_fragment">"Standardseite"</string>
+    <string name="pref_cat_default_fragment">"Standardseite"</string>
 <string name="pref_default_fragment_mode_summary">"Das Erste, was du nach dem Öffnen der App siehst."</string>
 <string name="pref_cat_updates">"Datenbankaktualisierungen"</string>
 <string name="pref_auto_updates_title">"Automatische Aktualisierungen"</string>
