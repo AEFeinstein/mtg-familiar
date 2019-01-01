@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Wyszukaj"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Anuluj"</string>
@@ -27,6 +28,8 @@
 <string name="not_deleted">"nie usunięty"</string>
 <string name="no_network">"Sieć jest niedostępna"</string>
 <string name="filter_title_view_card">"Pokaż kartę"</string>
+<string name="tutor_cards_notice">"Uzyskane przy pomocy TutorCards"</string>
+<string name="tutor_cards_fail">"TutorCards są nieosiągalne"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"ZAKŁADKI"</string>
@@ -70,7 +73,6 @@ Więc, na jak dużą hojność stać cię dzisiaj?
 <string name="main_import_success">"Import zakończony powodzeniem"</string>
 <string name="main_import_fail">"Nie udało się zaimportować danych. Proszę wstawić MTGFamiliarBackup.zip w root'a swojej karty SD"</string>
 <string name="main_about">"O aplikacji"</string>
-
 <string name="main_about_text">"Ta aplikacja jest moim darem dla społeczności MTG&lt;br&gt;
 &lt;br&gt;
 Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
@@ -105,8 +107,6 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; użyto w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; użyto w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; użyto w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; użyto w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -148,7 +148,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <plurals name="search_toast_results">
 <item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
 <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
-<item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
 <item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
@@ -175,7 +174,8 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_mana_cost">"Koszt Many"</string>
+<string name="search_type">"Typ"</string>
+<string name="search_mana_cost">"Koszt Many"</string>
 <string name="search_collectors_number">"Collector's Number"</string>
 <string name="search_color_title">"Kolor"</string>
 <string name="search_color_identity_title">"Ogół kolorów"</string>
@@ -206,7 +206,8 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_no_pictures_folder">"Nie można znaleźć folderu z obrazkiami, proszę spróbować jeszcze raz."</string>
 <string name="card_view_unable_to_create_dir">"Nie można stworzyć folderu dla obrazków, proszę spróbować jeszcze raz"</string>
 <string name="card_view_unable_to_create_file">"Nie można utworzyć pliku obrazka, proszę spróbować jeszcze raz."</string>
-    <string name="card_view_unable_to_save_image">"Nie można zapisać obrazka, proszę spróbować jeszcze raz."</string>
+<string name="card_view_no_image">"Nie można znaleźć obrazka do zapisania, proszę spróbować jeszcze raz."</string>
+<string name="card_view_unable_to_save_image">"Nie można zapisać obrazka, proszę spróbować jeszcze raz."</string>
 <string name="card_view_save_failure">"Nie udało się zapisać obrazka, proszę spróbować jeszcze raz."</string>
 <string name="card_view_image_saved">"Obrazek zapisano w"</string>
 <string name="card_view_share_card">"Udostępnij kartę"</string>
@@ -230,13 +231,11 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <plurals name="life_counter_spoken_life">
 <item quantity="one">"%1$s ma %2$d życia."</item>
 <item quantity="few">"%1$s ma %2$d życia."</item>
-<item quantity="many">"%1$s ma %2$d życia."</item>
 <item quantity="other">"%1$s ma %2$d życia."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
 <item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
 <item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
-<item quantity="many">"%1$s ma %2$d znaczników trucizny."</item>
 <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
 </plurals>
 <string name="life_counter_over_9000">"ponad 9000"</string>
@@ -262,7 +261,10 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="dice_tails">"Reszka"</string>
 
 <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">"Wyczyść wszystko"</string>
+<string name="mana_pool_error_toast">"Nie udało się wczytać licznika many!"</string>
+
+<!-- Mana pool activity -->
+<string name="mana_pool_clear_all">"Wyczyść wszystko"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Dodaj kartę"</string>
@@ -273,6 +275,8 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="trader_edit_dialog_reset_price">"Zeruj Cenę"</string>
 <string name="trader_clear_dialog_title">"Wyczyść Wymianę"</string>
 <string name="trader_clear_dialog_text">"Czy na pewno chcesz wyczyścić obecną wymianę?"</string>
+<string name="trader_select_dialog_title">"Wybierz Wymianę"</string>
+<string name="trader_delete_dialog_title">"Usuń Wymianę"</string>
 <string name="trader_edit_dialog_info">"Informacja o karcie"</string>
 <string name="trader_toast_no_trades">"Nie masz zapisanych wymian."</string>
 <string name="trader_toast_save_error">"Nie można zapisać wymiany, spróbuj ponownie."</string>
@@ -335,6 +339,7 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="profile_update_dci">"Aktualizuj numer DCI"</string>
 <string name="profile_remove_dci">"Usuń numer DCI"</string>
 
+<!-- Fuzzy -->
 <string name="profile_update_dci_dialog_title">"Wprowadź swój numer DCI"</string>
 <string name="profile_invalid_dci">"Wprowadzono niepoprawny numer DCI"</string>
 <string name="profile_no_dci">"Nie wprowadziłeś swojego numeru DCI"</string>
@@ -364,9 +369,11 @@ Kartka i długopis mogą być przydatne aby śledzić przebieg gry. Niestety, MT
 Powodzenia i miłej zabawy!
 "</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC="</string>
 <string name="mojhosto_random_creature">"Losowa Kreatura"</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
 <string name="mojhosto_random_equipment">"Losowe wyposażenie"</string>
 <string name="mojhosto_random_instants">"Trzy losowe Instanty"</string>
@@ -375,6 +382,8 @@ Powodzenia i miłej zabawy!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Ustawienia ogólne"</string>
+<string name="pref_screen_search">"Wyszukiwanie i Rezultaty"</string>
+<string name="pref_screen_trade_wishlist">"Wymiana i Lista Życzeń"</string>
 <string name="pref_cat_default_fragment">"Domyślna zakładka"</string>
 <string name="pref_default_fragment_mode_summary">"Zakładka wyświetlana po uruchomieniu aplikacji"</string>
 <string name="pref_cat_updates">"Aktualizacje"</string>
@@ -490,7 +499,10 @@ Liście Życzeń"</string>
 <string name="decklist_unnamed_deck">"Talia bez nazwy"</string>
 
 <!-- "Added Slovak Translation" was added -->
-    <string name="card_view_send_to">"Udostępnij obrazek przy użyciu"</string>
+<string name="main_whats_new_text">"- Dodano format Pauper&lt;br&gt;
+- Dodano opcję szukania po znaku wodnym&lt;br&gt;
+- Dodano opcję sprawdzenia zgodności decku&lt;br&gt;"</string>
+<string name="card_view_send_to">"Udostępnij obrazek przy użyciu"</string>
 <string name="card_view_translated_dialog_title">"Przetłumaczona nazwa karty"</string>
 <string name="pref_Portuguese">"Portugalski (Brazylijski)"</string>
 <string name="pref_Chinese">"Uproszczony Chiński"</string>
@@ -540,7 +552,6 @@ Liście Życzeń"</string>
 <plurals name="decklist_cards_count">
 <item quantity="one">"%1$d karta"</item>
 <item quantity="few">"%1$d karty"</item>
-<item quantity="many">"%1$d karty"</item>
 <item quantity="other">"%1$d karty"</item>
 </plurals>
 
@@ -575,4 +586,14 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"Nie zgodna"</string>
+<string name="pref_persist_search_title">"Zapisz opcje wyszukiwania"</string>
+<string name="pref_persist_search_summary">"Zapisz opcje wyszukiwania po opuszczeniu strony wyszukiwania"</string>
+<string name="life_counter_commander_experience_counter">"Znaczniki doświadczenia"</string>
+<string name="trader_new">"Nowa wymiana"</string>
+<string name="trader_save_as">"Zapisz wymianę jako"</string>
+<string name="pref_hide_online_title">"Ukryj karty dostępne tylko online"</string>
+
+<!-- This is slightly unclear, could you explain? -->
+<string name="pref_hide_online_summary">"Nie pokazuj nigdzie kart dostępnych tylko online"</string>
+<string name="decklist_new">"Nowa talia"</string>
 </resources>
