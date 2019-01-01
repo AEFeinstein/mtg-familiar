@@ -508,7 +508,7 @@ public class CardDbAdapter {
 
     /**
      * Given a list of KEY_ID values, return a cursor with all of a cards' information.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param ids        A list of ids for cards to fetch
@@ -546,19 +546,20 @@ public class CardDbAdapter {
 
     /**
      * Given a card's name, return a cursor with all of that card's requested information.
-     *
+     * <p>
      * TODO online only pref
      *
-     * @param name        The name of the card to query
-     * @param fields      The requested information about the card
-     * @param shouldGroup true if the query should group by KEY_CODE, false otherwise
-     * @param offlineOnly true if the query should exclude online only cards, false otherwise
-     * @param mDb         The database to query
+     * @param name               The name of the card to query
+     * @param fields             The requested information about the card
+     * @param shouldGroup        true if the query should group by KEY_CODE, false otherwise
+     * @param offlineOnly        true if the query should exclude online only cards, false otherwise
+     * @param preferOptionalFoil true if the query should order cards that may or may not be foil first
+     * @param mDb                The database to query
      * @return A cursor with the requested information about the card
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
-                                         boolean offlineOnly, SQLiteDatabase mDb)
+                                         boolean offlineOnly, boolean preferOptionalFoil, SQLiteDatabase mDb)
             throws FamiliarDbException {
         try {
             /* Sanitize the string and remove accent marks */
@@ -581,7 +582,11 @@ public class CardDbAdapter {
             if (shouldGroup) {
                 sql.append(" GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE);
             }
-            sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
+            if (preferOptionalFoil) {
+                sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL + " DESC, " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
+            } else {
+                sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
+            }
 
             Cursor c = mDb.rawQuery(sql.toString(), null);
             if (c != null) {
@@ -595,7 +600,7 @@ public class CardDbAdapter {
 
     /**
      * Given a multiverse ID, return a cursor with all of that card's requested information.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param multiverseId The card's multivers ID
@@ -632,7 +637,7 @@ public class CardDbAdapter {
 
     /**
      * Given a card name and set code, return a cursor with that card's requested data.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param name    The card's name
@@ -675,7 +680,7 @@ public class CardDbAdapter {
 
     /**
      * Given a list of cards, fetch all the database info about them in a single query
-     *
+     * <p>
      * TODO online only pref
      *
      * @param cards A list of cards to fetch info for
@@ -732,7 +737,7 @@ public class CardDbAdapter {
 
     /**
      * Given a card name, return the KEY_ID for that card.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param name The name of the card
@@ -774,7 +779,7 @@ public class CardDbAdapter {
     /**
      * This function will query the database with the information in criteria and return a cursor
      * with the requested data.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param criteria    The criteria used to build the query
@@ -1269,7 +1274,7 @@ public class CardDbAdapter {
 
     /**
      * Given a set and a card number, return the KEY_ID for that card.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param set    The set code
@@ -1302,7 +1307,7 @@ public class CardDbAdapter {
 
     /**
      * Returns a card name queried by set and collector's number.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param set    The set code
@@ -1333,7 +1338,7 @@ public class CardDbAdapter {
 
     /**
      * Given a card name, find the ID for that card in the database
-     *
+     * <p>
      * TODO online only pref
      *
      * @param name The name of the card to search for
@@ -1359,7 +1364,7 @@ public class CardDbAdapter {
 
     /**
      * Returns a Cursor positioned at the word specified by rowId.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param rowId   id of word to retrieve
@@ -1400,7 +1405,7 @@ public class CardDbAdapter {
 
     /**
      * Returns a Cursor over all words that match the given query.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param query The string to search for
@@ -1440,7 +1445,7 @@ public class CardDbAdapter {
     /**
      * Given a multiverseId for a multicard, return the full card name, which has each half of the
      * card separated by "//".
-     *
+     * <p>
      * TODO online only pref
      *
      * @param multiverseId The multiverse id to search for
@@ -1597,7 +1602,7 @@ public class CardDbAdapter {
     /**
      * I messed up with Duel Deck Anthologies. Each deck should have had its own set code, rather
      * than grouping them all together. This function fixes any saved cards when loaded.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param name     The name of the card to get the correct set code for
@@ -1653,7 +1658,7 @@ public class CardDbAdapter {
 
     /**
      * Given a Cursor pointed at a card, return the full type line (sub - super) for that card.
-     *
+     * <p>
      * TODO online only pref
      *
      * @param cCardById The cursor pointing to a card

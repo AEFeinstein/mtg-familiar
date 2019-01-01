@@ -165,7 +165,7 @@ public class MtgCard extends Card {
             this.mMessage = activity.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
             if (cardSet == null) {
-                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, database);
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, true, database);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {

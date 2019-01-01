@@ -330,7 +330,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, database);
+                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, false, database);
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
                             if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)))) {
