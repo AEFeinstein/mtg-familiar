@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Chercher un nom"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annuler"</string>
@@ -27,6 +28,8 @@
 <string name="not_deleted">"non supprimé"</string>
 <string name="no_network">"Réseau non disponible"</string>
 <string name="filter_title_view_card">"Vue Carte"</string>
+<string name="tutor_cards_notice">"Optimisé par TutorCards"</string>
+<string name="tutor_cards_fail">"TutorCards inaccessible"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PAGES"</string>
@@ -70,7 +73,6 @@ Alors, à quel point vous sentez-vous généreux aujourd'hui?
 <string name="main_import_success">"Import réalisé avec succès"</string>
 <string name="main_import_fail">"Echec de l'import. Veuillez placer MTGFamiliarBackup.zip à la racine de votre carte SD"</string>
 <string name="main_about">"A propos"</string>
-
 <string name="main_about_text">"Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;
 &lt;br&gt;
 Envoyez vos questions, commentaires, problèmes et souhaits à &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
@@ -104,8 +106,6 @@ Magic the Gathering et les cartes Magic the Gathering sont ™ &amp; © Wizards 
 &lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -172,7 +172,8 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythique"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_mana_cost">"Coût Mana"</string>
+<string name="search_type">"Type"</string>
+<string name="search_mana_cost">"Coût Mana"</string>
 <string name="search_collectors_number">"Numéro de collection"</string>
 <string name="search_color_title">"Couleur"</string>
 <string name="search_color_identity_title">"Identité Couleur"</string>
@@ -203,7 +204,8 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="card_view_no_pictures_folder">"Impossible de trouver le répertoire des images, veuillez essayer à nouveau."</string>
 <string name="card_view_unable_to_create_dir">"Impossible de créer le répertoire pour contenir les images, veuillez essayer à nouveau."</string>
 <string name="card_view_unable_to_create_file">"Impossible de créer le fichier image, veuillez essayer à nouveau."</string>
-    <string name="card_view_unable_to_save_image">"Impossible de sauver l'image, veuillez essayer à nouveau."</string>
+<string name="card_view_no_image">"Impossible de trouver l'image à sauver, veuillez essayer à nouveau."</string>
+<string name="card_view_unable_to_save_image">"Impossible de sauver l'image, veuillez essayer à nouveau."</string>
 <string name="card_view_save_failure">"Echec lors de la sauvegarde de l'image, veuillez essayer à nouveau."</string>
 <string name="card_view_image_saved">"Image sauvée à"</string>
 <string name="card_view_share_card">"Partager Carte"</string>
@@ -255,7 +257,10 @@ La réserve de mana sera aussi vidée."</string>
 <string name="dice_tails">"pile"</string>
 
 <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">"Tout effacer"</string>
+<string name="mana_pool_error_toast">"Echec du chargement de la Réserve de Mana!"</string>
+
+<!-- Mana pool activity -->
+<string name="mana_pool_clear_all">"Tout effacer"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Ajouter Carte"</string>
@@ -266,6 +271,8 @@ La réserve de mana sera aussi vidée."</string>
 <string name="trader_edit_dialog_reset_price">"Réinitialiser Prix"</string>
 <string name="trader_clear_dialog_title">"Vider Echange"</string>
 <string name="trader_clear_dialog_text">"Etes-vous sûr de vouloir vider l'échange actuel?"</string>
+<string name="trader_select_dialog_title">"Choisir un échange"</string>
+<string name="trader_delete_dialog_title">"Supprimer un échange"</string>
 <string name="trader_edit_dialog_info">"Informations de carte"</string>
 <string name="trader_toast_no_trades">"Vous n'avez aucun échange sauvé."</string>
 <string name="trader_toast_save_error">"L'échange n'a pu être sauvé; veuillez réessayer."</string>
@@ -328,6 +335,7 @@ La réserve de mana sera aussi vidée."</string>
 <string name="profile_update_dci">"Mettre à jour le numéro DCI"</string>
 <string name="profile_remove_dci">"Effacer le numéro DCI"</string>
 
+<!-- Fuzzy -->
 <string name="profile_update_dci_dialog_title">"Saisir le numéro DCI"</string>
 <string name="profile_invalid_dci">"Numéro DCI saisi non valide"</string>
 <string name="profile_no_dci">"Vous n'avez pas saisi votre numéro DCI"</string>
@@ -358,9 +366,11 @@ Papier et crayon peuvent être utiles pour suivre le jeu. Malheureusement, MTG F
 Bonne chance, et bon jeu!
 "</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC ="</string>
 <string name="mojhosto_random_creature">"Créature aléatoire"</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
 <string name="mojhosto_random_equipment">"Equipement aléatoire"</string>
 <string name="mojhosto_random_instants">"3 éphémères aléatoires"</string>
@@ -369,6 +379,8 @@ Bonne chance, et bon jeu!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Paramètres généraux"</string>
+<string name="pref_screen_search">"Recherche &amp; Résultats"</string>
+<string name="pref_screen_trade_wishlist">"Echange &amp; Liste de voeux"</string>
 <string name="pref_cat_default_fragment">"Page par défaut"</string>
 <string name="pref_default_fragment_mode_summary">"La première chose que vous voyez quand l'application démarre"</string>
 <string name="pref_cat_updates">"Mise à jour des données"</string>
@@ -483,7 +495,11 @@ Bonne chance, et bon jeu!
 <string name="decklist_unnamed_deck">"Deck Sans Nom"</string>
 
 <!-- "Added Slovak Translation" was added -->
-    <string name="card_view_send_to">"Partager l'image avec"</string>
+<string name="main_whats_new_text">"- Ajout du format \"Pauper\"&lt;br&gt;
+- Ajout de la recherche par filigrane&lt;br&gt;
+- Ajout de la vérification de la légalité du deck&lt;br&gt;
+- Ajout du prix du marché de TCGPlayer.com"</string>
+<string name="card_view_send_to">"Partager l'image avec"</string>
 <string name="card_view_translated_dialog_title">"Nom de carte traduit"</string>
 <string name="pref_Portuguese">"Portuguais (Brésil)"</string>
 <string name="pref_Chinese">"Chinois Simplifié"</string>
@@ -561,4 +577,12 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"Illégal"</string>
+<string name="pref_persist_search_title">"Enregistrer les Options de Recherche"</string>
+<string name="pref_persist_search_summary">"Enregistrer les options de recherche lorsqu'on quitte la page"</string>
+<string name="life_counter_commander_experience_counter">"Compteurs d'expérience"</string>
+<string name="trader_new">"Nouvel Échange"</string>
+<string name="trader_save_as">"Enregistrer Échange sous"</string>
+<string name="pref_hide_online_title">"Cacher les cartes seulement en ligne"</string>
+<string name="pref_hide_online_summary">"Ne jamais afficher les cartes seulement en ligne"</string>
+<string name="decklist_new">"Nouveau Deck"</string>
 </resources>
