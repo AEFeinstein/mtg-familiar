@@ -175,7 +175,9 @@ public class TradeFragment extends FamiliarListFragment {
             }
 
             clearCardNameInput();
-            clearCardNumberInput();
+
+            /* Don't reset the count after adding a card. This makes adding consecutive 4-ofs easier */
+            /* clearCardNumberInput(); */
 
             uncheckFoilCheckbox();
 

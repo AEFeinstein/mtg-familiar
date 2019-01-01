@@ -178,9 +178,10 @@ public class WishlistFragment extends FamiliarListFragment {
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
 
             /* Clean up for the next add */
-            clearCardNumberInput();
             clearCardNameInput();
             uncheckFoilCheckbox();
+            /* Don't reset the count after adding a card. This makes adding consecutive 4-ofs easier */
+            /* clearCardNumberInput(); */
 
             /* Redraw the new wishlist with the new card */
             getCardDataAdapter(0).notifyDataSetChanged();

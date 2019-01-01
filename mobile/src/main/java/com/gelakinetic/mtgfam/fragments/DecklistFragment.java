@@ -350,8 +350,10 @@ public class DecklistFragment extends FamiliarListFragment {
             }
 
             /* Clean up for the next add */
-            clearCardNumberInput();
             clearCardNameInput();
+
+            /* Don't reset the count after adding a card. This makes adding consecutive 4-ofs easier */
+            /* clearCardNumberInput(); */
 
             /* Uncheck the foil box if it isn't locked */
             uncheckFoilCheckbox();
