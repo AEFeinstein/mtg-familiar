@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Namen suchen"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Abbrechen"</string>
@@ -33,6 +34,8 @@
 <string name="not_deleted">"nicht gelöscht"</string>
 <string name="no_network">"Netzwerk nicht verfügbar"</string>
 <string name="filter_title_view_card">"Karte ansehen"</string>
+<string name="tutor_cards_notice">"Ermöglicht durch TutorCards"</string>
+<string name="tutor_cards_fail">"TutorCards ist nicht erreichbar"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"SEITEN"</string>
@@ -118,8 +121,6 @@ Magic the Gathering und Magic the Gathering Karten sind ™ &amp; © Wizards of 
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
 &lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; wird verwendet unter der BSD, part MIT, Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
@@ -185,7 +186,8 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_mana_cost">"Manakosten"</string>
+<string name="search_type">"Typ"</string>
+<string name="search_mana_cost">"Manakosten"</string>
 <string name="search_collectors_number">"Sammlernummer"</string>
 <string name="search_color_title">"Farbe"</string>
 <string name="search_color_identity_title">"Farbidentität"</string>
@@ -218,7 +220,8 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_no_pictures_folder">"Bilderordner konnte nicht gefunden werden. Bitte versuche es erneut."</string>
 <string name="card_view_unable_to_create_dir">"Verzeichnis zum Speichern der Bilder konnte nicht erstellt werden. Bitte versuche es erneut."</string>
 <string name="card_view_unable_to_create_file">"Bilddatei konnte nicht erstellt werden. Bitte versuche es erneut."</string>
-    <string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
+<string name="card_view_no_image">"Konnte das zu speichernde Bild nicht finden. Bitte versuche es erneut."</string>
+<string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_save_failure">"Bild konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_image_saved">"Bild gespeichert unter"</string>
 <string name="card_view_share_card">"Karte teilen"</string>
@@ -271,7 +274,10 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="dice_tails">"Zahl"</string>
 
 <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">"Alles löschen"</string>
+<string name="mana_pool_error_toast">"Manavorrat konnte nicht geladen werden!"</string>
+
+<!-- Mana pool activity -->
+<string name="mana_pool_clear_all">"Alles löschen"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Karte hinzufügen"</string>
@@ -282,6 +288,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="trader_edit_dialog_reset_price">"Preis zurücksetzen"</string>
 <string name="trader_clear_dialog_title">"Tausch leeren"</string>
 <string name="trader_clear_dialog_text">"Bist du sicher, dass du den aktuellen Tausch leeren möchtest?"</string>
+<string name="trader_select_dialog_title">"Tausch auswählen"</string>
+<string name="trader_delete_dialog_title">"Tausch löschen"</string>
 <string name="trader_edit_dialog_info">"Karteninformation"</string>
 <string name="trader_toast_no_trades">"Du hast keine gespeicherten Tausche."</string>
 <string name="trader_toast_save_error">"Tausch konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
@@ -384,6 +392,8 @@ Viel Glück und viel Spaß!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Allgemeine Einstellungen"</string>
+<string name="pref_screen_search">"Suche und Ergebnisse"</string>
+<string name="pref_screen_trade_wishlist">"Tausch &amp; Wunschliste"</string>
 <string name="pref_cat_default_fragment">"Standardseite"</string>
 <string name="pref_default_fragment_mode_summary">"Das Erste, was du nach dem Öffnen der App siehst."</string>
 <string name="pref_cat_updates">"Datenbankaktualisierungen"</string>
@@ -500,7 +510,11 @@ Viel Glück und viel Spaß!
 <string name="decklist_unnamed_deck">"Unbenanntes Deck"</string>
 
 <!-- "Added Slovak Translation" was added -->
-    <string name="card_view_send_to">"Bild teilen via"</string>
+<string name="main_whats_new_text">"- Pauper Format hinzugefügt&lt;br&gt;
+- Suche über Wasserzeichen hinzugefügt&lt;br&gt;
+- Deck Legalität Überprüfungen hinzugefügt&lt;br&gt;
+- TCGPlayer.com Market Preise hinzugefügt"</string>
+<string name="card_view_send_to">"Bild teilen via"</string>
 <string name="card_view_translated_dialog_title">"Übersetzter Kartenname"</string>
 <string name="pref_Portuguese">"Português"</string>
 <string name="pref_Chinese">"Chinesisch vereinfacht"</string>
@@ -535,6 +549,7 @@ Viel Glück und viel Spaß!
 <string name="pref_cat_list_general">"Allgemeine Listen"</string>
 
 <!-- Could you explain the undo functionality in simple terms? -->
+<!-- Fuzzy -->
 <string name="pref_undo_timeout_seconds_summary">"Zeitraum in Sekunden, in dem eine Aktion rückgängig gemacht werden kann."</string>
 
 <!-- Where and how is this used? Is it a button? Does it mean "to undo the timeout" or "the timeout of undoing"? -->
@@ -586,4 +601,12 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"NIcht legal"</string>
+<string name="pref_persist_search_title">"Suchoptionen speichern"</string>
+<string name="pref_persist_search_summary">"Suchoptionen beim Verlassen der Suche speichern"</string>
+<string name="life_counter_commander_experience_counter">"Experience Counter"</string>
+<string name="trader_new">"Neuer Trade"</string>
+<string name="trader_save_as">"Trade speichern unter"</string>
+<string name="pref_hide_online_title">"Karten die nur online verfügbar sind verstecken"</string>
+<string name="pref_hide_online_summary">"Karten die nur online verfügbar sind nirgendwo anzeigen"</string>
+<string name="decklist_new">"Neues Deck"</string>
 </resources>
