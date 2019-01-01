@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Vyhľadať názvy"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Zrušiť"</string>
@@ -29,6 +30,8 @@
 <string name="not_deleted">"nevymazané"</string>
 <string name="no_network">"Sieť nie je k dispozícii"</string>
 <string name="filter_title_view_card">"Zobraziť kartu"</string>
+<string name="tutor_cards_notice">"Powered by TutorCards"</string>
+<string name="tutor_cards_fail">"TutorCards nie je v dosahu"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"STRÁNKY"</string>
@@ -105,8 +108,6 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
 &lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; used under the BSD, part MIT, Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
@@ -154,6 +155,7 @@ For 2-4:   %1$d nájdené karty. -->
 <plurals name="search_toast_results">
 <item quantity="one">"%1$d nájdená karta"</item>
 <item quantity="few">"%1$d nájdené karty"</item>
+<item quantity="many">"%1$d nájdených kariet"</item>
 <item quantity="other">"%1$d nájdených kariet"</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
@@ -180,7 +182,8 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_mana_cost">"Manová cena"</string>
+<string name="search_type">"Typ"</string>
+<string name="search_mana_cost">"Manová cena"</string>
 <string name="search_collectors_number">"Zberateľské číslo"</string>
 <string name="search_color_title">"Farba"</string>
 <string name="search_color_identity_title">"Farebná identita"</string>
@@ -211,7 +214,8 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
 <string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
 <string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
-    <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
+<string name="card_view_no_image">"Nepodarilo sa nájsť obrázok na uloženie, prosím skúste to znova."</string>
+<string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
 <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
 <string name="card_view_share_card">"Zdieľať kartu"</string>
@@ -235,11 +239,13 @@ Manapool bude tiež vymazaný."</string>
 <plurals name="life_counter_spoken_life">
 <item quantity="one">"%1$s má %2$d život."</item>
 <item quantity="few">"%1$s má %2$d životov."</item>
+<item quantity="many">"%1$s má %2$d životov."</item>
 <item quantity="other">"%1$s má %2$d životov."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
 <item quantity="one">"%1$s má %2$d poison žetón."</item>
 <item quantity="few">"%1$s má %2$d poison žetónov."</item>
+<item quantity="many">"%1$s má %2$d poison žetónov."</item>
 <item quantity="other">"%1$s má %2$d poison žetónov."</item>
 </plurals>
 <string name="life_counter_over_9000">"nad 9000"</string>
@@ -265,7 +271,10 @@ Manapool bude tiež vymazaný."</string>
 <string name="dice_tails">"orol"</string>
 
 <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">"Vymazať všetko"</string>
+<string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
+
+<!-- Mana pool activity -->
+<string name="mana_pool_clear_all">"Vymazať všetko"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Pridať kartu"</string>
@@ -276,6 +285,8 @@ Manapool bude tiež vymazaný."</string>
 <string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
 <string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
 <string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
+<string name="trader_select_dialog_title">"Vyberte výmenu"</string>
+<string name="trader_delete_dialog_title">"Zmazať výmenu"</string>
 <string name="trader_edit_dialog_info">"Podrobnosti"</string>
 <string name="trader_toast_no_trades">"Nemáte žiadne uložené výmeny."</string>
 <string name="trader_toast_save_error">"Výmenu sa nepodarilo uložiť; prosím skúste to znova."</string>
@@ -377,6 +388,8 @@ Veľa šťastia a zabavte sa!"</string>
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Všeobecné nastavenia"</string>
+<string name="pref_screen_search">"Vyhľadávanie"</string>
+<string name="pref_screen_trade_wishlist">"Výmena a Zoznam želaní"</string>
 <string name="pref_cat_default_fragment">"Predvolená stránka"</string>
 <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
 <string name="pref_cat_updates">"Aktualizácie databázy"</string>
@@ -491,7 +504,11 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_unnamed_deck">"Nepomenovaný balík"</string>
 
 <!-- "Added Slovak Translation" was added -->
-    <string name="card_view_send_to">"Zdieľať obrázok cez"</string>
+<string name="main_whats_new_text">"- Pridaný Pauper formát&lt;br&gt;
+- Pridané vyhľadávanie podľa vodoznaku&lt;br&gt;
+- Pridaná kontrola legality balíka&lt;br&gt;
+- Prídaná TCGPlayer.com Market Price"</string>
+<string name="card_view_send_to">"Zdieľať obrázok cez"</string>
 <string name="card_view_translated_dialog_title">"Preložený názov karty"</string>
 <string name="pref_Portuguese">"Portugalský (Brazílsky)"</string>
 <string name="pref_Chinese">"Čínsky zjednodušený"</string>
@@ -536,6 +553,7 @@ Veľa šťastia a zabavte sa!"</string>
 <plurals name="decklist_cards_count">
 <item quantity="one">"%1$d karta"</item>
 <item quantity="few">"%1$d karty"</item>
+<item quantity="many">"%1$d kariet"</item>
 <item quantity="other">"%1$d kariet"</item>
 </plurals>
 
@@ -570,4 +588,12 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"Nie je legálny"</string>
+<string name="pref_persist_search_title">"Uložiť nastavenia vyhľadávania"</string>
+<string name="pref_persist_search_summary">"Uložiť nastavenia vyhľadávania po opustení vyhľadávacej stránky"</string>
+<string name="life_counter_commander_experience_counter">"Experience žetóny"</string>
+<string name="trader_new">"Nová výmena"</string>
+<string name="trader_save_as">"Uložiť výmenu ako"</string>
+<string name="pref_hide_online_title">"Skryť iba-online karty"</string>
+<string name="pref_hide_online_summary">"Nezobrazovať iba-online karty kdekoľvek"</string>
+<string name="decklist_new">"Nový balík"</string>
 </resources>
