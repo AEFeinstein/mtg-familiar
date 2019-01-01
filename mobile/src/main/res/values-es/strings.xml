@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Buscar nombre"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
@@ -29,6 +30,8 @@
 <string name="not_deleted">"no se ha borrrado"</string>
 <string name="no_network">"Red no disponible."</string>
 <string name="filter_title_view_card">"Ver carta"</string>
+<string name="tutor_cards_notice">"Funciona con TutorCards"</string>
+<string name="tutor_cards_fail">"Imposible conectar con TutorCards"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PÁGINAS"</string>
@@ -72,7 +75,6 @@ Así que, ¿cómo vas hoy de generosidad?
 <string name="main_import_success">"Datos importados correctamente"</string>
 <string name="main_import_fail">"Importación fallida. Por favor pon MTGFamiliarBackup.zip en el directorio raíz de tu tarjeta SD."</string>
 <string name="main_about">"Acerca de"</string>
-
 <string name="main_about_text">"Esta aplicación es mi regalo a la comunidad de MTG.&lt;br&gt;
 &lt;br&gt;
 Por favor, envía tus preguntas, comentarios, problemas y peticiones a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
@@ -106,8 +108,6 @@ Magic the Gathering y las cartas de Magic the Gathering son ™ &amp; © Wizards
 &lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; usado bajo la Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; usado bajo la Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-&lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; usado bajo la Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; usado bajo la Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -174,7 +174,8 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="search_Rare">"Rara"</string>
 <string name="search_Mythic">"Mítica"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_mana_cost">"Coste de Maná"</string>
+<string name="search_type">"Tipo"</string>
+<string name="search_mana_cost">"Coste de Maná"</string>
 <string name="search_collectors_number">"Número de coleccionista"</string>
 <string name="search_color_title">"Color"</string>
 <string name="search_color_identity_title">"​Identidad de ​color"</string>
@@ -205,7 +206,8 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_no_pictures_folder">"No se puede encontrar la carpeta de imágenes. Prueba otra vez."</string>
 <string name="card_view_unable_to_create_dir">"No se puede crear el directorio para guardar imagénes. Prueba otra vez."</string>
 <string name="card_view_unable_to_create_file">"No se puede crear el archivo de imagen. Prueba otra vez."</string>
-    <string name="card_view_unable_to_save_image">"No se pudo guardar la imagen. Prueba otra vez."</string>
+<string name="card_view_no_image">"No se puede encontrar la imagen para guardar. Prueba otra vez."</string>
+<string name="card_view_unable_to_save_image">"No se pudo guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_save_failure">"Ha habido un error al guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_image_saved">"Imagen guardada en"</string>
 <string name="card_view_share_card">"Compartir la carta"</string>
@@ -257,7 +259,10 @@ La reserva de maná también será vaciada."</string>
 <string name="dice_tails">"cruz"</string>
 
 <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">"Borrar todo"</string>
+<string name="mana_pool_error_toast">"¡La reserva de maná falló al cargar!"</string>
+
+<!-- Mana pool activity -->
+<string name="mana_pool_clear_all">"Borrar todo"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Añadir carta"</string>
@@ -268,6 +273,8 @@ La reserva de maná también será vaciada."</string>
 <string name="trader_edit_dialog_reset_price">"Reiniciar precio"</string>
 <string name="trader_clear_dialog_title">"Limpiar intercambio"</string>
 <string name="trader_clear_dialog_text">"¿Seguro que quieres limpiar el intercambio actual?"</string>
+<string name="trader_select_dialog_title">"Seleccionar un intercambio"</string>
+<string name="trader_delete_dialog_title">"Borrar un intercambio"</string>
 <string name="trader_edit_dialog_info">"Información de carta"</string>
 <string name="trader_toast_no_trades">"No tienes ningún intercambio guardado."</string>
 <string name="trader_toast_save_error">"El intercambio no pudo ser guardado; por favor, prueba otra vez."</string>
@@ -330,6 +337,7 @@ La reserva de maná también será vaciada."</string>
 <string name="profile_update_dci">"Actualizar número DCI"</string>
 <string name="profile_remove_dci">"Eliminar número DCI"</string>
 
+<!-- Fuzzy -->
 <string name="profile_update_dci_dialog_title">"Introducir número DCI"</string>
 <string name="profile_invalid_dci">"Número DCI inválido."</string>
 <string name="profile_no_dci">"No has ingresado tu número DCI."</string>
@@ -360,9 +368,11 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 ¡Buena suerte, y pásalo bien!
 "</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC ="</string>
 <string name="mojhosto_random_creature">"Criatura aleatoria"</string>
 
+<!-- Fuzzy -->
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
 <string name="mojhosto_random_equipment">"Equipamiento aleatorio"</string>
 <string name="mojhosto_random_instants">"Tres instantáneos aleatorios"</string>
@@ -371,6 +381,8 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Ajustes generales"</string>
+<string name="pref_screen_search">"Búsqueda y resultados"</string>
+<string name="pref_screen_trade_wishlist">"Intercambios y lista de deseos"</string>
 <string name="pref_cat_default_fragment">"Página por defecto"</string>
 <string name="pref_default_fragment_mode_summary">"La primera cosa que ves cuando abres la aplicación"</string>
 <string name="pref_cat_updates">"Actualizaciones de la base de datos"</string>
@@ -486,7 +498,11 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_unnamed_deck">"Mazo sin nombre"</string>
 
 <!-- "Added Slovak Translation" was added -->
-    <string name="card_view_send_to">"Compartir imagen con"</string>
+<string name="main_whats_new_text">"- Añadido el formato Pauper.&lt;br&gt;
+- Añadida la búsqueda por marca de agua.&lt;br&gt;
+- Añadida comprobación de legalidad de mazos.&lt;br&gt;
+- Añadidos precios de mercado de TCGPlayer.com"</string>
+<string name="card_view_send_to">"Compartir imagen con"</string>
 <string name="card_view_translated_dialog_title">"Nombre de Carta Traducido"</string>
 <string name="pref_Portuguese">"Portugués (Brasil)"</string>
 <string name="pref_Chinese">"Chino simplificado"</string>
@@ -568,4 +584,12 @@ This is shown in the settings menu for what price to display in the wishlist. --
 <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
 Standard ....... Not Legal -->
 <string name="decklist_not_legal">"Ilegal"</string>
+<string name="pref_persist_search_title">"Guardar opciones de búsqueda"</string>
+<string name="pref_persist_search_summary">"Guardar opciones de búsqueda al salir de la búsqueda"</string>
+<string name="life_counter_commander_experience_counter">"Contadores de experiencia"</string>
+<string name="trader_new">"Nuevo intercambio"</string>
+<string name="trader_save_as">"Guardar intercambio como..."</string>
+<string name="pref_hide_online_title">"Ocultar cartas exclusivas de Online"</string>
+<string name="pref_hide_online_summary">"No mostrar cartas exclusivas de Online en ningún sitio"</string>
+<string name="decklist_new">"Nuevo mazo"</string>
 </resources>
