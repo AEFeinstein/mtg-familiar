@@ -1,3 +1,5 @@
+import com.github.spotbugs.SpotBugsTask
+
 /*
  * Copyright 2017 Adam Feinstein
  *
@@ -20,9 +22,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'pmd'
 apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
+apply plugin: 'com.github.spotbugs'
 
-check.dependsOn 'pmd', 'checkstyle', 'findbugs'
+check.dependsOn 'pmd', 'checkstyle', 'spotbugs' // TODO replace with ;'spotbugsMain' eventually
 
 repositories {
     mavenCentral()
@@ -41,23 +43,53 @@ task checkstyle(type: Checkstyle, group: "verification") {
     classpath = files()
 }
 
-task findbugs(type: FindBugs, dependsOn: "assembleDebug", group: "verification") {
+spotbugs {
+    toolVersion = '3.1.9'
     ignoreFailures = true
     effort = "max"
     reportLevel = "high"
     excludeFilter = new File("$configDir/findbugs/findbugs.filter.xml")
-    classes = files("${project.rootDir}/mobile/build/intermediates/classes")
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
+}
+
+//sourceSets {
+//    // we define `main` sourceSet here, so SpotBugs Gradle Plugin generates `spotbugsMain` task
+//    main {
+//        java.srcDirs = ['src/main/java']
+//    }
+//}
+//
+//tasks.withType(SpotBugsTask) {
+//    dependsOn 'assembleDebug'
+//    group = "verification"
+//
+//    // configure automatically generated tasks
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//        html {
+//            destination file("$project.buildDir/reports/spotbugs.html")
+//        }
+//    }
+//}
+
+/* TODO This works, but doesnt check squat. The above tasks (sorceSents, withType) should be used
+ * instead, pending the outcome of https://github.com/spotbugs/spotbugs-gradle-plugin/issues/90
+ */
+task spotbugs(type: SpotBugsTask, dependsOn: 'assembleDebug', group: 'verification') {
+//    classes = files("${project.rootDir}/mobile/build/intermediates/javac")
+//    source 'src'
+//    include '**/*.java'
+//    exclude '**/gen/**'
+//    classpath = files()
+
+    // configure automatically generated tasks
     reports {
         xml.enabled = false
         html.enabled = true
         html {
-            destination "$project.buildDir/reports/findbugs.html"
+            destination "$project.buildDir/reports/spotbugs.html"
         }
     }
-    classpath = files()
 }
 
 task pmd(type: Pmd, group: "verification") {
@@ -66,7 +98,7 @@ task pmd(type: Pmd, group: "verification") {
     reports {
         html.enabled = true
         html {
-            destination "$project.buildDir/reports/pmd.html"
+            destination file("$project.buildDir/reports/pmd.html")
         }
     }
     source 'src'
@@ -114,8 +146,8 @@ android {
 
 dependencies {
 
-    findbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0'
-    findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0'
+    spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
     androidTestImplementation 'com.android.support:support-annotations:28.0.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
