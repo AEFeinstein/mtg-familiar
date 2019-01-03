@@ -24,7 +24,7 @@ apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'com.github.spotbugs'
 
-check.dependsOn 'pmd', 'checkstyle', 'spotbugs' // TODO replace with ;'spotbugsMain' eventually
+check.dependsOn 'pmdMain', 'checkstyleMain', 'spotbugsMain'
 
 repositories {
     mavenCentral()
@@ -33,14 +33,16 @@ repositories {
 
 def configDir = "${project.rootDir}/config"
 
-task checkstyle(type: Checkstyle, group: "verification") {
-    ignoreFailures = true
-    configFile file("$configDir/checkstyle/checkstyle.xml")
-    configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-    classpath = files()
+sourceSets {
+    // we define `main` sourceSet here, so SpotBugs Gradle Plugin generates `spotbugsMain` task
+    main {
+        java.srcDirs = ['src/main/java']
+    }
+}
+
+task compileJava(overwrite: true) {
+    dependsOn 'compileDebugJavaWithJavac'
+    group = "build"
 }
 
 spotbugs {
@@ -51,48 +53,33 @@ spotbugs {
     excludeFilter = new File("$configDir/findbugs/findbugs.filter.xml")
 }
 
-//sourceSets {
-//    // we define `main` sourceSet here, so SpotBugs Gradle Plugin generates `spotbugsMain` task
-//    main {
-//        java.srcDirs = ['src/main/java']
-//    }
-//}
-//
-//tasks.withType(SpotBugsTask) {
-//    dependsOn 'assembleDebug'
-//    group = "verification"
-//
-//    // configure automatically generated tasks
-//    reports {
-//        xml.enabled = false
-//        html.enabled = true
-//        html {
-//            destination file("$project.buildDir/reports/spotbugs.html")
-//        }
-//    }
-//}
+tasks.withType(SpotBugsTask) {
+    dependsOn 'assembleDebug'
+    group = "verification"
 
-/* TODO This works, but doesnt check squat. The above tasks (sorceSents, withType) should be used
- * instead, pending the outcome of https://github.com/spotbugs/spotbugs-gradle-plugin/issues/90
- */
-task spotbugs(type: SpotBugsTask, dependsOn: 'assembleDebug', group: 'verification') {
-//    classes = files("${project.rootDir}/mobile/build/intermediates/javac")
-//    source 'src'
-//    include '**/*.java'
-//    exclude '**/gen/**'
-//    classpath = files()
+    classes = files("${project.rootDir}/mobile/build/intermediates/javac")
 
     // configure automatically generated tasks
     reports {
         xml.enabled = false
         html.enabled = true
         html {
-            destination "$project.buildDir/reports/spotbugs.html"
+            destination file("$project.buildDir/reports/spotbugs.html")
         }
     }
 }
 
-task pmd(type: Pmd, group: "verification") {
+task checkstyleMain(type: Checkstyle, group: "verification", overwrite: true) {
+    ignoreFailures = true
+    configFile file("$configDir/checkstyle/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files()
+}
+
+task pmdMain(type: Pmd, group: "verification", overwrite: true) {
     ignoreFailures = true
     ruleSetFiles = files("$configDir/pmd/pmd.xml")
     reports {
