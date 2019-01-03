@@ -556,8 +556,8 @@ Viel Glück und viel Spaß!
 <string name="result_list_Add_to_wishlist">"Zur Wunschliste hinzufügen"</string>
 <string name="pref_deck_price_summary">"Im Deckbauer zu verwendender TCGPlayer-Preis"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d-Karte"</item>
-<item quantity="other">"%1$d-Karten"</item>
+<item quantity="one">"%1$d/%2$d-Karte"</item>
+<item quantity="other">"%1$d/%2$d-Karten"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

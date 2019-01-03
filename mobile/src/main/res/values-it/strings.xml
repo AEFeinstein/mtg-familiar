@@ -530,8 +530,8 @@ Buona fortuna, e divertiti!
 <string name="result_list_Add_to_wishlist">"Aggiungi a Carte Desiderate"</string>
 <string name="pref_deck_price_summary">"Prezzo TCGPlayer da usare nel deck builder"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d carta"</item>
-<item quantity="other">"%1$d carte"</item>
+<item quantity="one">"%1$d/%2$d carta"</item>
+<item quantity="other">"%1$d/%2$d carte"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

@@ -543,10 +543,10 @@ Liście Życzeń"</string>
 <string name="result_list_Add_to_wishlist">"Dodaj do Listy Życzeń"</string>
 <string name="pref_deck_price_summary">"Wybierz który zakres cen TCGplayera będzie używany przy budowaniu talii"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d karta"</item>
-<item quantity="few">"%1$d karty"</item>
-<item quantity="other">"%1$d karty"</item>
-<item quantity="many">"%1$d karty"</item>
+<item quantity="one">"%1$d/%2$d karta"</item>
+<item quantity="few">"%1$d/%2$d karty"</item>
+<item quantity="other">"%1$d/%2$d karty"</item>
+<item quantity="many">"%1$d/%2$d karty"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

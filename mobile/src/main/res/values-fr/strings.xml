@@ -532,8 +532,8 @@ Bonne chance, et bon jeu!
 <string name="result_list_Add_to_wishlist">"Ajouter à la liste de voeux"</string>
 <string name="pref_deck_price_summary">"Prix de TCGPlayer à utiliser dans le concepteur de deck"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d carte"</item>
-<item quantity="other">"%1$d cartes"</item>
+<item quantity="one">"%1$d/%2$d carte"</item>
+<item quantity="other">"%1$d/%2$d cartes"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

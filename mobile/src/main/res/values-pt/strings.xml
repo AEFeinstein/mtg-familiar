@@ -533,8 +533,8 @@ Boa sorte, e divirtam-se!
 <string name="result_list_Add_to_wishlist">"Adicionar à lista de desejos"</string>
 <string name="pref_deck_price_summary">"Preço do TCGPlayer para usar no Construtor de Decks"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d carta"</item>
-<item quantity="other">"%1$d cartas"</item>
+<item quantity="one">"%1$d/%2$d carta"</item>
+<item quantity="other">"%1$d/%2$d cartas"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

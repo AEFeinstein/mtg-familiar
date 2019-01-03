@@ -552,9 +552,9 @@ Good luck, and have fun!
     <string name="decklist_save_as">"Save Deck As"</string>
     <string name="decklist_saved_toast">"Deck %1$s saved!"</string>
     <plurals name="decklist_cards_count">
-        <item quantity="zero">"%1$d cards"</item>
-        <item quantity="one">"%1$d card"</item>
-        <item quantity="other">"%1$d cards"</item>
+        <item quantity="zero">"%1$d/%2$d cards"</item>
+        <item quantity="one">"%1$d/%2$d card"</item>
+        <item quantity="other">"%1$d/%2$d cards"</item>
     </plurals>
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>

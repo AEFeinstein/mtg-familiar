@@ -539,8 +539,8 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="result_list_Add_to_wishlist">"Añadir a la lista de deseos"</string>
 <string name="pref_deck_price_summary">"Precio de TCGPlayer para usar en el constructor de mazos"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d carta"</item>
-<item quantity="other">"%1$d cartas"</item>
+<item quantity="one">"%1$d/%2$d carta"</item>
+<item quantity="other">"%1$d/%2$d cartas"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

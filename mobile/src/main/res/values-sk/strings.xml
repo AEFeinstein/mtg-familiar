@@ -541,10 +541,10 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="result_list_Add_to_wishlist">"Pridať do zoznamu želaní"</string>
 <string name="pref_deck_price_summary">"Používať ceny kariet z TCGPlayer v deck builderi"</string>
 <plurals name="decklist_cards_count">
-<item quantity="one">"%1$d karta"</item>
-<item quantity="few">"%1$d karty"</item>
-<item quantity="many">"%1$d kariet"</item>
-<item quantity="other">"%1$d kariet"</item>
+<item quantity="one">"%1$d/%2$d karta"</item>
+<item quantity="few">"%1$d/%2$d karty"</item>
+<item quantity="many">"%1$d/%2$d kariet"</item>
+<item quantity="other">"%1$d/%2$d kariet"</item>
 </plurals>
 
 <!-- This is shown when a price download fails for an unknown reason -->

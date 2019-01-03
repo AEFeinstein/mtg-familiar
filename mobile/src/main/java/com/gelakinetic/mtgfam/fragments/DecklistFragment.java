@@ -224,7 +224,7 @@ public class DecklistFragment extends FamiliarListFragment {
         mDeckName = myFragmentView.findViewById(R.id.decklistName);
         mDeckName.setText(R.string.decklist_unnamed_deck);
         mDeckCards = myFragmentView.findViewById(R.id.decklistCards);
-        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
+        updateDeckCounts(true);
 
         mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
@@ -242,6 +242,23 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         return myFragmentView;
+    }
+
+    /**
+     * Update the card count next to the deck name
+     *
+     * @param shouldZero True if the value should be zero, false if it should check the actual deck
+     */
+    private void updateDeckCounts(boolean shouldZero) {
+        if (shouldZero) {
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0, 0));
+        } else {
+            int counts[] = new int[2];
+            ((DecklistDataAdapter) getCardDataAdapter(0)).getDeckCardCounts(counts);
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                    counts[0] + counts[1],
+                    counts[0], counts[1]));
+        }
     }
 
     /**
@@ -359,9 +376,7 @@ public class DecklistFragment extends FamiliarListFragment {
             uncheckFoilCheckbox();
 
             /* Update the number of cards listed */
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+            updateDeckCounts(false);
 
             /* Redraw the new decklist with the new card */
             setHeaderValues();
@@ -385,9 +400,7 @@ public class DecklistFragment extends FamiliarListFragment {
         mCurrentDeck = PreferenceAdapter.getLastLoadedDecklist(getContext());
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
-        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+        updateDeckCounts(false);
     }
 
     /**
@@ -483,9 +496,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* Fill extra card data from the database, for displaying full card info */
                 Collections.sort(mCompressedDecklist, mDecklistChain);
                 setHeaderValues();
-                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                updateDeckCounts(false);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
             }
@@ -637,7 +648,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     R.string.decklist_unnamed_deck
             );
         }
-        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
+        updateDeckCounts(true);
         synchronized (mCompressedDecklist) {
             DecklistHelpers.WriteCompressedDecklist(
                     getActivity(),
@@ -881,7 +892,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 Collections.sort(mCompressedDecklist, mDecklistChain);
 
                 // Reset the headers
-                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+                updateDeckCounts(false);
                 clearHeaders();
                 Collections.sort(mCompressedDecklist, mDecklistChain);
                 setHeaderValues();
@@ -895,15 +906,13 @@ public class DecklistFragment extends FamiliarListFragment {
         protected void onItemRemoved() {
             synchronized (mCompressedDecklist) {
                 // Reset the headers
-                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+                updateDeckCounts(false);
                 clearHeaders();
                 Collections.sort(mCompressedDecklist, mDecklistChain);
                 setHeaderValues();
 
                 // Update the number of cards listed
-                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                updateDeckCounts(false);
 
                 // Call super to notify the adapter, etc
                 super.onItemRemoved();
@@ -1031,6 +1040,23 @@ public class DecklistFragment extends FamiliarListFragment {
             }
             return totalCards;
 
+        }
+
+        /**
+         * Return the number of cards in the deck and sideboard separately
+         *
+         * @param counts The counts, [0] is the dec and [1] is the sideboard. Must be at least length two
+         */
+        void getDeckCardCounts(int counts[]) {
+            counts[0] = 0;
+            counts[1] = 0;
+            for (int i = 0; i < getItemCount(); i++) {
+                if (getItem(i).mIsSideboard) {
+                    counts[1] += getItem(i).getTotalNumber();
+                } else {
+                    counts[0] += getItem(i).getTotalNumber();
+                }
+            }
         }
     }
 }
