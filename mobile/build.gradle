@@ -58,6 +58,7 @@ tasks.withType(SpotBugsTask) {
     group = "verification"
 
     classes = files("${project.rootDir}/mobile/build/intermediates/javac")
+    ignoreFailures = true
 
     // configure automatically generated tasks
     reports {
