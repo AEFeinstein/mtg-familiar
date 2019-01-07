@@ -19,6 +19,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gelakinetic.mtgfam">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,7 +40,9 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:theme="@style/Theme.light">
+        android:theme="@style/Theme.light"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
         <activity
             android:name=".FamiliarActivity"
             android:label="@string/app_name"

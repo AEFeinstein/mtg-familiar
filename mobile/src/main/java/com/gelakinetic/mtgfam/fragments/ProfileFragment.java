@@ -177,7 +177,7 @@ public class ProfileFragment extends FamiliarFragment {
         mDCINumberTextView.setVisibility(View.VISIBLE);
         mBarcodeTextView.setVisibility(View.VISIBLE);
 
-        mNoDCINumberTextView.setText(Html.fromHtml("<a href=\"http://www.wizards.com/Magic/PlaneswalkerPoints/" + mDCINumber + "\">" + getString(R.string.profile_planeswalker_points) + "</a>"));
+        mNoDCINumberTextView.setText(Html.fromHtml("<a href=\"https://www.wizards.com/Magic/PlaneswalkerPoints/" + mDCINumber + "\">" + getString(R.string.profile_planeswalker_points) + "</a>"));
         mNoDCINumberTextView.setClickable(true);
         mNoDCINumberTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }

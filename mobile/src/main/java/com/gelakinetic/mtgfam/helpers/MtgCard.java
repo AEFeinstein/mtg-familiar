@@ -714,7 +714,7 @@ public class MtgCard extends Card {
      */
     private URL getMtgiPicUrl(String cardLanguage, Context ctx) throws MalformedURLException {
 
-        final String mtgiExtras = "http://magiccards.info/extras/";
+        final String mtgiExtras = "https://magiccards.info/extras/";
         String picURL;
         if (mType.toLowerCase().contains(ctx.getString(R.string.search_Ongoing).toLowerCase()) ||
                 /* extra space to not confuse with planeswalker */
@@ -746,12 +746,12 @@ public class MtgCard extends Card {
                             .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                     break;
                 default:
-                    picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" +
+                    picURL = "https://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" +
                             mNumber + ".jpg";
                     break;
             }
         } else {
-            picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" + mNumber + ".jpg";
+            picURL = "https://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" + mNumber + ".jpg";
         }
         return new URL(picURL.toLowerCase(Locale.ENGLISH));
     }
@@ -773,6 +773,7 @@ public class MtgCard extends Card {
      * @throws MalformedURLException If we screw up building the URL
      */
     private URL getGathererImageUrl() throws MalformedURLException {
+        // Gatherer doesn't use HTTPS as of 1/6/2019
         return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
     }
 

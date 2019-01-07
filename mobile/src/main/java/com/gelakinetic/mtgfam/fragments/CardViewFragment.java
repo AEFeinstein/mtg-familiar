@@ -1291,6 +1291,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             frag.mRulingsArrayList = new ArrayList<>();
             try {
+                // Gatherer doesn't use HTTPS as of 1/6/2019
                 url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
                 is = FamiliarActivity.getHttpInputStream(url, null, frag.getContext());
                 if (is == null) {
