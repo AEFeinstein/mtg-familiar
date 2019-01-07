@@ -95,11 +95,6 @@
             </intent-filter>
         </activity>
 
-        <!-- register the service for price look ups -->
-        <service
-            android:name=".helpers.PriceFetchService"
-            android:exported="false" />
-
         <!-- Register the service for database updates -->
         <service android:name=".helpers.updaters.DbUpdaterService" />
 
