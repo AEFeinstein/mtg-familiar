@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/android:api-26-alpha
+      - image: circleci/android:api-28
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -43,11 +43,11 @@ jobs:
             - build-
 
       # Update our dependencies
-      - run: ./gradlew androidDependencies
+      - run: ./gradlew androidDependencies --no-daemon --max-workers 2
           
       # run tests! Subsequent builds should be faster due to caching the build cache
-      - run: ./gradlew :mobile:check
-      - run: ./gradlew assembleDebug
+      - run: ./gradlew :mobile:check --no-daemon --max-workers 2
+      - run: ./gradlew assembleDebug --no-daemon --max-workers 2
       
       # Save our gradle stuff, depenencies, gradle distribution
       - save_cache:
