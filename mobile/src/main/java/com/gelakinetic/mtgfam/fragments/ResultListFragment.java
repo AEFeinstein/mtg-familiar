@@ -432,7 +432,7 @@ public class ResultListFragment extends FamiliarFragment {
             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
             CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();
             startNewFragment(cardViewPagerFragment, args);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);
         }
     }
