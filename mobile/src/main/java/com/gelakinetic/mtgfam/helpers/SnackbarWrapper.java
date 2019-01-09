@@ -68,7 +68,9 @@ public class SnackbarWrapper {
      */
     public static void makeAndShowText(Activity activity, @StringRes int resId, int duration)
             throws Resources.NotFoundException {
-        makeAndShowText(activity, activity.getString(resId), duration);
+        if (activity != null) {
+            makeAndShowText(activity, activity.getString(resId), duration);
+        }
     }
 
     /**
