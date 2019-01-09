@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -274,7 +275,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
                             getParentTradeFragment().startNewFragment(cvpFrag, args);
-                        } catch (SQLiteException | FamiliarDbException e) {
+                        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
                             getParentTradeFragment().handleFamiliarDbException(false);
                         } finally {
                             if (null != cursor) {
@@ -338,7 +339,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
                             cards.moveToNext();
                         }
-                    } catch (SQLiteException | FamiliarDbException e) {
+                    } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
                         /* Don't show the dialog, but pop a toast */
                         getParentTradeFragment().handleFamiliarDbException(true);
                         return DontShowDialog();

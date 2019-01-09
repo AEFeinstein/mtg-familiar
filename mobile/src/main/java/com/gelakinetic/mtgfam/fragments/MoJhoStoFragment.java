@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -230,7 +231,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
             startNewFragment(cvpFrag, args);
-        } catch (SQLiteException | FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
         } finally {
             if (null != permanents) {
@@ -283,7 +284,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             /* add a fragment */
             ResultListFragment rlFrag = new ResultListFragment();
             startNewFragment(rlFrag, args);
-        } catch (SQLiteException | FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
         } finally {
             if (null != spells) {

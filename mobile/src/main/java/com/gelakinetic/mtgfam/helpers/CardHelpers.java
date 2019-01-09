@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -189,7 +190,7 @@ public class CardHelpers {
 
                 cards.moveToNext();
             }
-        } catch (SQLiteException | FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             return null;
         } finally {
             if (null != cards) {

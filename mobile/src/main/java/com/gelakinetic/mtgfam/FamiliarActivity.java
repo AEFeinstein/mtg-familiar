@@ -32,6 +32,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.PorterDuff;
@@ -940,7 +941,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             this.finish();
                             shouldSelectItem = false;
                         }
-                    } catch (SQLiteException | FamiliarDbException e) {
+                    } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
                         e.printStackTrace();
                     } finally {
                         if (null != cursor) {

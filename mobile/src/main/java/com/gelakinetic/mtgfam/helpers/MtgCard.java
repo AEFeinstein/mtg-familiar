@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
@@ -203,7 +204,7 @@ public class MtgCard extends Card {
             if (!CardDbAdapter.canBeFoil(this.mExpansion, database)) {
                 this.mIsFoil = false;
             }
-        } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
+        } catch (SQLiteException | FamiliarDbException | NumberFormatException | CursorIndexOutOfBoundsException fde) {
             throw new InstantiationException();
         } finally {
             if (null != cardCursor) {
@@ -350,7 +351,7 @@ public class MtgCard extends Card {
                 }
                 cardCursor.moveToNext();
             }
-        } catch (SQLiteException | FamiliarDbException fde) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException fde) {
             throw new FamiliarDbException(fde);
         } finally {
             if (null != cardCursor) {

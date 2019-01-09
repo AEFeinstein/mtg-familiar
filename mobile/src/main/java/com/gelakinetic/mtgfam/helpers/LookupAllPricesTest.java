@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
@@ -100,7 +101,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
                 // Try to lookup all prices
                 lookupCard(activity.mMarketPriceStore, allCards, activity);
             }
-        } catch (SQLiteException | FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
 
