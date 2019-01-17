@@ -59,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 100;
+    public static final int DATABASE_VERSION = 101;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
