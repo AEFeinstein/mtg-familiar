@@ -21,8 +21,6 @@ package com.gelakinetic.mtgfam.helpers.database;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.DatabaseUtils;
@@ -34,14 +32,9 @@ import android.provider.BaseColumns;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.Language;
-import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +43,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.zip.GZIPInputStream;
 
 /**
  * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
@@ -59,10 +51,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 101;
-
-    /* The name of the database */
-    public static final String DATABASE_NAME = "data";
+    public static final int DATABASE_VERSION = 102;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -355,72 +344,6 @@ public class CardDbAdapter {
         } catch (SQLiteException e) {
             throw new FamiliarDbException(e);
         }
-    }
-
-    /**
-     * Copy the internally packaged gzipped database to where Android can access it.
-     *
-     * @param context The Context to get the packaged gzipped database from
-     */
-    public static void copyDB(Context context) {
-
-        try {
-
-            String dbPath = context.getFilesDir().getPath();
-            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
-
-            File folder = new File(dbPath);
-            if (!folder.exists()) {
-                if (!folder.mkdir()) {
-                    /* Couldn't make the folder, so exit */
-                    return;
-                }
-            }
-            File dbFile = new File(folder, DATABASE_NAME);
-            if (dbFile.exists()) {
-                if (!dbFile.delete()) {
-                    /* Couldn't delete the old database, so exit */
-                    return;
-                }
-                PreferenceAdapter.setDatabaseVersion(context, -1);
-            }
-            if (!dbFile.exists()) {
-
-                GZIPInputStream gis = new GZIPInputStream(context.getResources()
-                        .openRawResource(R.raw.datagz));
-                FileOutputStream fos = new FileOutputStream(dbFile);
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = gis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
-
-                PreferenceAdapter.setDatabaseVersion(context, CardDbAdapter.DATABASE_VERSION);
-
-                /* Close the streams */
-                fos.flush();
-                fos.close();
-                gis.close();
-            }
-        } catch (NotFoundException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Helper function to check if the database is up to date.
-     *
-     * @param context The context used to get the database file
-     * @return true if the database does not exist, is too small, or has a lower version than
-     * DATABASE_VERSION
-     */
-    public static boolean isDbOutOfDate(Context context) {
-        String dbPath = context.getFilesDir().getPath();
-        dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
-        File f = new File(dbPath, DATABASE_NAME);
-        int dbVersion = PreferenceAdapter.getDatabaseVersion(context);
-        return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
     }
 
     /**
