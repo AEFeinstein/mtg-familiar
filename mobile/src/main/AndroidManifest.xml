@@ -72,6 +72,22 @@
                     android:host="gatherer.wizards.com"
                     android:pathPrefix="/Pages/Card"
                     android:scheme="https" />
+                <data
+                    android:host="gatherer.wizards.com"
+                    android:pathPrefix="/Pages/Search/Default.aspx?name="
+                    android:scheme="http" />
+                <data
+                    android:host="gatherer.wizards.com"
+                    android:pathPrefix="/Pages/Search/Default.aspx?name="
+                    android:scheme="https" />
+                <data
+                    android:host="www.wizards.com"
+                    android:pathPrefix="/magic/autocard.asp?name="
+                    android:scheme="http" />
+                <data
+                    android:host="www.wizards.com"
+                    android:pathPrefix="/magic/autocard.asp?name="
+                    android:scheme="https" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />

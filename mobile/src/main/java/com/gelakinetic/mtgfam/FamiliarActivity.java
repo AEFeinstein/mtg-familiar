@@ -847,7 +847,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
 
                 boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
-                if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
+                if (data.getAuthority().toLowerCase().contains(".wizards")) {
                     Cursor cursor = null;
                     FamiliarDbHandle fromUrlHandle = new FamiliarDbHandle();
                     try {
@@ -865,7 +865,11 @@ public class FamiliarActivity extends AppCompatActivity {
                                 throw new Exception("Not Found");
                             }
                         } else if ((queryParam = data.getQueryParameter("name")) != null) {
-                            cursor = CardDbAdapter.fetchCardByName(queryParam,
+                            String cardName = queryParam;
+                            if (queryParam.matches("\\+\\[.+\\]")) { // See #458
+                                cardName = queryParam.substring(2, queryParam.length() - 1);
+                            }
+                            cursor = CardDbAdapter.fetchCardByName(cardName,
                                     Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, false, false, database);
                             if (cursor.getCount() != 0) {
                                 isDeepLink = true;
