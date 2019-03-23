@@ -842,12 +842,14 @@ public class DecklistFragment extends FamiliarListFragment {
 
         private final TextView mCardNumberOf;
         private final TextView mCardCost;
+        private final TextView mCardPrice;
 
         DecklistViewHolder(ViewGroup view) {
             super(view, R.layout.decklist_card_row, DecklistFragment.this.getCardDataAdapter(0), DecklistFragment.this);
 
             mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
             mCardCost = itemView.findViewById(R.id.decklistRowCost);
+            mCardPrice = itemView.findViewById(R.id.decklistRowPrice);
 
         }
 
@@ -965,6 +967,20 @@ public class DecklistFragment extends FamiliarListFragment {
                 holder.setCardName(info.getName());
                 holder.mCardCost.setText(ImageGetterHelper
                         .formatStringWithGlyphs(info.getManaCost(), imageGetter));
+
+                if (shouldShowPrice()) {
+                    // Add up the prices for the card
+                    double totalPrice = 0;
+                    for (CardHelpers.IndividualSetInfo isi : info.mInfo) {
+                        totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price * isi.mNumberOf;
+                    }
+
+                    holder.mCardPrice.setVisibility(View.VISIBLE);
+                    holder.mCardPrice.setText(String.format(Locale.US, PRICE_FORMAT, totalPrice));
+                } else {
+                    holder.mCardPrice.setVisibility(View.GONE);
+                }
+
                 holder.setIsSwipeable(true);
             } else {
                 /* The header uses the same layout, just set it up */
