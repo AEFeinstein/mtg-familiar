@@ -150,7 +150,11 @@ public class MarketPriceInfo {
         }
 
         /* Set the URL from the details */
-        mProductUrl = url + "?partner=MTGFAMILIA";
+        String affiliateCode = "MTGFAMILIA";
+        mProductUrl = url + "?partner=" + affiliateCode +
+                "&utm_campaign=affiliate" +
+                "&utm_medium=" + affiliateCode +
+                "&utm_source=" + affiliateCode;
     }
 
     public class PriceAndFoil {
