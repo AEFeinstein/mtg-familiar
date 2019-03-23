@@ -174,10 +174,13 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @return The percentage of scroll progress
      */
     private float calculateProgression() {
-        float positionTopView = mWebView.getTop();
-        float contentHeight = mWebView.getContentHeight();
-        float currentScrollPosition = mWebView.getScrollY();
-        return (currentScrollPosition - positionTopView) / contentHeight;
+        if (null != mWebView) {
+            float positionTopView = mWebView.getTop();
+            float contentHeight = mWebView.getContentHeight();
+            float currentScrollPosition = mWebView.getScrollY();
+            return (currentScrollPosition - positionTopView) / contentHeight;
+        }
+        return 0;
     }
 
     /**
@@ -187,6 +190,7 @@ public class HtmlDocFragment extends FamiliarFragment {
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(JudgesCornerFragment.PAGE_NAME, mName);
         try {
             outState.putFloat(SCROLL_PCT, calculateProgression());
         } catch (NullPointerException e) {
@@ -256,16 +260,18 @@ public class HtmlDocFragment extends FamiliarFragment {
     public void doSearch(String searchTerm) {
         mLastSearchTerm = searchTerm;
 
-        if (!findAllCalled) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                mWebView.findAllAsync(searchTerm);
+        if (null != mWebView) {
+            if (!findAllCalled) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    mWebView.findAllAsync(searchTerm);
+                } else {
+                    mWebView.findAll(searchTerm);
+                }
+                findAllCalled = true;
+                getFamiliarActivity().invalidateOptionsMenu();
             } else {
-                mWebView.findAll(searchTerm);
+                mWebView.findNext(true);
             }
-            findAllCalled = true;
-            getFamiliarActivity().invalidateOptionsMenu();
-        } else {
-            mWebView.findNext(true);
         }
     }
 
@@ -274,8 +280,10 @@ public class HtmlDocFragment extends FamiliarFragment {
      */
     public void cancelSearch() {
         findAllCalled = false;
-        mWebView.clearMatches();
-        getFamiliarActivity().invalidateOptionsMenu();
+        if (null != mWebView) {
+            mWebView.clearMatches();
+            getFamiliarActivity().invalidateOptionsMenu();
+        }
     }
 
     /**
@@ -301,19 +309,21 @@ public class HtmlDocFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.arrow_down:
-                mWebView.findNext(true);
-                return true;
-            case R.id.arrow_up:
-                mWebView.findNext(false);
-                return true;
-            case R.id.cancel:
-                mWebView.clearMatches();
-                findAllCalled = false;
-                getFamiliarActivity().invalidateOptionsMenu();
-            default:
-                return super.onOptionsItemSelected(item);
+        if (null != mWebView) {
+            switch (item.getItemId()) {
+                case R.id.arrow_down:
+                    mWebView.findNext(true);
+                    return true;
+                case R.id.arrow_up:
+                    mWebView.findNext(false);
+                    return true;
+                case R.id.cancel:
+                    mWebView.clearMatches();
+                    findAllCalled = false;
+                    getFamiliarActivity().invalidateOptionsMenu();
+                    return true;
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -124,7 +124,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
     }
 
     public FamiliarFragment getCurrentFragment() {
-        return ((JudgeFragmentPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getItem(mViewPager.getCurrentItem());
+        return ((JudgeFragmentPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getCurrentFragment();
     }
 
     /**
@@ -201,6 +201,8 @@ public class JudgesCornerFragment extends FamiliarFragment {
      */
     class JudgeFragmentPagerAdapter extends FragmentPagerAdapter {
 
+        private FamiliarFragment mCurrentFragment;
+
         JudgeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -221,6 +223,13 @@ public class JudgesCornerFragment extends FamiliarFragment {
         }
 
         /**
+         * @return Returns the current fragment being displayed by this adapter
+         */
+        FamiliarFragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+
+        /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link PagerSlidingTabStrip}.
          * <p>
@@ -229,6 +238,23 @@ public class JudgesCornerFragment extends FamiliarFragment {
         @Override
         public CharSequence getPageTitle(int position) {
             return mTabs.get(position).getTitle();
+        }
+
+        /**
+         * Called to inform the adapter of which item is currently considered to be the "primary",
+         * that is the one show to the user as the current page.
+         * Also keeps track of the currently displayed fragment
+         *
+         * @param container The containing View from which the page will be removed.
+         * @param position  The page position that is now the primary.
+         * @param object    The same object that was returned by instantiateItem(View, int).
+         */
+        @Override
+        public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = (FamiliarFragment) object;
+            }
+            super.setPrimaryItem(container, position, object);
         }
     }
 
