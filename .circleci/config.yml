@@ -46,9 +46,9 @@ jobs:
       - run: ./gradlew androidDependencies
           
       # run tests! Subsequent builds should be faster due to caching the build cache
-      #- run:
-      #    name: Run Tests
-      #    command: ./gradlew :mobile:check :mobile:lint :mobile:test
+      - run:
+          name: Run Tests
+          command: ./gradlew :mobile:check :mobile:lint :mobile:test
           
       # Build the release APK
       - run:
@@ -74,6 +74,6 @@ jobs:
           destination: apks
       
       # Also store the reports so we can track our progress on cleaning up the project
-      #- store_test_results:
-      #    path: mobile/build/reports
-      #    destination: reports
+      - store_test_results:
+          path: mobile/build/reports
+          destination: reports
