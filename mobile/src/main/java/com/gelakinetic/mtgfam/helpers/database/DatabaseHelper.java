@@ -20,13 +20,25 @@
 package com.gelakinetic.mtgfam.helpers.database;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
 
 /**
  * This class extends SQLiteOpenHelper in order to copy in the zipped database, and create tables
  */
 class DatabaseHelper extends SQLiteOpenHelper {
+
+    /* The name of the database */
+    private static final String DATABASE_NAME = "data";
 
     /**
      * Create a helper object to create, open, and/or manage a database. The database is not actually created or opened
@@ -35,10 +47,10 @@ class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @param context A context to copy the database with
      */
-    public DatabaseHelper(Context context) {
-        super(context, CardDbAdapter.DATABASE_NAME, null, CardDbAdapter.DATABASE_VERSION);
-        if (CardDbAdapter.isDbOutOfDate(context)) {
-            CardDbAdapter.copyDB(context);
+    DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, CardDbAdapter.DATABASE_VERSION);
+        if (isDbOutOfDate(context)) {
+            copyDB(context);
         }
     }
 
@@ -65,5 +77,80 @@ class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /* necessary to override, not doing anything */
+    }
+
+    /**
+     * @return A File pointing to the database, used to inflate the internal database and check if
+     * it needs updating. The database file is guaranteed to be closed
+     */
+    private File getDatabaseFile() {
+        // Get the database file
+        // https://stackoverflow.com/a/50630708/659726
+        SQLiteDatabase database = this.getReadableDatabase();
+        String filePath = database.getPath();
+        database.close();
+        this.close();
+        return new File(filePath);
+    }
+
+    /**
+     * Copy the internally packaged gzipped database to where Android can access it.
+     *
+     * @param context The Context to get the packaged gzipped database from
+     */
+    private void copyDB(Context context) {
+
+        try {
+            // Get the database file
+            File dbFile = getDatabaseFile();
+
+            // If the database exists, delete all the files in the database folder, including
+            // any write-ahead-logs (thanks Android 9)
+            if (dbFile.exists()) {
+                for (File file : dbFile.getParentFile().listFiles()) {
+                    if (!file.delete()) {
+                        /* Couldn't delete the old database, so exit */
+                        return;
+                    }
+                }
+                PreferenceAdapter.setDatabaseVersion(context, -1);
+            }
+
+            // If the database doesn't exist anymore, inflate the internal database
+            if (!dbFile.exists()) {
+
+                GZIPInputStream gis = new GZIPInputStream(context.getResources()
+                        .openRawResource(R.raw.datagz));
+                FileOutputStream fos = new FileOutputStream(dbFile);
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = gis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+
+                PreferenceAdapter.setDatabaseVersion(context, CardDbAdapter.DATABASE_VERSION);
+
+                /* Close the streams */
+                fos.flush();
+                fos.close();
+                gis.close();
+            }
+        } catch (Resources.NotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Helper function to check if the database is up to date.
+     *
+     * @param context The context used to get the database file
+     * @return true if the database does not exist, is too small, or has a lower version than
+     * DATABASE_VERSION
+     */
+    private boolean isDbOutOfDate(Context context) {
+        File f = getDatabaseFile();
+        int dbVersion = PreferenceAdapter.getDatabaseVersion(context);
+        return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
     }
 }
