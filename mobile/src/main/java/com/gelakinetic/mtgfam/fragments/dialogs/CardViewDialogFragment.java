@@ -167,35 +167,39 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 final String priceFormat = "$%1$,.2f";
                 MarketPriceInfo price = getParentCardViewFragment().mPriceInfo;
-                if (price.hasNormalPrice()) {
-                    ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.LOW).price));
-                    ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MID).price));
-                    ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.HIGH).price));
-                    ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MARKET).price));
+                if (null != price) {
+                    if (price.hasNormalPrice()) {
+                        ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.LOW).price));
+                        ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MID).price));
+                        ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.HIGH).price));
+                        ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MARKET).price));
+                    } else {
+                        v.findViewById(R.id.normal_prices).setVisibility(View.GONE);
+                        v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
+                    }
+
+                    if (price.hasFoilPrice()) {
+                        ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.LOW).price));
+                        ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MID).price));
+                        ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.HIGH).price));
+                        ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MARKET).price));
+                    } else {
+                        v.findViewById(R.id.foil_prices).setVisibility(View.GONE);
+                        v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
+                    }
+
+                    TextView priceLink = v.findViewById(R.id.pricelink);
+                    priceLink.setMovementMethod(LinkMovementMethod.getInstance());
+                    priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
+                            getString(R.string.card_view_price_dialog_link) + "</a>"));
+
+                    MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
+                    adb.customView(v, false);
+                    adb.title(R.string.card_view_price_dialog_title);
+                    return adb.build();
                 } else {
-                    v.findViewById(R.id.normal_prices).setVisibility(View.GONE);
-                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
+                    return DontShowDialog();
                 }
-
-                if (price.hasFoilPrice()) {
-                    ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.LOW).price));
-                    ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MID).price));
-                    ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.HIGH).price));
-                    ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MARKET).price));
-                } else {
-                    v.findViewById(R.id.foil_prices).setVisibility(View.GONE);
-                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
-                }
-
-                TextView priceLink = v.findViewById(R.id.pricelink);
-                priceLink.setMovementMethod(LinkMovementMethod.getInstance());
-                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
-                        getString(R.string.card_view_price_dialog_link) + "</a>"));
-
-                MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
-                adb.customView(v, false);
-                adb.title(R.string.card_view_price_dialog_title);
-                return adb.build();
             }
             case CHANGE_SET: {
                 final String[] aSets = getParentCardViewFragment().mPrintings.toArray(new String[getParentCardViewFragment().mPrintings.size()]);

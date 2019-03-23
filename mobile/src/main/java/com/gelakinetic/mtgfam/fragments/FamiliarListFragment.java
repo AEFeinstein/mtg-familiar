@@ -553,6 +553,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * Show an error snackbar when a file is saved with an empty name
      */
     public void showErrorSnackbarNoName() {
-        SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.life_counter_edit_name_dialog_title, SnackbarWrapper.LENGTH_LONG);
+        SnackbarWrapper.makeAndShowText(this.getActivity(),
+                getString(R.string.judges_corner_error) + " " + getString(R.string.life_counter_edit_name_dialog_title),
+                SnackbarWrapper.LENGTH_LONG);
     }
 }

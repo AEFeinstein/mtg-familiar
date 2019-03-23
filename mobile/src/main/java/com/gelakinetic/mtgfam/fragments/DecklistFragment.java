@@ -817,7 +817,7 @@ public class DecklistFragment extends FamiliarListFragment {
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 if (cdi.header == null) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        if (isi.mPrice != null) {
+                        if (null != isi.mPrice) {
                             totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price * isi.mNumberOf;
                         }
                     }
@@ -976,7 +976,9 @@ public class DecklistFragment extends FamiliarListFragment {
                     // Add up the prices for the card
                     double totalPrice = 0;
                     for (CardHelpers.IndividualSetInfo isi : info.mInfo) {
-                        totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price * isi.mNumberOf;
+                        if (null != isi.mPrice) {
+                            totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()).price * isi.mNumberOf;
+                        }
                     }
 
                     holder.mCardPrice.setVisibility(View.VISIBLE);

@@ -302,7 +302,9 @@ public class WishlistHelpers {
 
             for (IndividualSetInfo isi : mInfo) {
                 try {
-                    sumWish += (isi.mPrice.getPrice(isi.mIsFoil, priceSetting).price * isi.mNumberOf);
+                    if (null != isi.mPrice) {
+                        sumWish += (isi.mPrice.getPrice(isi.mIsFoil, priceSetting).price * isi.mNumberOf);
+                    }
                 } catch (NullPointerException e) {
                     /* eat it, no price is loaded */
                 }
