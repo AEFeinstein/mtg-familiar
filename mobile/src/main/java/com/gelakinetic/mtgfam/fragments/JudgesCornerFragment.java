@@ -34,6 +34,7 @@ import com.gelakinetic.mtgfam.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This fragment nests a few other fragments which are useful for judges
@@ -42,6 +43,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
     /* Key and constants for displaying the MTR and IPG */
     public static final String HTML_DOC = "html";
+    public static final String PAGE_NAME = "page_name";
     public static final String MTR_LOCAL_FILE = "MTR.html";
     public static final String IPG_LOCAL_FILE = "IPG.html";
     public static final String JAR_LOCAL_FILE = "JAR.html";
@@ -55,6 +57,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * List of {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem} which represent this sample's tabs.
      */
     private final List<PagerItem> mTabs = new ArrayList<>();
+    private ViewPager mViewPager = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * Here we can pick out the {@link View}s we need to configure from the content view.
      * <p>
      * We set the {@link ViewPager}'s adapter to be an instance of
-     * {@link SampleFragmentPagerAdapter}. The {@link PagerSlidingTabStrip} is then given the
+     * {@link JudgeFragmentPagerAdapter}. The {@link PagerSlidingTabStrip} is then given the
      * {@link ViewPager} so that it can populate itself.
      *
      * @param view View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
@@ -95,13 +98,33 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         /* A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above. */
-        ViewPager viewPager = view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new SampleFragmentPagerAdapter(getChildFragmentManager()));
-        viewPager.setOffscreenPageLimit(2);
+        mViewPager = view.findViewById(R.id.viewpager);
+        mViewPager.setAdapter(new JudgeFragmentPagerAdapter(getChildFragmentManager()));
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                // Don't care
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                // Don't care
+            }
+        });
 
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = view.findViewById(R.id.sliding_tabs);
-        tabs.setViewPager(viewPager);
+        tabs.setViewPager(mViewPager);
+    }
+
+    public FamiliarFragment getCurrentFragment() {
+        return ((JudgeFragmentPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getItem(mViewPager.getCurrentItem());
     }
 
     /**
@@ -110,42 +133,53 @@ public class JudgesCornerFragment extends FamiliarFragment {
     class PagerItem {
         private final CharSequence mTitle;
         private final String mFragmentType;
+        FamiliarFragment mFragment;
 
         PagerItem(CharSequence title, String fragmentType) {
             mTitle = title;
             mFragmentType = fragmentType;
+            mFragment = null;
         }
 
         /**
          * @return A new {@link Fragment} to be displayed by a {@link ViewPager}
          */
-        Fragment createFragment() {
+        FamiliarFragment createFragment() {
 
-            if (mFragmentType.equals(TAG_MTR)) {
-                Bundle MtrBundle = new Bundle();
-                MtrBundle.putString(HTML_DOC, MTR_LOCAL_FILE);
-                FamiliarFragment frag = new HtmlDocFragment();
-                frag.setArguments(MtrBundle);
-                return frag;
+            if (null == mFragment) {
+                switch (mFragmentType) {
+                    case TAG_MTR: {
+                        Bundle MtrBundle = new Bundle();
+                        MtrBundle.putString(HTML_DOC, MTR_LOCAL_FILE);
+                        MtrBundle.putString(PAGE_NAME, getString(R.string.judges_corner_MTR));
+                        mFragment = new HtmlDocFragment();
+                        mFragment.setArguments(MtrBundle);
+                        break;
+                    }
+                    case TAG_IPG: {
+                        Bundle IpgBundle = new Bundle();
+                        IpgBundle.putString(HTML_DOC, IPG_LOCAL_FILE);
+                        IpgBundle.putString(PAGE_NAME, getString(R.string.judges_corner_IPG));
+                        mFragment = new HtmlDocFragment();
+                        mFragment.setArguments(IpgBundle);
+                        break;
+                    }
+                    case TAG_JAR: {
+                        Bundle JarBundle = new Bundle();
+                        JarBundle.putString(HTML_DOC, JAR_LOCAL_FILE);
+                        JarBundle.putString(PAGE_NAME, getString(R.string.judges_corner_JAR));
+                        mFragment = new HtmlDocFragment();
+                        mFragment.setArguments(JarBundle);
+                        break;
+                    }
+                    default:
+                    case TAG_COUNTER: {
+                        mFragment = new DeckCounterFragment();
+                        break;
+                    }
+                }
             }
-            if (mFragmentType.equals(TAG_IPG)) {
-                Bundle IpgBundle = new Bundle();
-                IpgBundle.putString(HTML_DOC, IPG_LOCAL_FILE);
-                FamiliarFragment frag = new HtmlDocFragment();
-                frag.setArguments(IpgBundle);
-                return frag;
-            }
-            if (mFragmentType.equals(TAG_JAR)) {
-                Bundle JarBundle = new Bundle();
-                JarBundle.putString(HTML_DOC, JAR_LOCAL_FILE);
-                FamiliarFragment frag = new HtmlDocFragment();
-                frag.setArguments(JarBundle);
-                return frag;
-            }
-            if (mFragmentType.equals(TAG_COUNTER)) {
-                return new DeckCounterFragment();
-            }
-            return new DeckCounterFragment();
+            return mFragment;
         }
 
         /**
@@ -165,9 +199,9 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * The important section of this class is the {@link #getPageTitle(int)} method which controls
      * what is displayed in the {@link PagerSlidingTabStrip}.
      */
-    class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
+    class JudgeFragmentPagerAdapter extends FragmentPagerAdapter {
 
-        SampleFragmentPagerAdapter(FragmentManager fm) {
+        JudgeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -177,7 +211,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#createFragment()}.
          */
         @Override
-        public Fragment getItem(int i) {
+        public FamiliarFragment getItem(int i) {
             return mTabs.get(i).createFragment();
         }
 
@@ -196,5 +230,25 @@ public class JudgesCornerFragment extends FamiliarFragment {
         public CharSequence getPageTitle(int position) {
             return mTabs.get(position).getTitle();
         }
+    }
+
+    /**
+     * Ask the current fragment whether it can intercept the search key
+     *
+     * @return true if it can, false otherwise
+     */
+    @Override
+    boolean canInterceptSearchKey() {
+        return ((JudgeFragmentPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getItem(mViewPager.getCurrentItem()).canInterceptSearchKey();
+    }
+
+    /**
+     * Intercept the search key, if the current fragment supports it
+     *
+     * @return true if the button was handled, false otherwise
+     */
+    @Override
+    public boolean onInterceptSearchKey() {
+        return ((JudgeFragmentPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getItem(mViewPager.getCurrentItem()).onInterceptSearchKey();
     }
 }

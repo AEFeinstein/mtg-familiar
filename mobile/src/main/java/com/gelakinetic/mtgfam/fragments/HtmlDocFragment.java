@@ -26,13 +26,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.HtmlDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -43,12 +48,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
  * This is a simple fragment which displays an HTML document as specified in the bundle of arguments passed to it.
  * Primarily it is used to display the MTR and IPG
  */
 public class HtmlDocFragment extends FamiliarFragment {
+
+    private String mName;
+    private String mLastSearchTerm;
+    private WebView mWebView;
+    private boolean findAllCalled = false;
 
     /**
      * Get the document from the bundle. Spin a progress bar while it loads, then hide it when it's done. Set up
@@ -68,10 +79,10 @@ public class HtmlDocFragment extends FamiliarFragment {
         /* Inflate the view, pull out UI elements */
         View view = inflater.inflate(R.layout.html_frag, container, false);
         assert view != null;
-        final WebView webView = view.findViewById(R.id.webview);
+        mWebView = view.findViewById(R.id.webview);
         final ProgressBar progressBar = view.findViewById(R.id.progress_bar);
 
-        webView.setWebViewClient(new WebViewClient() {
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 /* The progress bar will spin until the web view is loaded */
@@ -83,28 +94,29 @@ public class HtmlDocFragment extends FamiliarFragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Uri uri = Uri.parse(url);
-                if (uri.getAuthority().toLowerCase().equals("gatherer.wizards.com")) {
+                if (Objects.requireNonNull(uri.getAuthority()).toLowerCase().equals("gatherer.wizards.com")) {
                     /* Display card links internally */
                     startCardViewFrag(uri.getQueryParameter("name"));
                 } else {
                     /* Otherwise launch links externally */
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    getContext().startActivity(i);
+                    Objects.requireNonNull(getContext()).startActivity(i);
                 }
                 return true;
             }
         });
 
         /* Enable zoom */
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
+        mWebView.getSettings().setBuiltInZoomControls(true);
+        mWebView.getSettings().setDisplayZoomControls(false);
+
+        assert getArguments() != null;
+        mName = getArguments().getString(JudgesCornerFragment.PAGE_NAME);
 
         /* Get the document from the bundle, load it */
-        File file = new File(getActivity().getFilesDir(), getArguments().getString(JudgesCornerFragment.HTML_DOC));
+        File file = new File(Objects.requireNonNull(getActivity()).getFilesDir(), getArguments().getString(JudgesCornerFragment.HTML_DOC));
         StringBuilder html = new StringBuilder();
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 html.append(line);
@@ -112,19 +124,12 @@ public class HtmlDocFragment extends FamiliarFragment {
         } catch (IOException e) {
             html.setLength(0);
             html.append(getString(R.string.judges_corner_error));
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                /* eat it */
-            }
         }
-        webView.loadDataWithBaseURL(null, html.toString(), "text/html", "utf-8", null);
+        /* eat it */
+        mWebView.loadDataWithBaseURL(null, html.toString(), "text/html", "utf-8", null);
 
         /* Set up the button to jump to the top of the document */
-        view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(v -> webView.scrollTo(0, 0));
+        view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(v -> mWebView.scrollTo(0, 0));
 
         return view;
     }
@@ -150,6 +155,120 @@ public class HtmlDocFragment extends FamiliarFragment {
             /* Eh */
         } finally {
             DatabaseManager.closeDatabase(getActivity(), handle);
+        }
+    }
+
+    @Override
+    boolean canInterceptSearchKey() {
+        return true;
+    }
+
+    @Override
+    public boolean onInterceptSearchKey() {
+        showDialog();
+        return true;
+    }
+
+    /**
+     * Remove any showing dialogs, and show the requested one
+     */
+    private void showDialog() throws IllegalStateException {
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+        currently showing dialog, so make our own transaction and take care of that here. */
+
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        if (!this.isVisible()) {
+            return;
+        }
+
+        removeDialog(getFragmentManager());
+
+        /* Create and show the dialog. */
+        HtmlDialogFragment newFragment = new HtmlDialogFragment();
+        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+    }
+
+    /**
+     * @return Get the name of the webpage being displayed
+     */
+    public String getName() {
+        return mName;
+    }
+
+    /**
+     * @return Get the last string that was searched on this webpage
+     */
+    public String getLastSearchTerm() {
+        return mLastSearchTerm;
+    }
+
+    /**
+     * Search the displayed webpage for the given term. If a search isn't in progress, start it.
+     * Otherwise, find the next term
+     *
+     * @param searchTerm The term to search for, saved for later searches
+     */
+    public void doSearch(String searchTerm) {
+        mLastSearchTerm = searchTerm;
+
+        if (!findAllCalled) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                mWebView.findAllAsync(searchTerm);
+            } else {
+                mWebView.findAll(searchTerm);
+            }
+            findAllCalled = true;
+            getFamiliarActivity().invalidateOptionsMenu();
+        } else {
+            mWebView.findNext(true);
+        }
+    }
+
+    /**
+     * Cancel the current search for a term
+     */
+    public void cancelSearch() {
+        findAllCalled = false;
+        mWebView.clearMatches();
+        getFamiliarActivity().invalidateOptionsMenu();
+    }
+
+    /**
+     * Create the menu and show the search controls if search is active
+     *
+     * @param menu     The options menu in which you place your items.
+     * @param inflater The inflater to use to inflate the menu
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (findAllCalled) {
+            inflater.inflate(R.menu.htmldoc_menu, menu);
+        }
+    }
+
+    /**
+     * Called when a search action button is clicked, either search up, down, or cancel
+     *
+     * @param item The item that was tapped
+     * @return true if the button was handled, false otherwise
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* Handle item selection */
+        switch (item.getItemId()) {
+            case R.id.arrow_down:
+                mWebView.findNext(true);
+                return true;
+            case R.id.arrow_up:
+                mWebView.findNext(false);
+                return true;
+            case R.id.cancel:
+                mWebView.clearMatches();
+                findAllCalled = false;
+                getFamiliarActivity().invalidateOptionsMenu();
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
