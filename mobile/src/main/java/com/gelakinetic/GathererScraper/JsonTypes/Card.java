@@ -190,8 +190,17 @@ public class Card implements Comparable<Card> {
 
         @Override
         public boolean equals(Object arg0) {
-            return (arg0 instanceof ForeignPrinting) &&
-                    (this.mMultiverseId == ((ForeignPrinting) arg0).mMultiverseId);
+            if (arg0 instanceof ForeignPrinting) {
+                ForeignPrinting o = (ForeignPrinting) arg0;
+                if (null == this.getLanguageCode() && null == o.getLanguageCode()) {
+                    return true;
+                } else if (null == this.getLanguageCode() || (null == o.getLanguageCode())) {
+                    return false;
+                } else {
+                    return this.getLanguageCode().equals(o.mLanguageCode);
+                }
+            }
+            return false;
         }
 
         @Override

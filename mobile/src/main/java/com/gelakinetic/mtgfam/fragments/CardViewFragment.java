@@ -378,6 +378,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         Cursor cCardById = null;
         Cursor cCardByName = null;
+        Cursor cAllCardsWithName = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
@@ -532,14 +533,20 @@ public class CardViewFragment extends FamiliarFragment {
             Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting(mCard.getName(), Language.English, mCard.getMultiverseId());
             mCard.getForeignPrintings().add(englishPrinting);
 
-            // Add all the others
-            for (String lang[] : allLanguageKeys) {
-                Card.ForeignPrinting fp = new Card.ForeignPrinting(
-                        cCardById.getString(cCardById.getColumnIndex(lang[1])), lang[0],
-                        cCardById.getInt(cCardById.getColumnIndex(lang[2])));
-                if (fp.getName() != null && !fp.getName().isEmpty()) {
-                    mCard.getForeignPrintings().add(fp);
+            // For each card with this name in the database
+            cAllCardsWithName = CardDbAdapter.fetchCardByName(mCard.getName(), CardDbAdapter.ALL_CARD_DATA_KEYS, false, false, false, database);
+            cAllCardsWithName.moveToFirst();
+            while (!cAllCardsWithName.isAfterLast()) {
+                // For each foreign printing for that card
+                for (String lang[] : allLanguageKeys) {
+                    Card.ForeignPrinting fp = new Card.ForeignPrinting(
+                            cAllCardsWithName.getString(cAllCardsWithName.getColumnIndex(lang[1])), lang[0],
+                            cAllCardsWithName.getInt(cAllCardsWithName.getColumnIndex(lang[2])));
+                    if (fp.getName() != null && !fp.getName().isEmpty() && !mCard.getForeignPrintings().contains(fp)) {
+                        mCard.getForeignPrintings().add(fp);
+                    }
                 }
+                cAllCardsWithName.moveToNext();
             }
 
             mIsOnlineOnly = CardDbAdapter.isOnlineOnly(mCard.getExpansion(), database);
@@ -576,6 +583,9 @@ public class CardViewFragment extends FamiliarFragment {
             }
             if (null != cCardByName) {
                 cCardByName.close();
+            }
+            if (null != cAllCardsWithName) {
+                cAllCardsWithName.close();
             }
             DatabaseManager.closeDatabase(mActivity, handle);
         }
