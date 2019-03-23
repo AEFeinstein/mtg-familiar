@@ -548,4 +548,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param priceSetting The price setting to write to preferences
      */
     public abstract void setPriceSetting(MarketPriceInfo.PriceType priceSetting);
+
+    /**
+     * Show an error snackbar when a file is saved with an empty name
+     */
+    public void showErrorSnackbarNoName() {
+        SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.life_counter_edit_name_dialog_title, SnackbarWrapper.LENGTH_LONG);
+    }
 }

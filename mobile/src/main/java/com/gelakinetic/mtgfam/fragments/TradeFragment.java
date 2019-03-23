@@ -82,6 +82,7 @@ public class TradeFragment extends FamiliarListFragment {
     public String mCurrentTrade = AUTOSAVE_NAME;
 
     private int mOrderAddedIdx = 0;
+    private TextView mTradeNameView;
 
     /**
      * Initialize the view and set up the button actions.
@@ -117,7 +118,7 @@ public class TradeFragment extends FamiliarListFragment {
                         new int[]{R.id.tradeListLeft, R.id.tradeListRight},
                         new CardDataAdapter[]{listAdapterLeft, listAdapterRight},
                         new int[]{R.id.priceTextLeft, R.id.priceTextRight},
-                        new int[]{R.id.priceDividerLeft, R.id.priceDividerRight}, R.menu.action_mode_menu,
+                        new int[]{R.id.trade_price_divider_left, R.id.trade_price_divider_right}, R.menu.action_mode_menu,
                         null);
             }
         }
@@ -128,6 +129,8 @@ public class TradeFragment extends FamiliarListFragment {
 
         myFragmentView.findViewById(R.id.addCardRight).setOnClickListener(
                 v -> addCardToTrade(RIGHT));
+
+        mTradeNameView = myFragmentView.findViewById(R.id.trade_name);
 
         return myFragmentView;
     }
@@ -449,12 +452,22 @@ public class TradeFragment extends FamiliarListFragment {
         super.onResume();
 
         // Get the last loaded trade
-        mCurrentTrade = PreferenceAdapter.getLastLoadedTrade(getContext());
+        setTradeName(PreferenceAdapter.getLastLoadedTrade(getContext()));
         if (mCurrentTrade.isEmpty()) {
             // If it's empty, use autosave instead
-            mCurrentTrade = AUTOSAVE_NAME;
+            setTradeName(AUTOSAVE_NAME);
         }
         loadTrade(mCurrentTrade + TRADE_EXTENSION);
+    }
+
+    /**
+     * Set the current trade name and display it
+     *
+     * @param tradeName the name to set
+     */
+    public void setTradeName(String tradeName) {
+        mCurrentTrade = tradeName;
+        mTradeNameView.setText(tradeName);
     }
 
     /**
@@ -466,7 +479,7 @@ public class TradeFragment extends FamiliarListFragment {
         super.onPause();
         // If for some reason there is no trade name, use autosave
         if (mCurrentTrade.isEmpty()) {
-            mCurrentTrade = AUTOSAVE_NAME;
+            setTradeName(AUTOSAVE_NAME);
         }
         // Save the current name and trade
         PreferenceAdapter.setLastLoadedTrade(getContext(), mCurrentTrade);
@@ -606,7 +619,7 @@ public class TradeFragment extends FamiliarListFragment {
     public void clearTrade(boolean preserveName) {
         /* Clear the arrays and tell everything to update */
         if (!preserveName) {
-            mCurrentTrade = "";
+            setTradeName(AUTOSAVE_NAME);
         }
         synchronized (mListRight) {
             mListRight.clear();

@@ -80,7 +80,7 @@ public class DecklistFragment extends FamiliarListFragment {
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
-    public String mCurrentDeck = "";
+    public String mCurrentDeck = AUTOSAVE_NAME;
     public static final String DECK_EXTENSION = ".deck";
 
     private static final String FRAGMENT_TAG = "decklist";

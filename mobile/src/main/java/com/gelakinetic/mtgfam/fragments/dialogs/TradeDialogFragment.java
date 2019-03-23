@@ -461,12 +461,14 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog1, which) -> {
                             if (nameInput.getText() == null) {
+                                getParentTradeFragment().showErrorSnackbarNoName();
                                 return;
                             }
                             String tradeName = nameInput.getText().toString();
 
                             /* Don't bother saving if there is no name */
                             if (tradeName.length() == 0) {
+                                getParentTradeFragment().showErrorSnackbarNoName();
                                 return;
                             }
 
@@ -477,7 +479,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             getParentTradeFragment().clearTrade(false);
 
                             // Create the new trade
-                            getParentTradeFragment().mCurrentTrade = tradeName;
+                            getParentTradeFragment().setTradeName(tradeName);
                             getParentTradeFragment().saveTrade(tradeName + TradeFragment.TRADE_EXTENSION);
                         })
                         .negativeText(R.string.dialog_cancel)
@@ -501,17 +503,19 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog1, which) -> {
                             if (nameInput.getText() == null) {
+                                getParentTradeFragment().showErrorSnackbarNoName();
                                 return;
                             }
                             String tradeName = nameInput.getText().toString();
 
                             /* Don't bother saving if there is no name */
-                            if (tradeName.length() == 0 || tradeName.equals("")) {
+                            if (tradeName.length() == 0) {
+                                getParentTradeFragment().showErrorSnackbarNoName();
                                 return;
                             }
 
                             getParentTradeFragment().saveTrade(tradeName + TradeFragment.TRADE_EXTENSION);
-                            getParentTradeFragment().mCurrentTrade = tradeName;
+                            getParentTradeFragment().setTradeName(tradeName);
                         })
                         .negativeText(R.string.dialog_cancel)
                         .build();
@@ -537,7 +541,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             getParentTradeFragment().saveTrade(getParentTradeFragment().mCurrentTrade + TradeFragment.TRADE_EXTENSION);
                             /* Then load the trade, set the current trade name */
                             getParentTradeFragment().loadTrade(tradeNames[position] + TradeFragment.TRADE_EXTENSION);
-                            getParentTradeFragment().mCurrentTrade = tradeNames[position];
+                            getParentTradeFragment().setTradeName(tradeNames[position]);
 
                             /* Alert things to update */
                             getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();

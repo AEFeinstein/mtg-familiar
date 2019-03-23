@@ -118,11 +118,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog1, which) -> {
                             if (nameInput.getText() == null) {
+                                getParentDecklistFragment().showErrorSnackbarNoName();
                                 return;
                             }
                             String deckName = nameInput.getText().toString();
                             /* Don't save if there is not a name */
                             if (deckName.length() == 0) {
+                                getParentDecklistFragment().showErrorSnackbarNoName();
                                 return;
                             }
                             // If the name is valid enough, save the current deck, then make the new one
@@ -158,11 +160,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .onPositive((dialog1, which) -> {
 
                             if (nameInput.getText() == null) {
+                                getParentDecklistFragment().showErrorSnackbarNoName();
                                 return;
                             }
                             String deckName = nameInput.getText().toString();
                             /* Don't save if there is not a name */
                             if (deckName.length() == 0) {
+                                getParentDecklistFragment().showErrorSnackbarNoName();
                                 return;
                             }
                             getParentDecklistFragment().mCurrentDeck = deckName;

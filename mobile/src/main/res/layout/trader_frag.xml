@@ -26,9 +26,112 @@
 
     <include layout="@layout/list_add_card" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="?attr/colorPrimary_attr" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/addCardLeft"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/trader_add_card"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="?attr/color_drawer_divider_item" />
+
+        <Button
+            android:id="@+id/addCardRight"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/trader_add_card"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="?attr/colorPrimary_attr" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/priceTextLeft"
+            style="@style/text.medium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/default_price" />
+
+        <View
+            android:id="@+id/trade_price_divider_left"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="?attr/color_drawer_divider_item" />
+
+        <TextView
+            android:id="@+id/trade_name"
+            style="@style/text.medium"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:text="Trade Name" />
+
+        <View
+            android:id="@+id/trade_price_divider_right"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="?attr/color_drawer_divider_item" />
+
+        <TextView
+            android:id="@+id/priceTextRight"
+            style="@style/text.medium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/default_price" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="?attr/colorPrimary_attr" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:orientation="horizontal">
@@ -38,40 +141,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorPrimary_attr" />
-
-            <Button
-                android:id="@+id/addCardLeft"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="@string/trader_add_card"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorPrimary_attr" />
-
-            <TextView
-                android:id="@+id/priceTextLeft"
-                style="@style/text.medium"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/default_price" />
-
-            <View
-                android:id="@+id/priceDividerLeft"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/color_drawer_divider_item" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tradeListLeft"
@@ -84,9 +153,8 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/divider"
             android:layout_width="1dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:background="?attr/color_drawer_divider_item" />
@@ -96,40 +164,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorPrimary_attr" />
-
-            <Button
-                android:id="@+id/addCardRight"
-                style="?android:attr/buttonBarButtonStyle"
-
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="@string/trader_add_card"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorPrimary_attr" />
-
-            <TextView
-                android:id="@+id/priceTextRight"
-                style="@style/text.medium"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/default_price" />
-
-            <View
-                android:id="@+id/priceDividerRight"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/color_drawer_divider_item" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tradeListRight"
