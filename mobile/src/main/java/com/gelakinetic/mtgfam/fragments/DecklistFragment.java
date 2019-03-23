@@ -605,6 +605,10 @@ public class DecklistFragment extends FamiliarListFragment {
                 mLegalityCheckerTask = new LegalityCheckerTask();
                 mLegalityCheckerTask.execute(this);
             }
+            case R.id.deck_menu_settings: {
+                showDialog(DecklistDialogFragment.DIALOG_PRICE_SETTING, null, false);
+                return true;
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }
@@ -829,7 +833,7 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected MarketPriceInfo.PriceType getPriceSetting() {
+    public MarketPriceInfo.PriceType getPriceSetting() {
         return PreferenceAdapter.getDeckPrice(getContext());
     }
 

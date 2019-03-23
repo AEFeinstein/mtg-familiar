@@ -58,4 +58,10 @@
         android:title="@string/card_view_legality"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/deck_menu_settings"
+        android:icon="@drawable/ic_menu_import_export"
+        android:title="@string/wishlist_set_pricing"
+        app:showAsAction="ifRoom" />
+
 </menu>

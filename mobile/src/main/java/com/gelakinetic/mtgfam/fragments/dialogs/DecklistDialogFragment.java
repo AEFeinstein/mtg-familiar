@@ -34,7 +34,9 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +55,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_CONFIRMATION = 5;
     public static final int DIALOG_GET_LEGALITY = 6;
     public static final int DIALOG_NEW_DECK = 7;
+    public static final int DIALOG_PRICE_SETTING = 8;
 
     public static final String NAME_KEY = "name";
     public static final String SIDE_KEY = "side";
@@ -271,6 +274,22 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(getActivity())
                         .customView(lv, false)
                         .title(R.string.decklist_legality)
+                        .build();
+            }
+            case DIALOG_PRICE_SETTING: {
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.pref_trade_price_title)
+                        .items(getResources().getStringArray(R.array.trade_option_entries))
+                        .itemsCallbackSingleChoice(getParentDecklistFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
+                            if (getParentDecklistFragment().getPriceSetting().ordinal() != which) {
+                                getParentDecklistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
+                                PreferenceAdapter.setDeckPrice(getContext(), getParentDecklistFragment().getPriceSetting());
+                                getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                getParentDecklistFragment().updateTotalPrices(0);
+                            }
+                            dialog.dismiss();
+                            return true;
+                        })
                         .build();
             }
             default: {
