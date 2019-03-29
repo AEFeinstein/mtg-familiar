@@ -11,7 +11,7 @@
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
 <string name="dialog_thanks">"Obrigado!"</string>
-<string name="dialog_thanks_anyway">"Obrigado mesmo assim!"</string>
+<!-- <string name="dialog_thanks_anyway">"Obrigado mesmo assim!"</string> -->
 <string name="dialog_enjoy">"Divirta-se!"</string>
 <string name="update_notification">"Procurando atualizações do banco de dados"</string>
 <string name="update_updating_set">"Adicionando %s"</string>
@@ -45,23 +45,23 @@
 <string name="main_decklist">"Construtor de Decks"</string>
 <string name="main_force_update_title">"Forçar Atualização"</string>
 <string name="main_settings_title">"Configurações"</string>
-<string name="main_donate_title">"Doar"</string>
+<!-- <string name="main_donate_title">"Doar"</string> -->
 
 <!-- This is a bit strange, "Doações" is more like donations, I'd recommend putting "Doe para os desenvolvedores" -->
-<string name="main_donate_dialog_title">"Doe para os Desenvolvedores"</string>
+<!-- <string name="main_donate_dialog_title">"Doe para os Desenvolvedores"</string> -->
 <string name="main_profile">"Perfil"</string>
-<string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? U$ 1.000? U$ 10.000? &lt;br&gt;
-&lt;br&gt;
-Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;
-&lt;br&gt;
-Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada dólar extra que recebemos. &lt;br&gt;
-&lt;br&gt;
-Temos um hábito de draftar para alimentar, OK? &lt;br&gt;
-&lt;br&gt;
-Você pode pressionar o botão abaixo para doar através do Paypal. U$ 1 já ajuda. U$ 5 ajuda ainda mais. E por aí vai. &lt;br&gt;
-&lt;br&gt;
-Então, quão generoso você está sentindo-se hoje?
-"</string>
+<!--<string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? U$ 1.000? U$ 10.000? &lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada dólar extra que recebemos. &lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Temos um hábito de draftar para alimentar, OK? &lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Você pode pressionar o botão abaixo para doar através do Paypal. U$ 1 já ajuda. U$ 5 ajuda ainda mais. E por aí vai. &lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Então, quão generoso você está sentindo-se hoje?-->
+<!--"</string>-->
 <string name="main_whats_new_title">"O Que Há de Novo"</string>
 <string name="main_whats_new_in_title">"O Que Há de Novo na Versão"</string>
 <string name="main_tts_warning_title">"TTS (Text-to-Speech)"</string>

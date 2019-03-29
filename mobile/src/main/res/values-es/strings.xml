@@ -11,7 +11,7 @@
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
 <string name="dialog_thanks">"¡Gracias!"</string>
-<string name="dialog_thanks_anyway">"¡Gracias igualmente!"</string>
+<!-- <string name="dialog_thanks_anyway">"¡Gracias igualmente!"</string> -->
 
 <!-- I'd like to know where this appears. Just to make sure it's OK. -->
 <string name="dialog_enjoy">"¡Genial!"</string>
@@ -47,21 +47,21 @@
 <string name="main_decklist">"Constructor de mazos"</string>
 <string name="main_force_update_title">"Forzar actualización"</string>
 <string name="main_settings_title">"Ajustes"</string>
-<string name="main_donate_title">"Donar"</string>
-<string name="main_donate_dialog_title">"Donar a los desarrolladores"</string>
+<!-- <string name="main_donate_title">"Donar"</string> -->
+<!-- <string name="main_donate_dialog_title">"Donar a los desarrolladores"</string> -->
 <string name="main_profile">"Perfil"</string>
-<string name="main_donate_text">"¿Cuánto pagarías por una excelente aplicación de Magic como esta? ¿1000€? ¿10000€?&lt;br&gt;
-&lt;br&gt;
-Bueno, si estás leyendo esto, entonces ya sabes que la estamos dando totalmente gratis.&lt;br&gt;
-&lt;br&gt;
-Escribir código es un duro trabajo y nosotros, los desarrolladores, apreciamos cualquier euro que recibamos.&lt;br&gt;
-&lt;br&gt;
-Tenemos una adicción a los drafts que mantener, ¿vale?&lt;br&gt;
-&lt;br&gt;
-Puedes pulsar el botón de abajo y donar a través de Paypal. 1€ está bien, 5€ están mejor. Ya me entiendes.&lt;br&gt;
-&lt;br&gt;
-Así que, ¿cómo vas hoy de generosidad?
-"</string>
+<!--<string name="main_donate_text">"¿Cuánto pagarías por una excelente aplicación de Magic como esta? ¿1000€? ¿10000€?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Bueno, si estás leyendo esto, entonces ya sabes que la estamos dando totalmente gratis.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Escribir código es un duro trabajo y nosotros, los desarrolladores, apreciamos cualquier euro que recibamos.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Tenemos una adicción a los drafts que mantener, ¿vale?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Puedes pulsar el botón de abajo y donar a través de Paypal. 1€ está bien, 5€ están mejor. Ya me entiendes.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Así que, ¿cómo vas hoy de generosidad?-->
+<!--"</string>-->
 <string name="main_whats_new_title">"Novedades"</string>
 <string name="main_whats_new_in_title">"Novedades de la versión"</string>
 <string name="main_tts_warning_title">"Síntesis de voz (Text-to-Speech)"</string>

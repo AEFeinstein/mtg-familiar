@@ -11,7 +11,7 @@
 <string name="dialog_both">"Oboje"</string>
 <string name="dialog_life">"Život"</string>
 <string name="dialog_thanks">"Vďaka!"</string>
-<string name="dialog_thanks_anyway">"Aj tak ďakujeme!"</string>
+<!-- <string name="dialog_thanks_anyway">"Aj tak ďakujeme!"</string> -->
 <string name="dialog_enjoy">"Užite si to!"</string>
 <string name="update_notification">"Vyhľadávajú sa aktualizácie databázy"</string>
 <string name="update_updating_set">"Pridávajú sa %s"</string>
@@ -47,20 +47,20 @@
 <string name="main_decklist">"Deck builder"</string>
 <string name="main_force_update_title">"Aktualizovať"</string>
 <string name="main_settings_title">"Nastavenia"</string>
-<string name="main_donate_title">"Podporte nás"</string>
-<string name="main_donate_dialog_title">"Podporte vývojárov"</string>
+<!-- <string name="main_donate_title">"Podporte nás"</string> -->
+<!-- <string name="main_donate_dialog_title">"Podporte vývojárov"</string> -->
 <string name="main_profile">"Profil"</string>
-<string name="main_donate_text">"Koľko by ste zaplatili za prémiovú MTG aplikáciu, ako je táto? 1 000 €? 10 000 €?&lt;br&gt;
-&lt;br&gt;
-Ak toto čítate, už dávno viete, že ju dávame úplne zadarmo!&lt;br&gt;
-&lt;br&gt;
-Kódovanie je však tvrdá práca a my vývojári sme vďační za každé extra euro raz za čas.&lt;br&gt;
-&lt;br&gt;
-Máme draftovacie návyky, ktoré musíme živiť, OK?&lt;br&gt;
-&lt;br&gt;
-Kliknutím na tlačidlo nižšie nás môžete podporiť prostredníctvom služby PayPal. 1 € je super. 5 € je ešte viac super! Chápete ako to funguje.&lt;br&gt;
-&lt;br&gt;
-Takže, ako štedro sa dnes cítite?"</string>
+<!--<string name="main_donate_text">"Koľko by ste zaplatili za prémiovú MTG aplikáciu, ako je táto? 1 000 €? 10 000 €?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Ak toto čítate, už dávno viete, že ju dávame úplne zadarmo!&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Kódovanie je však tvrdá práca a my vývojári sme vďační za každé extra euro raz za čas.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Máme draftovacie návyky, ktoré musíme živiť, OK?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Kliknutím na tlačidlo nižšie nás môžete podporiť prostredníctvom služby PayPal. 1 € je super. 5 € je ešte viac super! Chápete ako to funguje.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Takže, ako štedro sa dnes cítite?"</string>-->
 <string name="main_whats_new_title">"Čo je nové"</string>
 <string name="main_whats_new_in_title">"Čo je nové vo verzii"</string>
 <string name="main_tts_warning_title">"Prevod textu na reč"</string>

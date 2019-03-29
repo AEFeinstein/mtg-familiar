@@ -11,7 +11,7 @@
 <string name="dialog_both">"Wyczyść oba"</string>
 <string name="dialog_life">"Życie"</string>
 <string name="dialog_thanks">"Dzięki!"</string>
-<string name="dialog_thanks_anyway">"Tak czy inaczej, dzięki!"</string>
+<!-- <string name="dialog_thanks_anyway">"Tak czy inaczej, dzięki!"</string> -->
 <string name="dialog_enjoy">"Miłej zabawy!"</string>
 <string name="update_notification">"Sprawdzanie aktualizacji"</string>
 <string name="update_updating_set">"Dodawanie %s"</string>
@@ -45,21 +45,21 @@
 <string name="main_decklist">"Kreator talii"</string>
 <string name="main_force_update_title">"Wymuś aktualizację"</string>
 <string name="main_settings_title">"Ustawienia"</string>
-<string name="main_donate_title">"Wspomóż nas"</string>
-<string name="main_donate_dialog_title">"Wspomóż Programistów"</string>
+<!-- <string name="main_donate_title">"Wspomóż nas"</string> -->
+<!-- <string name="main_donate_dialog_title">"Wspomóż Programistów"</string> -->
 <string name="main_profile">"Profil"</string>
-<string name="main_donate_text">"Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
-&lt;br&gt;
-Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;
-&lt;br&gt;
-Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;
-&lt;br&gt;
-Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;
-&lt;br&gt;
-Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku. $5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;
-&lt;br&gt;
-Więc, na jak dużą hojność stać cię dzisiaj?
-"</string>
+<!--<string name="main_donate_text">"Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku. $5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Więc, na jak dużą hojność stać cię dzisiaj?-->
+<!--"</string>-->
 <string name="main_whats_new_title">"Nowości"</string>
 <string name="main_whats_new_in_title">"Nowości w aktualnej wersji"</string>
 <string name="main_tts_warning_title">"Synteza mowy (Text-To-Speech)"</string>

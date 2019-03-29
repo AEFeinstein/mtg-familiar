@@ -153,11 +153,11 @@ public class FamiliarActivity extends AppCompatActivity {
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
     private static final String IS_REFRESHING = "IS_REFRESHING";
-    /* PayPal URL */
-    @SuppressWarnings("SpellCheckingInspection")
-    public static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
-            "&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
-            "&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
+//    /* PayPal URL */
+//    @SuppressWarnings("SpellCheckingInspection")
+//    public static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
+//            "&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
+//            "&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
     /* Timer to determine user inactivity for screen dimming in the life counter */
     private static final long INACTIVITY_MS = 30000;
     /* Spice setup */
@@ -180,7 +180,7 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(0, 0, true, null),
             new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false, null),
             new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false, null),
-            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false, null),
+//            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false, null),
             new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false, null),
             new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false, null),
             new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false, null),
@@ -620,11 +620,11 @@ public class FamiliarActivity extends AppCompatActivity {
                     shouldCloseDrawer = true;
                     break;
                 }
-                case R.string.main_donate_title: {
-                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_DONATE);
-                    shouldCloseDrawer = true;
-                    break;
-                }
+//                case R.string.main_donate_title: {
+//                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_DONATE);
+//                    shouldCloseDrawer = true;
+//                    break;
+//                }
                 case R.string.main_about: {
                     showDialogFragment(FamiliarActivityDialogFragment.DIALOG_ABOUT);
                     shouldCloseDrawer = true;
@@ -733,7 +733,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             !(lastVersion == 54 && pInfo.versionCode == 55) && // Don't show 54 -> 55, it was just a quick bugfix release
                             !(lastVersion == 55 && pInfo.versionCode == 56) && // Don't show 55 -> 56, it was just a quick bugfix release
                             !(lastVersion == 56 && pInfo.versionCode == 57)    // Don't show 56 -> 57, it was just a quick bugfix release
-                            ) {
+                    ) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
 

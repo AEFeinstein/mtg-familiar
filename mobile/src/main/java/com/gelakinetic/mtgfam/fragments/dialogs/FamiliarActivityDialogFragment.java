@@ -51,7 +51,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     /* Constants used for displaying dialogs */
     public static final int DIALOG_ABOUT = 100;
     public static final int DIALOG_CHANGE_LOG = 101;
-    public static final int DIALOG_DONATE = 102;
+//    public static final int DIALOG_DONATE = 102;
     public static final int DIALOG_TTS = 103;
 
     /**
@@ -126,42 +126,42 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 return builder.build();
             }
-            case DIALOG_DONATE: {
-                /* Set the title */
-                builder.title(R.string.main_donate_dialog_title);
-                /* Set the buttons button */
-                builder.negativeText(R.string.dialog_thanks_anyway);
-
-                builder.positiveText(R.string.main_donate_title);
-                builder.onPositive((dialog, which) -> {
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FamiliarActivity.PAYPAL_URL));
-                    startActivity(myIntent);
-                });
-
-                /* Set the custom view */
-                LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
-
-                /* Set the text */
-                assert dialogLayout != null;
-                TextView text = dialogLayout.findViewById(R.id.aboutfield);
-                text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_donate_text)));
-                text.setMovementMethod(LinkMovementMethod.getInstance());
-
-                /* Set the image view */
-                ImageView payPal = dialogLayout.findViewById(R.id.imageview1);
-                payPal.setImageResource(R.drawable.paypal_icon);
-                payPal.setOnClickListener(v -> {
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri
-                            .parse(FamiliarActivity.PAYPAL_URL));
-
-                    startActivity(myIntent);
-                });
-                dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-
-                builder.customView(dialogLayout, false);
-                return builder.build();
-            }
+//            case DIALOG_DONATE: {
+//                /* Set the title */
+//                builder.title(R.string.main_donate_dialog_title);
+//                /* Set the buttons button */
+//                builder.negativeText(R.string.dialog_thanks_anyway);
+//
+//                builder.positiveText(R.string.main_donate_title);
+//                builder.onPositive((dialog, which) -> {
+//                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FamiliarActivity.PAYPAL_URL));
+//                    startActivity(myIntent);
+//                });
+//
+//                /* Set the custom view */
+//                LayoutInflater inflater = this.getActivity().getLayoutInflater();
+//                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+//
+//                /* Set the text */
+//                assert dialogLayout != null;
+//                TextView text = dialogLayout.findViewById(R.id.aboutfield);
+//                text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_donate_text)));
+//                text.setMovementMethod(LinkMovementMethod.getInstance());
+//
+//                /* Set the image view */
+//                ImageView payPal = dialogLayout.findViewById(R.id.imageview1);
+//                payPal.setImageResource(R.drawable.paypal_icon);
+//                payPal.setOnClickListener(v -> {
+//                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri
+//                            .parse(FamiliarActivity.PAYPAL_URL));
+//
+//                    startActivity(myIntent);
+//                });
+//                dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
+//
+//                builder.customView(dialogLayout, false);
+//                return builder.build();
+//            }
             case DIALOG_TTS: {
                 /* Then display a dialog informing them of TTS */
 
