@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * This is a superclass for all dialog fragments. It fixes some bugs and handles rotations nicely
@@ -77,7 +79,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         }
@@ -127,7 +129,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     @Nullable
     private Fragment getDialogParentFragment() {
-        return getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
     /**
@@ -156,7 +158,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return array of string file names, without the extension
      */
     String[] getFiles(String fileExtension) {
-        String[] files = this.getActivity().fileList();
+        String[] files = Objects.requireNonNull(this.getActivity()).fileList();
         ArrayList<String> validFiles = new ArrayList<>();
         for (String fileName : files) {
             if (fileName.endsWith(fileExtension)) {
@@ -176,7 +178,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     boolean canCreateDialog() {
         return (null != getDialogParentFragment()) &&
-                (!getDialogParentFragment().getActivity().isFinishing());
+                (!Objects.requireNonNull(getDialogParentFragment().getActivity()).isFinishing());
     }
 
     /**

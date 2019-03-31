@@ -103,6 +103,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 
 /**
  * This class handles displaying card info.
@@ -390,27 +391,27 @@ public class CardViewFragment extends FamiliarFragment {
             switch (mCard.getRarity()) {
                 case 'C':
                 case 'c':
-                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    mSetTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             getResourceIdFromAttr(R.attr.color_common)));
                     break;
                 case 'U':
                 case 'u':
-                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    mSetTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             getResourceIdFromAttr(R.attr.color_uncommon)));
                     break;
                 case 'R':
                 case 'r':
-                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    mSetTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             getResourceIdFromAttr(R.attr.color_rare)));
                     break;
                 case 'M':
                 case 'm':
-                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    mSetTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             getResourceIdFromAttr(R.attr.color_mythic)));
                     break;
                 case 'T':
                 case 't':
-                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                    mSetTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             getResourceIdFromAttr(R.attr.color_timeshifted)));
                     break;
             }
@@ -444,7 +445,6 @@ public class CardViewFragment extends FamiliarFragment {
             boolean isMultiCard = false;
             switch (CardDbAdapter.isMultiCard(mCard.getNumber(), mCard.getExpansion())) {
                 case NOPE:
-                    isMultiCard = false;
                     mTransformButton.setVisibility(View.GONE);
                     mTransformButtonDivider.setVisibility(View.GONE);
                     break;
@@ -1190,6 +1190,7 @@ public class CardViewFragment extends FamiliarFragment {
             ruling = r;
         }
 
+        @NonNull
         public String toString() {
             return date + ": " + ruling;
         }

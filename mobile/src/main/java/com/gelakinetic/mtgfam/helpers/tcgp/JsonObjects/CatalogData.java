@@ -25,9 +25,9 @@ import java.net.URL;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CatalogData {
-    public final boolean success;
-    public final String[] errors;
-    public final CatalogDataItem[] results;
+    private final boolean success;
+    private final String[] errors;
+    private final CatalogDataItem[] results;
 
     public CatalogData() {
         success = false;
@@ -36,16 +36,16 @@ public class CatalogData {
     }
 
     public static class CatalogDataItem {
-        public final int categoryId;
-        public final String name;
-        public final String modifiedOn; // Date modifiedOn;
-        public final String displayName;
-        public final String seoCategoryName;
-        public final String sealedLabel;
-        public final String nonSealedLabel;
-        public final URL conditionGuideUrl;
-        public final boolean isScannable;
-        public final int popularity;
+        final int categoryId;
+        final String name;
+        final String modifiedOn; // Date modifiedOn;
+        final String displayName;
+        final String seoCategoryName;
+        final String sealedLabel;
+        final String nonSealedLabel;
+        final URL conditionGuideUrl;
+        final boolean isScannable;
+        final int popularity;
 
         public CatalogDataItem() {
             categoryId = 0;

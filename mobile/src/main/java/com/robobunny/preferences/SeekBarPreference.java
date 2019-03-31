@@ -95,7 +95,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         try {
             // move our seekbar to the new view we've been given
             ViewParent oldContainer = mSeekBar.getParent();
-            ViewGroup newContainer = (ViewGroup) view.findViewById(R.id.seekBarPrefBarContainer);
+            ViewGroup newContainer = view.findViewById(R.id.seekBarPrefBarContainer);
 
             if (oldContainer != newContainer) {
                 // remove the seekbar from the old view
@@ -127,17 +127,17 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     private void updateView(View view) {
 
         try {
-            mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
+            mStatusText = view.findViewById(R.id.seekBarPrefValue);
 
             mStatusText.setText(String.valueOf(mCurrentValue));
             mStatusText.setMinimumWidth(30);
 
             mSeekBar.setProgress(mCurrentValue - mMinValue);
 
-            TextView unitsRight = (TextView) view.findViewById(R.id.seekBarPrefUnitsRight);
+            TextView unitsRight = view.findViewById(R.id.seekBarPrefUnitsRight);
             unitsRight.setText(mUnitsRight);
 
-            TextView unitsLeft = (TextView) view.findViewById(R.id.seekBarPrefUnitsLeft);
+            TextView unitsLeft = view.findViewById(R.id.seekBarPrefUnitsLeft);
             unitsLeft.setText(mUnitsLeft);
 
         } catch (Exception e) {

@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.R;
 import com.tokenautocomplete.FilteredArrayAdapter;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class ManaCostTextView extends ATokenTextView {
     private static final LinkedHashMap<String, BitmapDrawable> MANA_DRAWABLES = new LinkedHashMap<>();
@@ -150,10 +151,10 @@ public class ManaCostTextView extends ATokenTextView {
     private static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
+            drawable = (DrawableCompat.wrap(Objects.requireNonNull(drawable))).mutate();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+        Bitmap bitmap = Bitmap.createBitmap(Objects.requireNonNull(drawable).getIntrinsicWidth(),
                 drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());

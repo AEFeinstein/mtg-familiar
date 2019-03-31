@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class LifeCounterFragment extends FamiliarFragment implements TextToSpeech.OnInitListener,
         AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnUtteranceCompletedListener {
@@ -111,7 +112,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mTts = new TextToSpeech(getActivity(), this);
         mTts.setOnUtteranceCompletedListener(this);
 
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) Objects.requireNonNull(getActivity()).getSystemService(Context.AUDIO_SERVICE);
 
         m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
         if (m9000Player != null) {
@@ -237,7 +238,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mPlayers.clear();
 
         /* Remove the screen on lock, restore the brightness */
-        getActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Objects.requireNonNull(getActivity()).getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         onUserActive();
     }
 
@@ -270,7 +271,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         setStatDisplaying(mStatDisplaying);
 
         if (PreferenceAdapter.getKeepScreenOn(getContext())) {
-            getActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            Objects.requireNonNull(getActivity()).getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
 
@@ -283,7 +284,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             if (PreferenceAdapter.getKeepScreenOn(getContext()) &&
                     PreferenceAdapter.getDimScreen(getContext())) {
                 float dimLevel = (float) PreferenceAdapter.getDimLevel(getContext()) / (float) 100;
-                WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+                WindowManager.LayoutParams layoutParams = Objects.requireNonNull(getActivity()).getWindow().getAttributes();
                 layoutParams.screenBrightness = dimLevel;
                 getActivity().getWindow().setAttributes(layoutParams);
             }
@@ -298,7 +299,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public void onUserActive() {
         if (PreferenceAdapter.getKeepScreenOn(getContext())) {
-            WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+            WindowManager.LayoutParams layoutParams = Objects.requireNonNull(getActivity()).getWindow().getAttributes();
             layoutParams.screenBrightness = -1;
             getActivity().getWindow().setAttributes(layoutParams);
         }
@@ -443,7 +444,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         mGridLayout.removeAllViews();
 
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             switch (mDisplayMode) {
                 case DISPLAY_NORMAL:
                     mGridLayout.setOrientation(GridLayout.HORIZONTAL);
@@ -549,7 +550,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 mCommanderPlayerView.removeAllViews();
                 mCommanderPlayerView.addView(player.mView);
                 player.setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode,
-                        getActivity().getResources().getConfiguration().orientation
+                        Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation
                                 == Configuration.ORIENTATION_PORTRAIT, mPlayers.size() == 1
                 );
             });
@@ -572,7 +573,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private void setStatDisplaying(int statMode) {
         mStatDisplaying = statMode;
 
-        int disabledColor = ContextCompat.getColor(getContext(),
+        int disabledColor = ContextCompat.getColor(Objects.requireNonNull(getContext()),
                 getFamiliarActivity().getResourceIdFromAttr(R.attr.lc_disabled));
         int enabledColor = ContextCompat.getColor(getContext(),
                 getFamiliarActivity().getResourceIdFromAttr(R.attr.lc_enabled));
@@ -811,10 +812,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     mTtsInit = true;
                     if (mIsSearchViewOpen) {
                         /* Search view is open, pend menu refresh */
-                        mAfterSearchClosedRunnable = () -> getActivity().invalidateOptionsMenu();
+                        mAfterSearchClosedRunnable = () -> Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
                     } else {
                         /* Redraw menu */
-                        getActivity().invalidateOptionsMenu();
+                        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
                     }
                 }
             } else if (status == TextToSpeech.ERROR) {
@@ -927,7 +928,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         if (mListSizeHeight != -1) {
             for (LcPlayer player : mPlayers) {
                 player.setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode,
-                        getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                        Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
                         mPlayers.size() == 1);
             }
         }

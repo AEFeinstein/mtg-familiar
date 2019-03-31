@@ -43,6 +43,8 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class that creates dialogs for FamiliarActivity
  */
@@ -72,11 +74,11 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(this.getActivity());
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
 
         assert getActivity().getPackageManager() != null;
 
-        mDialogId = getArguments().getInt(ID_KEY);
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_ABOUT: {
 

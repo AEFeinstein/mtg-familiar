@@ -57,6 +57,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -266,7 +267,7 @@ public class RulesFragment extends FamiliarFragment {
                         if (item instanceof RuleItem) {
                             // Gets a handle to the clipboard service.
                             ClipboardManager clipboard = (ClipboardManager)
-                                    getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    Objects.requireNonNull(getActivity()).getSystemService(Context.CLIPBOARD_SERVICE);
                             if (null != clipboard) {
                                 // Creates a new text clip to put on the clipboard
                                 ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
@@ -282,13 +283,13 @@ public class RulesFragment extends FamiliarFragment {
                     /* Cursor had a size of 0, boring */
                     if (!isBanned) {
                         SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
-                        getFragmentManager().popBackStack();
+                        Objects.requireNonNull(getFragmentManager()).popBackStack();
                     }
                 }
             } else {
                 if (!isBanned) { /* Cursor is null. weird. */
                     SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
-                    getFragmentManager().popBackStack();
+                    Objects.requireNonNull(getFragmentManager()).popBackStack();
                 }
             }
 
@@ -366,7 +367,7 @@ public class RulesFragment extends FamiliarFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.rules_menu_exit:
-                for (int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
+                for (int i = 0; i < Objects.requireNonNull(getFragmentManager()).getBackStackEntryCount(); ++i) {
                     getFragmentManager().popBackStack();
                 }
                 return true;
@@ -410,7 +411,7 @@ public class RulesFragment extends FamiliarFragment {
         if (mKeywordPattern != null) {
             encodedInput = mKeywordPattern.matcher(encodedInput)
                     .replaceAll("\\<font color=\"" +
-                            String.format("0x%06X", 0xFFFFFF & ContextCompat.getColor(getContext(), R.color.colorPrimaryDark_light)) +
+                            String.format("0x%06X", 0xFFFFFF & ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorPrimaryDark_light)) +
                             "\"\\>$1\\</font\\>");
         }
         encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");
@@ -442,7 +443,7 @@ public class RulesFragment extends FamiliarFragment {
                     final int linkPosition = position;
                     result.setSpan(new ClickableSpan() {
                         @Override
-                        public void onClick(View widget) {
+                        public void onClick(@NonNull View widget) {
                             /* Open a new activity instance*/
                             Bundle args = new Bundle();
                             args.putInt(CATEGORY_KEY, linkCat);
@@ -716,7 +717,7 @@ public class RulesFragment extends FamiliarFragment {
 
             boolean isGlossary = true;
             for (DisplayItem item : items) {
-                if (RuleItem.class.isInstance(item) || BannedItem.class.isInstance(item)) {
+                if (item instanceof RuleItem || item instanceof BannedItem) {
                     isGlossary = false;
                     break;
                 }
@@ -758,7 +759,7 @@ public class RulesFragment extends FamiliarFragment {
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View v = convertView;
             if (v == null) {
-                LayoutInflater inf = getActivity().getLayoutInflater();
+                LayoutInflater inf = Objects.requireNonNull(getActivity()).getLayoutInflater();
                 v = inf.inflate(mLayoutResourceId, parent, false);
             }
             assert v != null;

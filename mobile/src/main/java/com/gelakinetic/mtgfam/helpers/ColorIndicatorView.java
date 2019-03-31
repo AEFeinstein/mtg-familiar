@@ -64,7 +64,7 @@ public class ColorIndicatorView extends View {
         super(context);
 
         int shapesIndex = 0;
-        int numColors = 0;
+        float numColors = 0;
 
         /* Sanitize strings to check for a match */
         manacost = sanitizeString(manacost);

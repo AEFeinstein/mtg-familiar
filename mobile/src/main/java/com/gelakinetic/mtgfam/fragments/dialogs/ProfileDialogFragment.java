@@ -37,6 +37,8 @@ import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class that creates dialogs for ProfileFragment
  */
@@ -74,7 +76,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
 
         switch (DIALOG_DCI_NUMBER) {
             case DIALOG_DCI_NUMBER: {
-                @SuppressLint("InflateParams") View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                @SuppressLint("InflateParams") View view = ((LayoutInflater) Objects.requireNonNull(getActivity()).getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
 
                 final EditText dciEditText = view.findViewById(R.id.text_entry);

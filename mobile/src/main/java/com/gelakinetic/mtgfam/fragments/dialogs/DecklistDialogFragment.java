@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Class that creates dialogs for DecklistFragment.
@@ -81,7 +82,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
         }
 
         setShowsDialog(true);
-        mDialogId = getArguments().getInt(ID_KEY);
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
         final String cardName = getArguments().getString(NAME_KEY);
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);
 
@@ -93,7 +94,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
             case DIALOG_UPDATE_CARD: {
                 Dialog dialog = CardHelpers.getDialog(
                         cardName,
-                        getParentDecklistFragment(),
+                        Objects.requireNonNull(getParentDecklistFragment()),
                         true,
                         isSideboard
                 );
@@ -107,7 +108,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_NEW_DECK: {
                 /* Inflate a view to type in the deck's name and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -139,13 +140,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         })
                         .negativeText(R.string.dialog_cancel)
                         .build();
-                dialog.getWindow()
+                Objects.requireNonNull(dialog.getWindow())
                         .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
             case DIALOG_SAVE_DECK_AS: {
                 /* Inflate a view to type in the deck's name and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -175,7 +176,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         })
                         .negativeText(R.string.dialog_cancel)
                         .build();
-                dialog.getWindow()
+                Objects.requireNonNull(dialog.getWindow())
                         .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
@@ -190,7 +191,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)
@@ -228,7 +229,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                         .title(R.string.decklist_delete_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)
@@ -253,7 +254,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_CONFIRMATION: {
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                         .title(R.string.decklist_clear)
                         .content(R.string.decklist_clear_dialog_text)
                         .positiveText(R.string.dialog_ok)
@@ -275,13 +276,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         DecklistFragment.LEGALITY_DIAOG_FROM, DecklistFragment.LEGALITY_DIALOG_TO);
                 ListView lv = new ListView(getActivity());
                 lv.setAdapter(adapter);
-                return new MaterialDialog.Builder(getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
                         .customView(lv, false)
                         .title(R.string.decklist_legality)
                         .build();
             }
             case DIALOG_PRICE_SETTING: {
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                         .title(R.string.pref_trade_price_title)
                         .items(getResources().getStringArray(R.array.trade_option_entries))
                         .itemsCallbackSingleChoice(getParentDecklistFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {

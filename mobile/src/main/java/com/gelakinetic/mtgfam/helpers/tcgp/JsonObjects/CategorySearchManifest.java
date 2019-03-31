@@ -20,11 +20,11 @@
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class CategorySearchManifest {
-    public final boolean success;
-    public final String errors[];
-    public final TextValuePair[] sortingOptions;
-    public final FilterOptions[] filterOptions;
+class CategorySearchManifest {
+    private final boolean success;
+    private final String[] errors;
+    private final TextValuePair[] sortingOptions;
+    private final FilterOptions[] filterOptions;
 
     public CategorySearchManifest() {
         success = false;
@@ -40,9 +40,9 @@ public class CategorySearchManifest {
         this.filterOptions = filters;
     }
 
-    public static class TextValuePair {
-        public final String text;
-        public final String value;
+    static class TextValuePair {
+        final String text;
+        final String value;
 
         public TextValuePair(String _text, String _value) {
             this.text = _text;
@@ -50,11 +50,11 @@ public class CategorySearchManifest {
         }
     }
 
-    public static class FilterOptions {
-        public final String name;
-        public final String displayName;
-        public final String inputType;
-        public final TextValuePair[] items;
+    static class FilterOptions {
+        final String name;
+        final String displayName;
+        final String inputType;
+        final TextValuePair[] items;
 
         public FilterOptions() {
             name = null;

@@ -50,6 +50,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -207,7 +208,7 @@ public class ResultListFragment extends FamiliarFragment {
         /* Open up the database, search for stuff */
         try {
             mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
-            doSearch(this.getArguments(), mDatabase);
+            doSearch(Objects.requireNonNull(this.getArguments()), mDatabase);
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
             return myFragmentView;
@@ -242,20 +243,20 @@ public class ResultListFragment extends FamiliarFragment {
         if (res != null) {
             if (mCursor.getCount() == 1) {
                 /* Jump back past the result list (it wasn't displayed because this card is a singleton) */
-                if (!getActivity().isTaskRoot()) {
+                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
                     getActivity().finish();
                 } else {
-                    getFragmentManager().popBackStack();
+                    Objects.requireNonNull(getFragmentManager()).popBackStack();
                 }
             }
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
                 SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT
                 );
-                if (!getActivity().isTaskRoot()) {
+                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
                     getActivity().finish();
                 } else {
-                    getFragmentManager().popBackStack();
+                    Objects.requireNonNull(getFragmentManager()).popBackStack();
                 }
             } else if (mCursor.getCount() == 1) {
                 mCursor.moveToFirst();
@@ -520,7 +521,7 @@ public class ResultListFragment extends FamiliarFragment {
             /* Close the old cursor */
             mCursor.close();
             /* Do the search again with the new "order by" options */
-            doSearch(getArguments(), mDatabase);
+            doSearch(Objects.requireNonNull(getArguments()), mDatabase);
             /* Display the newly sorted data */
             fillData();
         } catch (SQLiteException | FamiliarDbException e) {

@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -50,7 +51,7 @@ public class CardDataTouchHelper extends SimpleCallback {
      * @return false, because we do nothing
      */
     @Override
-    public boolean onMove(RecyclerView recyclerView, ViewHolder viewHolder, ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull ViewHolder viewHolder, @NonNull ViewHolder target) {
         return false;
     }
 
@@ -62,7 +63,7 @@ public class CardDataTouchHelper extends SimpleCallback {
      *                   direction registered by the constructor
      */
     @Override
-    public void onSwiped(ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
         if (RecyclerView.NO_POSITION != position) {
             mAdapter.swipeRemoveItem(position);
@@ -78,7 +79,7 @@ public class CardDataTouchHelper extends SimpleCallback {
      * @return 0 if the view is not swipeable, otherwise super
      */
     @Override
-    public int getSwipeDirs(RecyclerView parent, ViewHolder holder) {
+    public int getSwipeDirs(@NonNull RecyclerView parent, @NonNull ViewHolder holder) {
         if (holder instanceof CardDataViewHolder) {
             if (!((CardDataViewHolder) holder).getIsSwipeable()) {
                 return 0;

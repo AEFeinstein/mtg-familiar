@@ -416,7 +416,7 @@ public class CardDbAdapter {
             }
 
             /* Turn the HashSet into an array, and sort it */
-            String[] wordsArr = words.toArray(new String[words.size()]);
+            String[] wordsArr = words.toArray(new String[0]);
             Arrays.sort(wordsArr);
             return wordsArr;
 

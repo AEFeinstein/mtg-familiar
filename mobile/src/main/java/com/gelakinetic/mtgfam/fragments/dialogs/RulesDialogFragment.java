@@ -40,6 +40,8 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class that creates dialogs for RulesFragment
  */
@@ -88,7 +90,7 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
         switch (DIALOG_SEARCH) {
             case DIALOG_SEARCH: {
                 /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
+                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -133,7 +135,7 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                         })
                         .negativeText(R.string.dialog_cancel)
                         .build();
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
             default: {

@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Class that creates dialogs for CardViewFragment
@@ -103,7 +104,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
-        mDialogId = getArguments().getInt(ID_KEY);
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
 
         if (null == getParentCardViewFragment()) {
             return DontShowDialog();
@@ -202,8 +203,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 }
             }
             case CHANGE_SET: {
-                final String[] aSets = getParentCardViewFragment().mPrintings.toArray(new String[getParentCardViewFragment().mPrintings.size()]);
-                final Long[] aIds = getParentCardViewFragment().mCardIds.toArray(new Long[getParentCardViewFragment().mCardIds.size()]);
+                final String[] aSets = getParentCardViewFragment().mPrintings.toArray(new String[0]);
+                final Long[] aIds = getParentCardViewFragment().mCardIds.toArray(new Long[0]);
 
                 /* Sanity check */
                 for (String set : aSets) {
@@ -313,7 +314,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 // Write the decklist back
-                                DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
+                                DecklistHelpers.WriteDecklist(Objects.requireNonNull(getActivity()), decklist, deckFileName);
                             } catch (FamiliarDbException e) {
                                 getParentCardViewFragment().handleFamiliarDbException(false);
                             }
@@ -429,7 +430,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 lv.setAdapter(adapter);
                 lv.setOnItemLongClickListener((parent, view, position, id) -> {
                     /* Copy the translated name to the clipboard */
-                    ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
+                    ClipboardManager clipboard = (ClipboardManager) (Objects.requireNonNull(getParentCardViewFragment().getContext()).
                             getSystemService(android.content.Context.CLIPBOARD_SERVICE));
                     if (null != clipboard) {
                         ClipData cd = new ClipData(
@@ -443,7 +444,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return false;
                 });
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(getParentCardViewFragment()).mActivity);
                 builder.customView(lv, false);
                 builder.title(R.string.card_view_translated_dialog_title);
                 return builder.build();

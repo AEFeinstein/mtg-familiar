@@ -27,11 +27,11 @@ import java.util.Date;
 @SuppressWarnings("FieldCanBeLocal")
 public class AccessToken {
     public final String access_token;
-    public final String token_type;
-    public final int expires_in;
-    public final String userName;
+    private final String token_type;
+    private final int expires_in;
+    private final String userName;
     @SerializedName(".issued")
-    public final Date issued;
+    private final Date issued;
     @SerializedName(".expires")
     public final Date expires;
 

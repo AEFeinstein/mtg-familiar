@@ -30,6 +30,8 @@ import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class that creates dialogs for SearchViewFragment
  */
@@ -73,7 +75,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
-        mDialogId = getArguments().getInt(ID_KEY);
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
 
         if (null == getParentSearchViewFragment()) {
             return DontShowDialog();
@@ -84,7 +86,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                 already filled in onCreate() */
             switch (mDialogId) {
                 case FORMAT_LIST: {
-                    getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.getActivity())
+                    getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                             .title(R.string.search_formats)
                             .items((CharSequence[]) getParentSearchViewFragment().mFormatNames)
                             .itemsCallbackSingleChoice(getParentSearchViewFragment().mSelectedFormat, (dialog, itemView, which, text) -> {
@@ -99,7 +101,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
                 case RARITY_LIST: {
-                    getParentSearchViewFragment().mRarityDialog = new MaterialDialog.Builder(this.getActivity())
+                    getParentSearchViewFragment().mRarityDialog = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                             .title(R.string.search_rarities)
                             .positiveText(R.string.dialog_ok)
                             .items((CharSequence[]) getParentSearchViewFragment().mRarityNames)

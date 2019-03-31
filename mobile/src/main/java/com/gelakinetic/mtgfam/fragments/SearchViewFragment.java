@@ -76,6 +76,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This fragment lets users configure search parameters, and then search for a card
@@ -253,7 +254,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mManaComparisonSpinner = myFragmentView.findViewById(R.id.comparisonSpinner);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
-        ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
+        ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
         logicAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
         mPowLogic.setAdapter(logicAdapter);
         mTouLogic.setAdapter(logicAdapter);
@@ -461,7 +462,7 @@ public class SearchViewFragment extends FamiliarFragment {
         final Map<String, String> symbolsByAutocomplete = new LinkedHashMap<>();
 
         SetAdapter(SearchViewFragment frag) {
-            super(frag.getActivity(), R.layout.list_item_1);
+            super(Objects.requireNonNull(frag.getActivity()), R.layout.list_item_1);
             for (int index = 0; index < frag.mSetSymbols.length; index++) {
                 String autocomplete = "[" + frag.mSetSymbols[index] + "] " + frag.mSetNames[index];
                 String set = frag.mSetSymbols[index];
@@ -858,7 +859,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void persistOptions() {
         try {
-            FileOutputStream fileStream = this.getActivity()
+            FileOutputStream fileStream = Objects.requireNonNull(this.getActivity())
                     .openFileOutput(DEFAULT_CRITERIA_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fileStream);
             os.writeObject(parseForm());
@@ -873,7 +874,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void fetchPersistedOptions() {
         try {
-            FileInputStream fileInputStream = this.getActivity().openFileInput(DEFAULT_CRITERIA_FILE);
+            FileInputStream fileInputStream = Objects.requireNonNull(this.getActivity()).openFileInput(DEFAULT_CRITERIA_FILE);
             ObjectInputStream oInputStream = new ObjectInputStream(fileInputStream);
             SearchCriteria criteria = (SearchCriteria) oInputStream.readObject();
             oInputStream.close();
@@ -1107,7 +1108,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         /* Set the default color */
-        mFormatButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
+        mFormatButton.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()), getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
 
         if (mSetCheckedIndices == null || mRarityCheckedIndices == null) {

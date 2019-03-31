@@ -39,6 +39,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -514,7 +515,7 @@ public class PreferenceAdapter {
             return MarketPriceInfo.PriceType.MARKET;
         }
         return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
-                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "3")));
+                Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "3"))));
     }
 
     public static synchronized void setTradePrice(@Nullable Context context, MarketPriceInfo.PriceType tradePrice) {
@@ -533,7 +534,7 @@ public class PreferenceAdapter {
             return MarketPriceInfo.PriceType.MARKET;
         }
         return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
-                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_wishlistPrice), "3")));
+                Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_wishlistPrice), "3"))));
     }
 
     public static synchronized void setWishlistPrice(@Nullable Context context, MarketPriceInfo.PriceType wishlistPrice) {
@@ -615,7 +616,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         if (null == context) {
             return -1;
         }
-        Long endTime = PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_currentRoundTimer), -1);
+        long endTime = PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_currentRoundTimer), -1);
         /* If the timer has expired, set it as -1 */
         if (endTime < System.currentTimeMillis()) {
             endTime = -1L;
@@ -678,7 +679,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
             return "asd";
         }
         String theme = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_theme), "asd");
-        if (theme.equals("asd")) {
+        if (Objects.requireNonNull(theme).equals("asd")) {
             theme = context.getResources().getString(R.string.pref_theme_light);
             setTheme(context, theme);
         }
@@ -912,7 +913,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
             return MarketPriceInfo.PriceType.MARKET;
         }
         return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
-                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "3")));
+                Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "3"))));
     }
 
     public static synchronized void setDeckPrice(@Nullable Context context, MarketPriceInfo.PriceType tradePrice) {

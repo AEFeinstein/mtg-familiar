@@ -40,6 +40,8 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
+import java.util.Objects;
+
 /**
  * This is the superclass for all fragments. It has a bunch of convenient methods
  */
@@ -237,7 +239,7 @@ public abstract class FamiliarFragment extends Fragment {
      */
     public void startNewFragment(FamiliarFragment frag, Bundle args) {
         try {
-            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
             if (fm != null) {
                 frag.setArguments(args);
                 FragmentTransaction ft = fm.beginTransaction();
@@ -336,7 +338,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @return The resource ID
      */
     public int getResourceIdFromAttr(int attr) {
-        return ((FamiliarActivity) getActivity()).getResourceIdFromAttr(attr);
+        return ((FamiliarActivity) Objects.requireNonNull(getActivity())).getResourceIdFromAttr(attr);
     }
 
     /**

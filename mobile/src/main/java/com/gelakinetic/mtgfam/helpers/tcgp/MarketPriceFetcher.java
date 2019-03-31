@@ -19,7 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Handler;
@@ -55,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -142,7 +142,6 @@ public class MarketPriceFetcher {
                 String tcgSetName;
 
                 /* then the same for multicard ordering */
-                Cursor cursor = null;
                 FamiliarDbHandle cardInfoHandle = new FamiliarDbHandle();
                 try {
                     SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, cardInfoHandle);
@@ -160,9 +159,6 @@ public class MarketPriceFetcher {
                 } catch (SQLiteException | FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 } finally {
-                    if (null != cursor) {
-                        cursor.close();
-                    }
                     DatabaseManager.closeDatabase(mActivity, cardInfoHandle);
                 }
 
@@ -217,7 +213,7 @@ public class MarketPriceFetcher {
 
                                 /* Retry with accent marks removed */
                                 if (accentOption == 1) {
-                                    tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
+                                    tcgCardName = CardDbAdapter.removeAccentMarks(Objects.requireNonNull(tcgCardName));
                                 }
 
                                 /* Try it with no set name */

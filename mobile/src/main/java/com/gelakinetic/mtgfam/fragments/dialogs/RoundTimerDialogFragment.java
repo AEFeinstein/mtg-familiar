@@ -31,6 +31,8 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class that creates dialogs for RoundTimerFragment
  */
@@ -51,7 +53,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
 
         switch (DIALOG_SET_WARNINGS) {
             case DIALOG_SET_WARNINGS: {
-                @SuppressLint("InflateParams") final View v = getActivity().getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
+                @SuppressLint("InflateParams") final View v = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
                 final CheckBox chkFifteen = v.findViewById(R.id.timer_pref_fifteen);
                 final CheckBox chkTen = v.findViewById(R.id.timer_pref_ten);
                 final CheckBox chkFive = v.findViewById(R.id.timer_pref_five);

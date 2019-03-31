@@ -36,6 +36,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class that creates dialogs for ResultListFragment
@@ -58,7 +59,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
-        mDialogId = getArguments().getInt(ID_KEY);
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
 
         if (null == getParentResultListFragment()) {
             return DontShowDialog();
@@ -68,9 +69,9 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
             case QUICK_ADD: {
                 final String cardName = getArguments().getString(NAME_KEY);
                 final String cardSet = getArguments().getString(NAME_SET);
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                         .stackingBehavior(StackingBehavior.ALWAYS)
-                        .title(cardName)
+                        .title(Objects.requireNonNull(cardName))
                         .positiveText(R.string.result_list_Add_to_wishlist)
                         .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getActivity(),
                                 new WishlistHelpers.CompressedWishlistInfo(
@@ -96,7 +97,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(this.getActivity())
+                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)

@@ -59,6 +59,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This class displays a wishlist of cards, details about the cards, their prices, and the sum of their prices
@@ -561,7 +562,7 @@ public class WishlistFragment extends FamiliarListFragment {
             holder.mWishlistSets.removeAllViews();
 
             /* Set the card name, always */
-            holder.setCardName(info.getName());
+            holder.setCardName(Objects.requireNonNull(info).getName());
 
             /* Show or hide full card information */
             holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
@@ -624,7 +625,7 @@ public class WishlistFragment extends FamiliarListFragment {
             /* List all the sets and wishlist values for this card */
             for (IndividualSetInfo isi : info.mInfo) {
                 /* inflate a new row */
-                View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
+                View setRow = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
                 assert setRow != null;
                 /* Write the set name, color it with the rarity */
                 int color;
@@ -656,7 +657,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
-                        ContextCompat.getColor(getContext(), getResourceIdFromAttr(color)));
+                        ContextCompat.getColor(Objects.requireNonNull(getContext()), getResourceIdFromAttr(color)));
 
                 /* Show individual prices and number of each card, or message if price does not exist, if desired */
                 TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);

@@ -65,6 +65,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This fragment shows a deck, and allows you to add to and modify it.
@@ -73,7 +74,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /* UI Elements */
     public TextView mDeckName;
-    public TextView mDeckCards;
+    private TextView mDeckCards;
 
     /* Decklist and adapters */
     public final ArrayList<CompressedDecklistInfo> mCompressedDecklist = new ArrayList<>();
@@ -237,7 +238,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
 
         if (savedInstanceState != null) {
-            mCurrentDeck = savedInstanceState.getBundle(FRAGMENT_TAG).getString(CURRENT_DECKLIST_TAG);
+            mCurrentDeck = Objects.requireNonNull(savedInstanceState.getBundle(FRAGMENT_TAG)).getString(CURRENT_DECKLIST_TAG);
             readAndCompressDecklist(null, mCurrentDeck);
         }
 
@@ -619,7 +620,7 @@ public class DecklistFragment extends FamiliarListFragment {
     /**
      * Save the current deck to the disk
      *
-     * @param showSnackbar
+     * @param showSnackbar True to show a message that the deck was saved, false to not
      */
     public void saveCurrentDeck(boolean showSnackbar) {
         String currentDeckName = getCurrentDeckName();
@@ -636,7 +637,7 @@ public class DecklistFragment extends FamiliarListFragment {
     /**
      * Remove the deck from RAM and clean up the fragment. Doesn't delete the deck
      *
-     * @param preserveName
+     * @param preserveName true to leave the file name as-is, false to reset it to AUTOSAVE_NAME
      */
     public void clearDeck(boolean preserveName) {
         /* do some cleaning up */
@@ -946,7 +947,7 @@ public class DecklistFragment extends FamiliarListFragment {
             final CompressedDecklistInfo info = getItem(position);
 
             holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
-            if (info.header == null) {
+            if (Objects.requireNonNull(info).header == null) {
 
                 /* Enable the on click listener */
                 holder.itemView.setOnClickListener(holder);
@@ -1020,7 +1021,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             for (int i = 0; i < getItemCount(); i++) {
                 CompressedDecklistInfo cdi = getItem(i);
-                if (cdi.header != null) {
+                if (Objects.requireNonNull(cdi).header != null) {
                     continue;
                 }
                 if (    /* The type is not above -1 OR is not in the sideboard */
@@ -1058,7 +1059,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             int totalCards = 0;
             for (int i = 0; i < getItemCount(); i++) {
-                totalCards += getItem(i).getTotalNumber();
+                totalCards += Objects.requireNonNull(getItem(i)).getTotalNumber();
             }
             return totalCards;
 
@@ -1073,10 +1074,10 @@ public class DecklistFragment extends FamiliarListFragment {
             counts[0] = 0;
             counts[1] = 0;
             for (int i = 0; i < getItemCount(); i++) {
-                if (getItem(i).mIsSideboard) {
-                    counts[1] += getItem(i).getTotalNumber();
+                if (Objects.requireNonNull(getItem(i)).mIsSideboard) {
+                    counts[1] += Objects.requireNonNull(getItem(i)).getTotalNumber();
                 } else {
-                    counts[0] += getItem(i).getTotalNumber();
+                    counts[0] += Objects.requireNonNull(getItem(i)).getTotalNumber();
                 }
             }
         }

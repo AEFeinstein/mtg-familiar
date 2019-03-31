@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class that creates dialogs for ResultListFragment
@@ -65,12 +66,12 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         /* Inflate the view */
-        @SuppressLint("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        @SuppressLint("InflateParams") View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
-        String searchSortOrder = getArguments().getString(SAVED_SORT_ORDER);
+        String searchSortOrder = Objects.requireNonNull(getArguments()).getString(SAVED_SORT_ORDER);
 
         int idx = 0;
 

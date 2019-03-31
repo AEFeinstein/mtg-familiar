@@ -1,10 +1,10 @@
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
 public class CategoryGroups {
-    public final boolean success;
+    private final boolean success;
     public final String[] errors;
     public final Group[] results;
-    public long totalItems;
+    private final long totalItems;
 
     public CategoryGroups() {
         totalItems = 0;
@@ -16,11 +16,11 @@ public class CategoryGroups {
     public class Group {
         public final long groupId;
         public final String name;
-        public final String abbreviation;
-        public final boolean isSupplemental;
-        public final String publishedOn;
-        public final long categoryId;
-        public final String modifiedOn;
+        final String abbreviation;
+        final boolean isSupplemental;
+        final String publishedOn;
+        final long categoryId;
+        final String modifiedOn;
 
         public Group() {
             groupId = 0;

@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This class manages trades between two users. Trades can be saved and loaded.
@@ -246,7 +247,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
-            fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
+            fos = Objects.requireNonNull(this.getActivity()).openFileOutput(tradeName, Context.MODE_PRIVATE);
 
             synchronized (mListLeft) {
                 for (MtgCard cd : mListLeft) {
@@ -288,7 +289,7 @@ public class TradeFragment extends FamiliarListFragment {
 
                     /* Read each card, line by line, load prices along the way */
                     br = new BufferedReader(
-                            new InputStreamReader(this.getActivity().openFileInput(tradeName))
+                            new InputStreamReader(Objects.requireNonNull(this.getActivity()).openFileInput(tradeName))
                     );
                     String line;
                     while ((line = br.readLine()) != null) {
@@ -532,8 +533,8 @@ public class TradeFragment extends FamiliarListFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        ContextCompat.getColor(getContext(), R.color.material_red_500) :
-                        ContextCompat.getColor(getContext(),
+                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
+                        ContextCompat.getColor(Objects.requireNonNull(getContext()),
                                 getResourceIdFromAttr(R.attr.color_text));
                 final String leftPrice =
                         String.format(Locale.US, PRICE_FORMAT, totalPrice)
@@ -559,8 +560,8 @@ public class TradeFragment extends FamiliarListFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        ContextCompat.getColor(getContext(), R.color.material_red_500) :
-                        ContextCompat.getColor(getContext(),
+                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
+                        ContextCompat.getColor(Objects.requireNonNull(getContext()),
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
                 final String rightPrice =
@@ -811,21 +812,21 @@ public class TradeFragment extends FamiliarListFragment {
             final MtgCard item = getItem(position);
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
-            holder.setCardName(item.getName());
+            holder.setCardName(Objects.requireNonNull(item).getName());
             holder.mCardSet.setText(item.getSetName());
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());
                 if (item.mIsCustomPrice) {
-                    holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             R.color.material_green_500));
                 } else {
-                    holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
                 holder.mCardPrice.setText(item.mNumberOf + "x " + item.mMessage);
-                holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
+                holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                         R.color.material_red_500));
             }
         }

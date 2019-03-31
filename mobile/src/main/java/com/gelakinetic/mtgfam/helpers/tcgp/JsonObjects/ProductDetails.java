@@ -21,7 +21,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ProductDetails {
-    public final boolean success;
+    private final boolean success;
     public final String errors[];
     public final Details results[];
 
@@ -34,12 +34,12 @@ public class ProductDetails {
     public static class Details {
         public final long productId;
         public final String name;
-        public final String cleanName;
-        public final String imageUrl;
-        public final long categoryId;
+        final String cleanName;
+        final String imageUrl;
+        final long categoryId;
         public final long groupId;
         public final String url;
-        public final String modifiedOn; // Date modifiedOn;
+        final String modifiedOn; // Date modifiedOn;
 
         public Details() {
             productId = 0;

@@ -32,6 +32,8 @@ import android.view.ViewGroup;
 
 import com.gelakinetic.mtgfam.R;
 
+import java.util.Objects;
+
 /**
  * This class will nest the CardViewFragments found by a search in a ViewPager
  */
@@ -46,7 +48,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      * @return The currently viewed CardViewFragment in the CardViewPagerFragment
      */
     public CardViewFragment getCurrentFragment() {
-        return ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment();
+        return ((CardViewPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getCurrentFragment();
     }
 
     /**
@@ -100,7 +102,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
         }
 
         Bundle args = getArguments();
-        long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
+        long cardIds[] = Objects.requireNonNull(args).getLongArray(CARD_ID_ARRAY);
         int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
         CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
@@ -122,7 +124,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ((CardViewPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**
@@ -196,7 +198,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * @param object    The same object that was returned by instantiateItem(View, int).
          */
         @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             if (getCurrentFragment() != object) {
                 mCurrentFragment = ((CardViewFragment) object);
             }

@@ -21,11 +21,11 @@ package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class GetProductInformationOptions {
-    public final String sort;
-    public final int limit;
-    public final int offset;
-    public final boolean includeAggregates;
-    public final NameValuesPair filters[];
+    private final String sort;
+    private final int limit;
+    private final int offset;
+    private final boolean includeAggregates;
+    private final NameValuesPair[] filters;
 
     public GetProductInformationOptions(NameValuesPair[] nameValuesPairs) {
         filters = nameValuesPairs;
@@ -36,8 +36,8 @@ public class GetProductInformationOptions {
     }
 
     public static class NameValuesPair {
-        public final String name;
-        public final String values[];
+        final String name;
+        final String[] values;
 
         public NameValuesPair(String _name, String[] _values) {
             this.name = _name;

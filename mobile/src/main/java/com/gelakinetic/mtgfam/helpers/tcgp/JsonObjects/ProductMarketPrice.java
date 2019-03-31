@@ -22,7 +22,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 @SuppressWarnings("FieldCanBeLocal")
 public class ProductMarketPrice {
 
-    public final boolean success;
+    private final boolean success;
     public final String[] errors;
 
     public final MarketPrice results[];
@@ -34,12 +34,12 @@ public class ProductMarketPrice {
     }
 
     public static class MarketPrice {
-        public final long productId;
+        final long productId;
         public final double lowPrice;
         public final double midPrice;
         public final double highPrice;
         public final double marketPrice;
-        public final double directLowPrice;
+        final double directLowPrice;
         public final String subTypeName;
 
         public MarketPrice() {

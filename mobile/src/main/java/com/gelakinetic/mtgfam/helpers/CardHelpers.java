@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -81,7 +82,7 @@ public class CardHelpers {
         final Activity activity = fragment.getActivity();
 
         /* Create the custom view */
-        @SuppressLint("InflateParams") View customView = fragment.getActivity().getLayoutInflater()
+        @SuppressLint("InflateParams") View customView = Objects.requireNonNull(fragment.getActivity()).getLayoutInflater()
                 .inflate(R.layout.wishlist_dialog, null, false);
         assert customView != null;
 
@@ -107,7 +108,7 @@ public class CardHelpers {
                 ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
                 targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
                 deckName = "";
-                dialogText = activity.getString(R.string.wishlist_edit_dialog_title_end);
+                dialogText = Objects.requireNonNull(activity).getString(R.string.wishlist_edit_dialog_title_end);
             } else {
                 /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so
                  * obviously now it is the decklist */
@@ -120,7 +121,7 @@ public class CardHelpers {
                 ArrayList<MtgCard> decklist =
                         DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION, false);
                 targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
-                dialogText = activity.getString(R.string.decklist_edit_dialog_title_end);
+                dialogText = Objects.requireNonNull(activity).getString(R.string.decklist_edit_dialog_title_end);
             }
         } catch (FamiliarDbException e) {
             return null;
@@ -202,7 +203,7 @@ public class CardHelpers {
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
 
             ArrayList<MtgCard> list;
-            ArrayList<String> nonFoilSets = null;
+            ArrayList<String> nonFoilSets;
 
             try {
                 if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
@@ -352,7 +353,7 @@ public class CardHelpers {
             boolean isFoil,
             ViewGroup viewGroup) {
 
-        View dialogRow = fragment.getActivity().getLayoutInflater()
+        View dialogRow = Objects.requireNonNull(fragment.getActivity()).getLayoutInflater()
                 .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);

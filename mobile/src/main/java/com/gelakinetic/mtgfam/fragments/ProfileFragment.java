@@ -37,6 +37,8 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.ProfileDialogFragment;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
+import java.util.Objects;
+
 /**
  * This fragment contains a players profile information such as their DCI number and anything else
  * we can think of to go here
@@ -72,7 +74,7 @@ public class ProfileFragment extends FamiliarFragment {
         mDCINumberTextView = myFragmentView.findViewById(R.id.dci_number);
         mNoDCINumberTextView = myFragmentView.findViewById(R.id.no_dci_number);
 
-        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "free3of9.ttf");
+        Typeface tf = Typeface.createFromAsset(Objects.requireNonNull(getActivity()).getAssets(), "free3of9.ttf");
         mBarcodeTextView.setTypeface(tf);
 
         mDCINumber = PreferenceAdapter.getDCINumber(getContext());
@@ -161,7 +163,7 @@ public class ProfileFragment extends FamiliarFragment {
         } else {
             showDCINumber();
         }
-        getActivity().invalidateOptionsMenu();
+        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
     private void hideDCINumber() {

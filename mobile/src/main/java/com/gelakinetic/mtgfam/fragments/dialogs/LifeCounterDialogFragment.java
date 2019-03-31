@@ -35,6 +35,7 @@ import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class that creates dialogs for LifeCounterFragment
@@ -70,8 +71,8 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
-        mDialogId = getArguments().getInt(ID_KEY);
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()));
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
 
         if (null == getParentLifeCounterFragment()) {
             return DontShowDialog();

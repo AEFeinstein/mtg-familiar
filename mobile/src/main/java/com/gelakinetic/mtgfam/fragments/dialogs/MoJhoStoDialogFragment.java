@@ -33,6 +33,8 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class that creates dialogs for MoJhoStoFragment
  */
@@ -55,11 +57,11 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
-        mDialogId = getArguments().getInt(ID_KEY);
+        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_RULES: {
                 /* Use a generic AlertDialog to display the rules text */
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(this.getActivity());
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
                 builder.neutralText(R.string.mojhosto_dialog_play)
                         .content(ImageGetterHelper.formatHtmlString(getString(R.string.mojhosto_rules_text)))
                         .title(R.string.mojhosto_rules_title);
@@ -69,7 +71,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
             case DIALOG_STONEHEWER:
             case DIALOG_JHOIRA: {
                 /* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
-                Dialog dialog = new Dialog(this.getActivity());
+                Dialog dialog = new Dialog(Objects.requireNonNull(this.getActivity()));
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.card_view_image_dialog);
                 ImageView image = dialog.findViewById(R.id.cardimage);

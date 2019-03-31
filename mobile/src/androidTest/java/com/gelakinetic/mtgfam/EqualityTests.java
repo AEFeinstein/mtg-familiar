@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Test the equality of MtgCards, CompressedWishlistInfos, and CompressedDecklistInfos
@@ -43,7 +45,7 @@ public class EqualityTests {
         CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
         CompressedDecklistInfo cdi2 = new CompressedDecklistInfo(lightningBolt, false);
 
-        assertEquals(true, cdi1.equals(cdi2));
+        assertTrue(cdi1.equals(cdi2));
     }
 
     @Test
@@ -51,21 +53,21 @@ public class EqualityTests {
         CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
         CompressedDecklistInfo cdi2 = new CompressedDecklistInfo(lightningBolt, true);
 
-        assertEquals(false, cdi1.equals(cdi2));
+        assertFalse(cdi1.equals(cdi2));
     }
     
     @Test
     public void cdiEqualsMtgCard_ReturnsTrue() {
         CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
 
-        assertEquals(true, cdi1.equals(lightningBolt));
+        assertTrue(cdi1.equals(lightningBolt));
     }
 
     @Test
     public void mtgCardEqualscdi_ReturnsTrue() {
         CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
 
-        assertEquals(true, lightningBolt.equals(cdi1));
+        assertTrue(lightningBolt.equals(cdi1));
     }
 
     @Test
@@ -73,14 +75,14 @@ public class EqualityTests {
         CompressedWishlistInfo cwi1 = new CompressedWishlistInfo(lightningBolt, 0);
         CompressedWishlistInfo cwi2 = new CompressedWishlistInfo(lightningBolt, 0);
 
-        assertEquals(true, cwi1.equals(cwi2));
+        assertTrue(cwi1.equals(cwi2));
     }
 
     @Test
     public void cwiEqualsMtgCard_ReturnsTrue() {
         CompressedWishlistInfo cwi = new CompressedWishlistInfo(lightningBolt, 0);
 
-        assertEquals(true, cwi.equals(lightningBolt));
+        assertTrue(cwi.equals(lightningBolt));
     }
 
 }

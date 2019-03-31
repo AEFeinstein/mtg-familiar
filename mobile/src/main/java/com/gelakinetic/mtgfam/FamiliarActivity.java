@@ -120,6 +120,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Objects;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
@@ -896,7 +897,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 } else if (data.getAuthority().contains("CardSearchProvider")) {
                     /* User clicked a card in the quick search autocomplete, jump right to it */
                     args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                            new long[]{Long.parseLong(data.getLastPathSegment())});
+                            new long[]{Long.parseLong(Objects.requireNonNull(data.getLastPathSegment()))});
                     shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
                 } else {
                     /* User clicked a deep link, jump to the card(s) */
@@ -907,7 +908,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(this, false, deepLinkHandle);
                         boolean screenLaunched = false;
-                        if (data.getScheme().toLowerCase().equals("card") &&
+                        if (Objects.requireNonNull(data.getScheme()).toLowerCase().equals("card") &&
                                 data.getAuthority().toLowerCase().equals("multiverseid")) {
                             if (data.getLastPathSegment() == null) {
                                 /* Home screen deep link */
@@ -923,8 +924,7 @@ public class FamiliarActivity extends AppCompatActivity {
                                     }
                                     cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
                                             new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                                } catch (NumberFormatException e) {
-                                    cursor = null;
+                                } catch (NumberFormatException ignored) {
                                 }
                             }
                         }
@@ -1156,7 +1156,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         try {
-            if (!forceSelect && ((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
+            if (!forceSelect && ((Object) newFrag).getClass().equals(((Object) Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container))).getClass())) {
                 /* This is the same fragment, just close the menu */
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
@@ -1280,7 +1280,7 @@ public class FamiliarActivity extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             /* Check to see if the current fragment did anything with the search key */
-            return ((FamiliarFragment) f).onInterceptSearchKey() || super.onKeyDown(keyCode, event);
+            return ((FamiliarFragment) Objects.requireNonNull(f)).onInterceptSearchKey() || super.onKeyDown(keyCode, event);
         }
         /* Dinky workaround for LG phones: https://code.google.com/p/android/issues/detail?id=78154 */
         else if ((keyCode == KeyEvent.KEYCODE_MENU) /* &&
@@ -1638,7 +1638,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
                 break;
             default:
-                getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container))
                         .onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
         }
@@ -1826,7 +1826,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 for (int i = 0; i < recursionLevel; i++) {
                     toPrint.append("  ");
                 }
-                toPrint.append(key).append(" :: ").append(outState.get(key).getClass().getName()).append("\r\n");
+                toPrint.append(key).append(" :: ").append(Objects.requireNonNull(outState.get(key)).getClass().getName()).append("\r\n");
                 if (outState.get(key) instanceof Bundle) {
                     printBundleContents(toPrint, (Bundle) outState.get(key), recursionLevel + 1);
                 }

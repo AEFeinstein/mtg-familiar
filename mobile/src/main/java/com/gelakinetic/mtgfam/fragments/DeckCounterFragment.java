@@ -33,6 +33,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 import com.gelakinetic.mtgfam.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * This class helps judges tally deck counts quickly
@@ -83,7 +84,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
         /* Restore any state, if available */
         if (savedInstanceState != null) {
             mDeckCount = savedInstanceState.getInt(DECK_COUNT_KEY);
-            mDeckCountSequence = StringToArray(savedInstanceState.getString(SEQUENCE_KEY));
+            mDeckCountSequence = StringToArray(Objects.requireNonNull(savedInstanceState.getString(SEQUENCE_KEY)));
         } else {
             mDeckCount = 0;
             mDeckCountSequence = new ArrayList<>();
