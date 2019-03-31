@@ -11,7 +11,7 @@
 <string name="dialog_both">"Entrambi"</string>
 <string name="dialog_life">"Vita"</string>
 <string name="dialog_thanks">"Grazie!"</string>
-<string name="dialog_thanks_anyway">"Grazie comunque!"</string>
+<!-- <string name="dialog_thanks_anyway">"Grazie comunque!"</string> -->
 <string name="dialog_enjoy">"Divertiti!"</string>
 <string name="update_notification">"Sto controllando gli aggiornamenti del database"</string>
 <string name="update_updating_set">"Sto aggiungendo %s"</string>
@@ -47,21 +47,21 @@
 <string name="main_decklist">"Deck Builder"</string>
 <string name="main_force_update_title">"Forza aggiornamento"</string>
 <string name="main_settings_title">"Impostazioni"</string>
-<string name="main_donate_title">"Dona"</string>
-<string name="main_donate_dialog_title">"Fai una donazione agli sviluppatori"</string>
+<!-- <string name="main_donate_title">"Dona"</string> -->
+<!-- <string name="main_donate_dialog_title">"Fai una donazione agli sviluppatori"</string> -->
 <string name="main_profile">"Profilo"</string>
-<string name="main_donate_text">"Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;
-&lt;br&gt;
-Beh, se stai leggendo questo avviso, sai anche che la stiamo regalando!&lt;br&gt;
-&lt;br&gt;
-Programmare è un duro lavoro, e noi sviluppatori apprezziamo i dollari extra qui o là.&lt;br&gt;
-&lt;br&gt;
-Abbiamo l'abitudine di nutrirci, OK?&lt;br&gt;
-&lt;br&gt;
-Puoi toccare il bottone qua sotto per donare via PayPal. $1 è figo. $5 è più figo. La scelta è tua.&lt;br&gt;
-&lt;br&gt;
-Quindi, quanto ti senti generoso oggi?
-"</string>
+<!--<string name="main_donate_text">"Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Beh, se stai leggendo questo avviso, sai anche che la stiamo regalando!&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Programmare è un duro lavoro, e noi sviluppatori apprezziamo i dollari extra qui o là.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Abbiamo l'abitudine di nutrirci, OK?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Puoi toccare il bottone qua sotto per donare via PayPal. $1 è figo. $5 è più figo. La scelta è tua.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Quindi, quanto ti senti generoso oggi?-->
+<!--"</string>-->
 <string name="main_whats_new_title">"Novità"</string>
 <string name="main_whats_new_in_title">"Novità in questa versione"</string>
 <string name="main_tts_warning_title">"Sintetizzatore vocale (TTS)"</string>

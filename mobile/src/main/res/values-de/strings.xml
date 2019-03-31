@@ -11,7 +11,7 @@
 <string name="dialog_both">"Beide"</string>
 <string name="dialog_life">"Leben"</string>
 <string name="dialog_thanks">"Danke!"</string>
-<string name="dialog_thanks_anyway">"Trotzdem danke!"</string>
+<!-- <string name="dialog_thanks_anyway">"Trotzdem danke!"</string> -->
 <string name="dialog_enjoy">"Viel Spaß!"</string>
 <string name="update_notification">"Prüfe Datenbank auf Aktualisierungen"</string>
 <string name="update_updating_set">"Füge %s hinzu"</string>
@@ -51,23 +51,23 @@
 <string name="main_decklist">"Deckbauer"</string>
 <string name="main_force_update_title">"Aktualisierung erzwingen"</string>
 <string name="main_settings_title">"Einstellungen"</string>
-<string name="main_donate_title">"Spenden"</string>
-<string name="main_donate_dialog_title">"Spende an die Entwickler"</string>
+<!-- <string name="main_donate_title">"Spenden"</string> -->
+<!-- <string name="main_donate_dialog_title">"Spende an die Entwickler"</string> -->
 <string name="main_profile">"Profil"</string>
 
 <!-- Some grammar corrections and changes to the overall tone. What do you mean with "We've got a drafting habit to fuel, OK?" Are you referring to drafting as a playmode Magic? How does this fit into the text? -->
-<string name="main_donate_text">"Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;
-&lt;br&gt;
-Wenn du das hier liest, weißt du ja bereits, dass wir sie kostenfrei bereit stellen!&lt;br&gt;
-&lt;br&gt;
-Programmieren ist dennoch harte Arbeit und wir Entwickler freuen uns über jeden Cent.&lt;br&gt;
-&lt;br&gt;
-Wir brauchen schließlich auch Geld zum draften:)&lt;br&gt;
-&lt;br&gt;
-Du kannst die Schaltfläche unten drücken, um über Paypal zu spenden. $1 ist gut. $5 sind besser. Und so weiter…&lt;br&gt;
-&lt;br&gt;
-Also, wie großzügig bist du heute?
-"</string>
+<!--<string name="main_donate_text">"Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Wenn du das hier liest, weißt du ja bereits, dass wir sie kostenfrei bereit stellen!&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Programmieren ist dennoch harte Arbeit und wir Entwickler freuen uns über jeden Cent.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Wir brauchen schließlich auch Geld zum draften:)&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Du kannst die Schaltfläche unten drücken, um über Paypal zu spenden. $1 ist gut. $5 sind besser. Und so weiter…&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Also, wie großzügig bist du heute?-->
+<!--"</string>-->
 <string name="main_whats_new_title">"Neuerungen"</string>
 <string name="main_whats_new_in_title">"Neuerungen in Version"</string>
 

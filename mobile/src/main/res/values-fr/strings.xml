@@ -11,7 +11,7 @@
 <string name="dialog_both">"Joueurs &amp; Vie"</string>
 <string name="dialog_life">"Que Vie"</string>
 <string name="dialog_thanks">"Merci!"</string>
-<string name="dialog_thanks_anyway">"Merci quand même!"</string>
+<!-- <string name="dialog_thanks_anyway">"Merci quand même!"</string> -->
 <string name="dialog_enjoy">"Amusez-vous!"</string>
 <string name="update_notification">"Recherche de mise à jour des données"</string>
 <string name="update_updating_set">"Ajout de %s…"</string>
@@ -45,21 +45,21 @@
 <string name="main_decklist">"Concepteur de Deck"</string>
 <string name="main_force_update_title">"Forcer la mise à jour"</string>
 <string name="main_settings_title">"Paramètres"</string>
-<string name="main_donate_title">"Faire un don"</string>
-<string name="main_donate_dialog_title">"Don aux créateurs"</string>
+<!-- <string name="main_donate_title">"Faire un don"</string> -->
+<!-- <string name="main_donate_dialog_title">"Don aux créateurs"</string> -->
 <string name="main_profile">"Profile"</string>
-<string name="main_donate_text">"Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;
-&lt;br&gt;
-Bon, si vous lisez ceci, vous savez déjà qu'on la distribue gratuitement!&lt;br&gt;
-&lt;br&gt;
-Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;
-&lt;br&gt;
-Nous avons une passion du draft à alimenter, ok?&lt;br&gt;
-&lt;br&gt;
-Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c'est cool, 5€ ça l'est encore plus. A vous de choisir.&lt;br&gt;
-&lt;br&gt;
-Alors, à quel point vous sentez-vous généreux aujourd'hui?
-"</string>
+<!--<string name="main_donate_text">"Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Bon, si vous lisez ceci, vous savez déjà qu'on la distribue gratuitement!&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Nous avons une passion du draft à alimenter, ok?&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c'est cool, 5€ ça l'est encore plus. A vous de choisir.&lt;br&gt;-->
+<!--&lt;br&gt;-->
+<!--Alors, à quel point vous sentez-vous généreux aujourd'hui?-->
+<!--"</string>-->
 <string name="main_whats_new_title">"Nouveautés"</string>
 <string name="main_whats_new_in_title">"Nouveautés dans la Version"</string>
 <string name="main_tts_warning_title">"Synthèse vocale (TTS)"</string>
