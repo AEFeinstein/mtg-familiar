@@ -126,6 +126,7 @@ public class CardViewFragment extends FamiliarFragment {
     private TextView mCostTextView;
     private TextView mTypeTextView;
     private TextView mSetTextView;
+    private ImageView mSetImageView;
     private TextView mAbilityTextView;
     private TextView mPowTouTextView;
     private TextView mFlavorTextView;
@@ -233,6 +234,7 @@ public class CardViewFragment extends FamiliarFragment {
         mCostTextView = myFragmentView.findViewById(R.id.cost);
         mTypeTextView = myFragmentView.findViewById(R.id.type);
         mSetTextView = myFragmentView.findViewById(R.id.set);
+        mSetImageView = myFragmentView.findViewById(R.id.set_image);
         mAbilityTextView = myFragmentView.findViewById(R.id.ability);
         mFlavorTextView = myFragmentView.findViewById(R.id.flavor);
         mArtistTextView = myFragmentView.findViewById(R.id.artist);
@@ -417,6 +419,8 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             mCostTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getManaCost(), imgGetter));
+
+            mSetImageView.setImageDrawable(Drawable.createFromPath(new File(getContext().getFilesDir(), "expansionImages/" + mCard.getExpansion() + "_" + mCard.getRarity() + ".png").getAbsolutePath()));
 
             mAbilityTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getText(), imgGetter));
             mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());

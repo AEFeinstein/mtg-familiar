@@ -46,8 +46,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:layout_marginTop="4dp"
+                    android:layout_marginRight="16dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -99,14 +99,27 @@
                             android:text="Legendary Creature - Human Soldier" />
                     </LinearLayout>
 
-                    <TextView
-
-                        android:id="@+id/set"
-                        style="@style/text.medium"
-                        android:layout_width="fill_parent"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right|center_vertical"
-                        android:text="MOR" />
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:id="@+id/set"
+                            style="@style/text.medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MOR" />
+
+                        <ImageView
+                            android:id="@+id/set_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="8dp"/>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -147,9 +160,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
 
-                    android:layout_marginBottom="4dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginBottom="4dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -190,10 +203,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical|center|center_horizontal"
-                android:layout_marginBottom="4dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/card_view_image"
                 android:visibility="gone" />
 
