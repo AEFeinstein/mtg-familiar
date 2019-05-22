@@ -46,11 +46,11 @@ class MTRIPGParser {
     public static final int MODE_MTR = 1;
     public static final int MODE_JAR = 2;
     private static final String MTR_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/MagicTournamentRules-light.html";
+            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/no-foreign-mid/rules/MagicTournamentRules-light.html";
     private static final String IPG_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/InfractionProcedureGuide-light.html";
+            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/no-foreign-mid/rules/InfractionProcedureGuide-light.html";
     private static final String JAR_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/JudgingAtRegular-light.html";
+            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/no-foreign-mid/rules/JudgingAtRegular-light.html";
     private static final String MTR_LOCAL_FILE = "MTR.html";
     private static final String IPG_LOCAL_FILE = "IPG.html";
     private static final String JAR_LOCAL_FILE = "JAR.html";
