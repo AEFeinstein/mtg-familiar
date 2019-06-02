@@ -37,6 +37,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper.ChangeSetListAdapter;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper.ExpansionImageData;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
@@ -55,7 +58,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Class that creates dialogs for TradeFragment
@@ -322,8 +324,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* Get the card */
                     MtgCard data = lSide.get(positionForDialog);
 
-                    Set<String> sets = new LinkedHashSet<>();
-                    Set<String> setCodes = new LinkedHashSet<>();
+                    LinkedHashSet<ExpansionImageData> sets = new LinkedHashSet<>();
                     Cursor cards = null;
                     FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
                     try {
@@ -332,12 +333,14 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                                 CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, false, database);
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
-                            if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)))) {
-                                setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
-                            }
+                            sets.add(new ExpansionImageHelper.ExpansionImageData(
+                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)),
+                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)),
+                                    (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY)), 0));
                             cards.moveToNext();
                         }
                     } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
@@ -351,61 +354,62 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         DatabaseManager.closeDatabase(getActivity(), fetchCardHandle);
                     }
 
-                    /* Turn set names and set codes into arrays */
-                    final String[] aSets = sets.toArray(new String[0]);
-                    final String[] aSetCodes = setCodes.toArray(new String[0]);
-
                     /* Build and return the dialog */
-                    return new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
-                            .title(R.string.card_view_set_dialog_title)
-                            .items((CharSequence[]) aSets)
-                            .itemsCallback((dialog, itemView, position, text) -> {
+                    ChangeSetListAdapter adapter = (new ExpansionImageHelper()).
+                            new ChangeSetListAdapter(getContext(), sets) {
+                        @Override
+                        protected void onClick(ExpansionImageData data) {
+                            /* Make sure positionForDialog is in bounds */
+                            synchronized (lSide) {
+                                int max1 = lSide.size();
 
-                                /* Make sure positionForDialog is in bounds */
-                                synchronized (lSide) {
-                                    int max1 = lSide.size();
-
-                                    if (positionForDialog < 0 || positionForDialog >= max1) {
-                                        return;
-                                    }
-
-                                    String name = lSide.get(positionForDialog).getName();
-                                    String set = aSetCodes[position];
-                                    int numberOf = lSide.get(positionForDialog).mNumberOf;
-
-                                    /* See if the new set can be foil */
-                                    FamiliarDbHandle foilHandle = new FamiliarDbHandle();
-                                    boolean isFoil = lSide.get(positionForDialog).mIsFoil;
-                                    try {
-                                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
-                                        if (!CardDbAdapter.canBeFoil(set, database)) {
-                                            isFoil = false;
-                                        }
-                                    } catch (SQLiteException | FamiliarDbException e) {
-                                        isFoil = false;
-                                    } finally {
-                                        DatabaseManager.closeDatabase(getActivity(), foilHandle);
-                                    }
-
-                                    try {
-                                        lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
-
-                                        /* Reload and notify the adapter */
-                                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
-                                        /* Figure out what we're updating */
-                                        TradeFragment.TradeDataAdapter adapter;
-                                        if (sideForDialog == TradeFragment.LEFT) {
-                                            adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
-                                        } else {
-                                            adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    } catch (java.lang.InstantiationException e) {
-                                        /* Eat it */
-                                    }
+                                if (positionForDialog >= max1) {
+                                    return;
                                 }
-                            })
+
+                                String name = lSide.get(positionForDialog).getName();
+                                String set = data.getSetCode();
+                                int numberOf = lSide.get(positionForDialog).mNumberOf;
+
+                                /* See if the new set can be foil */
+                                FamiliarDbHandle foilHandle = new FamiliarDbHandle();
+                                boolean isFoil = lSide.get(positionForDialog).mIsFoil;
+                                try {
+                                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
+                                    if (!CardDbAdapter.canBeFoil(set, database)) {
+                                        isFoil = false;
+                                    }
+                                } catch (SQLiteException | FamiliarDbException e) {
+                                    isFoil = false;
+                                } finally {
+                                    DatabaseManager.closeDatabase(getActivity(), foilHandle);
+                                }
+
+                                try {
+                                    lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
+
+                                    /* Reload and notify the adapter */
+                                    getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
+                                    /* Figure out what we're updating */
+                                    TradeFragment.TradeDataAdapter adapter;
+                                    if (sideForDialog == TradeFragment.LEFT) {
+                                        adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
+                                    } else {
+                                        adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                } catch (java.lang.InstantiationException e) {
+                                    /* Eat it */
+                                }
+                            }
+                        }
+                    };
+                    Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                            .title(R.string.card_view_set_dialog_title)
+                            .adapter(adapter, null)
                             .build();
+                    adapter.setDialogReference(dialog);
+                    return dialog;
                 }
             }
             case DIALOG_PRICE_SETTING: {

@@ -23,11 +23,10 @@
     android:background="?attr/selectable_row"
     android:minHeight="48dp"
     android:orientation="vertical"
-    android:paddingBottom="4dp"
     android:paddingLeft="16dp"
+    android:paddingTop="4dp"
     android:paddingRight="16dp"
-    android:paddingTop="4dp">
-
+    android:paddingBottom="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,8 +38,8 @@
             style="@style/text.large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center_vertical"
             android:text="Name" />
 
         <TextView
@@ -64,20 +63,33 @@
         <TextView
             android:id="@+id/cardtype"
             style="@style/text.medium"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="Type" />
 
-        <TextView
-            android:id="@+id/cardset"
-            style="@style/text.large"
+        <LinearLayout
+            android:id="@+id/cardsetcombo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="Set" />
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cardset"
+                style="@style/text.large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Set" />
+
+            <ImageView
+                android:id="@+id/cardsetimage"
+                android:layout_width="@dimen/ExpansionImageWidthLarge"
+                android:layout_height="@dimen/ExpansionImageHeightLarge"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -98,13 +110,14 @@
             style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center_vertical"
             android:text="(R)" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="right"
             android:orientation="horizontal">

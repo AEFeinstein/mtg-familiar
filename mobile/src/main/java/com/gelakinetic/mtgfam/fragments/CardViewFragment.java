@@ -73,6 +73,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper;
 import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
 import com.gelakinetic.mtgfam.helpers.GlideApp;
 import com.gelakinetic.mtgfam.helpers.GlideRequest;
@@ -156,8 +157,7 @@ public class CardViewFragment extends FamiliarFragment {
     private int mTransformId;
 
     /* To switch card between printings */
-    public LinkedHashSet<String> mPrintings;
-    public LinkedHashSet<Long> mCardIds;
+    public LinkedHashSet<ExpansionImageHelper.ExpansionImageData> mPrintings;
 
     /* Easier than calling getActivity() all the time, and handles being nested */
     public FamiliarActivity mActivity;
@@ -420,7 +420,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             mCostTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getManaCost(), imgGetter));
 
-            mSetImageView.setImageDrawable(Drawable.createFromPath(new File(getContext().getFilesDir(), "expansionImages/" + mCard.getExpansion() + "_" + mCard.getRarity() + ".png").getAbsolutePath()));
+            ExpansionImageHelper.loadExpansionImage(getContext(), mCard.getExpansion(), mCard.getRarity(), mSetImageView);
 
             mAbilityTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getText(), imgGetter));
             mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -561,10 +561,10 @@ public class CardViewFragment extends FamiliarFragment {
                     Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, false, false, database
             );
             mPrintings = new LinkedHashSet<>();
-            mCardIds = new LinkedHashSet<>();
             while (!cCardByName.isAfterLast()) {
                 String number =
                         cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -573,10 +573,11 @@ public class CardViewFragment extends FamiliarFragment {
                 } else {
                     number = "";
                 }
-                if (mPrintings.add(CardDbAdapter
-                        .getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database) + number)) {
-                    mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
-                }
+                mPrintings.add(new ExpansionImageHelper.ExpansionImageData(
+                        CardDbAdapter.getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database) + number,
+                        cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)),
+                        (char) cCardByName.getInt(cCardByName.getColumnIndex(CardDbAdapter.KEY_RARITY)),
+                        cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID))));
                 cCardByName.moveToNext();
             }
         } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {

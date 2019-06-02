@@ -43,16 +43,12 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.google.gson.stream.JsonReader;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -316,7 +312,6 @@ public class DbUpdaterService extends IntentService {
                             retries--;
                         }
                     }
-                    downloadExpansionImages(set.mExpansionImageURLs, logWriter);
                 }
             }
 
@@ -429,42 +424,6 @@ public class DbUpdaterService extends IntentService {
         /* close the log */
         if (logWriter != null) {
             logWriter.close();
-        }
-    }
-
-    /**
-     * Download all expansion images associated with this expansion
-     *
-     * @param mExpansionImageURLs A list of png URLs to download
-     * @param logWriter A log writer to log errors to
-     */
-    private void downloadExpansionImages(ArrayList<String> mExpansionImageURLs, PrintWriter logWriter) {
-
-        // Make sure the directory exists
-        File expansionImagesDir = new File(getFilesDir(), "expansionImages");
-        if (!expansionImagesDir.exists()) {
-            // Create it
-            if (!expansionImagesDir.mkdir()) {
-                // folder not created
-                return;
-            }
-        }
-
-        try {
-            for (String expansionImageUrlStr : mExpansionImageURLs) {
-                // Make an actual URL object
-                URL expansionImageUrl = new URL(expansionImageUrlStr);
-
-                // Check if the image is already downloaded
-                File expansionImage = new File(expansionImagesDir, FilenameUtils.getName(expansionImageUrl.getPath()));
-                if (!expansionImage.exists()) {
-                    FileUtils.copyURLToFile(expansionImageUrl, expansionImage);
-                }
-            }
-        } catch (IOException e) {
-            if (logWriter != null) {
-                logWriter.write("downloadExpansionImages: " + e.toString() + '\n');
-            }
         }
     }
 

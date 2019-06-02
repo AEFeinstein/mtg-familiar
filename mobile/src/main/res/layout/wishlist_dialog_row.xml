@@ -22,28 +22,32 @@
     android:id="@+id/dialog_layout_root"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="8dp"
     android:baselineAligned="false"
     android:orientation="horizontal">
 
     <Button
         android:id="@+id/number_button"
-        android:layout_height="wrap_content"
+        style="?attr/button"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="99"
         android:textStyle="bold"
-        style="?attr/button"
         tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/cardsetimage"
+        android:layout_width="@dimen/ExpansionImageWidthLarge"
+        android:layout_height="@dimen/ExpansionImageHeightLarge"
+        android:layout_gravity="center_vertical" />
 
     <TextView
         android:id="@+id/cardset"
         style="@style/text.medium"
         android:layout_width="0dp"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="center_vertical"
         android:ellipsize="end"
         android:lines="1"
         android:text="@string/search_set" />
@@ -52,7 +56,6 @@
         android:id="@+id/wishlistDialogFoil"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginRight="8dp"
         app:srcCompat="@drawable/glyph_foil" />
 
 </LinearLayout>

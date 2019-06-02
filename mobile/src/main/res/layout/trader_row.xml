@@ -44,6 +44,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp">
 
+        <ImageView
+            android:id="@+id/traderRowSetImage"
+            android:layout_width="@dimen/ExpansionImageWidthSmall"
+            android:layout_height="@dimen/ExpansionImageHeightSmall"
+            android:layout_gravity="center_vertical" />
+
         <TextView
             android:id="@+id/traderRowSet"
             style="@style/text.small"

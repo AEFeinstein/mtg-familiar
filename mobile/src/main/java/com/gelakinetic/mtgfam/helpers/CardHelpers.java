@@ -153,6 +153,7 @@ public class CardHelpers {
             while (!cards.isAfterLast()) {
                 String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
                 String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
+                char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
 
                 if (targetFoilCardNumberOfs.keySet().contains(setCode) && !foilSets.contains(setCode)) {
                     // The card is foil, but the set isn't. This happens for foil-only sets like Masterpieces
@@ -160,6 +161,8 @@ public class CardHelpers {
                     View wishlistRow = createDialogRow(
                             fragment,
                             setName,
+                            setCode,
+                            rarity,
                             targetFoilCardNumberOfs.get(setCode),
                             false,
                             linearLayout);
@@ -170,6 +173,8 @@ public class CardHelpers {
                     View listDialogRow = createDialogRow(
                             fragment,
                             setName,
+                            setCode,
+                            rarity,
                             targetCardNumberOfs.get(setCode),
                             false,
                             linearLayout);
@@ -181,6 +186,8 @@ public class CardHelpers {
                         View wishlistRowFoil = createDialogRow(
                                 fragment,
                                 setName,
+                                setCode,
+                                rarity,
                                 targetFoilCardNumberOfs.get(setCode),
                                 true,
                                 linearLayout);
@@ -349,6 +356,8 @@ public class CardHelpers {
     private static View createDialogRow(
             FamiliarFragment fragment,
             String setName,
+            String setCode,
+            char rarity,
             String targetCardNumberOf,
             boolean isFoil,
             ViewGroup viewGroup) {
@@ -357,6 +366,7 @@ public class CardHelpers {
                 .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
+        ExpansionImageHelper.loadExpansionImage(fragment.getContext(), setCode, rarity, dialogRow.findViewById(R.id.cardsetimage));
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
         final Button numberButton = dialogRow.findViewById(R.id.number_button);
