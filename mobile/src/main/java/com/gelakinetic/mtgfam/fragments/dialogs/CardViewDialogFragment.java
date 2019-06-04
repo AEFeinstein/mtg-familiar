@@ -214,7 +214,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* Build and return the dialog */
                 ExpansionImageHelper.ChangeSetListAdapter adapter = (new ExpansionImageHelper()).
-                        new ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings) {
+                        new ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                     @Override
                     protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
                         getParentCardViewFragment().setInfoFromID(data.getMultiverseId());

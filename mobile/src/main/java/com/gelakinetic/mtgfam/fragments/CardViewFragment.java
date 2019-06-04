@@ -420,7 +420,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             mCostTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getManaCost(), imgGetter));
 
-            ExpansionImageHelper.loadExpansionImage(getContext(), mCard.getExpansion(), mCard.getRarity(), mSetImageView);
+            ExpansionImageHelper.loadExpansionImage(getContext(), mCard.getExpansion(), mCard.getRarity(), mSetImageView, ExpansionImageHelper.ExpansionImageSize.LARGE);
 
             mAbilityTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getText(), imgGetter));
             mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());

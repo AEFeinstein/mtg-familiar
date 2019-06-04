@@ -366,7 +366,7 @@ public class CardHelpers {
                 .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
-        ExpansionImageHelper.loadExpansionImage(fragment.getContext(), setCode, rarity, dialogRow.findViewById(R.id.cardsetimage));
+        ExpansionImageHelper.loadExpansionImage(fragment.getContext(), setCode, rarity, dialogRow.findViewById(R.id.cardsetimage), ExpansionImageHelper.ExpansionImageSize.LARGE);
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
         final Button numberButton = dialogRow.findViewById(R.id.number_button);

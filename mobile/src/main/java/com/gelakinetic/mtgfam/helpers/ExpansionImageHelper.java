@@ -25,6 +25,11 @@ import java.util.LinkedHashSet;
 
 public class ExpansionImageHelper {
 
+    public enum ExpansionImageSize {
+        SMALL,
+        LARGE
+    }
+
     public static class ExpansionImageData {
         private String mExpansionName;
         private String mExpansionCode;
@@ -79,10 +84,12 @@ public class ExpansionImageHelper {
         private final Context mContext;
         private final ExpansionImageData[] mExpansions;
         private Dialog dialog;
+        private ExpansionImageSize mImageSize;
 
-        protected ChangeSetListAdapter(Context context, LinkedHashSet<ExpansionImageData> expansions) {
+        protected ChangeSetListAdapter(Context context, LinkedHashSet<ExpansionImageData> expansions, ExpansionImageSize size) {
             mContext = context;
             mExpansions = expansions.toArray(new ExpansionImageData[0]);
+            mImageSize = size;
         }
 
         @NonNull
@@ -95,7 +102,7 @@ public class ExpansionImageHelper {
         public void onBindViewHolder(@NonNull ChangeSetListViewHolder changeSetListViewHolder, int i) {
             changeSetListViewHolder.setData(mExpansions[i]);
             changeSetListViewHolder.setName.setText(mExpansions[i].mExpansionName);
-            ExpansionImageHelper.loadExpansionImage(mContext, mExpansions[i].mExpansionCode, mExpansions[i].mRarity, changeSetListViewHolder.getImageView());
+            ExpansionImageHelper.loadExpansionImage(mContext, mExpansions[i].mExpansionCode, mExpansions[i].mRarity, changeSetListViewHolder.getImageView(), mImageSize);
         }
 
         @Override
@@ -117,16 +124,31 @@ public class ExpansionImageHelper {
         protected abstract void onClick(ExpansionImageData data);
     }
 
-    public static void loadExpansionImage(Context context, String set, char rarity, ImageView imageView) {
+    public static void loadExpansionImage(Context context, String set, char rarity, ImageView imageView, ExpansionImageSize size) {
         if (context != null) {
 
             Log.v("EIH", "Loading " + set + "_" + rarity);
+            imageView.setVisibility(View.GONE);
+
+            int width, height;
+            switch (size) {
+                case SMALL:
+                    width = context.getResources().getDimensionPixelSize(R.dimen.ExpansionImageWidthSmall);
+                    height = context.getResources().getDimensionPixelSize(R.dimen.ExpansionImageHeightSmall);
+                    break;
+                default:
+                case LARGE:
+                    width = context.getResources().getDimensionPixelSize(R.dimen.ExpansionImageWidthLarge);
+                    height = context.getResources().getDimensionPixelSize(R.dimen.ExpansionImageHeightLarge);
+                    break;
+            }
 
             // Then load the image
             Glide.with(context)
                     .load("https://raw.githubusercontent.com/AEFeinstein/GathererScraper/no-foreign-mid/symbols/" + set + "_" + rarity + ".png")
                     .dontAnimate()
                     .fitCenter()
+                    .override(width, height)
                     .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .addListener(new RequestListener<Drawable>() {
                         @Override
@@ -135,7 +157,6 @@ public class ExpansionImageHelper {
                             if (e != null) {
                                 Log.e("EIH", e.getMessage());
                             }
-                            imageView.setVisibility(View.GONE);
                             return false;
                         }
 
