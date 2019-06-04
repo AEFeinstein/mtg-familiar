@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +101,7 @@ public class ExpansionImageHelper {
         public void onBindViewHolder(@NonNull ChangeSetListViewHolder changeSetListViewHolder, int i) {
             changeSetListViewHolder.setData(mExpansions[i]);
             changeSetListViewHolder.setName.setText(mExpansions[i].mExpansionName);
-            ExpansionImageHelper.loadExpansionImage(mContext, mExpansions[i].mExpansionCode, mExpansions[i].mRarity, changeSetListViewHolder.getImageView(), mImageSize);
+            ExpansionImageHelper.loadExpansionImage(mContext, mExpansions[i].mExpansionCode, mExpansions[i].mRarity, changeSetListViewHolder.getImageView(), null, mImageSize);
         }
 
         @Override
@@ -124,10 +123,12 @@ public class ExpansionImageHelper {
         protected abstract void onClick(ExpansionImageData data);
     }
 
-    public static void loadExpansionImage(Context context, String set, char rarity, ImageView imageView, ExpansionImageSize size) {
+    public static void loadExpansionImage(Context context, String set, char rarity, ImageView imageView, @Nullable TextView textView, ExpansionImageSize size) {
         if (context != null) {
 
-            Log.v("EIH", "Loading " + set + "_" + rarity);
+            if (null != textView) {
+                textView.setVisibility(View.VISIBLE);
+            }
             imageView.setVisibility(View.GONE);
 
             int width, height;
@@ -153,16 +154,14 @@ public class ExpansionImageHelper {
                     .addListener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            Log.v("EIH", "Failed " + set + "_" + rarity);
-                            if (e != null) {
-                                Log.e("EIH", e.getMessage());
-                            }
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            Log.v("EIH", "Succeeded " + set + "_" + rarity);
+                            if (null != textView) {
+                                textView.setVisibility(View.GONE);
+                            }
                             imageView.setVisibility(View.VISIBLE);
                             return false;
                         }

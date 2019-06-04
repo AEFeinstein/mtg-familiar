@@ -152,7 +152,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     }
 
                     if (PreferenceAdapter.getSetPref(context)) {
-                        ExpansionImageHelper.loadExpansionImage(context, name, rarity, view.findViewById(R.id.cardsetimage), ExpansionImageHelper.ExpansionImageSize.LARGE);
+                        ExpansionImageHelper.loadExpansionImage(context, name, rarity, view.findViewById(R.id.cardsetimage), view.findViewById(R.id.cardset), ExpansionImageHelper.ExpansionImageSize.LARGE);
                     }
                     break;
                 }

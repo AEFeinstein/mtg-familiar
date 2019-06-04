@@ -817,7 +817,7 @@ public class TradeFragment extends FamiliarListFragment {
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(Objects.requireNonNull(item).getName());
             holder.mCardSet.setText(item.getSetName());
-            ExpansionImageHelper.loadExpansionImage(getContext(), item.getExpansion(), item.getRarity(), holder.mCardSetImage, ExpansionImageHelper.ExpansionImageSize.SMALL);
+            ExpansionImageHelper.loadExpansionImage(getContext(), item.getExpansion(), item.getRarity(), holder.mCardSetImage, null, ExpansionImageHelper.ExpansionImageSize.SMALL);
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());
