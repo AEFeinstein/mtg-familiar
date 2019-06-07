@@ -487,6 +487,19 @@ public class CardHelpers {
         }
 
         /**
+         * @return The alphabetically first expansion for this CompressedCardInfo
+         */
+        String getFirstExpansion() {
+            String firstExpansion = this.mInfo.get(0).mSet;
+            for (IndividualSetInfo info : this.mInfo) {
+                if (firstExpansion.compareTo(info.mSet) < 1) {
+                    firstExpansion = info.mSet;
+                }
+            }
+            return firstExpansion;
+        }
+
+        /**
          * @return The rarity of the rarest card in this CompressedCardInfo
          */
         char getHighestRarity() {

@@ -80,6 +80,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             boolean orderAdded = false;
             boolean priceAdded = false;
             boolean rarityAdded = false;
+            boolean setAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -112,6 +113,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     case CardDbAdapter.KEY_SET: {
                         name = getResources().getString(R.string.search_set);
+                        setAdded = true;
                         break;
                     }
                     case KEY_PRICE: {
@@ -144,6 +146,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             if (!rarityAdded) {
                 options.add(new SortOption(getResources().getString(R.string.search_rarity),
                         false, CardDbAdapter.KEY_RARITY, idx++));
+            }
+
+            if (!setAdded) {
+                options.add(new SortOption(getString(R.string.search_set),
+                        false, CardDbAdapter.KEY_SET, idx++));
             }
         }
 
