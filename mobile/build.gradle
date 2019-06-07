@@ -101,8 +101,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 65
-        versionName "3.5.11"
+        versionCode 66
+        versionName "3.6.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -145,7 +145,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.25.1'
 
-    implementation 'org.apache.commons:commons-lang3:3.8.1'
+    implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'org.apache.commons:commons-io:1.3.2'
     implementation 'org.apache.commons:commons-collections4:4.3'
 
@@ -177,7 +177,7 @@ dependencies {
     implementation 'com.github.machinarius:preferencefragment:0.1.2', {
         exclude module: 'support-v4'
     }
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.splitwise:tokenautocomplete:3.0.1'
     implementation 'com.google.code.findbugs:annotations:3.0.1u2', {
         // Need to exclude these, or build is broken by:
@@ -191,13 +191,13 @@ dependencies {
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
-    implementation 'com.nytimes.android:cache3:3.1.0', {
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'com.nytimes.android:cache3:3.1.1', {
         exclude module: 'jsr305'
         exclude module: 'jcip-annotations'
         exclude module: 'rxjava'
     }
-    implementation 'com.nytimes.android:store3:3.1.0', {
+    implementation 'com.nytimes.android:store3:3.1.1', {
         exclude module: 'jsr305'
         exclude module: 'jcip-annotations'
         exclude module: 'rxjava'

@@ -24,4 +24,13 @@
     <!-- Preference fragment padding, sides -->
     <dimen name="preference_fragment_padding_side">16dp</dimen>
 
+    <!--Default dimensions for expansions images.-->
+    <!--These need to be known ahead of time so that Glide can scale them appropriately-->
+    <!--The widest expansion image (as of now) is 160px, and all are 72px tall-->
+    <dimen name="ExpansionImageWidthLarge">48dp</dimen>
+    <dimen name="ExpansionImageHeightLarge">22dp</dimen>
+
+    <dimen name="ExpansionImageWidthSmall">31dp</dimen>
+    <dimen name="ExpansionImageHeightSmall">14dp</dimen>
+
 </resources>

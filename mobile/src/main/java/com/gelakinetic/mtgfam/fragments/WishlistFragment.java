@@ -44,6 +44,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -565,7 +566,7 @@ public class WishlistFragment extends FamiliarListFragment {
             holder.setCardName(Objects.requireNonNull(info).getName());
 
             /* Show or hide full card information */
-            holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
+            holder.itemView.findViewById(R.id.cardsetcombo).setVisibility(View.GONE);
             if (mShowCardInfo) {
                 Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
                 /* make sure everything is showing */
@@ -626,6 +627,7 @@ public class WishlistFragment extends FamiliarListFragment {
             for (IndividualSetInfo isi : info.mInfo) {
                 /* inflate a new row */
                 View setRow = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
+                ExpansionImageHelper.loadExpansionImage(getContext(), isi.mSetCode, isi.mRarity, setRow.findViewById(R.id.wishlistRowSetImage), null, ExpansionImageHelper.ExpansionImageSize.SMALL);
                 assert setRow != null;
                 /* Write the set name, color it with the rarity */
                 int color;

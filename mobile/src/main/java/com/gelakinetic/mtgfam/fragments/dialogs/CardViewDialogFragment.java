@@ -46,6 +46,7 @@ import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
@@ -203,20 +204,28 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 }
             }
             case CHANGE_SET: {
-                final String[] aSets = getParentCardViewFragment().mPrintings.toArray(new String[0]);
-                final Long[] aIds = getParentCardViewFragment().mCardIds.toArray(new Long[0]);
 
                 /* Sanity check */
-                for (String set : aSets) {
+                for (ExpansionImageHelper.ExpansionImageData set : getParentCardViewFragment().mPrintings) {
                     if (set == null) {
                         return DontShowDialog();
                     }
                 }
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
-                builder.title(R.string.card_view_set_dialog_title);
-                builder.items((CharSequence[]) aSets);
-                builder.itemsCallback((dialog, itemView, position, text) -> getParentCardViewFragment().setInfoFromID(aIds[position]));
-                return builder.build();
+
+                /* Build and return the dialog */
+                ExpansionImageHelper.ChangeSetListAdapter adapter = (new ExpansionImageHelper()).
+                        new ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
+                    @Override
+                    protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
+                        getParentCardViewFragment().setInfoFromID(data.getMultiverseId());
+                    }
+                };
+                Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                        .title(R.string.card_view_set_dialog_title)
+                        .adapter(adapter, null)
+                        .build();
+                adapter.setDialogReference(dialog);
+                return dialog;
             }
             case CARD_RULINGS: {
                 if (null == getParentCardViewFragment() || getParentCardViewFragment().mRulingsArrayList == null) {
