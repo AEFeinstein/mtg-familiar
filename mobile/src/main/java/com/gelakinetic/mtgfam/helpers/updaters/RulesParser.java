@@ -36,7 +36,7 @@ import java.util.Date;
 class RulesParser {
 
     /* URL and delimiting tokens */
-    private static final String SOURCE = "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/no-foreign-mid/rules/MagicCompRules.txt";
+    private static final String SOURCE = "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/MagicCompRules.txt";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String RULES_TOKEN = "RULES_VERYLONGSTRINGOFLETTERSUNLIKELYTOBEFOUNDINTHEACTUALRULES";
     @SuppressWarnings("SpellCheckingInspection")

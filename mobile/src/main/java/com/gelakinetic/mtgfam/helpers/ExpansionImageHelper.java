@@ -146,7 +146,7 @@ public class ExpansionImageHelper {
 
             // Then load the image
             Glide.with(context)
-                    .load("https://raw.githubusercontent.com/AEFeinstein/GathererScraper/no-foreign-mid/symbols/" + set + "_" + rarity + ".png")
+                    .load("https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/symbols/" + set + "_" + rarity + ".png")
                     .dontAnimate()
                     .fitCenter()
                     .override(width, height)
