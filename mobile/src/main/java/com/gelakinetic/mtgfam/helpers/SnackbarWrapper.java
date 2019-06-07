@@ -21,8 +21,8 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.StringRes;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 
 import com.gelakinetic.mtgfam.R;

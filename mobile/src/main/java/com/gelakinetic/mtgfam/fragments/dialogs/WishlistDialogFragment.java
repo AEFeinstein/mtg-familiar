@@ -21,7 +21,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;

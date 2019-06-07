@@ -20,11 +20,12 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,7 +185,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
         /**
          * @return the title which represents this tab. In this sample this is used directly by
-         * {@link android.support.v4.view.PagerAdapter#getPageTitle(int)}
+         * {@link PagerAdapter#getPageTitle(int)}
          */
         CharSequence getTitle() {
             return mTitle;
@@ -208,7 +209,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
         }
 
         /**
-         * Return the {@link android.support.v4.app.Fragment} to be displayed at {@code position}.
+         * Return the {@link Fragment} to be displayed at {@code position}.
          * <p>
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#createFragment()}.
          */

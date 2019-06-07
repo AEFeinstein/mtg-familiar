@@ -24,7 +24,7 @@ import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;

@@ -21,7 +21,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;

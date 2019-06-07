@@ -24,9 +24,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;

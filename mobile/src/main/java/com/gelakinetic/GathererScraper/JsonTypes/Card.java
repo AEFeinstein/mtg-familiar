@@ -19,7 +19,7 @@
 
 package com.gelakinetic.GathererScraper.JsonTypes;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 

@@ -19,11 +19,11 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.support.v7.widget.helper.ItemTouchHelper.SimpleCallback;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback;
 
 /**
  * Used for the callback for the ItemTouchHelper when swiping items.
