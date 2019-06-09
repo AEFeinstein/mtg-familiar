@@ -22,14 +22,15 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
@@ -78,6 +79,8 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         if (searchSortOrder != null) {
             boolean orderAdded = false;
             boolean priceAdded = false;
+            boolean rarityAdded = false;
+            boolean setAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -110,6 +113,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     case CardDbAdapter.KEY_SET: {
                         name = getResources().getString(R.string.search_set);
+                        setAdded = true;
                         break;
                     }
                     case KEY_PRICE: {
@@ -122,6 +126,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                         orderAdded = true;
                         break;
                     }
+                    case CardDbAdapter.KEY_RARITY: {
+                        name = getResources().getString(R.string.search_rarity);
+                        rarityAdded = true;
+                        break;
+                    }
                 }
                 options.add(new SortOption(name, ascending, key, idx++));
             }
@@ -131,7 +140,17 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
              */
             if (priceAdded && !orderAdded) {
                 options.add(new SortOption(getResources().getString(R.string.wishlist_type_order),
-                        false, KEY_ORDER, idx));
+                        false, KEY_ORDER, idx++));
+            }
+
+            if (!rarityAdded) {
+                options.add(new SortOption(getResources().getString(R.string.search_rarity),
+                        false, CardDbAdapter.KEY_RARITY, idx++));
+            }
+
+            if (!setAdded) {
+                options.add(new SortOption(getString(R.string.search_set),
+                        false, CardDbAdapter.KEY_SET, idx++));
             }
         }
 

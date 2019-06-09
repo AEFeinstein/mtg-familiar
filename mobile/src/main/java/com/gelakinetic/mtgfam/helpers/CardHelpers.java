@@ -486,6 +486,70 @@ public class CardHelpers {
             this.mRarity = isi.mRarity;
         }
 
+        /**
+         * @return The alphabetically first expansion for this CompressedCardInfo
+         */
+        String getFirstExpansion() {
+            String firstExpansion = this.mInfo.get(0).mSet;
+            for (IndividualSetInfo info : this.mInfo) {
+                if (firstExpansion.compareTo(info.mSet) < 1) {
+                    firstExpansion = info.mSet;
+                }
+            }
+            return firstExpansion;
+        }
+
+        /**
+         * @return The rarity of the rarest card in this CompressedCardInfo
+         */
+        char getHighestRarity() {
+            char rarity = '\0';
+            for (IndividualSetInfo info : this.mInfo) {
+                switch (info.mRarity) {
+                    case 'c':
+                    case 'C':
+                        if ('\0' == rarity) {
+                            rarity = 'C';
+                        }
+                        break;
+                    case 'u':
+                    case 'U':
+                        if ('\0' == rarity ||
+                                'C' == rarity) {
+                            rarity = 'U';
+                        }
+                        break;
+                    case 'r':
+                    case 'R':
+                        if ('\0' == rarity ||
+                                'C' == rarity ||
+                                'U' == rarity) {
+                            rarity = 'R';
+                        }
+                        break;
+                    case 't':
+                    case 'T':
+                        if ('\0' == rarity ||
+                                'C' == rarity ||
+                                'U' == rarity ||
+                                'R' == rarity) {
+                            rarity = 'T';
+                        }
+                        break;
+                    case 'm':
+                    case 'M':
+                        if ('\0' == rarity ||
+                                'C' == rarity ||
+                                'U' == rarity ||
+                                'R' == rarity ||
+                                'T' == rarity) {
+                            rarity = 'M';
+                        }
+                        break;
+                }
+            }
+            return rarity;
+        }
     }
 
     /**
