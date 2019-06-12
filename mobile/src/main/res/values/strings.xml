@@ -556,4 +556,9 @@ Good luck, and have fun!
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="life_counter_commander_experience_counter">Experience Counters</string>
+
+    <!-- Deck Importer -->
+    <string name="import_start">"Import"</string>
+    <string name="import_deck_name_hint">"Deck name"</string>
+    <string name="import_paste_hint">paste deck here…</string>
 </resources>
