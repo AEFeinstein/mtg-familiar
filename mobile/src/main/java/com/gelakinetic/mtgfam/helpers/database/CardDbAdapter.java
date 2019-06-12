@@ -963,6 +963,10 @@ public class CardDbAdapter {
         if (null != criteria.colorIdentity && !(criteria.colorIdentity.equals("wubrgl"))) {
             switch (criteria.colorIdentityLogic) {
                 case 0: {
+                    // All colors selected and "may include any color" doesn't make sense
+                    if (criteria.colorIdentity.equals("WUBRGL")) {
+                        break;
+                    }
                     /* search_May_include_any_colors */
                     boolean first = true;
                     statement.append(" AND (");
