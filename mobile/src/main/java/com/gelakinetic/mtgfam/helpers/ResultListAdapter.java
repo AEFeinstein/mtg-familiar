@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,6 +150,10 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                             textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_timeshifted)));
                             break;
                     }
+
+                    if (PreferenceAdapter.getSetPref(context)) {
+                        ExpansionImageHelper.loadExpansionImage(context, name, rarity, view.findViewById(R.id.cardsetimage), view.findViewById(R.id.cardset), ExpansionImageHelper.ExpansionImageSize.LARGE);
+                    }
                     break;
                 }
                 case CardDbAdapter.KEY_RARITY: {
@@ -208,10 +212,10 @@ public class ResultListAdapter extends SimpleCursorAdapter {
             view.findViewById(R.id.cardcost).setVisibility(View.GONE);
         }
         if (PreferenceAdapter.getSetPref(context)) {
-            view.findViewById(R.id.cardset).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.cardsetcombo).setVisibility(View.VISIBLE);
             view.findViewById(R.id.rarity).setVisibility(View.VISIBLE);
         } else {
-            view.findViewById(R.id.cardset).setVisibility(View.GONE);
+            view.findViewById(R.id.cardsetcombo).setVisibility(View.GONE);
             view.findViewById(R.id.rarity).setVisibility(View.GONE);
         }
         if (hideType) {

@@ -153,6 +153,7 @@ public class CardHelpers {
             while (!cards.isAfterLast()) {
                 String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
                 String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
+                char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
 
                 if (targetFoilCardNumberOfs.keySet().contains(setCode) && !foilSets.contains(setCode)) {
                     // The card is foil, but the set isn't. This happens for foil-only sets like Masterpieces
@@ -160,6 +161,8 @@ public class CardHelpers {
                     View wishlistRow = createDialogRow(
                             fragment,
                             setName,
+                            setCode,
+                            rarity,
                             targetFoilCardNumberOfs.get(setCode),
                             false,
                             linearLayout);
@@ -170,6 +173,8 @@ public class CardHelpers {
                     View listDialogRow = createDialogRow(
                             fragment,
                             setName,
+                            setCode,
+                            rarity,
                             targetCardNumberOfs.get(setCode),
                             false,
                             linearLayout);
@@ -181,6 +186,8 @@ public class CardHelpers {
                         View wishlistRowFoil = createDialogRow(
                                 fragment,
                                 setName,
+                                setCode,
+                                rarity,
                                 targetFoilCardNumberOfs.get(setCode),
                                 true,
                                 linearLayout);
@@ -349,6 +356,8 @@ public class CardHelpers {
     private static View createDialogRow(
             FamiliarFragment fragment,
             String setName,
+            String setCode,
+            char rarity,
             String targetCardNumberOf,
             boolean isFoil,
             ViewGroup viewGroup) {
@@ -357,6 +366,7 @@ public class CardHelpers {
                 .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
+        ExpansionImageHelper.loadExpansionImage(fragment.getContext(), setCode, rarity, dialogRow.findViewById(R.id.cardsetimage), null, ExpansionImageHelper.ExpansionImageSize.LARGE);
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
         final Button numberButton = dialogRow.findViewById(R.id.number_button);
@@ -476,6 +486,70 @@ public class CardHelpers {
             this.mRarity = isi.mRarity;
         }
 
+        /**
+         * @return The alphabetically first expansion for this CompressedCardInfo
+         */
+        String getFirstExpansion() {
+            String firstExpansion = this.mInfo.get(0).mSet;
+            for (IndividualSetInfo info : this.mInfo) {
+                if (firstExpansion.compareTo(info.mSet) < 1) {
+                    firstExpansion = info.mSet;
+                }
+            }
+            return firstExpansion;
+        }
+
+        /**
+         * @return The rarity of the rarest card in this CompressedCardInfo
+         */
+        char getHighestRarity() {
+            char rarity = '\0';
+            for (IndividualSetInfo info : this.mInfo) {
+                switch (info.mRarity) {
+                    case 'c':
+                    case 'C':
+                        if ('\0' == rarity) {
+                            rarity = 'C';
+                        }
+                        break;
+                    case 'u':
+                    case 'U':
+                        if ('\0' == rarity ||
+                                'C' == rarity) {
+                            rarity = 'U';
+                        }
+                        break;
+                    case 'r':
+                    case 'R':
+                        if ('\0' == rarity ||
+                                'C' == rarity ||
+                                'U' == rarity) {
+                            rarity = 'R';
+                        }
+                        break;
+                    case 't':
+                    case 'T':
+                        if ('\0' == rarity ||
+                                'C' == rarity ||
+                                'U' == rarity ||
+                                'R' == rarity) {
+                            rarity = 'T';
+                        }
+                        break;
+                    case 'm':
+                    case 'M':
+                        if ('\0' == rarity ||
+                                'C' == rarity ||
+                                'U' == rarity ||
+                                'R' == rarity ||
+                                'T' == rarity) {
+                            rarity = 'M';
+                        }
+                        break;
+                }
+            }
+            return rarity;
+        }
     }
 
     /**

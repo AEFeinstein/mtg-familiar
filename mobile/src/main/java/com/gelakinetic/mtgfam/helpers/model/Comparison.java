@@ -19,7 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.R;
 

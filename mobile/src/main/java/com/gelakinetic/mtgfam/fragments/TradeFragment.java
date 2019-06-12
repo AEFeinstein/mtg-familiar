@@ -22,8 +22,8 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +40,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
+import com.gelakinetic.mtgfam.helpers.ExpansionImageHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
@@ -709,6 +710,10 @@ public class TradeFragment extends FamiliarListFragment {
                             retVal = Double.compare(card1.getIndex(), card2.getIndex());
                             break;
                         }
+                        case CardDbAdapter.KEY_RARITY: {
+                            retVal = Character.compare(card1.getRarity(), card1.getRarity());
+                            break;
+                        }
                         default: {
                             break;
                         }
@@ -739,6 +744,7 @@ public class TradeFragment extends FamiliarListFragment {
     class TradeViewHolder extends CardDataViewHolder {
 
         private final TextView mCardSet;
+        private final ImageView mCardSetImage;
         private final ImageView mCardFoil;
         private final TextView mCardPrice;
         private final int mSide;
@@ -748,6 +754,7 @@ public class TradeFragment extends FamiliarListFragment {
             super(view, R.layout.trader_row, TradeFragment.this.getCardDataAdapter(side), TradeFragment.this);
 
             mCardSet = itemView.findViewById(R.id.traderRowSet);
+            mCardSetImage = itemView.findViewById(R.id.traderRowSetImage);
             mCardFoil = itemView.findViewById(R.id.traderRowFoil);
             mCardPrice = itemView.findViewById(R.id.traderRowPrice);
 
@@ -814,6 +821,7 @@ public class TradeFragment extends FamiliarListFragment {
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(Objects.requireNonNull(item).getName());
             holder.mCardSet.setText(item.getSetName());
+            ExpansionImageHelper.loadExpansionImage(getContext(), item.getExpansion(), item.getRarity(), holder.mCardSetImage, null, ExpansionImageHelper.ExpansionImageSize.SMALL);
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());

@@ -381,7 +381,7 @@ public class WishlistHelpers {
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = wish1.getExpansion().compareTo(wish2.getExpansion());
+                            retVal = wish1.getFirstExpansion().compareTo(wish2.getFirstExpansion());
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
@@ -390,6 +390,10 @@ public class WishlistHelpers {
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
                             retVal = Integer.compare(wish1.getIndex(), wish2.getIndex());
+                            break;
+                        }
+                        case CardDbAdapter.KEY_RARITY: {
+                            retVal = Character.compare(wish1.getHighestRarity(), wish2.getHighestRarity());
                             break;
                         }
                     }

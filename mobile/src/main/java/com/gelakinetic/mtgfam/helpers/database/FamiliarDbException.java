@@ -19,7 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.database;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Extend Exception instead of RuntimeException to force the compiler to whine about lack of try/catch blocks

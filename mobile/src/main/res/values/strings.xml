@@ -85,7 +85,7 @@
 <!--"</string>-->
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
-    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.5.11"&gt;Changelog&lt;/a&gt;"</string>
+    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.6.0"&gt;Changelog&lt;/a&gt;"</string>
     <string name="main_tts_warning_title">"Text-to-Speech"</string>
     <string name="main_tts_warning_text">"This application has text-to-speech capability for some of its features, but you don't seem to have it installed. If you want to install it, use the Install Text-to-Speech link in the settings menu."</string>
     <string name="main_export_data_title">"Save Data to SD"</string>
@@ -98,8 +98,6 @@
     <string name="main_about_text">"This app is my gift to the MTG community.&lt;br&gt;
 &lt;br&gt;
 Please send questions, comments, concerns, and praise to &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-Join the &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;beta community&lt;/a&gt; on Google+.&lt;br&gt;
 &lt;br&gt;
 Join the &lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;open source project&lt;/a&gt; on GitHub.&lt;br&gt;
 &lt;br&gt;
@@ -532,7 +530,7 @@ Good luck, and have fun!
     <string name="decklist_enchantments">"Enchantments"</string>
     <string name="decklist_artifacts">"Artifacts"</string>
     <string name="decklist_lands">"Lands"</string>
-    <string name="decklist_edit_dialog_title_end">"in the deck"</string>
+    <string name="decklist_edit_dialog_title_end">"in the Deck"</string>
     <string name="decklist_new">"New Deck"</string>
     <string name="decklist_delete">"Delete Deck"</string>
     <string name="decklist_save">"Save Deck"</string>

@@ -43,7 +43,7 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <android.support.v7.widget.GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
@@ -139,5 +139,5 @@
             app:layout_columnWeight="1"
             app:layout_rowWeight="1"
             app:srcCompat="@drawable/die_n" />
-    </android.support.v7.widget.GridLayout>
+    </androidx.gridlayout.widget.GridLayout>
 </LinearLayout>

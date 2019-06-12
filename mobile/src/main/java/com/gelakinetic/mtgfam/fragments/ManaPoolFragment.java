@@ -20,9 +20,9 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
