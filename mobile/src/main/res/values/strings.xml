@@ -562,4 +562,5 @@ Good luck, and have fun!
     <string name="import_start">"Import"</string>
     <string name="import_deck_name_hint">"Deck name"</string>
     <string name="import_paste_hint">paste deck here…</string>
+    <string name="import_loading">Importing…</string>
 </resources>
