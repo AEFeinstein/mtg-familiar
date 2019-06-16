@@ -1,22 +1,36 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
-
 import static java.lang.Integer.parseInt;
 
 public class DeckListImporter {
-    private List<MtgCard> mParsedCards;
+    private List<MtgCard> mParsedCards = new ArrayList<>();
+    private List<String> mErrorLines = new ArrayList<>();
     private boolean mReadingSideBoard = false;
     private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])?\\s*([^(\\d]+)(?:\\((\\w{2,6})\\))?\\s*(\\d+)?$");
+    private static final Pattern mNamePattern = Pattern.compile("^//\\s*NAME\\s?:\\s*(.*)\\s*$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+
+    @NonNull
+    public List<MtgCard> getParsedCards() {
+        return mParsedCards;
+    }
+
+    @NonNull
+    public List<String> getErrorLines() {
+        return mErrorLines;
+    }
 
     public void parseLine(String line) {
         line = line.trim();
         if (line.startsWith("//")) {
-            /* comment line, TODO: possibly parse deck name (and more?) */
+            /* comment line, ignore */
             return;
         }
 
@@ -26,20 +40,39 @@ public class DeckListImporter {
         }
 
         boolean currentIsSideBoard = mReadingSideBoard;
-        if (line.startsWith("SB:")){
+        if (line.startsWith("SB:")) {
             line = line.substring(3).trim();
             currentIsSideBoard = true;
         }
 
-        Matcher match = mCardPattern.matcher(line);
-        String cardName = match.group(3).trim();
-        int numberOf = parseInt(match.group(1));
-        String set = match.group(2);
-        String set2 = match.group(4);
-        String cardSet = null != set ? set : null != set2 ? set2 : "";
-        String idxInSet = match.group(5);
-        final boolean isFoil = false;
+        try {
+            Matcher match = mCardPattern.matcher(line);
 
-        mParsedCards.add(new MtgCard(cardName, cardSet, isFoil, numberOf, currentIsSideBoard));
+            String cardName = match.group(3).trim();
+            /* deal with split cards (/ or // in name): only include first half */
+            cardName = cardName.split("\\s/+\\s", 2)[0];
+
+            int numberOf = parseInt(match.group(1));
+
+            String set = match.group(2);
+            String set2 = match.group(4);
+            String cardSet = null != set ? set : null != set2 ? set2 : "";
+//          String idxInSet = match.group(5);
+            final boolean isFoil = false;
+
+            mParsedCards.add(new MtgCard(cardName, cardSet, isFoil, numberOf, currentIsSideBoard));
+        } catch (NullPointerException | IllegalStateException e) {
+            mErrorLines.add(currentIsSideBoard ? "SB: " + line : line);
+        }
+    }
+
+    @NonNull
+    public static String tryGuessDeckName(String deckLines) {
+        Matcher match = mNamePattern.matcher(deckLines);
+        String name;
+        if (match.find() && (name = match.group(1)) != null) {
+            return name;
+        }
+        return "";
     }
 }

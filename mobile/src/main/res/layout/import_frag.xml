@@ -66,7 +66,7 @@
             android:background="?attr/colorPrimary_attr" />
 
         <Button
-            android:id="@+id/start"
+            android:id="@+id/import_start"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="48dp"
