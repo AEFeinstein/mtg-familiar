@@ -5,76 +5,58 @@
 version: 2
 jobs:
   build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/android:api-28
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
+    # Specify a working directory
     working_directory: ~/repo
+
+    docker:
+      # specify a container to build in, should match project API level
+      - image: circleci/android:api-29
 
     environment:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
-      TERM: dumb
-    
+
     steps:
-    
+
       # Checkout the code
       - checkout
-    
+
       # Download and restore dependency cache
       - restore_cache:
           keys:
             # Use both build.gradle files to get a specific cache
             - jars-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
-            # Or just use one build.gradle file if we have added/changed dependencies, so we only have to update/add the new ones
-            - jars-{{ checksum "build.gradle" }}-
-            # Or just load the last cache of this type, and it will update it from there
-            - jars-
-            
-      # Download and restore build cache
-      - restore_cache:
-          keys:
-            - build-{{ epoch }}
-            - build-
 
       # Update our dependencies
       - run: ./gradlew androidDependencies
-          
-      # run tests! Subsequent builds should be faster due to caching the build cache
-      # note, not running :mobile:check
-      - run:
-          name: Run Tests
-          command: ./gradlew :mobile:lint :mobile:test
-          
-      # Build the release APK
-      - run:
-          name: Build release APK
-          command: ./gradlew :mobile:assembleRelease
-            
+
       # Save our gradle stuff, depenencies, gradle distribution
       - save_cache:
           paths:
-            - ~/.m2
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle"}}-{{ checksum "mobile/build.gradle" }}
-          
-      # Save our build cache so we can lessen the time used on it
-      - save_cache:
-          paths:
-            - mobile/build
-          key: build-{{ epoch }}
-      
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "mobile/build.gradle" }}
+
+      # Build the debug APK
+      - run:
+          name: Build debug APK
+          command: ./gradlew :mobile:assembleDebug
+
+      # Run tests. Note, not running :mobile:check
+      - run:
+          name: Run Tests
+          command: ./gradlew :mobile:lint :mobile:test
+
+      # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+      - store_artifacts:
+          path: mobile/build/reports
+          destination: reports
+
       # Store our APK so we can have nightly builds
       - store_artifacts:
           path: mobile/build/outputs/apk
           destination: apks
-      
-      # Also store the reports so we can track our progress on cleaning up the project
-      - store_test_results:
-          path: mobile/build/reports
-          destination: reports
+
+      # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+      # Familiar currently doesn't generate this folder
+      # - store_artifacts:
+      #    path: mobile/build/test-results

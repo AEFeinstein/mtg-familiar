@@ -136,7 +136,8 @@ dependencies {
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.8.0'
     spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+    //noinspection GradleDependency
+    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
 
