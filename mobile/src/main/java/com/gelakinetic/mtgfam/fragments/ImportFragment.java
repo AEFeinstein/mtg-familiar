@@ -60,6 +60,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -162,18 +163,22 @@ public class ImportFragment extends FamiliarFragment {
         final String lines = String.valueOf(getDeckTextInput());
 
         final DeckListImporter importer = new DeckListImporter();
-        BufferedReader br = new BufferedReader(new StringReader(lines));
-        String line;
-        while ((line = br.readLine()) != null) {
-            importer.parseLine(line);
+        try (BufferedReader br = new BufferedReader(new StringReader(lines))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                importer.parseLine(line);
+            }
+        } catch (IOException e) {
+            /* TODO: show some kind of message here?
+             * I don't think StringReader actually throws unless it's closed... */
+            return;
         }
 
-        /* TODO: match cards with database;
-         * handle errors in parsing;
-         * handle errors in card matching
-         */
+        /* TODO: handle errors in parsing */
+        /* TODO: match cards with database */
+        /* TODO: handle errors in card matching */
 
-        /* TODO: get actual card info and match with imported card names */
+        /*
         ArrayList<String> nonFoilSets;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
@@ -186,7 +191,7 @@ public class ImportFragment extends FamiliarFragment {
         }
 
         /* Save the decklist */
-        DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
+        // DecklistHelpers.WriteCompressedDecklist(getActivity(), compressedDecklist, getDeckNameInput());
     }
 
     /**

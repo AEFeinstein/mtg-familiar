@@ -14,7 +14,7 @@ public class DeckListImporter {
     private List<MtgCard> mParsedCards = new ArrayList<>();
     private List<String> mErrorLines = new ArrayList<>();
     private boolean mReadingSideBoard = false;
-    private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])?\\s*([^(\\d]+)(?:\\((\\w{2,6})\\))?\\s*(\\d+)?$");
+    private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])? *([^(\\[\\n\\r]+)(?:[(\\[](\\w{2,6})[)\\]])? *(\\d+)?$");
     private static final Pattern mNamePattern = Pattern.compile("^//\\s*NAME\\s?:\\s*(.*)\\s*$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     @NonNull
