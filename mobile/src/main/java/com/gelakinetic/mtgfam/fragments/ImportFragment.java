@@ -189,9 +189,12 @@ public class ImportFragment extends FamiliarFragment {
         } finally {
             DatabaseManager.closeDatabase(getContext(), handle);
         }
+        */
+
+        ArrayList<CompressedDecklistInfo> compressedDecklist = null;
 
         /* Save the decklist */
-        // DecklistHelpers.WriteCompressedDecklist(getActivity(), compressedDecklist, getDeckNameInput());
+        DecklistHelpers.WriteCompressedDecklist(getActivity(), compressedDecklist, getDeckNameInput().toString());
     }
 
     /**

@@ -339,7 +339,10 @@ public class MtgCard extends Card {
 
                 // Match that to a card in the initial list
                 for (MtgCard card : cards) {
-                    if (card.getName().equals(name) && card.getExpansion().equals(set)) {
+                    if (card.getName().equals(name) &&
+                            /* getMultiverseId() == 0 means card is not initiated yet */
+                            ((card.getExpansion().isEmpty() && card.getMultiverseId() == 0) ||
+                                    card.getExpansion().equals(set))) {
                         try {
                             // Fill in the initial list with data from the cursor
                             card.initFromCursor(mCtx, cardCursor);

@@ -632,9 +632,10 @@ public class CardDbAdapter {
             }
 
             // From a joined table
-            sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET);
-
-            sql.append(" WHERE ");
+            sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
+                    " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE +
+                    " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                    " WHERE ");
 
             first = true;
             for (MtgCard card : cards) {
@@ -643,8 +644,15 @@ public class CardDbAdapter {
                 } else {
                     sql.append(" OR ");
                 }
-                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE AND ");
-                sql.append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
+                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ")
+                        .append(sanitizeString(card.getName(), true))
+                        .append(" COLLATE NOCASE");
+
+                if(card.getExpansion() != null && !card.getExpansion().isEmpty()) {
+                    sql.append(" AND c_").append(KEY_SET).append(" = ")
+                            .append(sanitizeString(card.getExpansion(), false));
+                }
+                sql.append(")");
             }
             sql.append(" ORDER BY s_").append(KEY_DATE).append(" DESC");
 
