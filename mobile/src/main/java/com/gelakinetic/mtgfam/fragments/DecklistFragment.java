@@ -570,6 +570,13 @@ public class DecklistFragment extends FamiliarListFragment {
                 showDialog(DecklistDialogFragment.DIALOG_LOAD_DECK, null, false);
                 return true;
             }
+            case R.id.deck_menu_import: {
+                /* Import plaintext decklist */
+                /* TODO: open import fragment
+                 *  I don't know how the Fragment stack should be handled...
+                 */
+                return true;
+            }
             case R.id.deck_menu_delete: {
                 showDialog(DecklistDialogFragment.DIALOG_DELETE_DECK, null, false);
                 return true;

@@ -535,6 +535,7 @@ Good luck, and have fun!
     <string name="decklist_delete">"Delete Deck"</string>
     <string name="decklist_save">"Save Deck"</string>
     <string name="decklist_load">"Load Deck"</string>
+    <string name="decklist_import">"Import Deck"</string>
     <string name="decklist_clear">"Clear Deck"</string>
     <string name="decklist_toast_no_decks">"You have no saved decks."</string>
     <string name="decklist_select_dialog_title">"Select a Deck"</string>
