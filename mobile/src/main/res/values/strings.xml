@@ -562,6 +562,12 @@ Good luck, and have fun!
     <!-- Deck Importer -->
     <string name="import_start">"Import"</string>
     <string name="import_deck_name_hint">"Deck name"</string>
-    <string name="import_paste_hint">paste deck here…</string>
-    <string name="import_loading">Importing…</string>
+    <string name="import_paste_hint">"paste deck here…"</string>
+    <string name="import_loading">"Importing…"</string>
+    <string name="import_parse_error_toast">"Had some trouble parsing these lines."</string>
+    <plurals name="import_card_unknown_toast">
+        <item quantity="one">"One card was not recognized and was not imported."</item>
+        <item quantity="other">"%1$d cards were not recognized and were not imported."</item>
+    </plurals>
+    <string name="import_complete_toast">"Deck imported successfully."</string>
 </resources>

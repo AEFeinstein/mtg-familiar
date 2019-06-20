@@ -611,7 +611,7 @@ public class CardDbAdapter {
      * @return A Cursor with the requested information
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCardByNamesAndSets(ArrayList<MtgCard> cards, SQLiteDatabase mDb)
+    public static Cursor fetchCardByNamesAndSets(Iterable<MtgCard> cards, SQLiteDatabase mDb)
             throws FamiliarDbException {
         try {
             StringBuilder sql = new StringBuilder("SELECT ");

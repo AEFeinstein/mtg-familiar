@@ -50,7 +50,7 @@ public class DecklistHelpers {
      */
     public static void WriteDecklist(
             Activity activity,
-            ArrayList<MtgCard> lDecklist,
+            Iterable<MtgCard> lDecklist,
             String fileName) {
 
         try {
