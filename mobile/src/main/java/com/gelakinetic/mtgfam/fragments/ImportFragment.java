@@ -181,7 +181,17 @@ public class ImportFragment extends FamiliarFragment {
         final String lines = String.valueOf(getDeckTextInput());
 
         mImportTask = new ImportTask(name, lines).execute();
-        /* TODO: cancel task onDestroy() */
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        if (mImportTask != null) {
+            mImportTask.cancel(true);
+            mImportTask = null;
+        }
     }
 
     /**
@@ -195,6 +205,7 @@ public class ImportFragment extends FamiliarFragment {
         inflater.inflate(R.menu.decklist_menu, menu);
     }
 
+    /* TODO: make class static to prevent leaks? */
     private class ImportTask extends AsyncTask<Void, String[], DeckListImporter> {
 
         private final String mLines;

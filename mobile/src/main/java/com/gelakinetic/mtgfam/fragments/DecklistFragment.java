@@ -571,10 +571,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 return true;
             }
             case R.id.deck_menu_import: {
-                /* Import plaintext decklist */
-                /* TODO: open import fragment
-                 *  I don't know how the Fragment stack should be handled...
-                 */
+                startNewFragment(new ImportFragment(), null);
                 return true;
             }
             case R.id.deck_menu_delete: {
