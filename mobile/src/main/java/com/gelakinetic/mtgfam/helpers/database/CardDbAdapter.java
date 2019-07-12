@@ -1692,6 +1692,7 @@ public class CardDbAdapter {
                     " WHEN " + format + " = 'Legacy' THEN NULL" +
                     " WHEN " + format + " = 'Vintage' THEN NULL" +
                     " WHEN " + format + " = 'Commander' THEN NULL" +
+                    " WHEN " + format + " = 'Pauper' THEN NULL" +
                     " ELSE 1";
             sql += " END END,";
 
