@@ -19,61 +19,32 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
-import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DeckListImporter;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
-import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Queue;
-
-import static com.gelakinetic.mtgfam.FamiliarActivity.FRAGMENT_TAG;
 
 /**
  * This fragment shows a simple editText, and allows you to import from it.
@@ -277,6 +248,7 @@ public class ImportFragment extends FamiliarFragment {
         @Override
         protected void onPostExecute(DeckListImporter importer) {
             getFamiliarActivity().clearLoading();
+            mImportStarted = false;
 
             int unknownCount = unknownCards.size();
             if (unknownCount > 0) {
