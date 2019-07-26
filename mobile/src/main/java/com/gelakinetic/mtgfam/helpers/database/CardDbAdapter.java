@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
@@ -1661,6 +1662,10 @@ public class CardDbAdapter {
         mCardName = sanitizeString(mCardName, false);
         format = sanitizeString(format, false);
 
+        if("'Pauper'".equals(format)) {
+            Log.v("LEGAL", format);
+        }
+
         Cursor c = null;
         try {
             /* The new way (single query per type, should be much faster) - Alex */
@@ -1683,10 +1688,6 @@ public class CardDbAdapter {
                     " FROM " + DATABASE_TABLE_CARDS + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS + " ls ON ls." + KEY_SET + " = c." + KEY_SET +
                     " WHERE ls." + KEY_FORMAT + " = " + format +
                     " AND c." + KEY_NAME + " = " + mCardName;
-            /* If the format is pauper, restrict to commons */
-            if ("'Pauper'".equals(format)) {
-                sql += " AND c." + KEY_RARITY + " = " + ((int) 'C');
-            }
             sql += ")";
             sql += "  WHEN 1 THEN NULL ELSE CASE" +
                     " WHEN " + format + " = 'Legacy' THEN NULL" +
@@ -1702,7 +1703,16 @@ public class CardDbAdapter {
                     " WHERE " + KEY_NAME + " = " + mCardName +
                     " AND " + KEY_FORMAT + " = " + format + "),";
 
-            /* Finish the coalesce with a 0 */
+            if ("'Pauper'".equals(format)) {
+                /* Fourth coalesce logic, check card's pauper legality*/
+                sql += " CASE WHEN (" +
+                        " SELECT " + KEY_SET +
+                        " FROM " + DATABASE_TABLE_CARDS +
+                        " WHERE " + KEY_NAME + " = " + mCardName +
+                        " AND " + KEY_RARITY + " = " + ((int) 'C') +
+                        " ) IS NULL THEN 1 ELSE NULL END,";
+            }
+                /* Finish the coalesce with a 0 */
             sql += "0) AS " + KEY_LEGALITY;
 
             c = mDb.rawQuery(sql, null);
