@@ -28,7 +28,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
@@ -342,7 +341,7 @@ public class CardDbAdapter {
             sqLiteDatabase.execSQL(DATABASE_CREATE_BANNED_CARDS);
             sqLiteDatabase.execSQL(DATABASE_CREATE_RULES);
             sqLiteDatabase.execSQL(DATABASE_CREATE_GLOSSARY);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -463,7 +462,7 @@ public class CardDbAdapter {
                 cursor.moveToFirst();
             }
             return cursor;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -517,7 +516,7 @@ public class CardDbAdapter {
                 c.moveToFirst();
             }
             return c;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -554,7 +553,7 @@ public class CardDbAdapter {
                 cursor.moveToFirst();
             }
             return cursor;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -597,7 +596,7 @@ public class CardDbAdapter {
                 c.moveToFirst();
             }
             return c;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -654,7 +653,7 @@ public class CardDbAdapter {
                 c.moveToFirst();
             }
             return c;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -691,7 +690,7 @@ public class CardDbAdapter {
                 return cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
             }
             return -1;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != cursor) {
@@ -1130,7 +1129,7 @@ public class CardDbAdapter {
                 statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
 
                 numLegalSetCursor.close();
-            } catch (SQLiteException | IllegalStateException e) {
+            } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
                 throw new FamiliarDbException(e);
             }
         }
@@ -1195,7 +1194,7 @@ public class CardDbAdapter {
                 cursor.moveToFirst();
             }
             return cursor;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1255,7 +1254,7 @@ public class CardDbAdapter {
                     KEY_NAME, null);
             c.moveToFirst();
             return c.getString(c.getColumnIndex(KEY_NAME));
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1281,7 +1280,7 @@ public class CardDbAdapter {
                     KEY_NAME, null);
             c.moveToFirst();
             return c.getLong(c.getColumnIndex(KEY_ID));
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1326,7 +1325,7 @@ public class CardDbAdapter {
             }
 
             return cursor;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1365,7 +1364,7 @@ public class CardDbAdapter {
                             DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC" +
                             " ) GROUP BY " + KEY_NAME;
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1409,7 +1408,7 @@ public class CardDbAdapter {
             } else {
                 return null;
             }
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1557,7 +1556,7 @@ public class CardDbAdapter {
             } else {
                 return setCode;
             }
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != cursor) {
@@ -1579,7 +1578,7 @@ public class CardDbAdapter {
         try {
             database.delete(DATABASE_TABLE_CARDS, KEY_SET + " = " + sanitizeString(setCode, false), null);
             database.delete(DATABASE_TABLE_SETS, KEY_CODE + " = " + sanitizeString(setCode, false), null);
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1643,7 +1642,7 @@ public class CardDbAdapter {
                     " WHERE " + KEY_FORMAT + " = '" + format + "'" +
                     " GROUP BY " + KEY_LEGALITY;
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1661,10 +1660,6 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         mCardName = sanitizeString(mCardName, false);
         format = sanitizeString(format, false);
-
-        if("'Pauper'".equals(format)) {
-            Log.v("LEGAL", format);
-        }
 
         Cursor c = null;
         try {
@@ -1712,14 +1707,14 @@ public class CardDbAdapter {
                         " AND " + KEY_RARITY + " = " + ((int) 'C') +
                         " ) IS NULL THEN 1 ELSE NULL END,";
             }
-                /* Finish the coalesce with a 0 */
+            /* Finish the coalesce with a 0 */
             sql += "0) AS " + KEY_LEGALITY;
 
             c = mDb.rawQuery(sql, null);
 
             c.moveToFirst();
             return c.getInt(c.getColumnIndex(KEY_LEGALITY));
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1770,7 +1765,7 @@ public class CardDbAdapter {
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
             return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
                     null, null, null, KEY_DATE + " DESC");
-        } catch (SQLiteException | IllegalStateException | NullPointerException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1790,7 +1785,7 @@ public class CardDbAdapter {
                     KEY_CODE + "=\"" + code + "\"", null, null, null, null);
             cursor.moveToFirst();
             return cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != cursor) {
@@ -1819,7 +1814,7 @@ public class CardDbAdapter {
                 c.moveToFirst();
                 return c.getString(c.getColumnIndex(KEY_NAME));
             } else return "";
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1847,7 +1842,7 @@ public class CardDbAdapter {
                 return (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
             }
             return false;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1878,7 +1873,7 @@ public class CardDbAdapter {
                 return "";
             }
             return c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -1984,7 +1979,7 @@ public class CardDbAdapter {
             }
 
             return nonFoilSets;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -2038,7 +2033,7 @@ public class CardDbAdapter {
             /* Then check if the set contains foils */
             c.moveToFirst();
             return 0 != c.getInt(c.getColumnIndex(KEY_CAN_BE_FOIL));
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -2069,7 +2064,7 @@ public class CardDbAdapter {
                 c.moveToNext();
             }
             return foilSets;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -2094,7 +2089,7 @@ public class CardDbAdapter {
                     " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
                     " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2130,7 +2125,7 @@ public class CardDbAdapter {
             mDb.execSQL(DATABASE_CREATE_FORMATS);
             mDb.execSQL(DATABASE_CREATE_LEGAL_SETS);
             mDb.execSQL(DATABASE_CREATE_BANNED_CARDS);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2146,7 +2141,7 @@ public class CardDbAdapter {
             mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_FORMATS);
             mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_LEGAL_SETS);
             mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_BANNED_CARDS);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2162,7 +2157,7 @@ public class CardDbAdapter {
         try {
             return mDb.query(DATABASE_TABLE_FORMATS, new String[]{KEY_ID,
                     KEY_NAME,}, null, null, null, null, KEY_NAME);
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2185,7 +2180,7 @@ public class CardDbAdapter {
         try {
             mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_RULES);
             mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_GLOSSARY);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2202,7 +2197,7 @@ public class CardDbAdapter {
         try {
             mDb.execSQL(DATABASE_CREATE_RULES);
             mDb.execSQL(DATABASE_CREATE_GLOSSARY);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2239,7 +2234,7 @@ public class CardDbAdapter {
                         " AND " + KEY_ENTRY + " IS NOT NULL";
                 return mDb.rawQuery(sql, null);
             }
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2289,7 +2284,7 @@ public class CardDbAdapter {
                 }
             }
             return null;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2321,7 +2316,7 @@ public class CardDbAdapter {
                 }
             }
             return 0;
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -2355,7 +2350,7 @@ public class CardDbAdapter {
             } else {
                 return "";
             }
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (null != c) {
@@ -2396,7 +2391,7 @@ public class CardDbAdapter {
                 + ", " + entry + ", " + text + ", " + positionStr + ");";
         try {
             mDb.execSQL(sql);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2424,7 +2419,7 @@ public class CardDbAdapter {
                 + definition + ");";
         try {
             mDb.execSQL(sql);
-        } catch (SQLiteException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -2440,7 +2435,7 @@ public class CardDbAdapter {
         try {
             String sql = "SELECT * FROM " + DATABASE_TABLE_GLOSSARY;
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
