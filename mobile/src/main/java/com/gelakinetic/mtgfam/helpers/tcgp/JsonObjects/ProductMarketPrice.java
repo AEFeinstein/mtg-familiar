@@ -25,7 +25,7 @@ public class ProductMarketPrice {
     private final boolean success;
     public final String[] errors;
 
-    public final MarketPrice results[];
+    public final MarketPrice[] results;
 
     public ProductMarketPrice() {
         success = false;

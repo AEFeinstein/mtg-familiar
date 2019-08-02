@@ -203,7 +203,7 @@ public class FamiliarActivity extends AppCompatActivity {
             assert AppWidgetManager.getInstance(getApplication()) != null;
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
             assert appWidgetManager != null;
-            int ids[] = appWidgetManager.getAppWidgetIds(
+            int[] ids = appWidgetManager.getAppWidgetIds(
                     new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
             sendBroadcast(intent);
@@ -775,7 +775,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     if (lastVersion < 54) {
                         File cacheDir = getCacheDir();
                         if (null != cacheDir && cacheDir.exists()) {
-                            File listFiles[] = cacheDir.listFiles();
+                            File[] listFiles = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
                                     //noinspection ResultOfMethodCallIgnored
@@ -786,7 +786,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
                         cacheDir = getExternalCacheDir();
                         if (null != cacheDir && cacheDir.exists()) {
-                            File listFiles[] = cacheDir.listFiles();
+                            File[] listFiles = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
                                     //noinspection ResultOfMethodCallIgnored
@@ -1012,8 +1012,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 break;
             case Intent.ACTION_MAIN:
                 /* App launched as regular, show the default fragment if there isn't one already */
-                if (getSupportFragmentManager().getFragments() == null ||
-                        getSupportFragmentManager().getFragments().isEmpty()) {
+                getSupportFragmentManager().getFragments();
+                if (getSupportFragmentManager().getFragments().isEmpty()) {
                     launchHomeScreen();
                 }
                 break;
@@ -1583,7 +1583,6 @@ public class FamiliarActivity extends AppCompatActivity {
     public int getResourceIdFromAttr(int attr) {
         assert getTheme() != null;
         TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr});
-        assert ta != null;
         int resId = ta.getResourceId(0, 0);
         ta.recycle();
         return resId;
@@ -1668,7 +1667,7 @@ public class FamiliarActivity extends AppCompatActivity {
         private final Class[] mFragClasses;
         TextView textView;
 
-        DrawerEntry(int nameResource, int iconResource, boolean isHeader, Class fragments[]) {
+        DrawerEntry(int nameResource, int iconResource, boolean isHeader, Class[] fragments) {
             mNameResource = nameResource;
             mIconAttr = iconResource;
             mIsDivider = isHeader;
@@ -1825,7 +1824,7 @@ public class FamiliarActivity extends AppCompatActivity {
             parcel.writeBundle(outState);
             int size = parcel.dataSize();
             parcel.recycle();
-            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + Integer.toString(size) + " bytes");
+            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + size + " bytes");
 
             StringBuilder toPrint = new StringBuilder();
             toPrint.append("\r\n\r\n");
@@ -1862,7 +1861,7 @@ public class FamiliarActivity extends AppCompatActivity {
             parcel.writeParcelable(outState, 0);
             int size = parcel.dataSize();
             parcel.recycle();
-            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + Integer.toString(size) + " bytes");
+            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + size + " bytes");
         }
     }
 }

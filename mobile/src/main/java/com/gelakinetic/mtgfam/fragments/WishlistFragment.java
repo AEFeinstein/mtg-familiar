@@ -628,7 +628,6 @@ public class WishlistFragment extends FamiliarListFragment {
                 /* inflate a new row */
                 View setRow = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
                 ExpansionImageHelper.loadExpansionImage(getContext(), isi.mSetCode, isi.mRarity, setRow.findViewById(R.id.wishlistRowSetImage), null, ExpansionImageHelper.ExpansionImageSize.SMALL);
-                assert setRow != null;
                 /* Write the set name, color it with the rarity */
                 int color;
                 switch (isi.mRarity) {

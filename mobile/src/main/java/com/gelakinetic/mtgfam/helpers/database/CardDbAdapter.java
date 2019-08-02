@@ -1429,7 +1429,7 @@ public class CardDbAdapter {
         String delimiter = " - ";
         initialValues.put(KEY_NAME, card.getName());
         initialValues.put(KEY_SET, card.getExpansion());
-        String types[] = card.getType().split(delimiter);
+        String[] types = card.getType().split(delimiter);
         if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);
         } else {
@@ -1805,7 +1805,7 @@ public class CardDbAdapter {
     public static String getSetNameFromCode(String setCode, SQLiteDatabase database)
             throws FamiliarDbException {
 
-        String columns[] = new String[]{KEY_NAME};
+        String[] columns = new String[]{KEY_NAME};
         Cursor c = null;
         try {
             c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
@@ -1831,7 +1831,7 @@ public class CardDbAdapter {
      * @return true if the set is online only, false otherwise
      */
     public static boolean isOnlineOnly(String setCode, SQLiteDatabase database) throws FamiliarDbException {
-        String columns[] = new String[]{KEY_ONLINE_ONLY};
+        String[] columns = new String[]{KEY_ONLINE_ONLY};
         Cursor c = null;
         try {
             c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
@@ -2222,15 +2222,15 @@ public class CardDbAdapter {
             } else if (subcategory == -1) {
                 /* No subcategory specified; return the subcategories under the given category */
                 String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
-                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " WHERE " + KEY_CATEGORY + " = " + category +
                         " AND " + KEY_SUBCATEGORY + " > -1" +
                         " AND " + KEY_ENTRY + " IS NULL";
                 return mDb.rawQuery(sql, null);
             } else {
                 /* Both specified; return the rules under the given subcategory */
                 String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
-                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                        " WHERE " + KEY_CATEGORY + " = " + category +
+                        " AND " + KEY_SUBCATEGORY + " = " + subcategory +
                         " AND " + KEY_ENTRY + " IS NOT NULL";
                 return mDb.rawQuery(sql, null);
             }
@@ -2270,7 +2270,7 @@ public class CardDbAdapter {
                     String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
                             + " AND " + KEY_ENTRY + " IS NOT NULL"
-                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category);
+                            + " AND " + KEY_CATEGORY + " = " + category;
                     return mDb.rawQuery(sql, null);
                 } else {
                     /* We're searching within a subcategory, so restrict within
@@ -2278,8 +2278,8 @@ public class CardDbAdapter {
                     String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
                             + " AND " + KEY_ENTRY + " IS NOT NULL"
-                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category)
-                            + " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory);
+                            + " AND " + KEY_CATEGORY + " = " + category
+                            + " AND " + KEY_SUBCATEGORY + " = " + subcategory;
                     return mDb.rawQuery(sql, null);
                 }
             }
@@ -2306,8 +2306,8 @@ public class CardDbAdapter {
             if (entry != null) {
                 String sql = "SELECT " + KEY_POSITION +
                         " FROM " + DATABASE_TABLE_RULES +
-                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                        " WHERE " + KEY_CATEGORY + " = " + category +
+                        " AND " + KEY_SUBCATEGORY + " = " + subcategory +
                         " AND " + KEY_ENTRY + " = " + sanitizeString(entry, false);
                 c = mDb.rawQuery(sql, null);
                 if (c != null) {
@@ -2340,8 +2340,8 @@ public class CardDbAdapter {
         try {
             String sql = "SELECT " + KEY_RULE_TEXT +
                     " FROM " + DATABASE_TABLE_RULES +
-                    " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                    " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                    " WHERE " + KEY_CATEGORY + " = " + category +
+                    " AND " + KEY_SUBCATEGORY + " = " + subcategory +
                     " AND " + KEY_ENTRY + " IS NULL";
             c = mDb.rawQuery(sql, null);
             if (c != null) {
@@ -2387,7 +2387,7 @@ public class CardDbAdapter {
         String sql = "INSERT INTO " + DATABASE_TABLE_RULES + " ("
                 + KEY_CATEGORY + ", " + KEY_SUBCATEGORY + ", " + KEY_ENTRY
                 + ", " + KEY_RULE_TEXT + ", " + KEY_POSITION + ") VALUES ("
-                + String.valueOf(category) + ", " + String.valueOf(subcategory)
+                + category + ", " + subcategory
                 + ", " + entry + ", " + text + ", " + positionStr + ");";
         try {
             mDb.execSQL(sql);
@@ -2460,7 +2460,7 @@ public class CardDbAdapter {
         return DatabaseUtils.sqlEscapeString(input.trim());
     }
 
-    private static final char replacements[][] = {
+    private static final char[][] replacements = {
             {Character.toChars(0xC0)[0], 'A'},
             {Character.toChars(0xC1)[0], 'A'},
             {Character.toChars(0xC2)[0], 'A'},

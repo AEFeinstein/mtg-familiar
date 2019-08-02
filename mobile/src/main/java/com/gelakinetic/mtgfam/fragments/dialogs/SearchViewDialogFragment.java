@@ -137,7 +137,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
      * @return An int[] with the same values as "which"
      */
     private int[] toIntArray(Integer[] which) {
-        int tmp[] = new int[which.length];
+        int[] tmp = new int[which.length];
         for (int i = 0; i < which.length; i++) {
             tmp[i] = which[i];
         }
@@ -151,7 +151,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
      * @return An int[] with the same values as "which"
      */
     private Integer[] toIntegerArray(int[] which) {
-        Integer tmp[] = new Integer[which.length];
+        Integer[] tmp = new Integer[which.length];
         for (int i = 0; i < which.length; i++) {
             tmp[i] = which[i];
         }

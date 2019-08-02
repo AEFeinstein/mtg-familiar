@@ -401,7 +401,7 @@ public class ResultListFragment extends FamiliarFragment {
             int cardPosition = 0;
 
             /* Build the array of ids sequentially, make note of the chosen card's position */
-            long cardIds[] = new long[mCursor.getCount()];
+            long[] cardIds = new long[mCursor.getCount()];
             mCursor.moveToFirst();
             for (int i = 0; i < mCursor.getCount(); i++, mCursor.moveToNext()) {
                 cardIds[i] = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));

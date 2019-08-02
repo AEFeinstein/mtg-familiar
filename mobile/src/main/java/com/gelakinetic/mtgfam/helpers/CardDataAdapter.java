@@ -22,8 +22,12 @@ package com.gelakinetic.mtgfam.helpers;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 
 import com.gelakinetic.mtgfam.R;
@@ -145,14 +149,14 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
                         switch (event) {
-                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
-                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
-                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT: {
+                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL:
+                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE:
+                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT: {
                                 finalizeDelete();
                                 break;
                             }
-                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE: {
+                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION:
+                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE: {
                                 // Snackbar was dismissed by action click, handled above or
                                 // Hidden by a new snackbar, ignore it
                                 break;

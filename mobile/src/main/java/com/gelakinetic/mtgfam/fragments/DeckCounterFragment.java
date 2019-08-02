@@ -160,7 +160,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @return An ArrayList built from the String
      */
     private ArrayList<Integer> StringToArray(String string) {
-        String parts[] = string.split(",");
+        String[] parts = string.split(",");
         ArrayList<Integer> list = new ArrayList<>(parts.length - 1);
         for (String part : parts) {
             try {

@@ -518,7 +518,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mColorIndicatorLayout.setVisibility(View.GONE);
             }
 
-            String allLanguageKeys[][] = {
+            String[][] allLanguageKeys = {
                     {Language.Chinese_Traditional, CardDbAdapter.KEY_NAME_CHINESE_TRADITIONAL, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_TRADITIONAL},
                     {Language.Chinese_Simplified, CardDbAdapter.KEY_NAME_CHINESE_SIMPLIFIED, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_SIMPLIFIED},
                     {Language.French, CardDbAdapter.KEY_NAME_FRENCH, CardDbAdapter.KEY_MULTIVERSEID_FRENCH},
@@ -542,7 +542,7 @@ public class CardViewFragment extends FamiliarFragment {
             cAllCardsWithName.moveToFirst();
             while (!cAllCardsWithName.isAfterLast()) {
                 // For each foreign printing for that card
-                for (String lang[] : allLanguageKeys) {
+                for (String[] lang : allLanguageKeys) {
                     Card.ForeignPrinting fp = new Card.ForeignPrinting(
                             cAllCardsWithName.getString(cAllCardsWithName.getColumnIndex(lang[1])), lang[0],
                             cAllCardsWithName.getInt(cAllCardsWithName.getColumnIndex(lang[2])));
@@ -1003,7 +1003,7 @@ public class CardViewFragment extends FamiliarFragment {
                         getSystemService(android.content.Context.CLIPBOARD_SERVICE));
                 if (null != clipboard) {
                     String label = getResources().getString(R.string.app_name);
-                    String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+                    String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
                     ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
                     clipboard.setPrimaryClip(cd);
                 }

@@ -108,7 +108,7 @@ public class MtgAppWidgetConfigure extends Activity {
         assert AppWidgetManager.getInstance(getApplication()) != null;
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
         assert appWidgetManager != null;
-        int ids[] = appWidgetManager.getAppWidgetIds(
+        int[] ids = appWidgetManager.getAppWidgetIds(
                 new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);

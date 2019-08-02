@@ -31,8 +31,8 @@ import com.gelakinetic.mtgfam.R;
 import java.util.Arrays;
 
 public class ColorIndicatorView extends View {
-    private static final String COLORS_CHARS[] = {"w", "u", "b", "r", "g"};
-    private static final int COLOR_RESOURCES[] = {
+    private static final String[] COLORS_CHARS = {"w", "u", "b", "r", "g"};
+    private static final int[] COLOR_RESOURCES = {
             R.color.icon_white,
             R.color.icon_blue,
             R.color.icon_black,
@@ -111,7 +111,7 @@ public class ColorIndicatorView extends View {
      */
     private static String sanitizeString(String str) {
         str = str.toLowerCase();
-        boolean colors[] = new boolean[5];
+        boolean[] colors = new boolean[5];
         Arrays.fill(colors, false);
 
         for (int i = 0; i < str.length(); i++) {

@@ -102,7 +102,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
         }
 
         Bundle args = getArguments();
-        long cardIds[] = Objects.requireNonNull(args).getLongArray(CARD_ID_ARRAY);
+        long[] cardIds = Objects.requireNonNull(args).getLongArray(CARD_ID_ARRAY);
         int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
         CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);

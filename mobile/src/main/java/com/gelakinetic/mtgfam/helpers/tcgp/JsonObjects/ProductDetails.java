@@ -22,8 +22,8 @@ package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 @SuppressWarnings("FieldCanBeLocal")
 public class ProductDetails {
     private final boolean success;
-    public final String errors[];
-    public final Details results[];
+    public final String[] errors;
+    public final Details[] results;
 
     public ProductDetails() {
         success = false;

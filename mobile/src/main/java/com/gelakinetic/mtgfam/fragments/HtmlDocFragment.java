@@ -124,7 +124,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         mName = getArguments().getString(JudgesCornerFragment.PAGE_NAME);
 
         /* Get the document from the bundle, load it */
-        File file = new File(Objects.requireNonNull(getActivity()).getFilesDir(), getArguments().getString(JudgesCornerFragment.HTML_DOC));
+        File file = new File(Objects.requireNonNull(getActivity()).getFilesDir(), Objects.requireNonNull(getArguments().getString(JudgesCornerFragment.HTML_DOC)));
         StringBuilder html = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
@@ -154,7 +154,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         try {
             Bundle args = new Bundle();
             SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
-            long cardIds[] = {CardDbAdapter.getIdFromName(name, database)};
+            long[] cardIds = {CardDbAdapter.getIdFromName(name, database)};
 
             /* Load the array of ids and position into the bundle, start the fragment */
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);

@@ -23,8 +23,8 @@ package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 public class ProductInformation {
     private final int totalItems;
     private final boolean success;
-    public final String errors[];
-    public final long results[];
+    public final String[] errors;
+    public final long[] results;
     private final Object[] aggregates; // TODO what is this?
 
     public ProductInformation() {

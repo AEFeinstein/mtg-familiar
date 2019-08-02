@@ -23,12 +23,14 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.SearchView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -129,8 +131,7 @@ public abstract class FamiliarFragment extends Fragment {
 
     /**
      * Called when the Fragment is no longer resumed.  This is generally
-     * tied to {@link FamiliarActivity#onPause() Activity.onPause} of the containing
-     * Activity's lifecycle.
+     * tied to Activity.onPause of the containing Activity's lifecycle.
      * <p>
      * In this case, always remove the dialog, since it can contain stale references to the pre-rotated activity and
      * fragment after rotation. The one exception is the change log dialog, which would get removed by TTS checking

@@ -134,7 +134,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                 final int[] delta = {0};
                 final int[] absolute = {mLcPlayer.mCommanderDamage.get(position).mLife};
 
-                deltaText.setText(((delta[0] >= 0) ? "+" : "") + delta[0]);
+                deltaText.setText("+" + delta[0]);
                 absoluteText.setText("" + absolute[0]);
 
                 view.findViewById(R.id.commander_plus1).setOnClickListener(v -> {

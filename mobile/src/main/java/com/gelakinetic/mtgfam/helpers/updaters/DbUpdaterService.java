@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -234,7 +235,7 @@ public class DbUpdaterService extends IntentService {
                             /* If the digest doesn't match, mark the set for dropping
                              * and remove it from currentSetCodes so it redownloads
                              */
-                            if (set.mDigest != null && !storedDigests.get(set.mCode).equals(set.mDigest)) {
+                            if (set.mDigest != null && !Objects.requireNonNull(storedDigests.get(set.mCode)).equals(set.mDigest)) {
                                 if (logWriter != null) {
                                     logWriter.write("Dropping expansion: " + set.mCode + '\n');
                                 }

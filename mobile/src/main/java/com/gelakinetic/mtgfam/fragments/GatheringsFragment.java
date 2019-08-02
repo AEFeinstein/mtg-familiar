@@ -309,7 +309,7 @@ public class GatheringsFragment extends FamiliarFragment {
             _player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
         } else {
             try {
-                String nameParts[] = _player.mName.split(" ");
+                String[] nameParts = _player.mName.split(" ");
                 int number = Integer.parseInt(nameParts[nameParts.length - 1]);
                 if (number > mLargestPlayerNumber) {
                     mLargestPlayerNumber = number;

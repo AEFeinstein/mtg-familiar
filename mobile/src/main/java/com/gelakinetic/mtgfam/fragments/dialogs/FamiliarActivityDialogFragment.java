@@ -32,7 +32,6 @@ import android.speech.tts.TextToSpeech;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -213,12 +212,10 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                                 null != activity.mDrawerList) {
                             activity.mDrawerLayout.openDrawer(activity.mDrawerList);
                             new Handler().postDelayed(() -> {
-                                if (null != activity) {
-                                    PreferenceAdapter.setBounceDrawer(activity);
-                                    if (null != activity.mDrawerLayout &&
-                                            null != activity.mDrawerList) {
-                                        activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                    }
+                                PreferenceAdapter.setBounceDrawer(activity);
+                                if (null != activity.mDrawerLayout &&
+                                        null != activity.mDrawerList) {
+                                    activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
                                 }
                             }, 2000);
                         }

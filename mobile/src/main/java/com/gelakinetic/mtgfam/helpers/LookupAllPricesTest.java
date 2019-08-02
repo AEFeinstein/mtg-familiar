@@ -64,12 +64,12 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
         // Delete all caches
         try {
             File cacheDir = activity.getExternalCacheDir();
-            for (File cacheFile : Objects.requireNonNull(cacheDir).listFiles()) {
+            for (File cacheFile : Objects.requireNonNull(Objects.requireNonNull(cacheDir).listFiles())) {
                 //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
             cacheDir = activity.getCacheDir();
-            for (File cacheFile : Objects.requireNonNull(cacheDir).listFiles()) {
+            for (File cacheFile : Objects.requireNonNull(Objects.requireNonNull(cacheDir).listFiles())) {
                 //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
@@ -83,7 +83,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = new ArrayList<>(1);
             criteria.superTypes.add("!asdl");
-            String returnTypes[] = {
+            String[] returnTypes = {
                     CardDbAdapter.KEY_NAME,
                     CardDbAdapter.KEY_SET,
                     CardDbAdapter.KEY_MULTIVERSEID,

@@ -22,11 +22,15 @@ package com.gelakinetic.mtgfam.fragments;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.MenuRes;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
+
 import android.text.Editable;
 import android.text.InputType;
 import android.view.Menu;
@@ -319,9 +323,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                     public void onDismissed(Snackbar transientBottomBar, int event) {
                                         super.onDismissed(transientBottomBar, event);
                                         switch (event) {
-                                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
-                                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
-                                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT: {
+                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL:
+                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE:
+                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT: {
                                                 // Snackbar timed out or was dismissed by the user, so wipe the
                                                 // undoBuffer forever
                                                 for (CardDataAdapter adapter : mCardDataAdapters) {
@@ -329,8 +333,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                                 }
                                                 break;
                                             }
-                                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE: {
+                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION:
+                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE: {
                                                 // Snackbar was dismissed by action click, handled above or
                                                 // Hidden by a new snackbar, ignore it
                                                 break;

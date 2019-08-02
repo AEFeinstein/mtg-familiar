@@ -322,7 +322,7 @@ public class TcgpApi {
             addHeaders(conn);
 
             // Create the params, only adding the set if it isn't null
-            GetProductInformationOptions.NameValuesPair queryParams[];
+            GetProductInformationOptions.NameValuesPair[] queryParams;
             if (null != expansion) {
                 queryParams = new GetProductInformationOptions.NameValuesPair[]{
                         new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name}),
@@ -380,7 +380,7 @@ public class TcgpApi {
                 if (stringIds.length() > 0) {
                     stringIds.append(',');
                 }
-                stringIds.append(Long.toString(id));
+                stringIds.append(id);
             }
 
             // Create the connection with default options and headers
@@ -433,7 +433,7 @@ public class TcgpApi {
                 if (stringIds.length() > 0) {
                     stringIds.append(',');
                 }
-                stringIds.append(Long.toString(id));
+                stringIds.append(id);
             }
 
             // Create the connection with default options and headers

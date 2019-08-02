@@ -31,6 +31,7 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -108,7 +109,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
             // If the database exists, delete all the files in the database folder, including
             // any write-ahead-logs (thanks Android 9)
             if (dbFile.exists()) {
-                for (File file : dbFile.getParentFile().listFiles()) {
+                for (File file : Objects.requireNonNull(dbFile.getParentFile()).listFiles()) {
                     if (!file.delete()) {
                         /* Couldn't delete the old database, so exit */
                         return;

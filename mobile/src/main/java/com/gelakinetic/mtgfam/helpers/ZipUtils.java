@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -94,7 +95,7 @@ public class ZipUtils {
             SnackbarWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
                     SnackbarWrapper.LENGTH_SHORT);
         } catch (ZipException e) {
-            if (e.getMessage().equals("No entries")) {
+            if (Objects.requireNonNull(e.getMessage()).equals("No entries")) {
                 SnackbarWrapper.makeAndShowText(activity, R.string.main_export_no_data, SnackbarWrapper.LENGTH_SHORT);
             } else {
                 SnackbarWrapper.makeAndShowText(activity, R.string.main_export_fail, SnackbarWrapper.LENGTH_SHORT);
@@ -147,7 +148,7 @@ public class ZipUtils {
     private static ArrayList<File> findAllFiles(File... dirs) {
         ArrayList<File> files = new ArrayList<>();
         for (File dir : dirs) {
-            File listFiles[] = dir.listFiles();
+            File[] listFiles = dir.listFiles();
             assert listFiles != null;
             for (File file : listFiles) {
                 if (file.isDirectory()) {

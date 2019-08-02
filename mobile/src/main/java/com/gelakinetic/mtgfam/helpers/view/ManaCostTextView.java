@@ -107,7 +107,7 @@ public class ManaCostTextView extends ATokenTextView {
     @Override
     protected View getViewForObject(String symbol) {
         LayoutInflater l = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        ImageView view = (ImageView) l.inflate(R.layout.mana_token, (ViewGroup) getParent(), false);
+        ImageView view = (ImageView) Objects.requireNonNull(l).inflate(R.layout.mana_token, (ViewGroup) getParent(), false);
         BitmapDrawable bitmapDrawable = MANA_DRAWABLES.get(symbol);
         if (bitmapDrawable == null) {
             int resId = MANA_SYMBOLS.get(symbol);

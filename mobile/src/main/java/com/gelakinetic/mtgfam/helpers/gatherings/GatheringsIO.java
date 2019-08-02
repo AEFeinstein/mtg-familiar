@@ -160,7 +160,7 @@ public class GatheringsIO {
                 serializer.endTag("", "name");
 
                 serializer.startTag("", "startinglife");
-                serializer.text(String.valueOf(life));
+                serializer.text(life);
                 serializer.endTag("", "startinglife");
 
                 serializer.endTag("", "player");

@@ -646,7 +646,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         /* If the player's name ends in a number, and the number is larger than mPlayerNumber, set mPlayerNumber as
            it */
         try {
-            String nameParts[] = player.mName.split(" ");
+            String[] nameParts = player.mName.split(" ");
             int number = Integer.parseInt(nameParts[nameParts.length - 1]);
             if (number > mLargestPlayerNumber) {
                 mLargestPlayerNumber = number;
@@ -680,7 +680,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             /* If the player's name ends in a number, and the number is larger than mPlayerNumber, set mPlayerNumber as
                it */
             try {
-                String nameParts[] = player.mName.split(" ");
+                String[] nameParts = player.mName.split(" ");
                 int number = Integer.parseInt(nameParts[nameParts.length - 1]);
                 if (number > mLargestPlayerNumber) {
                     mLargestPlayerNumber = number;
@@ -841,7 +841,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                             /* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to
                                the m9000Player */
                             String tmp = getResources().getQuantityString(R.plurals.life_counter_spoken_life, IMPROBABLE_NUMBER, p.mName, IMPROBABLE_NUMBER);
-                            String parts[] = tmp.split(Integer.toString(IMPROBABLE_NUMBER));
+                            String[] parts = tmp.split(Integer.toString(IMPROBABLE_NUMBER));
                             mVocalizations.add(parts[0]);
                             mVocalizations.add(OVER_9000_KEY);
                             mVocalizations.add(parts[1]);
@@ -887,7 +887,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     public void onUtteranceCompleted(String key) {
         if (mVocalizations.size() > 0) {
             String toSpeak = mVocalizations.poll();
-            if (toSpeak.equals(OVER_9000_KEY)) {
+            if (Objects.requireNonNull(toSpeak).equals(OVER_9000_KEY)) {
                 try {
                     m9000Player.stop();
                     m9000Player.prepare();

@@ -236,7 +236,7 @@ public class MarketPriceFetcher {
                                         ProductDetails details = api.getProductDetails(information.results);
                                         if (details.results.length > 0) {
                                             // Assume the first result is the best result
-                                            long bestResult[] = {details.results[0].productId};
+                                            long[] bestResult = {details.results[0].productId};
                                             String bestUrl = "";
                                             boolean okResultFound = false;
                                             // Look through all results for a perfect match
@@ -420,7 +420,7 @@ public class MarketPriceFetcher {
         if (null == expansionName) {
             // Group is missing, download them all
             map.clear();
-            int offset[] = {0};
+            int[] offset = {0};
             while (true) {
                 CategoryGroups groups = api.getCategoryGroups(offset);
                 // If there are errors or no groups left, break the loop

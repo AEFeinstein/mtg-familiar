@@ -533,11 +533,11 @@ public class RulesFragment extends FamiliarFragment {
          */
         public String getHeader() {
             if (this.mSubcategory == -1) {
-                return String.valueOf(this.mCategory) + ".";
+                return this.mCategory + ".";
             } else if (this.mEntry == null) {
-                return String.valueOf((this.mCategory * 100) + this.mSubcategory) + ".";
+                return ((this.mCategory * 100) + this.mSubcategory) + ".";
             } else {
-                return String.valueOf((this.mCategory * 100 + this.mSubcategory)) + "." + this.mEntry;
+                return (this.mCategory * 100 + this.mSubcategory) + "." + this.mEntry;
             }
         }
 
@@ -698,8 +698,8 @@ public class RulesFragment extends FamiliarFragment {
         private final int mLayoutResourceId;
         private final ArrayList<DisplayItem> mItems;
 
-        private Integer mIndices[];
-        private String mAlphabet[];
+        private Integer[] mIndices;
+        private String[] mAlphabet;
 
         /**
          * Constructor

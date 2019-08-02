@@ -261,7 +261,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
                 throw new FamiliarDbException(new Exception("three spell failure"));
             }
             /* Get 3 random, distinct numbers */
-            int pos[] = new int[3];
+            int[] pos = new int[3];
             pos[0] = mRandom.nextInt(spells.getCount());
             pos[1] = mRandom.nextInt(spells.getCount());
             while (pos[0] == pos[1]) {

@@ -404,7 +404,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         private String[] tokenStringsFromTypes(String[] types) {
-            String tokenStrings[] = new String[types.length * 2];
+            String[] tokenStrings = new String[types.length * 2];
             System.arraycopy(types, 0, tokenStrings, 0, types.length);
             for (int i = 0; i < types.length; i++) {
                 tokenStrings[types.length + i] = CardDbAdapter.EXCLUDE_TOKEN + types[i];
