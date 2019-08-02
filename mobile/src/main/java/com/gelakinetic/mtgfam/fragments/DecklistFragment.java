@@ -606,6 +606,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 mLegalityCheckerTask = new LegalityCheckerTask();
                 mLegalityCheckerTask.execute(this);
+                return true;
             }
             case R.id.deck_menu_settings: {
                 showDialog(DecklistDialogFragment.DIALOG_PRICE_SETTING, null, false);
