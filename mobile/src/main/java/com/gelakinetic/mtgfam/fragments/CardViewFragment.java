@@ -1036,7 +1036,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mCard.getName() == null) {
+        if (null == mCard || mCard.getName() == null) {
             /*disable menu buttons if the card isn't initialized */
             return false;
         }
