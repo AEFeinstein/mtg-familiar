@@ -47,6 +47,7 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -61,6 +62,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -154,7 +156,7 @@ public class FamiliarActivity extends AppCompatActivity {
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
     private static final String IS_REFRESHING = "IS_REFRESHING";
-//    /* PayPal URL */
+    //    /* PayPal URL */
 //    @SuppressWarnings("SpellCheckingInspection")
 //    public static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
 //            "&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
@@ -478,7 +480,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /* Set the system bar color programatically, for lollipop+ */
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
         }
 
@@ -560,7 +562,11 @@ public class FamiliarActivity extends AppCompatActivity {
                             PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
                             PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
                             PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
-                            startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                startForegroundService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                            } else {
+                                startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                            }
                         } catch (SQLiteException | FamiliarDbException e) {
                             e.printStackTrace();
                         } finally {
@@ -616,7 +622,11 @@ public class FamiliarActivity extends AppCompatActivity {
                 case R.string.main_force_update_title: {
                     if (getNetworkState(FamiliarActivity.this, true) != -1) {
                         PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
-                        startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            startForegroundService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                        } else {
+                            startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                        }
                     }
                     shouldCloseDrawer = true;
                     break;
@@ -801,7 +811,11 @@ public class FamiliarActivity extends AppCompatActivity {
             int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
-                startService(new Intent(this, DbUpdaterService.class));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(new Intent(this, DbUpdaterService.class));
+                } else {
+                    startService(new Intent(this, DbUpdaterService.class));
+                }
             }
         }
 
