@@ -158,6 +158,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
                     foilCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
                         synchronized (lSide) {
+                            if (lSide.size() <= positionForDialog) {
+                                return;
+                            }
                             lSide.get(positionForDialog).mIsFoil = b;
                             if (!lSide.get(positionForDialog).mIsCustomPrice) {
                                 getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
@@ -170,6 +173,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* Set up the button to remove this card from the trade */
                     view.findViewById(R.id.traderDialogRemove).setOnClickListener(v -> {
                         synchronized (lSide) {
+                            if (lSide.size() <= positionForDialog) {
+                                return;
+                            }
                             lSide.remove(positionForDialog);
                         }
                         aaSide.notifyDataSetChanged();
@@ -180,6 +186,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* If this has a custom price, show the button to default the price */
                     view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(v -> {
                         synchronized (lSide) {
+                            if (lSide.size() <= positionForDialog) {
+                                return;
+                            }
                             lSide.get(positionForDialog).mIsCustomPrice = false;
                             /* This loads the price if necessary, or uses cached info */
                             getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
@@ -197,6 +206,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
                         /* Grab a reference to the card */
                         synchronized (lSide) {
+                            if (lSide.size() <= positionForDialog) {
+                                return;
+                            }
                             MtgCard data = lSide.get(positionForDialog);
 
                             /* Assume non-custom price */
@@ -265,6 +277,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, infoHandle);
 
                             synchronized (lSide) {
+                                if (lSide.size() <= positionForDialog) {
+                                    return;
+                                }
                                 /* Get the card ID, and send it to a new CardViewPagerFragment */
                                 cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).getName(),
                                         lSide.get(positionForDialog).getExpansion(), Collections.singletonList(
@@ -302,12 +317,17 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             .onPositive(onPositiveCallback)
                             .negativeText(R.string.dialog_cancel)
                             .onNegative((dialog, which) -> {
-                                // Revert any foil changes
-                                lSide.get(positionForDialog).mIsFoil = oldFoil;
-                                if (!lSide.get(positionForDialog).mIsCustomPrice) {
-                                    getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
-                                    priceText.setText(lSide.get(positionForDialog).hasPrice() ?
-                                            lSide.get(positionForDialog).getPriceString().substring(1) : "");
+                                synchronized (lSide) {
+                                    // Revert any foil changes
+                                    if (lSide.size() <= positionForDialog) {
+                                        return;
+                                    }
+                                    lSide.get(positionForDialog).mIsFoil = oldFoil;
+                                    if (!lSide.get(positionForDialog).mIsCustomPrice) {
+                                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
+                                        priceText.setText(lSide.get(positionForDialog).hasPrice() ?
+                                                lSide.get(positionForDialog).getPriceString().substring(1) : "");
+                                    }
                                 }
                             })
                             .build();
