@@ -567,7 +567,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             } else {
                                 startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                             }
-                        } catch (SQLiteException | FamiliarDbException e) {
+                        } catch (SQLiteException | FamiliarDbException | IllegalStateException e) {
                             e.printStackTrace();
                         } finally {
                             DatabaseManager.closeDatabase(FamiliarActivity.this, handle);
@@ -622,10 +622,14 @@ public class FamiliarActivity extends AppCompatActivity {
                 case R.string.main_force_update_title: {
                     if (getNetworkState(FamiliarActivity.this, true) != -1) {
                         PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        } else {
-                            startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                startForegroundService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                            } else {
+                                startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                            }
+                        } catch (IllegalStateException e) {
+                            // Ignore it
                         }
                     }
                     shouldCloseDrawer = true;
@@ -811,10 +815,14 @@ public class FamiliarActivity extends AppCompatActivity {
             int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(new Intent(this, DbUpdaterService.class));
-                } else {
-                    startService(new Intent(this, DbUpdaterService.class));
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(new Intent(this, DbUpdaterService.class));
+                    } else {
+                        startService(new Intent(this, DbUpdaterService.class));
+                    }
+                } catch (IllegalStateException e) {
+                    // Ignore it
                 }
             }
         }
@@ -1481,7 +1489,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @return True if the click was acted upon, false otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
