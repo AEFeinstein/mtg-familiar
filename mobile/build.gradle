@@ -96,13 +96,13 @@ task pmdMain(type: Pmd, group: "verification", overwrite: true) {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.0'
+    buildToolsVersion '29.0.1'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 66
-        versionName "3.6.0"
+        versionCode 67
+        versionName "3.6.1"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -148,13 +148,13 @@ dependencies {
 
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'org.apache.commons:commons-io:1.3.2'
-    implementation 'org.apache.commons:commons-collections4:4.3'
+    implementation 'org.apache.commons:commons-collections4:4.4'
 
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
-    implementation 'com.github.woxthebox:draglistview:1.6.4'
+    implementation 'com.github.woxthebox:draglistview:1.6.6'
     implementation 'org.jetbrains:annotations:17.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
@@ -174,7 +174,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     annotationProcessor 'androidx.annotation:annotation:1.1.0'
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.11'
     implementation 'com.nytimes.android:cache3:3.1.1', {
         exclude module: 'jsr305'
         exclude module: 'jcip-annotations'
