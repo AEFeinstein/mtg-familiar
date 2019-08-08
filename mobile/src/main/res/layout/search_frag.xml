@@ -252,6 +252,25 @@
             <LinearLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/text.medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Is Commander"
+                    android:gravity="center_vertical"/>
+
+                <CheckBox
+                    android:id="@+id/isCommander"
+                    style="@style/forty_eight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 

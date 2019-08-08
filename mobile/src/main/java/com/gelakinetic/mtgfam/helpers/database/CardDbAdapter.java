@@ -796,6 +796,18 @@ public class CardDbAdapter {
         List<String> supertypes = criteria.superTypes;
         List<String> subtypes = criteria.subTypes;
 
+        if(criteria.isCommander){
+            if(supertypes == null){
+                supertypes = new ArrayList<>();
+            }
+            if(!supertypes.contains("Legendary")){
+                supertypes.add("Legendary");
+            }
+            if(!supertypes.contains("Creature")){
+                supertypes.add("Creature");
+            }
+        }
+
         if (supertypes != null && !supertypes.isEmpty()) {
             /* Concat a leading and a trailing space to the supertype */
             final String supertypeInDb = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' '";
@@ -1101,6 +1113,9 @@ public class CardDbAdapter {
             }
             statement.append(")");
         }
+        if(criteria.format == null && criteria.isCommander){
+            criteria.format = "Commander";
+        }
 
         if (criteria.format != null) {
             try {
@@ -1122,7 +1137,12 @@ public class CardDbAdapter {
                     }
                     statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'");
                 }
-                statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
+                String commanderText = "";
+                if(criteria.isCommander && "Commander".equals(criteria.format)){
+                    commanderText = " AND " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = 'Commander' ";
+                }
+
+                statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(commanderText).append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
 
                 // Ensure pauper only searches commons in valid Pauper sets
                 if ("Pauper".equals(criteria.format)) {

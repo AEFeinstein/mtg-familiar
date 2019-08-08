@@ -124,6 +124,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private CheckBox mCheckboxG;
     private CheckBox mCheckboxL;
     private Spinner mColorSpinner;
+    private CheckBox mIsCommander;
     private CheckBox mCheckboxWIdentity;
     private CheckBox mCheckboxUIdentity;
     private CheckBox mCheckboxBIdentity;
@@ -233,6 +234,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxRIdentity = myFragmentView.findViewById(R.id.checkBoxR_identity);
         mCheckboxGIdentity = myFragmentView.findViewById(R.id.checkBoxG_identity);
         mCheckboxLIdentity = myFragmentView.findViewById(R.id.checkBoxL_identity);
+        mIsCommander = myFragmentView.findViewById(R.id.isCommander);
 
         mColorSpinner = myFragmentView.findViewById(R.id.colorlogic);
         mColorIdentitySpinner = myFragmentView.findViewById(R.id.coloridentitylogic);
@@ -647,6 +649,8 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         searchCriteria.colorLogic = mColorSpinner.getSelectedItemPosition();
 
+        searchCriteria.isCommander = mIsCommander.isChecked();
+
         /* Build a color identity string */
         searchCriteria.colorIdentity = "";
 
@@ -808,6 +812,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxL.setChecked(false);
         mColorSpinner.setSelection(2);
 
+        mIsCommander.setChecked(false);
         mCheckboxWIdentity.setChecked(false);
         mCheckboxUIdentity.setChecked(false);
         mCheckboxBIdentity.setChecked(false);
@@ -923,6 +928,8 @@ public class SearchViewFragment extends FamiliarFragment {
             mCheckboxL.setChecked(criteria.color.contains("L"));
         }
         mColorSpinner.setSelection(criteria.colorLogic);
+
+        mIsCommander.setChecked(criteria.isCommander);
 
         if (criteria.colorIdentity != null) {
             mCheckboxWIdentity.setChecked(criteria.colorIdentity.contains("W"));
