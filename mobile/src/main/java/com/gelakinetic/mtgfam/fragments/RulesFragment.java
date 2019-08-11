@@ -403,7 +403,7 @@ public class RulesFragment extends FamiliarFragment {
      * @param shouldLink true if links should be added, false otherwise
      * @return a SpannableString with glyphs and links
      */
-    private SpannableString formatText(String input, boolean shouldLink) {
+    private SpannableString formatText(String input, boolean shouldLink, boolean hasCards) {
         String encodedInput = input;
         encodedInput = mUnderscorePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
         encodedInput = mExamplePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
@@ -460,6 +460,40 @@ public class RulesFragment extends FamiliarFragment {
                 }
             }
         }
+
+        if (hasCards) {
+            String[] cards = cs.toString().split(Pattern.quote("\n"));
+            int indexEnd = 0;
+            for (String cardName : cards) {
+                int indexStart = result.toString().indexOf(cardName, indexEnd);
+                indexEnd = indexStart + cardName.length();
+                result.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+                        FamiliarDbHandle handle = new FamiliarDbHandle();
+                        try {
+                            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+                            long cardId = CardDbAdapter.fetchIdByName(cardName, database);
+                            Bundle args = new Bundle();
+                            if (cardId > 0) {
+                                args.putLongArray(
+                                        CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{cardId}
+                                );
+                                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+                                CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                                startNewFragment(cvpFrag, args);
+                            }
+                        } catch (Exception e) {
+                            /* Just eat it */
+                        } finally {
+                            DatabaseManager.closeDatabase(getActivity(), handle);
+                        }
+                    }
+                }, indexStart, indexEnd, 0);
+            }
+        }
+
         return result;
     }
 
@@ -689,6 +723,13 @@ public class RulesFragment extends FamiliarFragment {
         public boolean isClickable() {
             return this.mClickable;
         }
+
+        /**
+         * @return whether this entry is a list of cards
+         */
+        boolean isListOfCards() {
+            return mLegality.equals(getString(R.string.card_view_banned))|| mLegality.equals(getString(R.string.rules_banned_as_commander))||mLegality.equals(getString(R.string.card_view_restricted));
+        }
     }
 
     /**
@@ -771,16 +812,18 @@ public class RulesFragment extends FamiliarFragment {
                 String header = data.getHeader();
                 String text = data.getText();
 
-                rulesHeader.setText(formatText(header, false), BufferType.SPANNABLE);
+                rulesHeader.setText(formatText(header, false, false), BufferType.SPANNABLE);
                 if (text.equals("")) {
                     rulesText.setVisibility(View.GONE);
                 } else {
                     boolean shouldLink = true;
+                    boolean hasCards = false;
                     if (data instanceof BannedItem) {
                         shouldLink = false;
+                        hasCards = ((BannedItem)data).isListOfCards();
                     }
                     rulesText.setVisibility(View.VISIBLE);
-                    rulesText.setText(formatText(text, shouldLink), BufferType.SPANNABLE);
+                    rulesText.setText(formatText(text, shouldLink, hasCards), BufferType.SPANNABLE);
                 }
                 if (!data.isClickable()) {
                     rulesText.setMovementMethod(LinkMovementMethod.getInstance());
