@@ -726,6 +726,8 @@ public class CardDbAdapter {
             }
         }
 
+
+
         /* Check if the watermark matches exactly */
         if (criteria.watermark != null) {
             statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_WATERMARK + " = ").append(sanitizeString(criteria.watermark, false)).append(")");
@@ -796,17 +798,10 @@ public class CardDbAdapter {
         List<String> supertypes = criteria.superTypes;
         List<String> subtypes = criteria.subTypes;
 
-        if(criteria.isCommander){
-            if(supertypes == null){
-                supertypes = new ArrayList<>();
+            if(criteria.isCommander){
+                backface = false;
+                statement.append(" AND ((' ' ||" + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Planeswalker %' AND " + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE '%can be your commander%') OR (( ' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Creature %') AND (' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Legendary %')))");
             }
-            if(!supertypes.contains("Legendary")){
-                supertypes.add("Legendary");
-            }
-            if(!supertypes.contains("Creature")){
-                supertypes.add("Creature");
-            }
-        }
 
         if (supertypes != null && !supertypes.isEmpty()) {
             /* Concat a leading and a trailing space to the supertype */

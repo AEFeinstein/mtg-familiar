@@ -258,7 +258,7 @@
                     style="@style/text.medium"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Is Commander"
+                    android:text="@string/is_commander"
                     android:gravity="center_vertical"/>
 
                 <CheckBox

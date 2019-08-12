@@ -204,6 +204,7 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="search_mana_cost">"Mana Cost"</string>
     <string name="search_collectors_number">"Collector's Number"</string>
     <string name="search_color_title">"Color"</string>
+    <string name="is_commander">"Is Commander"</string>
     <string name="search_color_identity_title">"Color Identity"</string>
 
     <!-- Card view activity -->
