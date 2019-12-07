@@ -1113,10 +1113,6 @@ public class CardDbAdapter {
                 /* If the format is not eternal, filter by set */
                 if (numLegalSetCursor.getCount() > 0) {
                     String toAppend = " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN (" + " SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME + " FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B " + " WHERE ";
-                    // Ensure pauper only searches commons in valid Pauper sets
-                    if ("Pauper".equals(criteria.format)) {
-                        toAppend += DATABASE_TABLE_CARDS + "_B." + KEY_RARITY + " = " + ((int) 'C') + " AND ";
-                    }
                     toAppend += DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN (" + " SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "' ) )";
                     statement.append(toAppend);
                 } else {
@@ -1127,6 +1123,11 @@ public class CardDbAdapter {
                     statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'");
                 }
                 statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
+
+                // Ensure pauper only searches commons in valid Pauper sets
+                if ("Pauper".equals(criteria.format)) {
+                    statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_RARITY).append(" = ").append(((int) 'C')).append(" ");
+                }
 
                 numLegalSetCursor.close();
             } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
