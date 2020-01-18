@@ -35,6 +35,8 @@ import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -2536,68 +2538,6 @@ public class CardDbAdapter {
         return DatabaseUtils.sqlEscapeString(input.trim());
     }
 
-    private static final char[][] replacements = {
-            {Character.toChars(0xC0)[0], 'A'},
-            {Character.toChars(0xC1)[0], 'A'},
-            {Character.toChars(0xC2)[0], 'A'},
-            {Character.toChars(0xC3)[0], 'A'},
-            {Character.toChars(0xC4)[0], 'A'},
-            {Character.toChars(0xC5)[0], 'A'},
-            //{Character.toChars(0xC6)[0], 'Ae'},
-            {Character.toChars(0xC7)[0], 'C'},
-            {Character.toChars(0xC8)[0], 'E'},
-            {Character.toChars(0xC9)[0], 'E'},
-            {Character.toChars(0xCA)[0], 'E'},
-            {Character.toChars(0xCB)[0], 'E'},
-            {Character.toChars(0xCC)[0], 'I'},
-            {Character.toChars(0xCD)[0], 'I'},
-            {Character.toChars(0xCE)[0], 'I'},
-            {Character.toChars(0xCF)[0], 'I'},
-            {Character.toChars(0xD0)[0], 'D'},
-            {Character.toChars(0xD1)[0], 'N'},
-            {Character.toChars(0xD2)[0], 'O'},
-            {Character.toChars(0xD3)[0], 'O'},
-            {Character.toChars(0xD4)[0], 'O'},
-            {Character.toChars(0xD5)[0], 'O'},
-            {Character.toChars(0xD6)[0], 'O'},
-            {Character.toChars(0xD7)[0], 'x'},
-            {Character.toChars(0xD8)[0], 'O'},
-            {Character.toChars(0xD9)[0], 'U'},
-            {Character.toChars(0xDA)[0], 'U'},
-            {Character.toChars(0xDB)[0], 'U'},
-            {Character.toChars(0xDC)[0], 'U'},
-            {Character.toChars(0xDD)[0], 'Y'},
-            {Character.toChars(0xE0)[0], 'a'},
-            {Character.toChars(0xE1)[0], 'a'},
-            {Character.toChars(0xE2)[0], 'a'},
-            {Character.toChars(0xE3)[0], 'a'},
-            {Character.toChars(0xE4)[0], 'a'},
-            {Character.toChars(0xE5)[0], 'a'},
-            //{Character.toChars(0xE6)[0], 'ae'},
-            {Character.toChars(0xE7)[0], 'c'},
-            {Character.toChars(0xE8)[0], 'e'},
-            {Character.toChars(0xE9)[0], 'e'},
-            {Character.toChars(0xEA)[0], 'e'},
-            {Character.toChars(0xEB)[0], 'e'},
-            {Character.toChars(0xEC)[0], 'i'},
-            {Character.toChars(0xED)[0], 'i'},
-            {Character.toChars(0xEE)[0], 'i'},
-            {Character.toChars(0xEF)[0], 'i'},
-            {Character.toChars(0xF1)[0], 'n'},
-            {Character.toChars(0xF2)[0], 'o'},
-            {Character.toChars(0xF3)[0], 'o'},
-            {Character.toChars(0xF4)[0], 'o'},
-            {Character.toChars(0xF5)[0], 'o'},
-            {Character.toChars(0xF6)[0], 'o'},
-            {Character.toChars(0xF8)[0], 'o'},
-            {Character.toChars(0xF9)[0], 'u'},
-            {Character.toChars(0xFA)[0], 'u'},
-            {Character.toChars(0xFB)[0], 'u'},
-            {Character.toChars(0xFC)[0], 'u'},
-            {Character.toChars(0xFD)[0], 'y'},
-            {Character.toChars(0xFF)[0], 'y'}
-    };
-
     /**
      * Helper function to remove all non-ascii characters with accent marks from a String.
      *
@@ -2605,21 +2545,6 @@ public class CardDbAdapter {
      * @return The accent-less String
      */
     public static String removeAccentMarks(String str) {
-        StringBuilder out = new StringBuilder(str.length());
-        char[] letters = str.toCharArray();
-        for (char letter : letters) {
-            boolean matchFailed = true;
-            for (char[] replacement : replacements) {
-                if (letter == replacement[0]) {
-                    out.append(replacement[1]);
-                    matchFailed = false;
-                    break;
-                }
-            }
-            if (matchFailed) {
-                out.append(letter);
-            }
-        }
-        return out.toString();
+        return StringUtils.stripAccents(str);
     }
 }
