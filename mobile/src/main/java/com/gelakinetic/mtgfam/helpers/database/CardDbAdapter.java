@@ -736,11 +736,16 @@ public class CardDbAdapter {
                 DATABASE_TABLE_SETS + "." + KEY_CODE +
                 " WHERE " + name + " COLLATE NOCASE IN (" +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_TRADITIONAL + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_SIMPLIFIED + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_FRENCH + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_GERMAN + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_ITALIAN + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL + "," +
-                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_SPANISH +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_SPANISH + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN +
                 ") ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
         Cursor cursor = null;
