@@ -755,7 +755,7 @@ public class CardDbAdapter {
             cursor = mDb.rawQuery(sql, null);
             if (cursor != null && cursor.getCount() > 0) {
                 long[] ids = new long[cursor.getCount()];
-                for (int i=0; i<cursor.getCount(); i++) {
+                for (int i = 0; i < cursor.getCount(); i++) {
                     cursor.moveToNext();
                     ids[i] = cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
                 }
@@ -2532,10 +2532,17 @@ public class CardDbAdapter {
      * @return The sanitized String
      */
     private static String sanitizeString(String input, boolean removeAccentMarks) {
-        if (removeAccentMarks) {
-            return DatabaseUtils.sqlEscapeString(removeAccentMarks(input).trim());
+        input = input.trim();
+        if ('[' == input.charAt(0)) {
+            input = input.substring(1);
         }
-        return DatabaseUtils.sqlEscapeString(input.trim());
+        if (input.endsWith("]")) {
+            input = input.substring(0, input.length() - 1);
+        }
+        if (removeAccentMarks) {
+            return DatabaseUtils.sqlEscapeString(removeAccentMarks(input));
+        }
+        return DatabaseUtils.sqlEscapeString(input);
     }
 
     /**
