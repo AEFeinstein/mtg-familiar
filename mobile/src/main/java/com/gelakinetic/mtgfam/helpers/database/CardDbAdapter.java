@@ -35,6 +35,8 @@ import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,7 +53,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 106;
+    public static final int DATABASE_VERSION = 107;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -107,18 +109,23 @@ public class CardDbAdapter {
     public static final String KEY_NAME_CHINESE_SIMPLIFIED = "NAME_CHINESE_SIMPLIFIED";
     public static final String KEY_MULTIVERSEID_CHINESE_SIMPLIFIED = "MULTIVERSEID_CHINESE_SIMPLIFIED";
     public static final String KEY_NAME_FRENCH = "NAME_FRENCH";
+    public static final String KEY_NAME_NO_ACCENT_FRENCH = "NAME_NO_ACCENT_FRENCH";
     public static final String KEY_MULTIVERSEID_FRENCH = "MULTIVERSEID_FRENCH";
     public static final String KEY_NAME_GERMAN = "NAME_GERMAN";
+    public static final String KEY_NAME_NO_ACCENT_GERMAN = "NAME_NO_ACCENT_GERMAN";
     public static final String KEY_MULTIVERSEID_GERMAN = "MULTIVERSEID_GERMAN";
     public static final String KEY_NAME_ITALIAN = "NAME_ITALIAN";
+    public static final String KEY_NAME_NO_ACCENT_ITALIAN = "NAME_NO_ACCENT_ITALIAN";
     public static final String KEY_MULTIVERSEID_ITALIAN = "MULTIVERSEID_ITALIAN";
     public static final String KEY_NAME_JAPANESE = "NAME_JAPANESE";
     public static final String KEY_MULTIVERSEID_JAPANESE = "MULTIVERSEID_JAPANESE";
     public static final String KEY_NAME_PORTUGUESE_BRAZIL = "NAME_PORTUGUESE_BRAZIL";
+    public static final String KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL = "NAME_NO_ACCENT_PORTUGUESE_BRAZIL";
     public static final String KEY_MULTIVERSEID_PORTUGUESE_BRAZIL = "MULTIVERSEID_PORTUGUESE_BRAZIL";
     public static final String KEY_NAME_RUSSIAN = "NAME_RUSSIAN";
     public static final String KEY_MULTIVERSEID_RUSSIAN = "MULTIVERSEID_RUSSIAN";
     public static final String KEY_NAME_SPANISH = "NAME_SPANISH";
+    public static final String KEY_NAME_NO_ACCENT_SPANISH = "NAME_NO_ACCENT_SPANISH";
     public static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
     public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
     public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
@@ -151,18 +158,23 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_SIMPLIFIED,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_SIMPLIFIED,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_FRENCH,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_FRENCH,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_GERMAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_GERMAN,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_ITALIAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_ITALIAN,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_JAPANESE,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_PORTUGUESE_BRAZIL,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_RUSSIAN,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_SPANISH,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_SPANISH,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
@@ -236,18 +248,23 @@ public class CardDbAdapter {
                     KEY_NAME_CHINESE_SIMPLIFIED + " text, " +
                     KEY_MULTIVERSEID_CHINESE_SIMPLIFIED + " integer, " +
                     KEY_NAME_FRENCH + " text, " +
+                    KEY_NAME_NO_ACCENT_FRENCH + " text, " +
                     KEY_MULTIVERSEID_FRENCH + " integer, " +
                     KEY_NAME_GERMAN + " text, " +
+                    KEY_NAME_NO_ACCENT_GERMAN + " text, " +
                     KEY_MULTIVERSEID_GERMAN + " integer, " +
                     KEY_NAME_ITALIAN + " text, " +
+                    KEY_NAME_NO_ACCENT_ITALIAN + " text, " +
                     KEY_MULTIVERSEID_ITALIAN + " integer, " +
                     KEY_NAME_JAPANESE + " text, " +
                     KEY_MULTIVERSEID_JAPANESE + " integer, " +
                     KEY_NAME_PORTUGUESE_BRAZIL + " text, " +
+                    KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL + " text, " +
                     KEY_MULTIVERSEID_PORTUGUESE_BRAZIL + " integer, " +
                     KEY_NAME_RUSSIAN + " text, " +
                     KEY_MULTIVERSEID_RUSSIAN + " integer, " +
                     KEY_NAME_SPANISH + " text, " +
+                    KEY_NAME_NO_ACCENT_SPANISH + " text, " +
                     KEY_MULTIVERSEID_SPANISH + " integer, " +
                     KEY_NAME_KOREAN + " text, " +
                     KEY_MULTIVERSEID_KOREAN + " integer);";
@@ -690,6 +707,61 @@ public class CardDbAdapter {
                 return cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
             }
             return -1;
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        } finally {
+            if (null != cursor) {
+                cursor.close();
+            }
+        }
+    }
+
+    /**
+     * Given a card name, return the KEY_ID of matching cards, searching every language.
+     * <p>
+     * TODO online only pref
+     *
+     * @param name The name of the card
+     * @param mDb  The database to query
+     * @return The KEY_ID values
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static long[] fetchIdsByLocalizedName(String name, SQLiteDatabase mDb) throws FamiliarDbException {
+        /* replace lowercase ae with Ae */
+        name = sanitizeString(name, true);
+
+        String sql = "SELECT " +
+                DATABASE_TABLE_CARDS + "." + KEY_ID +
+                " FROM " + DATABASE_TABLE_CARDS +
+                " JOIN " + DATABASE_TABLE_SETS +
+                " ON " + DATABASE_TABLE_CARDS + "." + KEY_SET + "=" +
+                DATABASE_TABLE_SETS + "." + KEY_CODE +
+                " WHERE " + name + " COLLATE NOCASE IN (" +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_TRADITIONAL + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_SIMPLIFIED + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_FRENCH + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_GERMAN + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_ITALIAN + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_SPANISH + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN +
+                ") ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
+
+        Cursor cursor = null;
+        try {
+            cursor = mDb.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                long[] ids = new long[cursor.getCount()];
+                for (int i=0; i<cursor.getCount(); i++) {
+                    cursor.moveToNext();
+                    ids[i] = cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
+                }
+                return ids;
+            }
+            return new long[0];
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
@@ -1483,16 +1555,19 @@ public class CardDbAdapter {
                 }
                 case Language.French: {
                     initialValues.put(KEY_NAME_FRENCH, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_FRENCH, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_FRENCH, fp.getMultiverseId());
                     break;
                 }
                 case Language.German: {
                     initialValues.put(KEY_NAME_GERMAN, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_GERMAN, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_GERMAN, fp.getMultiverseId());
                     break;
                 }
                 case Language.Italian: {
                     initialValues.put(KEY_NAME_ITALIAN, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_ITALIAN, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_ITALIAN, fp.getMultiverseId());
                     break;
                 }
@@ -1503,6 +1578,7 @@ public class CardDbAdapter {
                 }
                 case Language.Portuguese_Brazil: {
                     initialValues.put(KEY_NAME_PORTUGUESE_BRAZIL, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_PORTUGUESE_BRAZIL, fp.getMultiverseId());
                     break;
                 }
@@ -1513,6 +1589,7 @@ public class CardDbAdapter {
                 }
                 case Language.Spanish: {
                     initialValues.put(KEY_NAME_SPANISH, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_SPANISH, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_SPANISH, fp.getMultiverseId());
                     break;
                 }
@@ -2461,68 +2538,6 @@ public class CardDbAdapter {
         return DatabaseUtils.sqlEscapeString(input.trim());
     }
 
-    private static final char[][] replacements = {
-            {Character.toChars(0xC0)[0], 'A'},
-            {Character.toChars(0xC1)[0], 'A'},
-            {Character.toChars(0xC2)[0], 'A'},
-            {Character.toChars(0xC3)[0], 'A'},
-            {Character.toChars(0xC4)[0], 'A'},
-            {Character.toChars(0xC5)[0], 'A'},
-            //{Character.toChars(0xC6)[0], 'Ae'},
-            {Character.toChars(0xC7)[0], 'C'},
-            {Character.toChars(0xC8)[0], 'E'},
-            {Character.toChars(0xC9)[0], 'E'},
-            {Character.toChars(0xCA)[0], 'E'},
-            {Character.toChars(0xCB)[0], 'E'},
-            {Character.toChars(0xCC)[0], 'I'},
-            {Character.toChars(0xCD)[0], 'I'},
-            {Character.toChars(0xCE)[0], 'I'},
-            {Character.toChars(0xCF)[0], 'I'},
-            {Character.toChars(0xD0)[0], 'D'},
-            {Character.toChars(0xD1)[0], 'N'},
-            {Character.toChars(0xD2)[0], 'O'},
-            {Character.toChars(0xD3)[0], 'O'},
-            {Character.toChars(0xD4)[0], 'O'},
-            {Character.toChars(0xD5)[0], 'O'},
-            {Character.toChars(0xD6)[0], 'O'},
-            {Character.toChars(0xD7)[0], 'x'},
-            {Character.toChars(0xD8)[0], 'O'},
-            {Character.toChars(0xD9)[0], 'U'},
-            {Character.toChars(0xDA)[0], 'U'},
-            {Character.toChars(0xDB)[0], 'U'},
-            {Character.toChars(0xDC)[0], 'U'},
-            {Character.toChars(0xDD)[0], 'Y'},
-            {Character.toChars(0xE0)[0], 'a'},
-            {Character.toChars(0xE1)[0], 'a'},
-            {Character.toChars(0xE2)[0], 'a'},
-            {Character.toChars(0xE3)[0], 'a'},
-            {Character.toChars(0xE4)[0], 'a'},
-            {Character.toChars(0xE5)[0], 'a'},
-            //{Character.toChars(0xE6)[0], 'ae'},
-            {Character.toChars(0xE7)[0], 'c'},
-            {Character.toChars(0xE8)[0], 'e'},
-            {Character.toChars(0xE9)[0], 'e'},
-            {Character.toChars(0xEA)[0], 'e'},
-            {Character.toChars(0xEB)[0], 'e'},
-            {Character.toChars(0xEC)[0], 'i'},
-            {Character.toChars(0xED)[0], 'i'},
-            {Character.toChars(0xEE)[0], 'i'},
-            {Character.toChars(0xEF)[0], 'i'},
-            {Character.toChars(0xF1)[0], 'n'},
-            {Character.toChars(0xF2)[0], 'o'},
-            {Character.toChars(0xF3)[0], 'o'},
-            {Character.toChars(0xF4)[0], 'o'},
-            {Character.toChars(0xF5)[0], 'o'},
-            {Character.toChars(0xF6)[0], 'o'},
-            {Character.toChars(0xF8)[0], 'o'},
-            {Character.toChars(0xF9)[0], 'u'},
-            {Character.toChars(0xFA)[0], 'u'},
-            {Character.toChars(0xFB)[0], 'u'},
-            {Character.toChars(0xFC)[0], 'u'},
-            {Character.toChars(0xFD)[0], 'y'},
-            {Character.toChars(0xFF)[0], 'y'}
-    };
-
     /**
      * Helper function to remove all non-ascii characters with accent marks from a String.
      *
@@ -2530,21 +2545,6 @@ public class CardDbAdapter {
      * @return The accent-less String
      */
     public static String removeAccentMarks(String str) {
-        StringBuilder out = new StringBuilder(str.length());
-        char[] letters = str.toCharArray();
-        for (char letter : letters) {
-            boolean matchFailed = true;
-            for (char[] replacement : replacements) {
-                if (letter == replacement[0]) {
-                    out.append(replacement[1]);
-                    matchFailed = false;
-                    break;
-                }
-            }
-            if (matchFailed) {
-                out.append(letter);
-            }
-        }
-        return out.toString();
+        return StringUtils.stripAccents(str);
     }
 }
