@@ -430,16 +430,16 @@ public class LcPlayer {
     }
 
     /**
-     * @param i       The int to turn into a string
-     * @param addSign true to have a leading "+", false otherwise
-     * @return The String representation of i
-     */
-    private String formatInt(int i, boolean addSign) {
-        if (addSign) {
-            return String.format(Locale.getDefault(), "%+d", i);
-        }
-        return String.format(Locale.getDefault(), "%d", i);
-    }
+	 * @param i        The int to turn into a string
+	 * @param addSign  true to have a leading "+", false otherwise
+	 * @return  The String representation of i
+	 */
+	private static String formatInt(int i, boolean addSign) {
+		if (addSign) {
+			return String.format(Locale.getDefault(), "%+d", i);
+		}
+		return String.format(Locale.getDefault(), "%d", i);
+	}
 
     /**
      * Returns a string containing all the player data in the form:
