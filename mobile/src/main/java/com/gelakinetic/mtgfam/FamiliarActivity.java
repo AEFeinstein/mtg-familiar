@@ -892,12 +892,10 @@ public class FamiliarActivity extends AppCompatActivity {
                             if (queryParam.matches("\\+\\[.+\\]")) { // See #458
                                 cardName = queryParam.substring(2, queryParam.length() - 1);
                             }
-                            cursor = CardDbAdapter.fetchCardByName(cardName,
-                                    Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, false, false, database);
-                            if (cursor.getCount() != 0) {
+                            long[] cardIds = CardDbAdapter.fetchIdsByLocalizedName(cardName, database);
+                            if (cardIds.length != 0) {
                                 isDeepLink = true;
-                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
                             }
                             if (args.size() == 0) {
                                 throw new Exception("Not Found");
