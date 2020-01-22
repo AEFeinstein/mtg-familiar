@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -83,7 +84,7 @@ public class ZipUtils {
         ArrayList<File> files = findAllFiles(activity.getFilesDir(),
                 new File(sharedPrefsDir));
 
-        File sdCard = Environment.getExternalStorageDirectory();
+        File sdCard = activity.getFilesDir();
         File zipOut = new File(sdCard, BACKUP_FILE_NAME);
         if (zipOut.exists()) {
             if (!zipOut.delete()) {
@@ -131,11 +132,15 @@ public class ZipUtils {
         }
 
         /* Try unzipping the file */
-        try (ZipFile zipFile = new ZipFile(new File(Environment.getExternalStorageDirectory(), BACKUP_FILE_NAME))) {
+        try (ZipFile zipFile = new ZipFile(new File(activity.getFilesDir(), BACKUP_FILE_NAME))) {
             unZipIt(zipFile, activity);
             SnackbarWrapper.makeAndShowText(activity, R.string.main_import_success, SnackbarWrapper.LENGTH_SHORT);
         } catch (IOException e) {
-            SnackbarWrapper.makeAndShowText(activity, R.string.main_import_fail, SnackbarWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(activity,
+                    String.format(activity.getString(R.string.main_import_fail),
+                            BACKUP_FILE_NAME,
+                            activity.getFilesDir().getAbsolutePath()),
+                    SnackbarWrapper.LENGTH_XLONG);
         }
     }
 
