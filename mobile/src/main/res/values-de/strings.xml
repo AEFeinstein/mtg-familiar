@@ -81,7 +81,7 @@
 <string name="main_export_fail">"Konnte die Daten nicht auf der SD-Karte speichern"</string>
 <string name="main_import_data_title">"Daten von der SD-Karte laden"</string>
 <string name="main_import_success">"Importieren erfolgreich"</string>
-<string name="main_import_fail">"Importieren fehlgeschlagen. Bitte speicher die Datei MTGFamiliarBackup.zip im Stammverzeichnis deiner SD-Karte ab."</string>
+<string name="main_import_fail">"Importieren fehlgeschlagen. Bitte speicher die Datei %1$s im %2$s."</string>
 <string name="main_about">"Über diese App"</string>
 
 <!-- Some grammar corrections and changes in language tone. -->

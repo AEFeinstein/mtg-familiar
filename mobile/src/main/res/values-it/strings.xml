@@ -71,7 +71,7 @@
 <string name="main_export_fail">"Salvataggio dei dati sulla scheda SD fallito"</string>
 <string name="main_import_data_title">"Carica dati dalla scheda SD"</string>
 <string name="main_import_success">"Caricamento completato"</string>
-<string name="main_import_fail">"Caricamento fallito. Metti il file MTGFamiliarBackup.zip nella cartella files dei dati di quest app"</string>
+<string name="main_import_fail">"Caricamento fallito. Metti il file %1$s nella %2$s"</string>
 <string name="main_about">"Info"</string>
 <string name="main_about_text">"Questa app è il mio regalo per la comunità di MTG.&lt;br&gt;
 &lt;br&gt;

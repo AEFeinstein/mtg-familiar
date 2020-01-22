@@ -70,7 +70,7 @@
 <string name="main_export_fail">"Nepodarilo sa uložiť dáta na SD kartu "</string>
 <string name="main_import_data_title">"Načítať dáta z SD"</string>
 <string name="main_import_success">"Načítanie bolo úspešné"</string>
-<string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte MTGFamiliarBackup.zip do koreňového adresára SD karty"</string>
+<string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte %1$s do %2$s"</string>
 <string name="main_about">"O aplikácii"</string>
 <string name="main_about_text">"Táto aplikácia je môj darček pre MTG komunitu.&lt;br&gt;
 &lt;br&gt;
