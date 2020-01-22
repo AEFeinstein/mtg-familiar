@@ -71,7 +71,7 @@
 <string name="main_export_fail">"Falha ao salvar dados no cartão SD"</string>
 <string name="main_import_data_title">"Importar Dados do SD"</string>
 <string name="main_import_success">"Dados importados com sucesso"</string>
-<string name="main_import_fail">"A importação falhou. Por favor, coloque MTGFamiliarBackup.zip no diretório raiz do seu cartão SD."</string>
+<string name="main_import_fail">"A importação falhou. Por favor, coloque %1$s no %2$s."</string>
 <string name="main_about">"Sobre"</string>
 <string name="main_about_text">"Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
 &lt;br&gt;

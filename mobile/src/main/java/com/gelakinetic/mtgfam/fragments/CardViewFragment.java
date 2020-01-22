@@ -653,7 +653,6 @@ public class CardViewFragment extends FamiliarFragment {
                 // Or display the path where it's saved
                 SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + msi.getFilePath(), SnackbarWrapper.LENGTH_LONG);
             }
-            return;
         } else {
             runGlideTarget(new FamiliarGlideTarget(this, new FamiliarGlideTarget.DrawableLoadedCallback() {
                 /**
@@ -727,15 +726,13 @@ public class CardViewFragment extends FamiliarFragment {
      * @return The file path and ID for this card's image in the MediaStore, or null
      */
     @javax.annotation.Nullable
-    MediaStoreInfo getMediaStoreInfo() {
-        Cursor mCursor = null;
-        try {
-            mCursor = getContext().getContentResolver().query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    new String[]{MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID},
-                    MediaStore.Images.Media.DISPLAY_NAME + " = ?",
-                    new String[]{getSavedFileName()},
-                    MediaStore.Images.Media.DEFAULT_SORT_ORDER);
+    private MediaStoreInfo getMediaStoreInfo() {
+        try (Cursor mCursor = getContext().getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID},
+                MediaStore.Images.Media.DISPLAY_NAME + " = ?",
+                new String[]{getSavedFileName()},
+                MediaStore.Images.Media.DEFAULT_SORT_ORDER)) {
             if (mCursor.getCount() > 0) {
                 mCursor.moveToFirst();
                 return new MediaStoreInfo(
@@ -744,10 +741,6 @@ public class CardViewFragment extends FamiliarFragment {
             }
         } catch (Exception e) {
             // eat it
-        } finally {
-            if (null != mCursor) {
-                mCursor.close();
-            }
         }
         return null;
     }

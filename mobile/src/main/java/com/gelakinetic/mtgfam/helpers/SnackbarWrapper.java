@@ -34,6 +34,8 @@ public class SnackbarWrapper {
 
     public static final int LENGTH_LONG = Snackbar.LENGTH_LONG;
     public static final int LENGTH_SHORT = Snackbar.LENGTH_SHORT;
+    public static final int LENGTH_XLONG = 2750 * 3; // Three times long, see SnackbarManager.LONG_DURATION_MS
+
     private static Snackbar mSnackbar;
 
     /**

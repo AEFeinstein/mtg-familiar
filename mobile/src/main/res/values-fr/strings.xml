@@ -69,7 +69,7 @@
 <string name="main_export_fail">"Echec de l'export des données vers carte SD"</string>
 <string name="main_import_data_title">"Import depuis SD"</string>
 <string name="main_import_success">"Import réalisé avec succès"</string>
-<string name="main_import_fail">"Echec de l'import. Veuillez placer MTGFamiliarBackup.zip à la racine de votre carte SD"</string>
+<string name="main_import_fail">"Echec de l'import. Veuillez placer %1$s dans %2$s"</string>
 <string name="main_about">"A propos"</string>
 <string name="main_about_text">"Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;
 &lt;br&gt;
