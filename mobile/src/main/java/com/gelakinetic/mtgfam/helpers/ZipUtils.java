@@ -67,22 +67,10 @@ public class ZipUtils {
             return;
         }
 
-        /* Check if permission is granted */
-        if (ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            /* Request the permission */
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP);
-            return;
-        }
-
         assert activity.getFilesDir() != null;
 
         String sharedPrefsDir = activity.getFilesDir().getPath();
         sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
-
-        ArrayList<File> files = findAllFiles(activity.getFilesDir(),
-                new File(sharedPrefsDir));
 
         File sdCard = activity.getFilesDir();
         File zipOut = new File(sdCard, BACKUP_FILE_NAME);
@@ -91,10 +79,14 @@ public class ZipUtils {
                 return;
             }
         }
+
+        ArrayList<File> files = findAllFiles(activity.getFilesDir(),
+                new File(sharedPrefsDir));
+
         try {
             zipIt(zipOut, files, activity);
             SnackbarWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
-                    SnackbarWrapper.LENGTH_SHORT);
+                    SnackbarWrapper.LENGTH_XLONG);
         } catch (ZipException e) {
             if (Objects.requireNonNull(e.getMessage()).equals("No entries")) {
                 SnackbarWrapper.makeAndShowText(activity, R.string.main_export_no_data, SnackbarWrapper.LENGTH_SHORT);
@@ -117,18 +109,6 @@ public class ZipUtils {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             SnackbarWrapper.makeAndShowText(activity, R.string.card_view_no_external_storage, SnackbarWrapper.LENGTH_LONG);
             return;
-        }
-
-        /* Only check permissions after Jelly Bean */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            /* Check if permission is granted */
-            if (ContextCompat.checkSelfPermission(activity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                /* Request the permission */
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        FamiliarActivity.REQUEST_READ_EXTERNAL_STORAGE_BACKUP);
-                return;
-            }
         }
 
         /* Try unzipping the file */
