@@ -859,9 +859,6 @@ public class CardDbAdapter {
                     }
                     statement.append(")");
                     break;
-                case 2:
-                    statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + criteria.text + "%", false)).append(")");
-                    break;
                 default:
                     break;
             }
