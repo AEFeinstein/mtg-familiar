@@ -45,6 +45,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
@@ -808,8 +810,14 @@ public class CardDbAdapter {
          * exact text, all words, or just any one word.
          */
         if (criteria.text != null) {
-            /* Separate each individual */
-            String[] cardTextParts = criteria.text.split(" ");
+            /* Separate each individual word or quoted phrase */
+            List<String> cardTextParts = new ArrayList<>();
+
+            Matcher matcher = Pattern.compile("(?<=\\s|^)\"(.+?)\"(?=\\s|$)|(\\S+)").matcher(criteria.text);
+
+            while(matcher.find()) {
+                cardTextParts.add(matcher.group(1) == null ? matcher.group(2) : matcher.group(1));
+            }
 
             /*
              * The following switch statement tests to see which text search logic was chosen by the
