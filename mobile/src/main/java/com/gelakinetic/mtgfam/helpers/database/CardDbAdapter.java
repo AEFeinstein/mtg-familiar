@@ -813,10 +813,17 @@ public class CardDbAdapter {
             /* Separate each individual word or quoted phrase */
             List<String> cardTextParts = new ArrayList<>();
 
-            Matcher matcher = Pattern.compile("(?<=\\s|^)\"(.+?)\"(?=\\s|$)|(\\S+)").matcher(criteria.text);
+            /*
+             * Regex that matches words and quoted phrases.
+             * With [^\\]" we avoid escaped quotes.
+             * */
+            Matcher matcher = Pattern.compile("(?<=\\s|^)\"(.*?)[^\\\\]\"(?=\\s|$)|(\\S+)").matcher(criteria.text);
 
             while(matcher.find()) {
-                cardTextParts.add(matcher.group(1) == null ? matcher.group(2) : matcher.group(1));
+                String match = matcher.group(1) == null ? matcher.group(2) : matcher.group(1);
+
+                /* Replacing escaped quotes (\") with quotes */
+                cardTextParts.add(match.replaceAll("\\\\\"", "\""));
             }
 
             /*
