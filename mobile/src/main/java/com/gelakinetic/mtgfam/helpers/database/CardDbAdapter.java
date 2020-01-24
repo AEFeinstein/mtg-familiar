@@ -811,19 +811,28 @@ public class CardDbAdapter {
          */
         if (criteria.text != null) {
             /* Separate each individual word or quoted phrase */
-            List<String> cardTextParts = new ArrayList<>();
+            Set<String> cardTextParts = new HashSet<>();
 
-            /*
-             * Regex that matches words and quoted phrases.
-             * With [^\\]" we avoid escaped quotes.
-             * */
-            Matcher matcher = Pattern.compile("(?<=\\s|^)\"(.*?)[^\\\\]\"(?=\\s|$)|(\\S+)").matcher(criteria.text);
+            /* The limit=-1 avoids split() to remove trailing empty strings, required for the algorithm */
+            /* The negative lookbehind avoids matching escaped backslashes */
+            String[] blocks = criteria.text.split("(?<!\\\\)\"");
 
-            while(matcher.find()) {
-                String match = matcher.group(1) == null ? matcher.group(2) : matcher.group(1);
+            for (int i = 0; i < blocks.length; i++) {
+                String block = blocks[i].replaceAll("\\\\\"", "\"");
 
-                /* Replacing escaped quotes (\") with quotes */
-                cardTextParts.add(match.replaceAll("\\\\\"", "\""));
+                /* Even blocks are non-quoted blocks */
+                if (i % 2 == 0) {
+                    // Split the block by spaces
+                    for (String word : block.split("\\s+")) {
+                        if (!word.isEmpty()) {
+                            cardTextParts.add(word);
+                        }
+                    }
+                } else {
+                    if (!block.isEmpty()) {
+                        cardTextParts.add(block);
+                    }
+                }
             }
 
             /*
