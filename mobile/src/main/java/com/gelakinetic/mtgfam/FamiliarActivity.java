@@ -1192,7 +1192,7 @@ public class FamiliarActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft;
         if (fm != null) {
-            if (shouldClearFragmentStack) {
+            if (shouldClearFragmentStack && !fm.isStateSaved()) {
                 /* Remove any current fragments on the back stack */
                 while (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStackImmediate();

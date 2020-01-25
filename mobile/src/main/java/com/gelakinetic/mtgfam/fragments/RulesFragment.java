@@ -27,8 +27,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -283,13 +286,19 @@ public class RulesFragment extends FamiliarFragment {
                     /* Cursor had a size of 0, boring */
                     if (!isBanned) {
                         SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
-                        Objects.requireNonNull(getFragmentManager()).popBackStack();
+                        FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+                        if (!fm.isStateSaved()) {
+                            fm.popBackStack();
+                        }
                     }
                 }
             } else {
                 if (!isBanned) { /* Cursor is null. weird. */
                     SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
-                    Objects.requireNonNull(getFragmentManager()).popBackStack();
+                    FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+                    if (!fm.isStateSaved()) {
+                        fm.popBackStack();
+                    }
                 }
             }
 
@@ -367,8 +376,11 @@ public class RulesFragment extends FamiliarFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.rules_menu_exit:
-                for (int i = 0; i < Objects.requireNonNull(getFragmentManager()).getBackStackEntryCount(); ++i) {
-                    getFragmentManager().popBackStack();
+                FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+                if (!fm.isStateSaved()) {
+                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                        fm.popBackStack();
+                    }
                 }
                 return true;
             default:
@@ -728,7 +740,7 @@ public class RulesFragment extends FamiliarFragment {
          * @return whether this entry is a list of cards
          */
         boolean isListOfCards() {
-            return mLegality.equals(getString(R.string.card_view_banned))|| mLegality.equals(getString(R.string.rules_banned_as_commander))||mLegality.equals(getString(R.string.card_view_restricted));
+            return mLegality.equals(getString(R.string.card_view_banned)) || mLegality.equals(getString(R.string.rules_banned_as_commander)) || mLegality.equals(getString(R.string.card_view_restricted));
         }
     }
 
@@ -820,7 +832,7 @@ public class RulesFragment extends FamiliarFragment {
                     boolean hasCards = false;
                     if (data instanceof BannedItem) {
                         shouldLink = false;
-                        hasCards = ((BannedItem)data).isListOfCards();
+                        hasCards = ((BannedItem) data).isListOfCards();
                     }
                     rulesText.setVisibility(View.VISIBLE);
                     rulesText.setText(formatText(text, shouldLink, hasCards), BufferType.SPANNABLE);

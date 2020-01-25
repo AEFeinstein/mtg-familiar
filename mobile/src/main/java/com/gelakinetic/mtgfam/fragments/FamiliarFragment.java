@@ -288,7 +288,7 @@ public abstract class FamiliarFragment extends Fragment {
                          * Otherwise pop the offending fragment */
                         if (fm.getFragments().size() == 1) {
                             activity.finish();
-                        } else {
+                        } else if (!fm.isStateSaved()) {
                             fm.popBackStack();
                         }
                     }
