@@ -143,7 +143,6 @@
     <string-array name="text_spinner">
         <item>@string/search_All_words</item>
         <item>@string/search_Any_words</item>
-        <item>@string/search_Exact_phrase</item>
     </string-array>
     <string-array name="update_frequency_days">
         <item>@string/pref_1_day</item>

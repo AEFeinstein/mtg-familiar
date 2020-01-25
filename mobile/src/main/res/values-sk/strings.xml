@@ -161,7 +161,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="search_NOT_any_selected_types">"NIE akýkoľvek vybraný typ(y)"</string>
 <string name="search_All_words">"Všetky slová"</string>
 <string name="search_Any_words">"Akékoľvek slovo(á)"</string>
-<string name="search_Exact_phrase">"Presná fráza"</string>
 <string name="search_Most_recent_printing">"Najnovšia verzia"</string>
 <string name="search_Original_printing">"Originálna verzia"</string>
 <string name="search_All_printings">"Všetky verzie"</string>

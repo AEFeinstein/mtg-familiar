@@ -1018,9 +1018,9 @@ public class SearchViewFragment extends FamiliarFragment {
         if (criteria.rarity != null) {
             ArrayList<Integer> rarityCheckedIndicesTmp = new ArrayList<>();
             /* For each rarity */
-            for (int i = 0; i < mRarityNames.length; i++) {
+            for (int i = 0; i < mRarityCodes.length; i++) {
                 /* If the persisted options contain that rarity */
-                if (criteria.rarity.contains(mRarityNames[i].charAt(0) + "")) {
+                if (criteria.rarity.contains(mRarityCodes[i] + "")) {
                     /* Save that index */
                     rarityCheckedIndicesTmp.add(i);
                 }

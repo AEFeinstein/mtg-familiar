@@ -45,6 +45,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
@@ -808,8 +810,30 @@ public class CardDbAdapter {
          * exact text, all words, or just any one word.
          */
         if (criteria.text != null) {
-            /* Separate each individual */
-            String[] cardTextParts = criteria.text.split(" ");
+            /* Separate each individual word or quoted phrase */
+            Set<String> cardTextParts = new HashSet<>();
+
+            /* The limit=-1 avoids split() to remove trailing empty strings, required for the algorithm */
+            /* The negative lookbehind avoids matching escaped backslashes */
+            String[] blocks = criteria.text.split("(?<!\\\\)\"");
+
+            for (int i = 0; i < blocks.length; i++) {
+                String block = blocks[i].replaceAll("\\\\\"", "\"");
+
+                /* Even blocks are non-quoted blocks */
+                if (i % 2 == 0) {
+                    // Split the block by spaces
+                    for (String word : block.split("\\s+")) {
+                        if (!word.isEmpty()) {
+                            cardTextParts.add(word);
+                        }
+                    }
+                } else {
+                    if (!block.isEmpty()) {
+                        cardTextParts.add(block);
+                    }
+                }
+            }
 
             /*
              * The following switch statement tests to see which text search logic was chosen by the
@@ -850,9 +874,6 @@ public class CardDbAdapter {
                         }
                     }
                     statement.append(")");
-                    break;
-                case 2:
-                    statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + criteria.text + "%", false)).append(")");
                     break;
                 default:
                     break;
