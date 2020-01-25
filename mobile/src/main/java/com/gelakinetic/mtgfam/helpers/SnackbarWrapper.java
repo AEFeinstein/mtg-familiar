@@ -21,11 +21,14 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import androidx.annotation.StringRes;
-import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 
+import androidx.annotation.StringRes;
+
 import com.gelakinetic.mtgfam.R;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Snackbar that cancels when new snackbar shows
@@ -36,14 +39,14 @@ public class SnackbarWrapper {
     public static final int LENGTH_SHORT = Snackbar.LENGTH_SHORT;
     public static final int LENGTH_XLONG = 2750 * 3; // Three times long, see SnackbarManager.LONG_DURATION_MS
 
-    private static Snackbar mSnackbar;
+    private static WeakReference<Snackbar> mSnackbar;
 
     /**
      * Cancel current snackbar if present
      */
     public static void cancelSnackbar() {
         if (mSnackbar != null) {
-            mSnackbar.dismiss();
+            mSnackbar.get().dismiss();
         }
     }
 
@@ -90,17 +93,17 @@ public class SnackbarWrapper {
                                        @StringRes int actionStringResId,
                                        View.OnClickListener actionListener, Snackbar.Callback callback) {
         if (mSnackbar != null) {
-            mSnackbar.dismiss();
+            mSnackbar.get().dismiss();
         }
         if (activity != null && !activity.isFinishing()) {
-            mSnackbar = Snackbar.make(activity.findViewById(R.id.myCoordinatorLayout), text, duration);
+            mSnackbar = new WeakReference<>(Snackbar.make(activity.findViewById(R.id.myCoordinatorLayout), text, duration));
             if (null != actionListener) {
-                mSnackbar.setAction(actionStringResId, actionListener);
+                mSnackbar.get().setAction(actionStringResId, actionListener);
             }
             if (null != callback) {
-                mSnackbar.addCallback(callback);
+                mSnackbar.get().addCallback(callback);
             }
-            mSnackbar.show();
+            mSnackbar.get().show();
         }
     }
 }

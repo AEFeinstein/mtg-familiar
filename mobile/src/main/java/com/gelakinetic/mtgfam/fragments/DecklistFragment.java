@@ -1059,7 +1059,7 @@ public class DecklistFragment extends FamiliarListFragment {
                             totalCards += cdi.getTotalNumber();
                         }
                     }
-                /* If the card is in the sideboard and we're looking for sideboard cards */
+                    /* If the card is in the sideboard and we're looking for sideboard cards */
                 } else if (cdi.mIsSideboard && -1 == typeIndex) {
                     totalCards += cdi.getTotalNumber();
                 }

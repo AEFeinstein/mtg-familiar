@@ -23,8 +23,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +33,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -674,7 +675,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
                 } else {
                     /* Just show the number of */
-                    priceText.setText("x" + isi.mNumberOf);
+                    priceText.setText(String.format(Locale.getDefault(), "x%d", isi.mNumberOf));
                 }
 
                 /* Show or hide the foil indicator */

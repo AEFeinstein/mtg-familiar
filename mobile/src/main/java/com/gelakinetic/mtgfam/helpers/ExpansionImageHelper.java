@@ -3,14 +3,15 @@ package com.gelakinetic.mtgfam.helpers;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -59,7 +60,7 @@ public class ExpansionImageHelper {
 
         ChangeSetListViewHolder(@NonNull ViewGroup view, ChangeSetListAdapter changeSetListAdapter) {
             // Inflates to itemView
-            super(LayoutInflater.from(view.getContext()).inflate(R.layout.trader_change_set, null, false));
+            super(LayoutInflater.from(view.getContext()).inflate(R.layout.trader_change_set, view, false));
             setName = itemView.findViewById(R.id.changeSetName);
             setImage = itemView.findViewById(R.id.changeSetImage);
             itemView.findViewById(R.id.changeSetCombo).setOnClickListener(v -> {

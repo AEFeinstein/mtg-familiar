@@ -22,8 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +30,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -824,7 +825,7 @@ public class TradeFragment extends FamiliarListFragment {
             ExpansionImageHelper.loadExpansionImage(getContext(), item.getExpansion(), item.getRarity(), holder.mCardSetImage, null, ExpansionImageHelper.ExpansionImageSize.SMALL);
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
-                holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());
+                holder.mCardPrice.setText(String.format(Locale.getDefault(), "%dx %s", item.mNumberOf, item.getPriceString()));
                 if (item.mIsCustomPrice) {
                     holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                             R.color.material_green_500));
@@ -833,7 +834,7 @@ public class TradeFragment extends FamiliarListFragment {
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
-                holder.mCardPrice.setText(item.mNumberOf + "x " + item.mMessage);
+                holder.mCardPrice.setText(String.format(Locale.getDefault(), "%dx %s", item.mNumberOf, item.mMessage));
                 holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
                         R.color.material_red_500));
             }

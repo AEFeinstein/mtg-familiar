@@ -52,7 +52,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     /* Constants used for displaying dialogs */
     public static final int DIALOG_ABOUT = 100;
     public static final int DIALOG_CHANGE_LOG = 101;
-//    public static final int DIALOG_DONATE = 102;
+    //    public static final int DIALOG_DONATE = 102;
     public static final int DIALOG_TTS = 103;
 
     /**

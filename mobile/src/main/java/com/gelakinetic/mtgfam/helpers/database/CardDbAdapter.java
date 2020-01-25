@@ -45,8 +45,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
@@ -701,9 +699,7 @@ public class CardDbAdapter {
                 " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = "
                 + name + " COLLATE NOCASE ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
-        Cursor cursor = null;
-        try {
-            cursor = mDb.rawQuery(sql, null);
+        try (Cursor cursor = mDb.rawQuery(sql, null)) {
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 return cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
@@ -711,10 +707,6 @@ public class CardDbAdapter {
             return -1;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != cursor) {
-                cursor.close();
-            }
         }
     }
 
@@ -752,9 +744,7 @@ public class CardDbAdapter {
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN +
                 ") ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
-        Cursor cursor = null;
-        try {
-            cursor = mDb.rawQuery(sql, null);
+        try (Cursor cursor = mDb.rawQuery(sql, null)) {
             if (cursor != null && cursor.getCount() > 0) {
                 long[] ids = new long[cursor.getCount()];
                 for (int i = 0; i < cursor.getCount(); i++) {
@@ -766,10 +756,6 @@ public class CardDbAdapter {
             return new long[0];
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != cursor) {
-                cursor.close();
-            }
         }
     }
 
@@ -1308,21 +1294,15 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
                 + KEY_SET + " = '" + set + "')";
-        Cursor c = null;
-        try {
-            c = mDb.query(true, DATABASE_TABLE_CARDS,
-                    new String[]{KEY_ID}, statement, null, null, null,
-                    KEY_ID, null);
+        try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
+                new String[]{KEY_ID}, statement, null, null, null,
+                KEY_ID, null)) {
             c.moveToFirst();
             return c.getInt(c.getColumnIndex(KEY_ID));
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } catch (CursorIndexOutOfBoundsException e) {
             return -1; /* The other half doesn't exist... */
-        } finally {
-            if (null != c) {
-                c.close();
-            }
         }
     }
 
@@ -1341,19 +1321,13 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
                 + KEY_SET + " = '" + set + "')";
-        Cursor c = null;
-        try {
-            c = mDb.query(true, DATABASE_TABLE_CARDS,
-                    new String[]{KEY_NAME}, statement, null, null, null,
-                    KEY_NAME, null);
+        try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
+                new String[]{KEY_NAME}, statement, null, null, null,
+                KEY_NAME, null)) {
             c.moveToFirst();
             return c.getString(c.getColumnIndex(KEY_NAME));
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
         }
     }
 
@@ -1367,19 +1341,13 @@ public class CardDbAdapter {
      */
     public static long getIdFromName(String name, SQLiteDatabase mDb) throws FamiliarDbException {
         String statement = "(" + KEY_NAME + " = " + sanitizeString(name, false) + ")";
-        Cursor c = null;
-        try {
-            c = mDb.query(true, DATABASE_TABLE_CARDS,
-                    new String[]{KEY_ID}, statement, null, null, null,
-                    KEY_NAME, null);
+        try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
+                new String[]{KEY_ID}, statement, null, null, null,
+                KEY_NAME, null)) {
             c.moveToFirst();
             return c.getLong(c.getColumnIndex(KEY_ID));
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
         }
     }
 
@@ -1487,9 +1455,7 @@ public class CardDbAdapter {
             statement += " DESC";
         }
 
-        Cursor c = null;
-        try {
-            c = mDb.rawQuery(statement, null);
+        try (Cursor c = mDb.rawQuery(statement, null)) {
 
             if (c.getCount() == 2) {
                 c.moveToFirst();
@@ -1504,10 +1470,6 @@ public class CardDbAdapter {
             }
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
         }
     }
 
@@ -1878,18 +1840,12 @@ public class CardDbAdapter {
      * @throws FamiliarDbException If something goes wrong
      */
     public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
-        Cursor cursor = null;
-        try {
-            cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
-                    KEY_CODE + "=\"" + code + "\"", null, null, null, null);
+        try (Cursor cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
+                KEY_CODE + "=\"" + code + "\"", null, null, null, null)) {
             cursor.moveToFirst();
             return cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != cursor) {
-                cursor.close();
-            }
         }
     }
 
@@ -1905,20 +1861,14 @@ public class CardDbAdapter {
             throws FamiliarDbException {
 
         String[] columns = new String[]{KEY_NAME};
-        Cursor c = null;
-        try {
-            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
-                    + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null);
+        try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null)) {
             if (c != null && c.getCount() > 0) {
                 c.moveToFirst();
                 return c.getString(c.getColumnIndex(KEY_NAME));
             } else return "";
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
         }
     }
 
@@ -1931,10 +1881,8 @@ public class CardDbAdapter {
      */
     public static boolean isOnlineOnly(String setCode, SQLiteDatabase database) throws FamiliarDbException {
         String[] columns = new String[]{KEY_ONLINE_ONLY};
-        Cursor c = null;
-        try {
-            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
-                    + "=\"" + setCode + "\"", null, null, null, null, null);
+        try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                + "=\"" + setCode + "\"", null, null, null, null, null)) {
 
             if (c != null && c.getCount() > 0) {
                 c.moveToFirst();
@@ -1943,10 +1891,6 @@ public class CardDbAdapter {
             return false;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
         }
     }
 

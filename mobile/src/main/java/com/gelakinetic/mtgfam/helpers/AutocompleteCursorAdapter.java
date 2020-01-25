@@ -23,16 +23,17 @@ import android.app.SearchManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -73,7 +74,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
     public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, AutoCompleteTextView textView, boolean showArrowhead) {
         super(context.getActivity(), showArrowhead ? R.layout.list_item_1_arrowhead : R.layout.list_item_1, null, from, to, 0);
         mFragment = context;
-        mFragment.getLoaderManager().initLoader(0, null, this);
+        LoaderManager.getInstance(mFragment).initLoader(0, null, this);
         textView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -90,7 +91,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
                 /* Preform a query */
                 mAutocompleteFilter[0] = String.valueOf(editable);
                 try {
-                    mFragment.getLoaderManager().restartLoader(0, null, AutocompleteCursorAdapter.this);
+                    LoaderManager.getInstance(mFragment).restartLoader(0, null, AutocompleteCursorAdapter.this);
                 } catch (RejectedExecutionException e) {
                     // Autocomplete broke, but at least it won't take down the whole app
                 }

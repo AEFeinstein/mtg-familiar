@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
-import androidx.core.content.ContextCompat;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +30,14 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 /**
  * This list adapter is used to display a list of search results. It implements SectionIndexer to enable fast scrolling.
@@ -158,7 +161,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                 }
                 case CardDbAdapter.KEY_RARITY: {
                     char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    textField.setText("(" + rarity + ")");
+                    textField.setText(String.format(Locale.getDefault(), "(%c)", rarity));
                     break;
                 }
                 case CardDbAdapter.KEY_SUPERTYPE: {
