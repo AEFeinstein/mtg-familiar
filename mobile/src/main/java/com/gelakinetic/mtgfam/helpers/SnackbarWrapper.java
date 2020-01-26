@@ -45,7 +45,7 @@ public class SnackbarWrapper {
      * Cancel current snackbar if present
      */
     public static void cancelSnackbar() {
-        if (mSnackbar != null) {
+        if (mSnackbar != null && mSnackbar.get() != null) {
             mSnackbar.get().dismiss();
         }
     }
@@ -92,7 +92,7 @@ public class SnackbarWrapper {
     public static void makeAndShowText(Activity activity, CharSequence text, int duration,
                                        @StringRes int actionStringResId,
                                        View.OnClickListener actionListener, Snackbar.Callback callback) {
-        if (mSnackbar != null) {
+        if (mSnackbar != null && mSnackbar.get() != null) {
             mSnackbar.get().dismiss();
         }
         if (activity != null && !activity.isFinishing()) {
