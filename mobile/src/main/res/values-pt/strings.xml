@@ -198,9 +198,6 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_price_not_found">"Preço não encontrado"</string>
 <string name="card_view_image_not_found">"Imagem não encontrada"</string>
 <string name="card_view_no_external_storage">"Não é possível acessar armazenamento externo, por favor, verifique o seu cartão SD."</string>
-<string name="card_view_no_pictures_folder">"Não é possível localizar a pasta de imagens, por favor tente novamente."</string>
-<string name="card_view_unable_to_create_dir">"Não foi possível criar o diretório para salvar imagens, por favor tente novamente."</string>
-<string name="card_view_unable_to_create_file">"Não foi possível criar o arquivo de imagem, por favor tente novamente."</string>
     <string name="card_view_unable_to_save_image">"Falha ao salvar a imagem, por favor tente novamente."</string>
 <string name="card_view_save_failure">"Houve um erro ao salvar a imagem, por favor tente novamente."</string>
 <string name="card_view_image_saved">"Imagem salva em "</string>
@@ -566,7 +563,5 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Contadores de Expêriencia"</string>
 <string name="trader_new">"Nova Troca"</string>
 <string name="trader_save_as">"Salvar Troca Como"</string>
-<string name="pref_hide_online_title">"Esconder Cartas Exclusivamente Online"</string>
-<string name="pref_hide_online_summary">"Nunca mostrar cartas exclusivamente online"</string>
-<string name="decklist_new">"Novo Deck"</string>
+    <string name="decklist_new">"Novo Deck"</string>
 </resources>

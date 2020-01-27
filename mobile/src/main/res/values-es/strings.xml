@@ -197,9 +197,6 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_price_not_found">"Precio no encontrado."</string>
 <string name="card_view_image_not_found">"Imagen no encontrada."</string>
 <string name="card_view_no_external_storage">"No se puede acceder al almacenaje externo. Comprueba tu tarjeta SD."</string>
-<string name="card_view_no_pictures_folder">"No se puede encontrar la carpeta de imágenes. Prueba otra vez."</string>
-<string name="card_view_unable_to_create_dir">"No se puede crear el directorio para guardar imagénes. Prueba otra vez."</string>
-<string name="card_view_unable_to_create_file">"No se puede crear el archivo de imagen. Prueba otra vez."</string>
     <string name="card_view_unable_to_save_image">"No se pudo guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_save_failure">"Ha habido un error al guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_image_saved">"Imagen guardada en"</string>
@@ -572,7 +569,5 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Contadores de experiencia"</string>
 <string name="trader_new">"Nuevo intercambio"</string>
 <string name="trader_save_as">"Guardar intercambio como..."</string>
-<string name="pref_hide_online_title">"Ocultar cartas exclusivas de Online"</string>
-<string name="pref_hide_online_summary">"No mostrar cartas exclusivas de Online en ningún sitio"</string>
-<string name="decklist_new">"Nuevo mazo"</string>
+    <string name="decklist_new">"Nuevo mazo"</string>
 </resources>

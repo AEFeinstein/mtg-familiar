@@ -198,9 +198,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_price_not_found">"Nie znaleziono ceny."</string>
 <string name="card_view_image_not_found">"Nie znaleziono obrazka"</string>
 <string name="card_view_no_external_storage">"Nie można skorzystać z zewnętrznej pamięci, proszę sprawdzić kartę SD."</string>
-<string name="card_view_no_pictures_folder">"Nie można znaleźć folderu z obrazkiami, proszę spróbować jeszcze raz."</string>
-<string name="card_view_unable_to_create_dir">"Nie można stworzyć folderu dla obrazków, proszę spróbować jeszcze raz"</string>
-<string name="card_view_unable_to_create_file">"Nie można utworzyć pliku obrazka, proszę spróbować jeszcze raz."</string>
     <string name="card_view_unable_to_save_image">"Nie można zapisać obrazka, proszę spróbować jeszcze raz."</string>
 <string name="card_view_save_failure">"Nie udało się zapisać obrazka, proszę spróbować jeszcze raz."</string>
 <string name="card_view_image_saved">"Obrazek zapisano w"</string>
@@ -579,9 +576,7 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Znaczniki doświadczenia"</string>
 <string name="trader_new">"Nowa wymiana"</string>
 <string name="trader_save_as">"Zapisz wymianę jako"</string>
-<string name="pref_hide_online_title">"Ukryj karty dostępne tylko online"</string>
 
-<!-- This is slightly unclear, could you explain? -->
-<string name="pref_hide_online_summary">"Nie pokazuj nigdzie kart dostępnych tylko online"</string>
-<string name="decklist_new">"Nowa talia"</string>
+    <!-- This is slightly unclear, could you explain? -->
+    <string name="decklist_new">"Nowa talia"</string>
 </resources>

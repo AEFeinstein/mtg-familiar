@@ -205,9 +205,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_price_not_found">"Cena sa nenašla"</string>
 <string name="card_view_image_not_found">"Obrázok sa nenašiel"</string>
 <string name="card_view_no_external_storage">"Nepodarilo sa pristúpiť k externému úložisku, prosím skontrolujte svoju SD kartu."</string>
-<string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
-<string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
-<string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
     <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
 <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
@@ -576,7 +573,5 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Experience žetóny"</string>
 <string name="trader_new">"Nová výmena"</string>
 <string name="trader_save_as">"Uložiť výmenu ako"</string>
-<string name="pref_hide_online_title">"Skryť iba-online karty"</string>
-<string name="pref_hide_online_summary">"Nezobrazovať iba-online karty kdekoľvek"</string>
-<string name="decklist_new">"Nový balík"</string>
+    <string name="decklist_new">"Nový balík"</string>
 </resources>

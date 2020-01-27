@@ -211,9 +211,6 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_price_not_found">"Kein Preis gefunden"</string>
 <string name="card_view_image_not_found">"Kein Bild gefunden"</string>
 <string name="card_view_no_external_storage">"Auf den externen Speicher konnte nicht zugegriffen werden. Bitte überprüfe deine SD-Karte."</string>
-<string name="card_view_no_pictures_folder">"Bilderordner konnte nicht gefunden werden. Bitte versuche es erneut."</string>
-<string name="card_view_unable_to_create_dir">"Verzeichnis zum Speichern der Bilder konnte nicht erstellt werden. Bitte versuche es erneut."</string>
-<string name="card_view_unable_to_create_file">"Bilddatei konnte nicht erstellt werden. Bitte versuche es erneut."</string>
     <string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_save_failure">"Bild konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_image_saved">"Bild gespeichert unter"</string>
@@ -589,7 +586,5 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Experience Counter"</string>
 <string name="trader_new">"Neuer Trade"</string>
 <string name="trader_save_as">"Trade speichern unter"</string>
-<string name="pref_hide_online_title">"Karten die nur online verfügbar sind verstecken"</string>
-<string name="pref_hide_online_summary">"Karten die nur online verfügbar sind nirgendwo anzeigen"</string>
-<string name="decklist_new">"Neues Deck"</string>
+    <string name="decklist_new">"Neues Deck"</string>
 </resources>
