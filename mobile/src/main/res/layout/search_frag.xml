@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -62,6 +61,11 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <LinearLayout
                 android:id="@+id/linearLayout12"
                 style="@style/forty_eight"
@@ -103,6 +107,11 @@
                 android:entries="@array/type_spinner"
                 android:imeOptions="actionSearch" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <!-- EditText below by Adam Feinstein -->
 
             <EditText
@@ -123,6 +132,11 @@
                 android:drawSelectorOnTop="false"
                 android:entries="@array/text_spinner"
                 android:imeOptions="actionSearch" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 style="@style/forty_eight"
@@ -234,6 +248,11 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="false"
                 android:entries="@array/color_spinner" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 style="@style/forty_eight"
@@ -347,6 +366,11 @@
                 android:drawSelectorOnTop="false"
                 android:entries="@array/color_identity_spinner" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <androidx.gridlayout.widget.GridLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
@@ -454,25 +478,30 @@
                 <com.gelakinetic.mtgfam.helpers.view.ManaCostTextView
                     android:id="@+id/manaCostTextView"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:dropDownAnchor="@+id/linearLayout20"
                     android:dropDownWidth="wrap_content"
                     android:hint="@string/search_mana_cost"
                     android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_width="0dp" />
+                    android:inputType="text" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 style="@android:style/Holo.ButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginBottom="4dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -496,6 +525,11 @@
                     android:text="@string/search_rarity"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 android:id="@+id/linearLayout19"
@@ -523,6 +557,11 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="false"
                 android:entries="@array/set_spinner" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <AutoCompleteTextView
                 android:id="@+id/watermarksearch"
