@@ -147,6 +147,9 @@ public class GatheringsFragment extends FamiliarFragment {
             Gathering gathering = (Gathering) savedInstanceState.getSerializable(SAVED_GATHERING_KEY);
 
             assert gathering != null;
+            if (gathering.mDisplayMode >= mDisplayModeSpinner.getAdapter().getCount()) {
+                gathering.mDisplayMode = 0;
+            }
             mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
             ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
             for (GatheringsPlayerData player : players) {

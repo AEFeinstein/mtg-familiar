@@ -235,6 +235,9 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                             getParentGatheringsFragment().mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[position],
                                     getActivity().getFilesDir());
+                            if (gathering.mDisplayMode >= getParentGatheringsFragment().mDisplayModeSpinner.getAdapter().getCount()) {
+                                gathering.mDisplayMode = 0;
+                            }
                             getParentGatheringsFragment().mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
                             ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
                             for (GatheringsPlayerData player : players) {
