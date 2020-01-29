@@ -739,14 +739,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 if (pInfo.versionCode != lastVersion) {
 
                     // Show the changelog dialog, sometimes
-                    if (lastVersion != 0 &&
-                            !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
-                            !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
-                            !(lastVersion == 52 && pInfo.versionCode == 53) && // Don't show 52 -> 53, it was just a quick bugfix release
-                            !(lastVersion == 54 && pInfo.versionCode == 55) && // Don't show 54 -> 55, it was just a quick bugfix release
-                            !(lastVersion == 55 && pInfo.versionCode == 56) && // Don't show 55 -> 56, it was just a quick bugfix release
-                            !(lastVersion == 56 && pInfo.versionCode == 57)    // Don't show 56 -> 57, it was just a quick bugfix release
-                    ) {
+                    if (lastVersion != 0) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
 

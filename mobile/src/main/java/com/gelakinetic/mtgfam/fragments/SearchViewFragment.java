@@ -1055,7 +1055,6 @@ public class SearchViewFragment extends FamiliarFragment {
         mArtistField.setText(criteria.artist);
         mCollectorsNumberField.setText(criteria.collectorsNumber);
 
-        this.removeDialog(getFragmentManager());
         checkDialogButtonColors();
     }
 
