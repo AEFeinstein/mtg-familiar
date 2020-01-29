@@ -244,8 +244,9 @@ public class ResultListFragment extends FamiliarFragment {
         FragmentManager fm = Objects.requireNonNull(getFragmentManager());
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
-            if (mCursor.getCount() == 1) {
-                /* Jump back past the result list (it wasn't displayed because this card is a singleton) */
+            if (null == mCursor || mCursor.getCount() == 1) {
+                /* Jump back past the result list (it wasn't displayed because this card is a singleton)
+                 * or maybe the cursor was null for no good reason */
                 if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
                     getActivity().finish();
                 } else if (!fm.isStateSaved()) {
