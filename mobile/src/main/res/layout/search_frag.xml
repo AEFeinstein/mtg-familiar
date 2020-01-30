@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -238,6 +237,25 @@
             <LinearLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/text.medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/is_commander" />
+
+                <CheckBox
+                    android:id="@+id/isCommander"
+                    style="@style/forty_eight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
@@ -247,25 +265,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="@string/search_color_identity_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    style="@style/text.medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/is_commander"
-                    android:gravity="center_vertical"/>
-
-                <CheckBox
-                    android:id="@+id/isCommander"
-                    style="@style/forty_eight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
@@ -473,14 +472,14 @@
                 <com.gelakinetic.mtgfam.helpers.view.ManaCostTextView
                     android:id="@+id/manaCostTextView"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:dropDownAnchor="@+id/linearLayout20"
                     android:dropDownWidth="wrap_content"
                     android:hint="@string/search_mana_cost"
                     android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_width="0dp" />
+                    android:inputType="text" />
 
             </LinearLayout>
 
@@ -488,10 +487,10 @@
                 style="@android:style/Holo.ButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginBottom="4dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
