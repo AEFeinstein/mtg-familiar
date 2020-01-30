@@ -800,7 +800,13 @@ public class CardDbAdapter {
 
             if(criteria.isCommander){
                 backface = false;
-                statement.append(" AND ((' ' ||" + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Planeswalker %' AND " + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE '%can be your commander%') OR (( ' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Creature %') AND (' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Legendary %')))");
+                statement.append(" AND ((' ' ||" + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Planeswalker %' ");
+                String planeswalkerBrawl = "AND " + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE '%can be your commander%'";
+                if("Brawl".equals(criteria.format)){
+                    planeswalkerBrawl = "";
+                }
+                statement.append((planeswalkerBrawl));
+                statement.append(") OR (( ' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Creature %') AND (' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Legendary %'))) ");
             }
 
         if (supertypes != null && !supertypes.isEmpty()) {
