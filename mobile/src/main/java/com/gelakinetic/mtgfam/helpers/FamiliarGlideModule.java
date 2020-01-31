@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.GlideBuilder;

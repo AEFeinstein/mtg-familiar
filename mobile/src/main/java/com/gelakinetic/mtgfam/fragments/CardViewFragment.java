@@ -29,7 +29,6 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -37,11 +36,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.SpannableString;
@@ -60,6 +55,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -67,7 +67,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
-import com.gelakinetic.mtgfam.BuildConfig;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
@@ -95,8 +94,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -644,82 +641,108 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-        // Get a File where the image should be saved
-        File imageFile;
-        try {
-            imageFile = getSavedImageFile();
-        } catch (Exception e) {
-            SnackbarWrapper.makeAndShowText(getActivity(), e.getMessage(), SnackbarWrapper.LENGTH_SHORT);
-            return;
-        }
+        // Query the MediaStore to see if an image is already saved
+        MediaStoreInfo msi = getMediaStoreInfo();
 
         // Check if the saved image already exists
-        if (imageFile.exists()) {
+        if (null != msi) {
             if (SHARE == whereTo) {
                 // Image is already saved, just share it
-                shareImage();
+                shareImage(Uri.parse(MediaStore.Images.Media.getContentUri("external") + "/" + msi.getId()));
             } else {
                 // Or display the path where it's saved
-                String strPath = imageFile.getAbsolutePath();
-                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + strPath, SnackbarWrapper.LENGTH_LONG);
+                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + msi.getFilePath(), SnackbarWrapper.LENGTH_LONG);
             }
-            return;
-        }
-
-        runGlideTarget(new FamiliarGlideTarget(this, new FamiliarGlideTarget.DrawableLoadedCallback() {
-            /**
-             * When Glide loads the resource either from cache or the network, save it
-             * to a file then optionally launch the intent to share it
-             *
-             * @param resource The Drawable Glide loaded, hopefully a BitmapDrawable
-             */
-            @Override
-            protected void onDrawableLoaded(Drawable resource) {
-                if (resource instanceof BitmapDrawable) {
-                    // Save the image
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) resource;
-
+        } else {
+            runGlideTarget(new FamiliarGlideTarget(this, new FamiliarGlideTarget.DrawableLoadedCallback() {
+                /**
+                 * When Glide loads the resource either from cache or the network, save it
+                 * to a file then optionally launch the intent to share it
+                 *
+                 * @param resource The Drawable Glide loaded, hopefully a BitmapDrawable
+                 */
+                @Override
+                protected void onDrawableLoaded(Drawable resource) {
                     try {
-                        // Create the file
-                        if (!imageFile.createNewFile()) {
-                            // Couldn't create the file
-                            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_create_file, SnackbarWrapper.LENGTH_SHORT);
-                            return;
-                        }
+                        if (resource instanceof BitmapDrawable) {
+                            // Save the image
+                            String url = MediaStore.Images.Media.insertImage(
+                                    getContext().getContentResolver(),
+                                    ((BitmapDrawable) resource).getBitmap(),
+                                    getSavedFileName(), mCard.getName() + " - " + mCard.getSetName());
 
-                        // Now that the file is created, write to it
-                        FileOutputStream fStream = new FileOutputStream(imageFile);
-                        boolean bCompressed = bitmapDrawable.getBitmap().compress(Bitmap.CompressFormat.JPEG, 90, fStream);
-                        fStream.flush();
-                        fStream.close();
+                            // Couldn't save the image for some reason
+                            if (null == url) {
+                                SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
+                            } else {
+                                // Notify the system that a new image was saved
+                                getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(url)));
 
-                        // Couldn't save the image for some reason
-                        if (!bCompressed) {
-                            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
-                            return;
+                                // Now that the image is saved, launch the intent
+                                if (SHARE == whereTo) {
+                                    // Image is already saved, just share it
+                                    shareImage(Uri.parse(url));
+                                } else {
+                                    // Or display the path where it's saved
+                                    MediaStoreInfo msi = getMediaStoreInfo();
+                                    if (null != msi) {
+                                        SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + msi.getFilePath(), SnackbarWrapper.LENGTH_LONG);
+                                    } else {
+                                        SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + url, SnackbarWrapper.LENGTH_LONG);
+                                    }
+                                }
+                            }
                         }
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         // Couldn't save it for some reason
                         SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
-                        return;
-                    }
-
-                    // Notify the system that a new image was saved
-                    getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                            Uri.fromFile(imageFile)));
-
-                    // Now that the image is saved, launch the intent
-                    if (SHARE == whereTo) {
-                        // Image is already saved, just share it
-                        shareImage();
-                    } else {
-                        // Or display the path where it's saved
-                        String strPath = imageFile.getAbsolutePath();
-                        SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + strPath, SnackbarWrapper.LENGTH_LONG);
                     }
                 }
+            }), 0, 0);
+        }
+    }
+
+    private class MediaStoreInfo {
+        private final String filePath;
+        private final long mediaStoreId;
+
+        MediaStoreInfo(String fp, long id) {
+            filePath = fp;
+            mediaStoreId = id;
+        }
+
+        String getFilePath() {
+            return filePath;
+        }
+
+        long getId() {
+            return mediaStoreId;
+        }
+    }
+
+    /**
+     * Get the file path
+     *
+     * @return The file path and ID for this card's image in the MediaStore, or null
+     */
+    @javax.annotation.Nullable
+    private MediaStoreInfo getMediaStoreInfo() {
+        try (Cursor mCursor = getContext().getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID},
+                MediaStore.Images.Media.DISPLAY_NAME + " = ?",
+                new String[]{getSavedFileName()},
+                MediaStore.Images.Media.DEFAULT_SORT_ORDER)) {
+            if (mCursor.getCount() > 0) {
+                mCursor.moveToFirst();
+                return new MediaStoreInfo(
+                        mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA)),
+                        mCursor.getLong(mCursor.getColumnIndex(MediaStore.Images.Media._ID)));
             }
-        }), 0, 0);
+        } catch (Exception e) {
+            // eat it
+        }
+        return null;
     }
 
     /**
@@ -849,11 +872,9 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Launch the intent to share a saved image
      */
-    private void shareImage() {
+    private void shareImage(Uri uri) {
         /* Start the intent to share the image */
         try {
-            Uri uri = FileProvider.getUriForFile(mActivity,
-                    BuildConfig.APPLICATION_ID + ".FileProvider", getSavedImageFile());
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -866,37 +887,8 @@ public class CardViewFragment extends FamiliarFragment {
         }
     }
 
-    /**
-     * Returns the File used to save this card's image.
-     *
-     * @return A File, either with the image already or blank
-     * @throws Exception If something goes wrong
-     */
-    private File getSavedImageFile() throws Exception {
-
-        String strPath;
-        try {
-            strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-                    .getCanonicalPath() + "/MTGFamiliar";
-        } catch (IOException ex) {
-            throw new Exception(getString(R.string.card_view_no_pictures_folder));
-        }
-
-        File fPath = new File(strPath);
-
-        if (!fPath.exists()) {
-            if (!fPath.mkdir()) {
-                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
-            }
-
-            if (!fPath.isDirectory()) {
-                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
-            }
-        }
-
-        fPath = new File(strPath, mCard.getName() + "_" + mCard.getExpansion() + ".jpg");
-
-        return fPath;
+    private String getSavedFileName() {
+        return mCard.getName() + "_" + mCard.getExpansion() + ".jpg";
     }
 
     /**

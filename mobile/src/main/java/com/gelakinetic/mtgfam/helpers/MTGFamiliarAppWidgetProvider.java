@@ -30,9 +30,10 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.content.res.AppCompatResources;
 import android.view.View;
 import android.widget.RemoteViews;
+
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;

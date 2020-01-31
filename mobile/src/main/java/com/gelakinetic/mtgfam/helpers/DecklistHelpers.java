@@ -115,7 +115,7 @@ public class DecklistHelpers {
     /**
      * Read the decklist from a file and return it as an ArrayList<Pair<MtgCard, Boolean>>.
      *
-     * @param activity A context to open the file and pop toasts with
+     * @param activity     A context to open the file and pop toasts with
      * @param deckName     the name of the deck to load
      * @param loadFullData true to load all card data from the database, false to to just read the file
      * @return The decklist as an ArrayList of MtgCards

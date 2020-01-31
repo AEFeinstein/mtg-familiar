@@ -47,22 +47,6 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -75,6 +59,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -120,7 +119,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -741,14 +739,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 if (pInfo.versionCode != lastVersion) {
 
                     // Show the changelog dialog, sometimes
-                    if (lastVersion != 0 &&
-                            !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
-                            !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
-                            !(lastVersion == 52 && pInfo.versionCode == 53) && // Don't show 52 -> 53, it was just a quick bugfix release
-                            !(lastVersion == 54 && pInfo.versionCode == 55) && // Don't show 54 -> 55, it was just a quick bugfix release
-                            !(lastVersion == 55 && pInfo.versionCode == 56) && // Don't show 55 -> 56, it was just a quick bugfix release
-                            !(lastVersion == 56 && pInfo.versionCode == 57)    // Don't show 56 -> 57, it was just a quick bugfix release
-                    ) {
+                    if (lastVersion != 0) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
 
@@ -892,12 +883,10 @@ public class FamiliarActivity extends AppCompatActivity {
                             if (queryParam.matches("\\+\\[.+\\]")) { // See #458
                                 cardName = queryParam.substring(2, queryParam.length() - 1);
                             }
-                            cursor = CardDbAdapter.fetchCardByName(cardName,
-                                    Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, false, false, database);
-                            if (cursor.getCount() != 0) {
+                            long[] cardIds = CardDbAdapter.fetchIdsByLocalizedName(cardName, database);
+                            if (cardIds.length != 0) {
                                 isDeepLink = true;
-                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
                             }
                             if (args.size() == 0) {
                                 throw new Exception("Not Found");
@@ -1194,7 +1183,7 @@ public class FamiliarActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft;
         if (fm != null) {
-            if (shouldClearFragmentStack) {
+            if (shouldClearFragmentStack && !fm.isStateSaved()) {
                 /* Remove any current fragments on the back stack */
                 while (fm.getBackStackEntryCount() > 0) {
                     fm.popBackStackImmediate();

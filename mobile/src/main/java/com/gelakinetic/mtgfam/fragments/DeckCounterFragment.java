@@ -20,7 +20,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +28,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
+
+import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.R;
 

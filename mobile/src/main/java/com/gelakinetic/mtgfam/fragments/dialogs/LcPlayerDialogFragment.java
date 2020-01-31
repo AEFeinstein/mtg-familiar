@@ -22,13 +22,14 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
@@ -37,6 +38,7 @@ import com.gelakinetic.mtgfam.helpers.LcPlayer;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -134,21 +136,21 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                 final int[] delta = {0};
                 final int[] absolute = {mLcPlayer.mCommanderDamage.get(position).mLife};
 
-                deltaText.setText("+" + delta[0]);
-                absoluteText.setText("" + absolute[0]);
+                deltaText.setText(String.format(Locale.getDefault(), "+%d", delta[0]));
+                absoluteText.setText(String.format(Locale.getDefault(), "%d", absolute[0]));
 
                 view.findViewById(R.id.commander_plus1).setOnClickListener(v -> {
                     delta[0]++;
                     absolute[0]++;
-                    deltaText.setText(((delta[0] >= 0) ? "+" : "") + delta[0]);
-                    absoluteText.setText("" + absolute[0]);
+                    deltaText.setText(String.format(Locale.getDefault(), "%s%d", ((delta[0] >= 0) ? "+" : ""), delta[0]));
+                    absoluteText.setText(String.format(Locale.getDefault(), "%d", absolute[0]));
                 });
 
                 view.findViewById(R.id.commander_minus1).setOnClickListener(v -> {
                     delta[0]--;
                     absolute[0]--;
-                    deltaText.setText(((delta[0] >= 0) ? "+" : "") + delta[0]);
-                    absoluteText.setText("" + absolute[0]);
+                    deltaText.setText(String.format(Locale.getDefault(), "%s%d", ((delta[0] >= 0) ? "+" : ""), delta[0]));
+                    absoluteText.setText(String.format(Locale.getDefault(), "%d", absolute[0]));
                 });
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));

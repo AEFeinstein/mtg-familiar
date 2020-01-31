@@ -29,9 +29,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +44,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -256,26 +257,12 @@ public class SearchViewFragment extends FamiliarFragment {
         mManaCostTextView = myFragmentView.findViewById(R.id.manaCostTextView);
         mManaComparisonSpinner = myFragmentView.findViewById(R.id.comparisonSpinner);
 
-        /* Now we need to apply a different TextView to our Spinners to center the items */
-        ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
-        logicAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
-        mPowLogic.setAdapter(logicAdapter);
-        mTouLogic.setAdapter(logicAdapter);
-        mCmcLogic.setAdapter(logicAdapter);
-        ArrayAdapter<String> ptChoiceAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.pt_spinner));
-        ptChoiceAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
-        mPowChoice.setAdapter(ptChoiceAdapter);
-        mTouChoice.setAdapter(ptChoiceAdapter);
-        ArrayAdapter<String> cmcChoiceAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.cmc_spinner));
-        cmcChoiceAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
-        mCmcChoice.setAdapter(cmcChoiceAdapter);
-
         /* set the buttons to open the dialogs */
         mFormatButton.setOnClickListener(v -> showDialog(SearchViewDialogFragment.FORMAT_LIST));
         mRarityButton.setOnClickListener(v -> showDialog(SearchViewDialogFragment.RARITY_LIST));
 
         /* This is a better default, might want to reorder the array */
-        mColorSpinner.setSelection(2);
+        safeSetSelection(mColorSpinner, 2);
 
         /* The button colors change whether an option is selected or not */
         checkDialogButtonColors();
@@ -328,6 +315,26 @@ public class SearchViewFragment extends FamiliarFragment {
 
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;
+    }
+
+    /**
+     * Safely set a spinner's selection by defaulting to if out of bounds
+     *
+     * @param spinner   The spinner to set a selection
+     * @param selection The index to set
+     */
+    private void safeSetSelection(Spinner spinner, int selection) {
+        int spinnerCount = spinner.getAdapter().getCount();
+        // Make sure the spinner has items
+        if (0 != spinnerCount) {
+            if (selection >= spinnerCount) {
+                // The selection would be out of bounds, just select 0
+                spinner.setSelection(0);
+            } else {
+                // All good, make the selection
+                spinner.setSelection(selection);
+            }
+        }
     }
 
     private static class BuildAutocompleteTask extends AsyncTask<SearchViewFragment, Void, SearchViewFragment> {
@@ -513,7 +520,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* Do we want to consolidate different printings of the same card in results, or not? */
         boolean consolidate = PreferenceAdapter.getConsolidateSearch(getContext());
-        mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
+        safeSetSelection(mSetSpinner, consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
 
         // Load the saved criteria
         if (PreferenceAdapter.getPersistSearchOptions(getContext())) {
@@ -811,7 +818,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxR.setChecked(false);
         mCheckboxG.setChecked(false);
         mCheckboxL.setChecked(false);
-        mColorSpinner.setSelection(2);
+        safeSetSelection(mColorSpinner, 2);
 
         mIsCommander.setChecked(false);
         mCheckboxWIdentity.setChecked(false);
@@ -820,21 +827,21 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxRIdentity.setChecked(false);
         mCheckboxGIdentity.setChecked(false);
         mCheckboxLIdentity.setChecked(false);
-        mColorIdentitySpinner.setSelection(0);
+        safeSetSelection(mColorIdentitySpinner, 0);
 
-        mTextSpinner.setSelection(0);
-        mTypeSpinner.setSelection(0);
-        mSetSpinner.setSelection(0);
+        safeSetSelection(mTextSpinner, 0);
+        safeSetSelection(mTypeSpinner, 0);
+        safeSetSelection(mSetSpinner, 0);
 
-        mPowLogic.setSelection(0);
-        mPowChoice.setSelection(0);
-        mTouLogic.setSelection(0);
-        mTouChoice.setSelection(0);
-        mCmcLogic.setSelection(0);
-        mCmcLogic.setSelection(1); /* CMC should default to < */
-        mCmcChoice.setSelection(0);
+        safeSetSelection(mPowLogic, 0);
+        safeSetSelection(mPowChoice, 0);
+        safeSetSelection(mTouLogic, 0);
+        safeSetSelection(mTouChoice, 0);
+        safeSetSelection(mCmcLogic, 0);
+        safeSetSelection(mCmcLogic, 1); /* CMC should default to < */
+        safeSetSelection(mCmcChoice, 0);
         clearTextAndTokens(mManaCostTextView);
-        mManaComparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
+        safeSetSelection(mManaComparisonSpinner, Comparison.EMPTY.ordinal());
 
         if (mSetCheckedIndices != null) {
             mSetCheckedIndices = new int[0];
@@ -913,11 +920,11 @@ public class SearchViewFragment extends FamiliarFragment {
         } else {
             clearTextAndTokens(mSubtypeField);
         }
-        mTypeSpinner.setSelection(criteria.typeLogic);
+        safeSetSelection(mTypeSpinner, criteria.typeLogic);
 
         /* Set text fields */
         mTextField.setText(criteria.text);
-        mTextSpinner.setSelection(criteria.textLogic);
+        safeSetSelection(mTextSpinner, criteria.textLogic);
 
         /* Set color fields */
         if (criteria.color != null) {
@@ -928,7 +935,7 @@ public class SearchViewFragment extends FamiliarFragment {
             mCheckboxG.setChecked(criteria.color.contains("G"));
             mCheckboxL.setChecked(criteria.color.contains("L"));
         }
-        mColorSpinner.setSelection(criteria.colorLogic);
+        safeSetSelection(mColorSpinner, criteria.colorLogic);
 
         mIsCommander.setChecked(criteria.isCommander);
 
@@ -940,69 +947,69 @@ public class SearchViewFragment extends FamiliarFragment {
             mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
             mCheckboxLIdentity.setChecked(criteria.colorIdentity.contains("L"));
         }
-        mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
+        safeSetSelection(mColorIdentitySpinner, criteria.colorIdentityLogic);
 
         /* Set power and toughness fields */
         List<String> logicChoices = Arrays.asList(getResources().getStringArray(R.array.logic_spinner));
-        mPowLogic.setSelection(logicChoices.indexOf(criteria.powLogic));
+        safeSetSelection(mPowLogic, logicChoices.indexOf(criteria.powLogic));
         List<String> ptList = Arrays.asList(getResources().getStringArray(R.array.pt_spinner));
         float p = criteria.powChoice;
         if (p != CardDbAdapter.NO_ONE_CARES) {
             if (p == CardDbAdapter.STAR)
-                mPowChoice.setSelection(ptList.indexOf("*"));
+                safeSetSelection(mPowChoice, ptList.indexOf("*"));
             else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                mPowChoice.setSelection(ptList.indexOf("1+*"));
+                safeSetSelection(mPowChoice, ptList.indexOf("1+*"));
             else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                mPowChoice.setSelection(ptList.indexOf("2+*"));
+                safeSetSelection(mPowChoice, ptList.indexOf("2+*"));
             else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                mPowChoice.setSelection(ptList.indexOf("7-*"));
+                safeSetSelection(mPowChoice, ptList.indexOf("7-*"));
             else if (p == CardDbAdapter.STAR_SQUARED)
-                mPowChoice.setSelection(ptList.indexOf("*^2"));
+                safeSetSelection(mPowChoice, ptList.indexOf("*^2"));
             else if (p == CardDbAdapter.X)
-                mPowChoice.setSelection(ptList.indexOf("X"));
+                safeSetSelection(mPowChoice, ptList.indexOf("X"));
             else if (p == CardDbAdapter.QUESTION_MARK)
-                mPowChoice.setSelection(ptList.indexOf("?"));
+                safeSetSelection(mPowChoice, ptList.indexOf("?"));
             else if (p == CardDbAdapter.INFINITY)
-                mPowChoice.setSelection(ptList.indexOf("∞"));
+                safeSetSelection(mPowChoice, ptList.indexOf("∞"));
             else {
                 if (p == (int) p) {
-                    mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
+                    safeSetSelection(mPowChoice, ptList.indexOf(((int) p) + ""));
                 } else {
-                    mPowChoice.setSelection(ptList.indexOf(p + ""));
+                    safeSetSelection(mPowChoice, ptList.indexOf(p + ""));
                 }
             }
         }
-        mTouLogic.setSelection(logicChoices.indexOf(criteria.touLogic));
+        safeSetSelection(mTouLogic, logicChoices.indexOf(criteria.touLogic));
         float t = criteria.touChoice;
         if (t != CardDbAdapter.NO_ONE_CARES) {
             if (t == CardDbAdapter.STAR)
-                mTouChoice.setSelection(ptList.indexOf("*"));
+                safeSetSelection(mTouChoice, ptList.indexOf("*"));
             else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                mTouChoice.setSelection(ptList.indexOf("1+*"));
+                safeSetSelection(mTouChoice, ptList.indexOf("1+*"));
             else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                mTouChoice.setSelection(ptList.indexOf("2+*"));
+                safeSetSelection(mTouChoice, ptList.indexOf("2+*"));
             else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                mTouChoice.setSelection(ptList.indexOf("7-*"));
+                safeSetSelection(mTouChoice, ptList.indexOf("7-*"));
             else if (t == CardDbAdapter.STAR_SQUARED)
-                mTouChoice.setSelection(ptList.indexOf("*^2"));
+                safeSetSelection(mTouChoice, ptList.indexOf("*^2"));
             else if (t == CardDbAdapter.X)
-                mTouChoice.setSelection(ptList.indexOf("X"));
+                safeSetSelection(mTouChoice, ptList.indexOf("X"));
             else if (t == CardDbAdapter.QUESTION_MARK)
-                mTouChoice.setSelection(ptList.indexOf("?"));
+                safeSetSelection(mTouChoice, ptList.indexOf("?"));
             else if (t == CardDbAdapter.INFINITY)
-                mTouChoice.setSelection(ptList.indexOf("∞"));
+                safeSetSelection(mTouChoice, ptList.indexOf("∞"));
             else {
                 if (t == (int) t) {
-                    mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));
+                    safeSetSelection(mTouChoice, ptList.indexOf(((int) t) + ""));
                 } else {
-                    mTouChoice.setSelection(ptList.indexOf(t + ""));
+                    safeSetSelection(mTouChoice, ptList.indexOf(t + ""));
                 }
             }
         }
 
         /* Set CMC fields */
-        mCmcLogic.setSelection(logicChoices.indexOf(criteria.cmcLogic));
-        mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
+        safeSetSelection(mCmcLogic, logicChoices.indexOf(criteria.cmcLogic));
+        safeSetSelection(mCmcChoice, Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
                 .indexOf(String.valueOf(criteria.cmc)));
 
         /* Set mana fields */
@@ -1014,7 +1021,7 @@ public class SearchViewFragment extends FamiliarFragment {
             clearTextAndTokens(mManaCostTextView);
         }
         if (null != criteria.manaCostLogic) {
-            mManaComparisonSpinner.setSelection(criteria.manaCostLogic.ordinal());
+            safeSetSelection(mManaComparisonSpinner, criteria.manaCostLogic.ordinal());
         }
 
         /* set format */
@@ -1026,9 +1033,9 @@ public class SearchViewFragment extends FamiliarFragment {
         if (criteria.rarity != null) {
             ArrayList<Integer> rarityCheckedIndicesTmp = new ArrayList<>();
             /* For each rarity */
-            for (int i = 0; i < mRarityNames.length; i++) {
+            for (int i = 0; i < mRarityCodes.length; i++) {
                 /* If the persisted options contain that rarity */
-                if (criteria.rarity.contains(mRarityNames[i].charAt(0) + "")) {
+                if (criteria.rarity.contains(mRarityCodes[i] + "")) {
                     /* Save that index */
                     rarityCheckedIndicesTmp.add(i);
                 }
@@ -1048,7 +1055,7 @@ public class SearchViewFragment extends FamiliarFragment {
         } else {
             clearTextAndTokens(mSetField);
         }
-        mSetSpinner.setSelection(criteria.setLogic);
+        safeSetSelection(mSetSpinner, criteria.setLogic);
 
         /* Set text fields at the end */
         mWatermarkField.setText(criteria.watermark);
@@ -1056,7 +1063,6 @@ public class SearchViewFragment extends FamiliarFragment {
         mArtistField.setText(criteria.artist);
         mCollectorsNumberField.setText(criteria.collectorsNumber);
 
-        this.removeDialog(getFragmentManager());
         checkDialogButtonColors();
     }
 

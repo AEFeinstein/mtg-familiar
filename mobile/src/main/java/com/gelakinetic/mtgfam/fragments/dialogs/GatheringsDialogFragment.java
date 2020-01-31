@@ -22,11 +22,12 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+
+import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
@@ -234,6 +235,9 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                             getParentGatheringsFragment().mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[position],
                                     getActivity().getFilesDir());
+                            if (gathering.mDisplayMode >= getParentGatheringsFragment().mDisplayModeSpinner.getAdapter().getCount()) {
+                                gathering.mDisplayMode = 0;
+                            }
                             getParentGatheringsFragment().mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
                             ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
                             for (GatheringsPlayerData player : players) {

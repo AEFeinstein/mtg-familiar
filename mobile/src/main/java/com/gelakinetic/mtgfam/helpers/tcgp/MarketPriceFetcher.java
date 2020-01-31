@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Handler;
+
 import androidx.collection.LongSparseArray;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;

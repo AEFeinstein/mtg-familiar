@@ -22,11 +22,12 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.Spanned;
 import android.text.SpannedString;
+
+import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.R;
 

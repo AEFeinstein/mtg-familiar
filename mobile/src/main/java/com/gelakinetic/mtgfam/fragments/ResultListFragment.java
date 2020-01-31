@@ -24,7 +24,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +33,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -239,24 +241,25 @@ public class ResultListFragment extends FamiliarFragment {
             });
         }
 
+        FragmentManager fm = Objects.requireNonNull(getFragmentManager());
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
-            if (mCursor.getCount() == 1) {
-                /* Jump back past the result list (it wasn't displayed because this card is a singleton) */
+            if (null == mCursor || mCursor.getCount() == 1) {
+                /* Jump back past the result list (it wasn't displayed because this card is a singleton)
+                 * or maybe the cursor was null for no good reason */
                 if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
                     getActivity().finish();
-                } else {
-                    Objects.requireNonNull(getFragmentManager()).popBackStack();
+                } else if (!fm.isStateSaved()) {
+                    fm.popBackStack();
                 }
             }
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
-                SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT
-                );
+                SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT);
                 if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
                     getActivity().finish();
-                } else {
-                    Objects.requireNonNull(getFragmentManager()).popBackStack();
+                } else if (!fm.isStateSaved()) {
+                    fm.popBackStack();
                 }
             } else if (mCursor.getCount() == 1) {
                 mCursor.moveToFirst();

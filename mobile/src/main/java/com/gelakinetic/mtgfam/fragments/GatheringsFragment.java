@@ -19,7 +19,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +29,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -146,6 +147,9 @@ public class GatheringsFragment extends FamiliarFragment {
             Gathering gathering = (Gathering) savedInstanceState.getSerializable(SAVED_GATHERING_KEY);
 
             assert gathering != null;
+            if (gathering.mDisplayMode >= mDisplayModeSpinner.getAdapter().getCount()) {
+                gathering.mDisplayMode = 0;
+            }
             mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
             ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
             for (GatheringsPlayerData player : players) {

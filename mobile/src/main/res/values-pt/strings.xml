@@ -71,7 +71,7 @@
 <string name="main_export_fail">"Falha ao salvar dados no cartão SD"</string>
 <string name="main_import_data_title">"Importar Dados do SD"</string>
 <string name="main_import_success">"Dados importados com sucesso"</string>
-<string name="main_import_fail">"A importação falhou. Por favor, coloque MTGFamiliarBackup.zip no diretório raiz do seu cartão SD."</string>
+<string name="main_import_fail">"A importação falhou. Por favor, coloque %1$s no %2$s."</string>
 <string name="main_about">"Sobre"</string>
 <string name="main_about_text">"Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
 &lt;br&gt;
@@ -154,7 +154,6 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="search_NOT_any_selected_types">"NENHUM dos tipos selecionados"</string>
 <string name="search_All_words">"Todas as palavras"</string>
 <string name="search_Any_words">"Qualquer palavra(s)"</string>
-<string name="search_Exact_phrase">"Frase exata"</string>
 <string name="search_Most_recent_printing">"Impressão mais recente"</string>
 <string name="search_Original_printing">"Impressão Original"</string>
 <string name="search_All_printings">"Todas as impressões"</string>
@@ -199,9 +198,6 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_price_not_found">"Preço não encontrado"</string>
 <string name="card_view_image_not_found">"Imagem não encontrada"</string>
 <string name="card_view_no_external_storage">"Não é possível acessar armazenamento externo, por favor, verifique o seu cartão SD."</string>
-<string name="card_view_no_pictures_folder">"Não é possível localizar a pasta de imagens, por favor tente novamente."</string>
-<string name="card_view_unable_to_create_dir">"Não foi possível criar o diretório para salvar imagens, por favor tente novamente."</string>
-<string name="card_view_unable_to_create_file">"Não foi possível criar o arquivo de imagem, por favor tente novamente."</string>
     <string name="card_view_unable_to_save_image">"Falha ao salvar a imagem, por favor tente novamente."</string>
 <string name="card_view_save_failure">"Houve um erro ao salvar a imagem, por favor tente novamente."</string>
 <string name="card_view_image_saved">"Imagem salva em "</string>
@@ -567,7 +563,5 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Contadores de Expêriencia"</string>
 <string name="trader_new">"Nova Troca"</string>
 <string name="trader_save_as">"Salvar Troca Como"</string>
-<string name="pref_hide_online_title">"Esconder Cartas Exclusivamente Online"</string>
-<string name="pref_hide_online_summary">"Nunca mostrar cartas exclusivamente online"</string>
-<string name="decklist_new">"Novo Deck"</string>
+    <string name="decklist_new">"Novo Deck"</string>
 </resources>

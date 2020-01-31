@@ -22,7 +22,7 @@
 
     <!-- Arrays -->
     <string-array name="logic_spinner">
-        <item>></item>
+        <item>&gt;</item>
         <item>&lt;</item>
         <item>=</item>
     </string-array>
@@ -62,7 +62,7 @@
         <item>7-*</item>
         <item>*^2</item>
         <item>X</item>
-        <item>&amp;</item>
+        <item>\?</item>
         <item>0.5</item>
         <item>1.5</item>
         <item>2.5</item>
@@ -143,7 +143,6 @@
     <string-array name="text_spinner">
         <item>@string/search_All_words</item>
         <item>@string/search_Any_words</item>
-        <item>@string/search_Exact_phrase</item>
     </string-array>
     <string-array name="update_frequency_days">
         <item>@string/pref_1_day</item>

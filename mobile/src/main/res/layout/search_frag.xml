@@ -61,6 +61,11 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <LinearLayout
                 android:id="@+id/linearLayout12"
                 style="@style/forty_eight"
@@ -102,6 +107,11 @@
                 android:entries="@array/type_spinner"
                 android:imeOptions="actionSearch" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <!-- EditText below by Adam Feinstein -->
 
             <EditText
@@ -122,6 +132,11 @@
                 android:drawSelectorOnTop="false"
                 android:entries="@array/text_spinner"
                 android:imeOptions="actionSearch" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 style="@style/forty_eight"
@@ -233,6 +248,11 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="false"
                 android:entries="@array/color_spinner" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 style="@style/forty_eight"
@@ -365,6 +385,11 @@
                 android:drawSelectorOnTop="false"
                 android:entries="@array/color_identity_spinner" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <androidx.gridlayout.widget.GridLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
@@ -457,17 +482,23 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout20"
-                style="@style/forty_eight"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
                 <com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner
                     android:id="@+id/comparisonSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
                     android:drawSelectorOnTop="false"
+                    android:gravity="center_vertical"
                     app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    app:layout_gravity="fill_horizontal|center_vertical" />
 
                 <com.gelakinetic.mtgfam.helpers.view.ManaCostTextView
                     android:id="@+id/manaCostTextView"
@@ -477,11 +508,17 @@
                     android:layout_weight="1"
                     android:dropDownAnchor="@+id/linearLayout20"
                     android:dropDownWidth="wrap_content"
+                    android:gravity="center_vertical"
                     android:hint="@string/search_mana_cost"
                     android:imeOptions="actionSearch"
                     android:inputType="text" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <LinearLayout
                 style="@android:style/Holo.ButtonBar"
@@ -515,6 +552,11 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
+
             <LinearLayout
                 android:id="@+id/linearLayout19"
                 style="@style/forty_eight"
@@ -541,6 +583,11 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="false"
                 android:entries="@array/set_spinner" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/color_drawer_divider_item" />
 
             <AutoCompleteTextView
                 android:id="@+id/watermarksearch"

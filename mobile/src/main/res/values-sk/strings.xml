@@ -70,7 +70,7 @@
 <string name="main_export_fail">"Nepodarilo sa uložiť dáta na SD kartu "</string>
 <string name="main_import_data_title">"Načítať dáta z SD"</string>
 <string name="main_import_success">"Načítanie bolo úspešné"</string>
-<string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte MTGFamiliarBackup.zip do koreňového adresára SD karty"</string>
+<string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte %1$s do %2$s"</string>
 <string name="main_about">"O aplikácii"</string>
 <string name="main_about_text">"Táto aplikácia je môj darček pre MTG komunitu.&lt;br&gt;
 &lt;br&gt;
@@ -161,7 +161,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="search_NOT_any_selected_types">"NIE akýkoľvek vybraný typ(y)"</string>
 <string name="search_All_words">"Všetky slová"</string>
 <string name="search_Any_words">"Akékoľvek slovo(á)"</string>
-<string name="search_Exact_phrase">"Presná fráza"</string>
 <string name="search_Most_recent_printing">"Najnovšia verzia"</string>
 <string name="search_Original_printing">"Originálna verzia"</string>
 <string name="search_All_printings">"Všetky verzie"</string>
@@ -206,9 +205,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_price_not_found">"Cena sa nenašla"</string>
 <string name="card_view_image_not_found">"Obrázok sa nenašiel"</string>
 <string name="card_view_no_external_storage">"Nepodarilo sa pristúpiť k externému úložisku, prosím skontrolujte svoju SD kartu."</string>
-<string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
-<string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
-<string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
     <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
 <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
@@ -577,7 +573,5 @@ Standard ....... Not Legal -->
 <string name="life_counter_commander_experience_counter">"Experience žetóny"</string>
 <string name="trader_new">"Nová výmena"</string>
 <string name="trader_save_as">"Uložiť výmenu ako"</string>
-<string name="pref_hide_online_title">"Skryť iba-online karty"</string>
-<string name="pref_hide_online_summary">"Nezobrazovať iba-online karty kdekoľvek"</string>
-<string name="decklist_new">"Nový balík"</string>
+    <string name="decklist_new">"Nový balík"</string>
 </resources>
