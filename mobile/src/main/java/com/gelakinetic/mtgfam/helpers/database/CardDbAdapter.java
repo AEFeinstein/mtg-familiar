@@ -877,16 +877,25 @@ public class CardDbAdapter {
         List<String> supertypes = criteria.superTypes;
         List<String> subtypes = criteria.subTypes;
 
-            if(criteria.isCommander){
-                backface = false;
-                statement.append(" AND ((' ' ||" + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Planeswalker %' ");
-                String planeswalkerBrawl = "AND " + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE '%can be your commander%'";
-                if("Brawl".equals(criteria.format)){
-                    planeswalkerBrawl = "";
-                }
-                statement.append((planeswalkerBrawl));
-                statement.append(") OR (( ' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Creature %') AND (' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' ' LIKE '% Legendary %'))) ");
+        if (criteria.isCommander) {
+            // Don't check the backface for commanders
+            backface = false;
+
+            // Planeswalkers can be commanders
+            statement.append(" AND ((").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
+            // In brawl, every planeswalker is a commander! Otherwise it needs special text
+            if (!"Brawl".equals(criteria.format)) {
+                statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ABILITY).append(" LIKE '%can be your commander%'");
             }
+
+            // Legendary creatures can be commanders
+            statement.append(") OR (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Legendary%Creature%'))");
+
+            // Set the format to Commander if it isn't set already, so the banlist applies
+            if (criteria.format == null) {
+                criteria.format = "Commander";
+            }
+        }
 
         if (supertypes != null && !supertypes.isEmpty()) {
             /* Concat a leading and a trailing space to the supertype */
@@ -1193,43 +1202,58 @@ public class CardDbAdapter {
             }
             statement.append(")");
         }
-        if(criteria.format == null && criteria.isCommander){
-            criteria.format = "Commander";
-        }
 
         if (criteria.format != null) {
-            try {
-                /* Check if the format is eternal or not, by the number of legal sets */
-                String numLegalSetsSql = "SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + criteria.format + "\"";
-
-                Cursor numLegalSetCursor;
-                numLegalSetCursor = mDb.rawQuery(numLegalSetsSql, null);
-
+            /* Check if the format is eternal or not, by the number of legal sets */
+            try (Cursor numLegalSetCursor = mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + criteria.format + "\"", null)) {
                 /* If the format is not eternal, filter by set */
                 if (numLegalSetCursor.getCount() > 0) {
-                    String toAppend = " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN (" + " SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME + " FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B " + " WHERE ";
-                    toAppend += DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN (" + " SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "' ) )";
-                    statement.append(toAppend);
+                    statement
+                            .append(" AND ")
+                            .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME)
+                            .append(" IN ( SELECT ")
+                            .append(DATABASE_TABLE_CARDS).append("_B.").append(KEY_NAME)
+                            .append(" FROM ")
+                            .append(DATABASE_TABLE_CARDS).append(" ").append(DATABASE_TABLE_CARDS).append("_B ")
+                            .append(" WHERE ")
+                            .append(DATABASE_TABLE_CARDS).append("_B.").append(KEY_SET)
+                            .append(" IN ( SELECT ")
+                            .append(DATABASE_TABLE_LEGAL_SETS).append(".").append(KEY_SET)
+                            .append(" FROM ")
+                            .append(DATABASE_TABLE_LEGAL_SETS)
+                            .append(" WHERE ")
+                            .append(DATABASE_TABLE_LEGAL_SETS).append(".").append(KEY_FORMAT).append("='").append(criteria.format).append("' ) )");
                 } else {
                     /* Otherwise filter silver bordered cards, giant cards */
                     for (String illegalSet : ILLEGAL_SETS) {
-                        statement.append(" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(illegalSet).append("'");
+                        statement.append(" AND NOT ")
+                                .append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = '").append(illegalSet).append("'");
                     }
-                    statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'");
-                }
-                String commanderText = "";
-                if(criteria.isCommander && "Commander".equals(criteria.format)){
-                    commanderText = " AND " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = 'Commander' ";
+                    statement
+                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Plane'")
+                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Conspiracy'")
+                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE '%Scheme'")
+                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Vanguard'");
                 }
 
-                statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(commanderText).append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
+                /* And make sure the name isn't in the list of banned cads */
+                statement.append(" AND ")
+                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME)
+                        .append(" NOT IN (SELECT ")
+                        .append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_NAME)
+                        .append(" FROM ")
+                        .append(DATABASE_TABLE_BANNED_CARDS)
+                        .append(" WHERE ")
+                        .append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_FORMAT).append(" = '").append(criteria.format).append("'")
+                        .append(" AND ")
+                        .append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED)
+                        .append(")");
 
                 // Ensure pauper only searches commons in valid Pauper sets
                 if ("Pauper".equals(criteria.format)) {
                     statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_RARITY).append(" = ").append(((int) 'C')).append(" ");
                 }
 
-                numLegalSetCursor.close();
             } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
                 throw new FamiliarDbException(e);
             }
