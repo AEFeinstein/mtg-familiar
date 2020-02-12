@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="39"
+    android:viewportHeight="39">
+    <path
+        android:fillColor="?attr/color_text"
+        android:pathData="m8.9639,37.1988c-1.6609,-0.4476 -3.5322,-0.7401 -4.4207,-0.691l-1.5407,0.0852 0.1949,-1.0382c0.1222,-0.6509 -0.1297,-2.382 -0.675,-4.64 -1.8311,-7.5812 -0.701,-12.4285 4.3697,-18.7437 2.7569,-3.4335 4.711,-4.0229 7.9329,-2.3928 2.4301,1.2295 7.3117,5.4072 10.5317,9.0131 6.1371,6.8726 6.8557,9.6391 3.3523,12.9051 -2.7787,2.5905 -6.5973,4.8213 -9.9631,5.8205 -2.5071,0.7443 -6.2972,0.621 -9.7819,-0.3182zM6.9345,22.0329c1.5365,-3.1281 4.2838,-6.1011 6.7494,-7.3036 1.7317,-0.8446 1.8762,-1.3298 0.6768,-2.2732 -1.7296,-1.3605 -3.9925,-0.5337 -6.207,2.2677 -3.1946,4.0415 -4.7759,9.5387 -3.9425,13.7058 0.1914,0.9568 0.2529,0.8549 0.7973,-1.32 0.3245,-1.2962 1.1912,-3.5808 1.926,-5.0768zM32.0202,28.9232c0.6951,-1.6636 0.5712,-2.673 -0.6182,-5.0342C28.3433,17.8167 19.8445,9.6078 14.5769,7.6378c-1.8117,-0.6775 -2.0183,-0.6927 -3.3715,-0.2472 -1.4404,0.4742 -1.4415,0.474 -1.4415,-0.2943 0,-0.9551 0.9948,-2.9471 1.8648,-3.7338 1.5575,-1.4085 4.9471,-1.8804 7.3691,-1.0259 0.7229,0.255 2.505,1.1854 3.9602,2.0676 2.6255,1.5915 2.6646,1.6032 5.063,1.5141 1.3294,-0.0494 2.5926,-0.1983 2.8071,-0.3309 0.2145,-0.1326 0.9888,-1.0586 1.7206,-2.0578 1.9102,-2.6083 2.2744,-2.7508 2.6507,-1.0377 0.1125,0.5124 0.6537,1.6096 1.2025,2.4381l0.9978,1.5064 -0.9374,0.6782c-2.3168,1.6763 -2.6267,2.1614 -2.812,4.4026l-0.1756,2.1244 1.8978,3.152c2.1955,3.6464 2.7218,5.5338 2.2446,8.0499 -0.1759,0.9276 -0.4636,1.9552 -0.6393,2.2834 -0.5244,0.9799 -2.1932,2.219 -3.4638,2.5718 -1.9094,0.5303 -2.0162,0.4748 -1.4937,-0.7756z" />
+</vector>
