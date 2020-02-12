@@ -72,17 +72,17 @@
     <!-- <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
     <string name="main_profile">"Profile"</string>
     <!--<string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;-->
-<!--&lt;br&gt;-->
-<!--Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;-->
-<!--&lt;br&gt;-->
-<!--Coding is hard work though, and we developers appreciate the extra dollar here or there.&lt;br&gt;-->
-<!--&lt;br&gt;-->
-<!--We've got a drafting habit to fuel, OK?&lt;br&gt;-->
-<!--&lt;br&gt;-->
-<!--You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br&gt;-->
-<!--&lt;br&gt;-->
-<!--So, how generous are you feeling today?-->
-<!--"</string>-->
+    <!--&lt;br&gt;-->
+    <!--Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;-->
+    <!--&lt;br&gt;-->
+    <!--Coding is hard work though, and we developers appreciate the extra dollar here or there.&lt;br&gt;-->
+    <!--&lt;br&gt;-->
+    <!--We've got a drafting habit to fuel, OK?&lt;br&gt;-->
+    <!--&lt;br&gt;-->
+    <!--You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br&gt;-->
+    <!--&lt;br&gt;-->
+    <!--So, how generous are you feeling today?-->
+    <!--"</string>-->
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
     <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.6.4"&gt;Changelog&lt;/a&gt;"</string>
