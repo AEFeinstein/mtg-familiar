@@ -312,8 +312,6 @@ public class CardDbAdapter {
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
 
-    private static final String[] ILLEGAL_SETS = {"UG", "UNH", "UST", "ARS", "PCP", "PP2"};
-
     /* The various types of multi-cards */
     public enum MultiCardType {
         NOPE,
@@ -1175,17 +1173,7 @@ public class CardDbAdapter {
                     /* Cards like 'Dryad Arbor'. */
                     "OR " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " LIKE '%Land Creature%')");
             /* Filter out 'UN-'sets*/
-            statement.append(" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " IN (");
-            boolean first = true;
-            for (String illegalSet : ILLEGAL_SETS) {
-                if (first) {
-                    first = false;
-                } else {
-                    statement.append(", ");
-                }
-                statement.append("'").append(illegalSet).append("'");
-            }
-            statement.append(")");
+            statement.append(" AND NOT ").append(DATABASE_TABLE_SETS).append(".").append(KEY_BORDER_COLOR).append(" = \"Silver\"");
         }
 
         if (criteria.rarity != null) {
@@ -1225,10 +1213,8 @@ public class CardDbAdapter {
                             .append(DATABASE_TABLE_LEGAL_SETS).append(".").append(KEY_FORMAT).append("='").append(criteria.format).append("' ) )");
                 } else {
                     /* Otherwise filter silver bordered cards, giant cards */
-                    for (String illegalSet : ILLEGAL_SETS) {
-                        statement.append(" AND NOT ")
-                                .append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = '").append(illegalSet).append("'");
-                    }
+                    statement.append(" AND NOT ")
+                            .append(DATABASE_TABLE_SETS).append(".").append(KEY_BORDER_COLOR).append(" = \"Silver\"");
                     statement
                             .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Plane'")
                             .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Conspiracy'")
@@ -1772,16 +1758,15 @@ public class CardDbAdapter {
             /* The new way (single query per type, should be much faster) - Alex */
             String sql = "SELECT COALESCE(CASE ";
 
-            /* First coalesce logic, checks the card against ILLEGAL_SETS */
-            sql += "(SELECT " + KEY_SET
-                    + " FROM " + DATABASE_TABLE_CARDS
-                    + " WHERE " + KEY_NAME + " = " + mCardName + ")";
-            StringBuilder sqlBuilder = new StringBuilder(sql);
-            for (String illegalSet : ILLEGAL_SETS) {
-                sqlBuilder.append("WHEN '").append(illegalSet).append("' THEN 1 ");
-            }
-            sql = sqlBuilder.toString();
-            sql += "ELSE NULL END,";
+            /* First coalesce logic, checks the card for a silver border */
+            sql += "(SELECT 1 FROM " +
+                    DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
+                    DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                    " WHERE " +
+                    DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + mCardName +
+                    " AND " +
+                    DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR + " != " + "\"Silver\")";
+            sql += " WHEN 1 THEN NULL ELSE 1 END,";
 
             /* Second coalesce logic, check card against legal sets */
             sql += "CASE (" +
