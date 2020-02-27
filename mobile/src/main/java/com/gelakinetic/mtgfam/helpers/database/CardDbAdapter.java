@@ -2527,7 +2527,13 @@ public class CardDbAdapter {
      * @return The sanitized String
      */
     private static String sanitizeString(String input, boolean removeAccentMarks) {
+        if (null == input) {
+            return null;
+        }
         input = input.trim();
+        if (input.isEmpty()) {
+            return input;
+        }
         if ('[' == input.charAt(0)) {
             input = input.substring(1);
         }
