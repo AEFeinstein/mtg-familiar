@@ -1149,11 +1149,15 @@ public class CardViewFragment extends FamiliarFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        /* If the image has been loaded to the main page, remove the menu option for image */
-        if (PreferenceAdapter.getPicFirst(getContext())) {
-            menu.findItem(R.id.image).setVisible(false);
-        } else {
-            menu.findItem(R.id.image).setVisible(true);
+        try {
+            /* If the image has been loaded to the main page, remove the menu option for image */
+            if (PreferenceAdapter.getPicFirst(getContext())) {
+                menu.findItem(R.id.image).setVisible(false);
+            } else {
+                menu.findItem(R.id.image).setVisible(true);
+            }
+        } catch (NullPointerException e) {
+            // eh, couldn't find the menu item. Image _should_ be there
         }
 
         /* If this is an online-only card, hide the price lookup button */
