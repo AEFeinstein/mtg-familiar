@@ -587,7 +587,6 @@ public class CardHelpers {
             implements Comparator<CompressedDecklistInfo>, Serializable {
 
         private static final String COLORS = "WUBRG";
-        private static final String NON_COLORS = "LAC";
 
         /**
          * Gets what COLORS are in the given string.
@@ -617,21 +616,6 @@ public class CardHelpers {
 
             String cardColors1 = getColors(card1.getColor());
             String cardColors2 = getColors(card2.getColor());
-            int priority1;
-            int priority2;
-            //1. If colorless, perform colorless comparison
-            if (cardColors1.length() + cardColors2.length() == 0) {
-                cardColors1 = card1.getColor();
-                cardColors2 = card2.getColor();
-                for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
-                    priority1 = NON_COLORS.indexOf(cardColors1.charAt(i));
-                    priority2 = NON_COLORS.indexOf(cardColors2.charAt(i));
-                    if (priority1 != priority2) {
-                        return priority1 < priority2 ? -1 : 1;
-                    }
-                }
-                return 0;
-            }
             if (cardColors1.length() < cardColors2.length()) {
                 return -1;
             } else if (cardColors1.length() > cardColors2.length()) {
@@ -639,8 +623,8 @@ public class CardHelpers {
             }
             // Else if the same number of COLORS exist, compare based on WUBRG-ness
             for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
-                priority1 = COLORS.indexOf(cardColors1.charAt(i));
-                priority2 = COLORS.indexOf(cardColors2.charAt(i));
+                int priority1 = COLORS.indexOf(cardColors1.charAt(i));
+                int priority2 = COLORS.indexOf(cardColors2.charAt(i));
                 if (priority1 != priority2) {
                     return priority1 < priority2 ? -1 : 1;
                 }

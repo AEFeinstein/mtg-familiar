@@ -53,7 +53,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 108;
+    public static final int DATABASE_VERSION = 109;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -1015,7 +1015,7 @@ public class CardDbAdapter {
                             statement.append(" AND ");
 
                         if (ch == 'l')
-                            statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT GLOB '[CLA]'");
+                            statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE ''");
                         else
                             statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE '%").append(Character.toUpperCase(ch)).append("%'");
                     }
@@ -1042,7 +1042,7 @@ public class CardDbAdapter {
                     }
 
                     if (ch == 'L')
-                        statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " GLOB '[CLA]'");
+                        statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE ''");
                     else
                         statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE '%").append(ch).append("%'");
                 }
@@ -1549,7 +1549,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_FLAVOR, card.getFlavor());
         initialValues.put(KEY_ARTIST, card.getArtist());
         initialValues.put(KEY_NUMBER, card.getNumber());
-        initialValues.put(KEY_COLOR, card.getColor());
+        initialValues.put(KEY_COLOR, card.getColor().replaceAll("[^WUBRGwubrg]", ""));
         initialValues.put(KEY_MULTIVERSEID, card.getMultiverseId());
         initialValues.put(KEY_COLOR_IDENTITY, card.getColorIdentity());
         initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.getName()));

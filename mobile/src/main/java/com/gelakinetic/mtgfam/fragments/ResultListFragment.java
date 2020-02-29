@@ -319,7 +319,7 @@ public class ResultListFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
                     CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_SUPERTYPE, CardDbAdapter.KEY_SUBTYPE,
                     CardDbAdapter.KEY_ABILITY, CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
-                    CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CMC, CardDbAdapter.KEY_COLOR};
+                    CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CMC, CardDbAdapter.KEY_COLOR, CardDbAdapter.KEY_COLOR_IDENTITY};
 
             SearchCriteria criteria = PreferenceAdapter.getSearchCriteria(getContext());
             assert criteria != null; /* Because Android Studio */

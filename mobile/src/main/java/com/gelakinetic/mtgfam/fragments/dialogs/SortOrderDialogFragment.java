@@ -81,6 +81,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             boolean priceAdded = false;
             boolean rarityAdded = false;
             boolean setAdded = false;
+            boolean colorIdentityAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -131,6 +132,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                         rarityAdded = true;
                         break;
                     }
+                    case CardDbAdapter.KEY_COLOR_IDENTITY: {
+                        name = getResources().getString(R.string.search_color_identity_title);
+                        colorIdentityAdded = true;
+                        break;
+                    }
                 }
                 options.add(new SortOption(name, ascending, key, idx++));
             }
@@ -151,6 +157,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             if (!setAdded) {
                 options.add(new SortOption(getString(R.string.search_set),
                         false, CardDbAdapter.KEY_SET, idx++));
+            }
+
+            if (!colorIdentityAdded) {
+                options.add(new SortOption(getString(R.string.search_color_identity_title),
+                        false, CardDbAdapter.KEY_COLOR_IDENTITY, idx++));
             }
         }
 
