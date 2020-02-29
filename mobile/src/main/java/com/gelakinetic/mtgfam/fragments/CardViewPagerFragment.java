@@ -125,7 +125,15 @@ public class CardViewPagerFragment extends FamiliarFragment {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ((CardViewPagerAdapter) Objects.requireNonNull(mViewPager.getAdapter())).getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (null != mViewPager) {
+            CardViewPagerAdapter adapter = (CardViewPagerAdapter) mViewPager.getAdapter();
+            if (null != adapter) {
+                CardViewFragment frag = adapter.getCurrentFragment();
+                if (null != frag) {
+                    frag.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                }
+            }
+        }
     }
 
     /**
