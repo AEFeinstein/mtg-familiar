@@ -8,7 +8,6 @@
     <string name="dialog_both">"Wyczyść oba"</string>
     <string name="dialog_life">"Życie"</string>
     <string name="dialog_thanks">"Dzięki!"</string>
-    <string name="dialog_thanks_anyway">"Tak czy inaczej, dzięki!"</string>
     <string name="dialog_enjoy">"Miłej zabawy!"</string>
     <string name="update_notification">"Sprawdzanie aktualizacji"</string>
     <string name="update_updating_set">"Dodawanie %s"</string>
@@ -25,8 +24,6 @@
     <string name="not_deleted">"nie usunięty"</string>
     <string name="no_network">"Sieć jest niedostępna"</string>
     <string name="filter_title_view_card">"Pokaż kartę"</string>
-    <string name="tutor_cards_notice">"Uzyskane przy pomocy TutorCards"</string>
-    <string name="tutor_cards_fail">"TutorCards są nieosiągalne"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"ZAKŁADKI"</string>
@@ -44,24 +41,11 @@
     <string name="main_decklist">"Kreator talii"</string>
     <string name="main_force_update_title">"Wymuś aktualizację"</string>
     <string name="main_settings_title">"Ustawienia"</string>
-    <string name="main_donate_title">"Wspomóż nas"</string>
-    <string name="main_donate_dialog_title">"Wspomóż Programistów"</string>
 
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
     <string name="main_profile">"Profil"</string>
-    <string name="main_donate_text">"Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
-&lt;br&gt;
-Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;
-&lt;br&gt;
-Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;
-&lt;br&gt;
-Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;
-&lt;br&gt;
-Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku. $5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;
-&lt;br&gt;
-Więc, na jak dużą hojność stać cię dzisiaj?
-"</string>
+
 
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
@@ -160,6 +144,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
         <item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
         <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
         <item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
+        <item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
     </plurals>
     <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
     <string name="search_toast_cannot_load">"Nie można wczytać opcji wyszukiwania."</string>
@@ -168,7 +153,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="search_NOT_any_selected_types">"ŻADEN z wybranego typu (typów)"</string>
     <string name="search_All_words">"Wszystkie słowa"</string>
     <string name="search_Any_words">"Dowolne słowo (słowa)"</string>
-    <string name="search_Exact_phrase">"Dokładna fraza"</string>
     <string name="search_Most_recent_printing">"Najnowsze wydanie"</string>
     <string name="search_Original_printing">"Oryginalne wydanie"</string>
     <string name="search_All_printings">"Wszystkie wydania"</string>
@@ -185,7 +169,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="search_Rare">"Rare"</string>
     <string name="search_Mythic">"Mythic"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Typ"</string>
     <string name="search_mana_cost">"Koszt Many"</string>
     <string name="search_collectors_number">"Collector's Number"</string>
     <string name="search_color_title">"Kolor"</string>
@@ -214,10 +197,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="card_view_price_not_found">"Nie znaleziono ceny."</string>
     <string name="card_view_image_not_found">"Nie znaleziono obrazka"</string>
     <string name="card_view_no_external_storage">"Nie można skorzystać z zewnętrznej pamięci, proszę sprawdzić kartę SD."</string>
-    <string name="card_view_no_pictures_folder">"Nie można znaleźć folderu z obrazkiami, proszę spróbować jeszcze raz."</string>
-    <string name="card_view_unable_to_create_dir">"Nie można stworzyć folderu dla obrazków, proszę spróbować jeszcze raz"</string>
-    <string name="card_view_unable_to_create_file">"Nie można utworzyć pliku obrazka, proszę spróbować jeszcze raz."</string>
-    <string name="card_view_no_image">"Nie można znaleźć obrazka do zapisania, proszę spróbować jeszcze raz."</string>
     <string name="card_view_unable_to_save_image">"Nie można zapisać obrazka, proszę spróbować jeszcze raz."</string>
     <string name="card_view_save_failure">"Nie udało się zapisać obrazka, proszę spróbować jeszcze raz."</string>
     <string name="card_view_image_saved">"Obrazek zapisano w"</string>
@@ -243,11 +222,13 @@ Licznik many także ulegnie wyczyszczeniu."</string>
         <item quantity="one">"%1$s ma %2$d życia."</item>
         <item quantity="few">"%1$s ma %2$d życia."</item>
         <item quantity="other">"%1$s ma %2$d życia."</item>
+        <item quantity="many">"%1$s ma %2$d życia."</item>
     </plurals>
     <plurals name="life_counter_spoken_poison">
         <item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
         <item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
         <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
+        <item quantity="many">"%1$s ma %2$d znaczników trucizny."</item>
     </plurals>
     <string name="life_counter_over_9000">"ponad 9000"</string>
     <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>
@@ -272,22 +253,18 @@ Licznik many także ulegnie wyczyszczeniu."</string>
     <string name="dice_tails">"Reszka"</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Nie udało się wczytać licznika many!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Wyczyść wszystko"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Dodaj kartę"</string>
-    <string name="trader_save">"Zapisz Wymianę"</string>
     <string name="trader_load">"Wczytaj Wymianę"</string>
     <string name="trader_delete">"Usuń Wymianę"</string>
     <string name="trader_edit_dialog_remove">"Usuń"</string>
     <string name="trader_edit_dialog_reset_price">"Zeruj Cenę"</string>
     <string name="trader_clear_dialog_title">"Wyczyść Wymianę"</string>
     <string name="trader_clear_dialog_text">"Czy na pewno chcesz wyczyścić obecną wymianę?"</string>
-    <string name="trader_select_dialog_title">"Wybierz Wymianę"</string>
-    <string name="trader_delete_dialog_title">"Usuń Wymianę"</string>
     <string name="trader_edit_dialog_info">"Informacja o karcie"</string>
     <string name="trader_toast_no_trades">"Nie masz zapisanych wymian."</string>
     <string name="trader_toast_save_error">"Nie można zapisać wymiany, spróbuj ponownie."</string>
@@ -393,8 +370,6 @@ Powodzenia i miłej zabawy!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Ustawienia ogólne"</string>
-    <string name="pref_screen_search">"Wyszukiwanie i Rezultaty"</string>
-    <string name="pref_screen_trade_wishlist">"Wymiana i Lista Życzeń"</string>
     <string name="pref_cat_default_fragment">"Domyślna zakładka"</string>
     <string name="pref_default_fragment_mode_summary">"Zakładka wyświetlana po uruchomieniu aplikacji"</string>
     <string name="pref_cat_updates">"Aktualizacje"</string>
@@ -559,6 +534,7 @@ Liście Życzeń"</string>
         <item quantity="one">"%1$d/%2$d karta"</item>
         <item quantity="few">"%1$d/%2$d karty"</item>
         <item quantity="other">"%1$d/%2$d karty"</item>
+        <item quantity="many">"%1$d/%2$d karty"</item>
     </plurals>
 
     <!-- This is shown when a price download fails for an unknown reason -->
@@ -597,10 +573,8 @@ Standard ....... Not Legal -->
     <string name="life_counter_commander_experience_counter">"Znaczniki doświadczenia"</string>
     <string name="trader_new">"Nowa wymiana"</string>
     <string name="trader_save_as">"Zapisz wymianę jako"</string>
-    <string name="pref_hide_online_title">"Ukryj karty dostępne tylko online"</string>
 
     <!-- This is slightly unclear, could you explain? -->
-    <string name="pref_hide_online_summary">"Nie pokazuj nigdzie kart dostępnych tylko online"</string>
     <string name="decklist_new">"Nowa talia"</string>
     <string name="is_commander">"Jest Commanderem"</string>
 </resources>
