@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- General-purpose strings -->
-    <string name="app_name">"MTG Familiar"</string>
     <string name="name_search_hint">"Pesquisar Nomes"</string>
     <string name="dialog_ok">"OK"</string>
     <string name="dialog_cancel">"Cancelar"</string>
@@ -11,7 +8,7 @@
     <string name="dialog_both">"Ambos"</string>
     <string name="dialog_life">"Vida"</string>
     <string name="dialog_thanks">"Obrigado!"</string>
-    <!-- <string name="dialog_thanks_anyway">"Obrigado mesmo assim!"</string> -->
+    <string name="dialog_thanks_anyway">"Obrigado mesmo assim!"</string>
     <string name="dialog_enjoy">"Divirta-se!"</string>
     <string name="update_notification">"Procurando atualizações do banco de dados"</string>
     <string name="update_updating_set">"Adicionando %s"</string>
@@ -28,6 +25,8 @@
     <string name="not_deleted">"não excluída"</string>
     <string name="no_network">"A rede não está disponível"</string>
     <string name="filter_title_view_card">"Vizualizar Carta"</string>
+    <string name="tutor_cards_notice">"Potencializado por TutorCards"</string>
+    <string name="tutor_cards_fail">"TutorCards não localizado"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PÁGINAS"</string>
@@ -45,23 +44,39 @@
     <string name="main_decklist">"Construtor de Decks"</string>
     <string name="main_force_update_title">"Forçar Atualização"</string>
     <string name="main_settings_title">"Configurações"</string>
-    <!-- <string name="main_donate_title">"Doar"</string> -->
+    <string name="main_donate_title">"Doar"</string>
 
     <!-- This is a bit strange, "Doações" is more like donations, I'd recommend putting "Doe para os desenvolvedores" -->
-    <!-- <string name="main_donate_dialog_title">"Doe para os Desenvolvedores"</string> -->
+    <string name="main_donate_dialog_title">"Doe para os Desenvolvedores"</string>
+
+    <!-- <string name="main_donate_title">"Donate"</string> 
+ <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
     <string name="main_profile">"Perfil"</string>
-    <!--<string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? U$ 1.000? U$ 10.000? &lt;br&gt;-->
-    <!--&lt;br&gt;-->
-    <!--Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;-->
-    <!--&lt;br&gt;-->
-    <!--Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada dólar extra que recebemos. &lt;br&gt;-->
-    <!--&lt;br&gt;-->
-    <!--Temos um hábito de draftar para alimentar, OK? &lt;br&gt;-->
-    <!--&lt;br&gt;-->
-    <!--Você pode pressionar o botão abaixo para doar através do Paypal. U$ 1 já ajuda. U$ 5 ajuda ainda mais. E por aí vai. &lt;br&gt;-->
-    <!--&lt;br&gt;-->
-    <!--Então, quão generoso você está sentindo-se hoje?-->
-    <!--"</string>-->
+    <string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? U$ 1.000? U$ 10.000? &lt;br&gt;
+&lt;br&gt;
+Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;
+&lt;br&gt;
+Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada dólar extra que recebemos. &lt;br&gt;
+&lt;br&gt;
+Temos um hábito de draftar para alimentar, OK? &lt;br&gt;
+&lt;br&gt;
+Você pode pressionar o botão abaixo para doar através do Paypal. U$ 1 já ajuda. U$ 5 ajuda ainda mais. E por aí vai. &lt;br&gt;
+&lt;br&gt;
+Então, quão generoso você está sentindo-se hoje?
+"</string>
+
+    <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
+&lt;br&gt;
+Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;
+&lt;br&gt;
+Coding is hard work though, and we developers appreciate the extra dollar here or there.&lt;br&gt;
+&lt;br&gt;
+We've got a drafting habit to fuel, OK?&lt;br&gt;
+&lt;br&gt;
+You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br&gt;
+&lt;br&gt;
+So, how generous are you feeling today?
+"</string> -->
     <string name="main_whats_new_title">"O Que Há de Novo"</string>
     <string name="main_whats_new_in_title">"O Que Há de Novo na Versão"</string>
     <string name="main_tts_warning_title">"TTS (Text-to-Speech)"</string>
@@ -154,6 +169,7 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
     <string name="search_NOT_any_selected_types">"NENHUM dos tipos selecionados"</string>
     <string name="search_All_words">"Todas as palavras"</string>
     <string name="search_Any_words">"Qualquer palavra(s)"</string>
+    <string name="search_Exact_phrase">"Frase exata"</string>
     <string name="search_Most_recent_printing">"Impressão mais recente"</string>
     <string name="search_Original_printing">"Impressão Original"</string>
     <string name="search_All_printings">"Todas as impressões"</string>
@@ -164,12 +180,13 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
     <string name="search_Exact_all_selected_and_no_others">"Exatamente as cores selecionadas"</string>
 
     <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-        See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
     <string name="search_Common">"Comum"</string>
     <string name="search_Uncommon">"Incomum"</string>
     <string name="search_Rare">"Rara"</string>
     <string name="search_Mythic">"Mítica"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
+    <string name="search_type">"Tipo"</string>
     <string name="search_mana_cost">"Custo de Mana"</string>
     <string name="search_collectors_number">"Número de Colecionador"</string>
     <string name="search_color_title">"Cor"</string>
@@ -198,6 +215,10 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_price_not_found">"Preço não encontrado"</string>
     <string name="card_view_image_not_found">"Imagem não encontrada"</string>
     <string name="card_view_no_external_storage">"Não é possível acessar armazenamento externo, por favor, verifique o seu cartão SD."</string>
+    <string name="card_view_no_pictures_folder">"Não é possível localizar a pasta de imagens, por favor tente novamente."</string>
+    <string name="card_view_unable_to_create_dir">"Não foi possível criar o diretório para salvar imagens, por favor tente novamente."</string>
+    <string name="card_view_unable_to_create_file">"Não foi possível criar o arquivo de imagem, por favor tente novamente."</string>
+    <string name="card_view_no_image">"Não foi possível localizar a imagem para salvar, por favor tente novamente."</string>
     <string name="card_view_unable_to_save_image">"Falha ao salvar a imagem, por favor tente novamente."</string>
     <string name="card_view_save_failure">"Houve um erro ao salvar a imagem, por favor tente novamente."</string>
     <string name="card_view_image_saved">"Imagem salva em "</string>
@@ -250,18 +271,22 @@ Reservas de mana também serão apagadas."</string>
     <string name="dice_tails">"Coroa"</string>
 
     <!-- Mana pool activity -->
+    <string name="mana_pool_error_toast">"Falha ao carregar reserva de mana!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Limpar Tudo"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Adicionar Carta"</string>
+    <string name="trader_save">"Salvar Troca"</string>
     <string name="trader_load">"Carregar Troca"</string>
     <string name="trader_delete">"Excluir Troca"</string>
     <string name="trader_edit_dialog_remove">"Remover"</string>
     <string name="trader_edit_dialog_reset_price">"Resetar Preço"</string>
     <string name="trader_clear_dialog_title">"Limpar Troca"</string>
     <string name="trader_clear_dialog_text">"Tem certeza de que deseja apagar a troca atual?"</string>
+    <string name="trader_select_dialog_title">"Selecione um Troca"</string>
+    <string name="trader_delete_dialog_title">"Excluir uma Troca"</string>
     <string name="trader_edit_dialog_info">"Informação da Carta"</string>
     <string name="trader_toast_no_trades">"Você não tem trocas salvas."</string>
     <string name="trader_toast_save_error">"A troca não poderia ser salva; por favor, tente novamente."</string>
@@ -366,6 +391,8 @@ Boa sorte, e divirtam-se!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Configurações Gerais"</string>
+    <string name="pref_screen_search">"Pesquisa e Resultados"</string>
+    <string name="pref_screen_trade_wishlist">"Trocas e Desejos"</string>
     <string name="pref_cat_default_fragment">"Página Padrão"</string>
     <string name="pref_default_fragment_mode_summary">"A primeira coisa que você vê quando você abre o aplicativo"</string>
     <string name="pref_cat_updates">"Atualizações do Banco de Dados"</string>
@@ -478,8 +505,6 @@ Boa sorte, e divirtam-se!
     <string name="decklist_sorceries">"Feitiços"</string>
     <string name="decklist_others">"Outros"</string>
     <string name="decklist_unnamed_deck">"Deck Sem Nome"</string>
-
-    <!-- "Added Slovak Translation" was added -->
     <string name="card_view_send_to">"Compartilhar imagem usando"</string>
     <string name="card_view_translated_dialog_title">"Nome da Carta Traduzido"</string>
     <string name="pref_Portuguese">"Português (Brasil)"</string>
@@ -549,19 +574,22 @@ Boa sorte, e divirtam-se!
     <string name="trader_Market">"Mercado"</string>
 
     <!-- Pretty much the same as pref_deck_price_summary or pref_trade_price_summary.
-    This is shown in the settings menu for what price to display in the wishlist. -->
+This is shown in the settings menu for what price to display in the wishlist. -->
     <string name="pref_wishlist_price_summary">"Preço TCGPlayer a usar na lista de desejos"</string>
 
     <!-- This is the title for the dialog which displays deck legalities (Modern, Standard, Legacy, Pauper, etc). -->
     <string name="decklist_legality">"Legalidade do Deck"</string>
 
     <!-- This is shown in the deck legality dialog for each format which the deck is not legal in, like:
-    Standard ....... Not Legal -->
+Standard ....... Not Legal -->
     <string name="decklist_not_legal">"Ilegal"</string>
     <string name="pref_persist_search_title">"Salvar Opções de Pesquisa"</string>
     <string name="pref_persist_search_summary">"Salvar opções de pesquisa quando sair da página de pesquisa"</string>
     <string name="life_counter_commander_experience_counter">"Contadores de Expêriencia"</string>
     <string name="trader_new">"Nova Troca"</string>
     <string name="trader_save_as">"Salvar Troca Como"</string>
+    <string name="pref_hide_online_title">"Esconder Cartas Exclusivamente Online"</string>
+    <string name="pref_hide_online_summary">"Nunca mostrar cartas exclusivamente online"</string>
     <string name="decklist_new">"Novo Deck"</string>
+    <string name="is_commander">"É Comandante"</string>
 </resources>
