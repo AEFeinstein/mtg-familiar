@@ -321,7 +321,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                     public void onDismissed(Snackbar transientBottomBar, int event) {
                                         super.onDismissed(transientBottomBar, event);
                                         switch (event) {
-                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL:
                                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE:
                                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT: {
                                                 // Snackbar timed out or was dismissed by the user, so wipe the
@@ -331,6 +330,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                                 }
                                                 break;
                                             }
+                                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL:
                                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION:
                                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE: {
                                                 // Snackbar was dismissed by action click, handled above or

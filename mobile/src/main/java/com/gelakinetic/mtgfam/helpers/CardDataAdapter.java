@@ -155,12 +155,12 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
                         switch (event) {
-                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL:
                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE:
                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_TIMEOUT: {
                                 finalizeDelete();
                                 break;
                             }
+                            case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_MANUAL:
                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION:
                             case BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_CONSECUTIVE: {
                                 // Snackbar was dismissed by action click, handled above or
