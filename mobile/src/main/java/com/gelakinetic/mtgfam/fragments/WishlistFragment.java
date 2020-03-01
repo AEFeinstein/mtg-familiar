@@ -60,6 +60,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -73,7 +74,7 @@ public class WishlistFragment extends FamiliarListFragment {
     private boolean mShowIndividualPrices;
 
     /* The wishlist and adapter */
-    public final ArrayList<CompressedWishlistInfo> mCompressedWishlist = new ArrayList<>();
+    public final List<CompressedWishlistInfo> mCompressedWishlist = Collections.synchronizedList(new ArrayList<>());
     private int mOrderAddedIdx = 0;
 
     /**
@@ -521,7 +522,7 @@ public class WishlistFragment extends FamiliarListFragment {
     class WishlistDataAdapter
             extends CardDataAdapter<CompressedWishlistInfo, WishlistViewHolder> {
 
-        WishlistDataAdapter(ArrayList<CompressedWishlistInfo> values) {
+        WishlistDataAdapter(List<CompressedWishlistInfo> values) {
             super(values, WishlistFragment.this);
         }
 
@@ -544,8 +545,8 @@ public class WishlistFragment extends FamiliarListFragment {
         protected void onItemRemovedFinal() {
             // Unsort, save, then sort the wishlist
             sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            synchronized (mCompressedWishlist) {
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            synchronized (this.items) {
+                WishlistHelpers.WriteCompressedWishlist(getActivity(), this.items);
             }
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
         }

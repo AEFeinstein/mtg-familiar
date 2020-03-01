@@ -37,6 +37,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -315,7 +316,7 @@ public class MtgCard extends Card {
      * @param mCtx  A context to do database operations with
      * @param cards A list of cards to fill in data for
      */
-    public static void initCardListFromDb(Context mCtx, ArrayList<MtgCard> cards) throws FamiliarDbException {
+    public static void initCardListFromDb(Context mCtx, List<MtgCard> cards) throws FamiliarDbException {
         // First make sure there are cards to load data for
         if (cards.isEmpty()) {
             return;

@@ -60,6 +60,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -77,10 +78,10 @@ public class TradeFragment extends FamiliarListFragment {
     private static final String AUTOSAVE_NAME = "autosave";
 
     /* Left List and Company */
-    public final ArrayList<MtgCard> mListLeft = new ArrayList<>();
+    public final List<MtgCard> mListLeft = Collections.synchronizedList(new ArrayList<>());
 
     /* Right List and Company */
-    public final ArrayList<MtgCard> mListRight = new ArrayList<>();
+    public final List<MtgCard> mListRight = Collections.synchronizedList(new ArrayList<>());
 
     public String mCurrentTrade = AUTOSAVE_NAME;
 
@@ -782,7 +783,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         private final int side;
 
-        TradeDataAdapter(ArrayList<MtgCard> values, int side) {
+        TradeDataAdapter(List<MtgCard> values, int side) {
             super(values, TradeFragment.this);
             this.side = side;
         }
@@ -796,19 +797,8 @@ public class TradeFragment extends FamiliarListFragment {
         @Override
         protected void onItemReadded() {
             TradeComparator tradeComparator = new TradeComparator(PreferenceAdapter.getTradeSortOrder(getContext()));
-            switch (side) {
-                case LEFT: {
-                    synchronized (mListLeft) {
-                        Collections.sort(mListLeft, tradeComparator);
-                    }
-                    break;
-                }
-                case RIGHT: {
-                    synchronized (mListRight) {
-                        Collections.sort(mListRight, tradeComparator);
-                    }
-                    break;
-                }
+            synchronized (this.items) {
+                Collections.sort(this.items, tradeComparator);
             }
             super.onItemReadded();
         }

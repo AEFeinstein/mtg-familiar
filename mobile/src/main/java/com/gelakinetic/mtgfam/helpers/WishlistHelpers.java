@@ -38,6 +38,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -77,7 +78,7 @@ public class WishlistHelpers {
      * @param activity            A context to open the file and pop toasts with
      * @param mCompressedWishlist The wishlist to write to the file
      */
-    public static void WriteCompressedWishlist(Activity activity, ArrayList<CompressedWishlistInfo> mCompressedWishlist) {
+    public static void WriteCompressedWishlist(Activity activity, List<CompressedWishlistInfo> mCompressedWishlist) {
         if (null == activity) {
             // Context is null, don't try to write the wishlist
             return;
@@ -182,7 +183,7 @@ public class WishlistHelpers {
      * @param sharePrice          Whether or not the card price should be exported
      * @return A string containing all the wishlist data
      */
-    public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
+    public static String GetSharableWishlist(List<CompressedWishlistInfo> mCompressedWishlist,
                                              Context ctx, boolean shareText, boolean sharePrice,
                                              MarketPriceInfo.PriceType priceOption) {
         StringBuilder readableWishlist = new StringBuilder();

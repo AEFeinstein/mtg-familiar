@@ -78,7 +78,7 @@ public class DecklistFragment extends FamiliarListFragment {
     private TextView mDeckCards;
 
     /* Decklist and adapters */
-    public final ArrayList<CompressedDecklistInfo> mCompressedDecklist = new ArrayList<>();
+    public final List<CompressedDecklistInfo> mCompressedDecklist = Collections.synchronizedList(new ArrayList<>());
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
@@ -882,7 +882,7 @@ public class DecklistFragment extends FamiliarListFragment {
          *
          * @param values the data set
          */
-        DecklistDataAdapter(ArrayList<CompressedDecklistInfo> values) {
+        DecklistDataAdapter(List<CompressedDecklistInfo> values) {
             super(values, DecklistFragment.this);
         }
 
@@ -896,14 +896,14 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemReadded() {
-            synchronized (mCompressedDecklist) {
+            synchronized (this.items) {
                 // Resort the decklist
-                Collections.sort(mCompressedDecklist, mDecklistChain);
+                Collections.sort(this.items, mDecklistChain);
 
                 // Reset the headers
                 updateDeckCounts(false);
                 clearHeaders();
-                Collections.sort(mCompressedDecklist, mDecklistChain);
+                Collections.sort(this.items, mDecklistChain);
                 setHeaderValues();
 
                 // Call super to notify the adapter, etc
@@ -913,11 +913,11 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemRemoved() {
-            synchronized (mCompressedDecklist) {
+            synchronized (this.items) {
                 // Reset the headers
                 updateDeckCounts(false);
                 clearHeaders();
-                Collections.sort(mCompressedDecklist, mDecklistChain);
+                Collections.sort(this.items, mDecklistChain);
                 setHeaderValues();
 
                 // Update the number of cards listed
@@ -931,8 +931,8 @@ public class DecklistFragment extends FamiliarListFragment {
         @Override
         protected void onItemRemovedFinal() {
             // After the snackbar times out, write the decklist to the disk
-            synchronized (mCompressedDecklist) {
-                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
+            synchronized (this.items) {
+                DecklistHelpers.WriteCompressedDecklist(getActivity(), this.items, getCurrentDeckName());
             }
         }
 

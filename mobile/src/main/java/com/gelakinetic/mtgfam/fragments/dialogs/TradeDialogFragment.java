@@ -53,10 +53,10 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -113,7 +113,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
                 /* Get some final references */
-                final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
+                final List<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
                 synchronized (lSide) {
 
                     final TradeFragment.TradeDataAdapter aaSide = (TradeFragment.TradeDataAdapter) (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT) : getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
@@ -336,7 +336,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_CHANGE_SET: {
                 /* Make sure positionForDialog is in bounds */
-                final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
+                final List<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
                 synchronized (lSide) {
                     if (positionForDialog < 0 || positionForDialog >= lSide.size()) {
                         return DontShowDialog();
