@@ -395,8 +395,9 @@
                 <TextView
                     style="@style/text.medium"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:minHeight="48dp"
                     android:text="@string/search_power"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
@@ -404,18 +405,20 @@
                 <Spinner
                     android:id="@+id/powLogic"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:drawSelectorOnTop="false"
                     android:entries="@array/logic_spinner"
+                    android:minHeight="48dp"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
 
                 <Spinner
                     android:id="@+id/powChoice"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:drawSelectorOnTop="false"
                     android:entries="@array/pt_spinner"
+                    android:minHeight="48dp"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
 
@@ -423,8 +426,9 @@
                     style="@style/text.medium"
                     android:layout_width="0dp"
 
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:minHeight="48dp"
                     android:text="@string/search_toughness"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
@@ -432,26 +436,29 @@
                 <Spinner
                     android:id="@+id/touLogic"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:drawSelectorOnTop="false"
                     android:entries="@array/logic_spinner"
+                    android:minHeight="48dp"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
 
                 <Spinner
                     android:id="@+id/touChoice"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:drawSelectorOnTop="false"
                     android:entries="@array/pt_spinner"
+                    android:minHeight="48dp"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
 
                 <TextView
                     style="@style/text.medium"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:minHeight="48dp"
                     android:text="@string/search_cmc"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
@@ -459,18 +466,20 @@
                 <Spinner
                     android:id="@+id/cmcLogic"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:drawSelectorOnTop="false"
                     android:entries="@array/logic_spinner"
+                    android:minHeight="48dp"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
 
                 <Spinner
                     android:id="@+id/cmcChoice"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:drawSelectorOnTop="false"
                     android:entries="@array/cmc_spinner"
+                    android:minHeight="48dp"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
             </androidx.gridlayout.widget.GridLayout>
@@ -638,8 +647,9 @@
     <LinearLayout
         style="@android:style/Holo.ButtonBar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?attr/color_background">
+        android:layout_height="wrap_content"
+        android:background="?attr/color_background"
+        android:minHeight="48dp">
 
         <Button
             android:id="@+id/searchbutton"
