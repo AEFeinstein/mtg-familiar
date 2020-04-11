@@ -157,8 +157,10 @@ public class WishlistHelpers {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
                     MtgCard card = MtgCard.fromWishlistString(line, false, activity);
-                    card.setIndex(orderAddedIdx++);
-                    lWishlist.add(card);
+                    if (null != card) {
+                        card.setIndex(orderAddedIdx++);
+                        lWishlist.add(card);
+                    }
                 }
             }
         } catch (NumberFormatException e) {

@@ -298,12 +298,14 @@ public class TradeFragment extends FamiliarListFragment {
                     while ((line = br.readLine()) != null) {
                         try {
                             MtgCard card = MtgCard.fromTradeString(line, getActivity());
-                            card.setIndex(mOrderAddedIdx++);
+                            if (null != card) {
+                                card.setIndex(mOrderAddedIdx++);
 
-                            if (card.mSide == LEFT) {
-                                mListLeft.add(card);
-                            } else if (card.mSide == RIGHT) {
-                                mListRight.add(card);
+                                if (card.mSide == LEFT) {
+                                    mListLeft.add(card);
+                                } else if (card.mSide == RIGHT) {
+                                    mListRight.add(card);
+                                }
                             }
                         } catch (NumberFormatException | IndexOutOfBoundsException e) {
                             // This card line is junk, ignore it

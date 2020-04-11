@@ -141,7 +141,10 @@ public class DecklistHelpers {
                         isSideboard = true;
                         line = line.substring(3);
                     }
-                    lDecklist.add(MtgCard.fromWishlistString(line, isSideboard, activity));
+                    MtgCard card = MtgCard.fromWishlistString(line, isSideboard, activity);
+                    if (null != card) {
+                        lDecklist.add(card);
+                    }
                 }
             }
         } catch (NumberFormatException nfe) {

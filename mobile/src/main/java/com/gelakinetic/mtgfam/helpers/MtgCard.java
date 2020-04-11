@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.Nullable;
+
 /**
  * Encapsulate all information about a magic card
  */
@@ -458,37 +460,42 @@ public class MtgCard extends Card {
      * @param activity The activity for database access
      * @return An initialized MtgCard
      */
-    public static MtgCard fromTradeString(String line, Activity activity) {
+    public static @Nullable
+    MtgCard fromTradeString(String line, Activity activity) {
 
-        /* Parse these parts out of the string */
-        String[] parts = line.split(DELIMITER);
+        try {
+            /* Parse these parts out of the string */
+            String[] parts = line.split(DELIMITER);
 
-        /* Correct the mExpansion code for Duel Deck Anthologies */
-        if (parts[2].equals("DD3")) {
-            FamiliarDbHandle handle = new FamiliarDbHandle();
-            try {
-                SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
-                parts[2] = CardDbAdapter.getCorrectSetCode(parts[1], parts[2], database);
-            } catch (SQLiteException | FamiliarDbException e) {
-                /* Oops, Expansion may be wrong */
-            } finally {
-                DatabaseManager.closeDatabase(activity, handle);
+            /* Correct the mExpansion code for Duel Deck Anthologies */
+            if (parts[2].equals("DD3")) {
+                FamiliarDbHandle handle = new FamiliarDbHandle();
+                try {
+                    SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
+                    parts[2] = CardDbAdapter.getCorrectSetCode(parts[1], parts[2], database);
+                } catch (SQLiteException | FamiliarDbException e) {
+                    /* Oops, Expansion may be wrong */
+                } finally {
+                    DatabaseManager.closeDatabase(activity, handle);
+                }
             }
+
+            MtgCard card = new MtgCard(parts[1], parts[2], false, Integer.parseInt(parts[3]), false);
+            card.mSide = Integer.parseInt(parts[0]);
+
+            /* These parts may not exist */
+            card.mIsCustomPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
+            if (parts.length > 5) {
+                card.mPrice = Integer.parseInt(parts[5]);
+            } else {
+                card.mPrice = 0;
+            }
+            card.mIsFoil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
+
+            return card;
+        } catch (IndexOutOfBoundsException e) {
+            return null;
         }
-
-        MtgCard card = new MtgCard(parts[1], parts[2], false, Integer.parseInt(parts[3]), false);
-        card.mSide = Integer.parseInt(parts[0]);
-
-        /* These parts may not exist */
-        card.mIsCustomPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
-        if (parts.length > 5) {
-            card.mPrice = Integer.parseInt(parts[5]);
-        } else {
-            card.mPrice = 0;
-        }
-        card.mIsFoil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
-
-        return card;
     }
 
     /**
@@ -545,29 +552,33 @@ public class MtgCard extends Card {
      * @param line     Information about this card, in the form of what toWishlistString() prints
      * @param activity A context used for getting localized strings
      */
-    public static MtgCard fromWishlistString(String line, boolean isSideboard, Activity activity) {
+    public static @Nullable
+    MtgCard fromWishlistString(String line, boolean isSideboard, Activity activity) {
+        try {
+            String[] parts = line.split(MtgCard.DELIMITER);
 
-        String[] parts = line.split(MtgCard.DELIMITER);
-
-        /* Correct the mExpansion code for Duel Deck Anthologies */
-        if (parts[1].equals("DD3")) {
-            FamiliarDbHandle handle = new FamiliarDbHandle();
-            try {
-                SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
-                parts[1] = CardDbAdapter.getCorrectSetCode(parts[0], parts[1], database);
-            } catch (SQLiteException | FamiliarDbException e) {
-                /* Eat it and use the old mExpansion code. */
-            } finally {
-                DatabaseManager.closeDatabase(activity, handle);
+            /* Correct the mExpansion code for Duel Deck Anthologies */
+            if (parts[1].equals("DD3")) {
+                FamiliarDbHandle handle = new FamiliarDbHandle();
+                try {
+                    SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
+                    parts[1] = CardDbAdapter.getCorrectSetCode(parts[0], parts[1], database);
+                } catch (SQLiteException | FamiliarDbException e) {
+                    /* Eat it and use the old mExpansion code. */
+                } finally {
+                    DatabaseManager.closeDatabase(activity, handle);
+                }
             }
-        }
-        /* "foil" didn't exist in earlier versions, so it may not be part of the string */
-        boolean foil = false;
-        if (parts.length > 5) {
-            foil = Boolean.parseBoolean(parts[5]);
-        }
+            /* "foil" didn't exist in earlier versions, so it may not be part of the string */
+            boolean foil = false;
+            if (parts.length > 5) {
+                foil = Boolean.parseBoolean(parts[5]);
+            }
 
-        return new MtgCard(parts[0], parts[1], foil, Integer.parseInt(parts[2]), isSideboard);
+            return new MtgCard(parts[0], parts[1], foil, Integer.parseInt(parts[2]), isSideboard);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /**
