@@ -1293,12 +1293,11 @@ public class CardDbAdapter {
             }
 
             if (consolidate) {
-                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
+                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC, " + KEY_ID + " DESC"
                         + ") GROUP BY " + KEY_NAME + " ORDER BY " + orderByStr;
             } else {
                 sql += " ORDER BY " + orderByStr
-                        + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                        + " DESC)";
+                        + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC, " + KEY_ID + " DESC)";
             }
             Cursor cursor = mDb.rawQuery(sql, null);
             if (cursor != null) {
