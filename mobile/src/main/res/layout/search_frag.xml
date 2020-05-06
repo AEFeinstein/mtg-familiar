@@ -373,7 +373,6 @@
 
                 <CheckBox
                     android:id="@+id/isCommander"
-                    style="@style/forty_eight"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"

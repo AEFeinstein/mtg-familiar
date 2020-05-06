@@ -26,13 +26,13 @@
         style="@style/forty_eight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:hint="@string/gathering_display_mode_title"
             android:text="@string/gathering_display_mode_title" />
 
