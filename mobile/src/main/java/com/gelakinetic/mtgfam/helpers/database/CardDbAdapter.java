@@ -997,60 +997,71 @@ public class CardDbAdapter {
         if (null != criteria.color &&
                 !(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") &&
                         criteria.colorLogic == 0))) {
-            boolean firstPrint = true;
-
             /* Can't contain these colors
              **
              * ...if the chosen color logic was exactly (2) or none (3) of the selected colors.
              */
             if (criteria.colorLogic > 1) {
-                statement.append(" AND ((");
+                statement.append(" AND (( 1=1");
                 for (byte b : criteria.color.getBytes()) {
                     char ch = (char) b;
-
-                    if (ch > 'a') {
-                        if (firstPrint)
-                            firstPrint = false;
-                        else
-                            statement.append(" AND ");
-
-                        if (ch == 'l')
-                            statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE ''");
-                        else
-                            statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE '%").append(Character.toUpperCase(ch)).append("%'");
+                    switch (ch) {
+                        case 'l': {
+                            // This means colorless
+                            statement.append(" AND ").append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE ''");
+                            break;
+                        }
+                        case 'w':
+                        case 'u':
+                        case 'b':
+                        case 'r':
+                        case 'g': {
+                            statement.append(" AND ").append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE '%").append(Character.toUpperCase(ch)).append("%'");
+                            break;
+                        }
                     }
                 }
-                statement.append(") AND (");
+                statement.append(") AND ( ");
             }
 
-            firstPrint = true;
-
             /* Might contain these colors */
-            if (criteria.colorLogic < 2)
+            if (criteria.colorLogic < 2) {
                 statement.append(" AND (");
+            }
+
+            /* Start the logic and pick the conjunction */
+            String conjunction;
+            if (criteria.colorLogic == 1 || criteria.colorLogic == 3) {
+                conjunction = " AND ";
+                statement.append(" 1=1 ");
+            } else {
+                conjunction = " OR ";
+                statement.append(" 0=1 ");
+            }
 
             for (byte b : criteria.color.getBytes()) {
                 char ch = (char) b;
-                if (ch < 'a') {
-                    if (firstPrint)
-                        firstPrint = false;
-                    else {
-                        if (criteria.colorLogic == 1 || criteria.colorLogic == 3)
-                            statement.append(" AND ");
-                        else
-                            statement.append(" OR ");
+                switch (ch) {
+                    case 'L': {
+                        statement.append(conjunction).append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE ''");
+                        break;
                     }
-
-                    if (ch == 'L')
-                        statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE ''");
-                    else
-                        statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE '%").append(ch).append("%'");
+                    case 'W':
+                    case 'U':
+                    case 'B':
+                    case 'R':
+                    case 'G': {
+                        statement.append(conjunction).append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE '%").append(ch).append("%'");
+                        break;
+                    }
                 }
             }
-            if (criteria.colorLogic > 1)
+
+            if (criteria.colorLogic > 1) {
                 statement.append("))");
-            else
+            } else {
                 statement.append(")");
+            }
         }
         /* End of addition
          *************************************************************************************/
@@ -1067,20 +1078,22 @@ public class CardDbAdapter {
                         break;
                     }
                     /* search_May_include_any_colors */
-                    boolean first = true;
-                    statement.append(" AND (");
+                    statement.append(" AND ( 1=1");
                     for (int i = 0; i < criteria.colorIdentity.length(); i++) {
-                        if (Character.isLowerCase(criteria.colorIdentity.charAt(i))) {
-                            if (!first) {
-                                statement.append(" AND ");
-                            }
-                            if (criteria.colorIdentity.charAt(i) == 'l') {
+                        switch (criteria.colorIdentity.charAt(i)) {
+                            case 'l': {
                                 /* If colorless isn't selected, don't allow empty identities */
-                                statement.append("(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " NOT LIKE \"\")");
-                            } else {
-                                statement.append("(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " NOT LIKE \"%").append(criteria.colorIdentity.toUpperCase().charAt(i)).append("%\")");
+                                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " NOT LIKE \"\")");
+                                break;
                             }
-                            first = false;
+                            case 'w':
+                            case 'u':
+                            case 'b':
+                            case 'r':
+                            case 'g': {
+                                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " NOT LIKE \"%").append(criteria.colorIdentity.toUpperCase().charAt(i)).append("%\")");
+                                break;
+                            }
                         }
                     }
                     statement.append(")");
@@ -1090,12 +1103,19 @@ public class CardDbAdapter {
                     /* search_Exact_all_selected_and_no_others */
                     StringBuilder colorIdentity = new StringBuilder();
                     for (int i = 0; i < criteria.colorIdentity.length(); i++) {
-                        if (Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
-                            if (criteria.colorIdentity.charAt(i) == 'L') {
+                        switch (criteria.colorIdentity.charAt(i)) {
+                            case 'L': {
                                 /* Colorless identity is the empty string */
                                 statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"\")");
-                            } else {
+                                break;
+                            }
+                            case 'W':
+                            case 'U':
+                            case 'B':
+                            case 'R':
+                            case 'G': {
                                 colorIdentity.append(criteria.colorIdentity.charAt(i));
+                                break;
                             }
                         }
                     }
