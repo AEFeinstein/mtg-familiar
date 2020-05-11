@@ -43,7 +43,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.light"
         android:usesCleartextTraffic="true"
-        tools:targetApi="m">
+        tools:targetApi="Q">
         <activity
             android:name=".FamiliarActivity"
             android:label="@string/app_name"

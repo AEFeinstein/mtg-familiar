@@ -280,6 +280,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
+    private static String extFileDirPath = null;
 
     /**
      * Open an inputStream to the HTML content at the given URL.
@@ -458,6 +459,10 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Save this for static access by loggers
+        extFileDirPath = this.getApplicationContext().getExternalFilesDir(null).getAbsolutePath();
+        
         PrefsFragment.checkOverrideSystemLanguage(this);
 
         /* Figure out what theme the app is currently in, and change it if necessary */
@@ -1860,5 +1865,14 @@ public class FamiliarActivity extends AppCompatActivity {
             parcel.recycle();
             FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + size + " bytes");
         }
+    }
+
+    /**
+     * TODO
+     */
+    @Nullable
+    public static String getExternalFileDirPath()
+    {
+        return extFileDirPath;
     }
 }

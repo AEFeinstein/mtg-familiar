@@ -36,6 +36,11 @@ public class FamiliarDbException extends Exception {
      */
     public FamiliarDbException(Exception e) {
         mInnerException = e;
+        // Log this exception
+        StringBuilder sb = new StringBuilder(e.getMessage());
+        sb.append(e.getMessage() + '\n');
+        sb.append(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e) + '\n');
+        CardDbAdapter.appendToLogFile(sb, "FamiliarDbException");
     }
 
     /**
