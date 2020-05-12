@@ -67,6 +67,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -113,6 +114,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -462,7 +464,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         // Save this for static access by loggers
         extFileDirPath = this.getApplicationContext().getExternalFilesDir(null).getAbsolutePath();
-        
+
         PrefsFragment.checkOverrideSystemLanguage(this);
 
         /* Figure out what theme the app is currently in, and change it if necessary */
@@ -553,6 +555,29 @@ public class FamiliarActivity extends AppCompatActivity {
         mDrawerList.setOnItemLongClickListener((adapterView, view, i, l) -> {
             boolean shouldCloseDrawer = false;
             switch (mPageEntries[i].mNameResource) {
+                case R.string.main_about: {
+                    try (BufferedReader br = new BufferedReader(new FileReader(new File(this.getExternalFilesDir(null), "mtgf_sqlite_log.txt")))) {
+                        // Read the entire log file to a String
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while (null != (line = br.readLine())) {
+                            sb.append(line).append('\n');
+                        }
+
+                        // Send an email intent with the contents of the log
+                        ShareCompat.IntentBuilder.from(this)
+                                .setType("message/rfc822")
+                                .addEmailTo("mtg.familiar@gmail.com")
+                                .setSubject("Database Log")
+                                .setText(sb.toString())
+                                .setChooserTitle("Send Database Log")
+                                .startChooser();
+                    } catch (IOException e) {
+                        // Eh
+                    }
+                    shouldCloseDrawer = true;
+                    break;
+                }
                 case R.string.main_force_update_title: {
                     if (getNetworkState(FamiliarActivity.this, true) != -1) {
                         FamiliarDbHandle handle = new FamiliarDbHandle();
@@ -1871,8 +1896,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * TODO
      */
     @Nullable
-    public static String getExternalFileDirPath()
-    {
+    public static String getExternalFileDirPath() {
         return extFileDirPath;
     }
 }
