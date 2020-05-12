@@ -27,6 +27,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.os.Environment;
 import android.provider.BaseColumns;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
@@ -2629,7 +2630,7 @@ public class CardDbAdapter {
      * @param sb
      * @param methodName
      */
-    static void appendToLogFile(StringBuilder sb, String methodName) {
+    public static void appendToLogFile(StringBuilder sb, String methodName) {
         /* Try to open up a log */
         String fileDirAbsPath = FamiliarActivity.getExternalFileDirPath();
         if (BuildConfig.DEBUG && null != fileDirAbsPath &&
@@ -2638,12 +2639,11 @@ public class CardDbAdapter {
             try (FileWriter logWriter = new FileWriter(
                     new File(fileDirAbsPath, "mtgf_sqlite_log.txt"), true)) {
                 /* Datestamp it */
-                logWriter.write("Date :" + (new Date()).toString() + '\n');
+                logWriter.write("Date : " + (new Date()).toString() + '\n');
                 logWriter.write("From : " + methodName + '\n');
                 logWriter.write(sb.toString() + "\n\n");
             } catch (IOException e) {
                 /* Couldn't open log, oh well */
-                Log.e("ERR", e.getMessage());
             }
         }
     }
