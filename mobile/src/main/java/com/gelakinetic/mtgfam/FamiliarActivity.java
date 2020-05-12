@@ -464,6 +464,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         // Save this for static access by loggers
         extFileDirPath = this.getApplicationContext().getExternalFilesDir(null).getAbsolutePath();
+        logDeviceInfo();
 
         PrefsFragment.checkOverrideSystemLanguage(this);
 
@@ -1893,6 +1894,42 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * TODO
+     */
+    private void logDeviceInfo() {
+        // Log SDK, manufacturer, and model
+        CardDbAdapter.appendToLogFile(new StringBuilder("Android SDK: ").append(Build.VERSION.SDK_INT)
+                .append(", Manufacturer: ").append(Build.MANUFACTURER)
+                .append(", Model: ").append(Build.MODEL), "SYS Info");
+
+        // Log CPU info
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo").start().getInputStream()))) {
+            String line;
+            StringBuilder sb = new StringBuilder("/proc/cpuinfo\n");
+            while (null != (line = br.readLine())) {
+                sb.append(line).append('\n');
+            }
+            CardDbAdapter.appendToLogFile(sb, "CPU Info");
+        } catch (IOException e) {
+            // Eh
+        }
+
+        // Log memory info
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start().getInputStream()))) {
+            String line;
+            StringBuilder sb = new StringBuilder("/proc/meminfo\n");
+            while (null != (line = br.readLine())) {
+                sb.append(line).append('\n');
+            }
+            CardDbAdapter.appendToLogFile(sb, "MEM Info");
+        } catch (IOException e) {
+            // Eh
+        }
+    }
+    
     /**
      * TODO
      */
