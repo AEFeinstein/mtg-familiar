@@ -556,7 +556,8 @@ public class FamiliarActivity extends AppCompatActivity {
             boolean shouldCloseDrawer = false;
             switch (mPageEntries[i].mNameResource) {
                 case R.string.main_about: {
-                    try (BufferedReader br = new BufferedReader(new FileReader(new File(this.getExternalFilesDir(null), "mtgf_sqlite_log.txt")))) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(
+                            new File(this.getExternalFilesDir(null), CardDbAdapter.DB_LOG_FILE_NAME)))) {
                         // Read the entire log file to a String
                         StringBuilder sb = new StringBuilder();
                         String line;

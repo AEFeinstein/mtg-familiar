@@ -318,6 +318,7 @@ public class CardDbAdapter {
     public static final int LEGAL = 0;
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
+    public static final String DB_LOG_FILE_NAME = "mtgf_sqlite_log.txt";
 
     /* The various types of multi-cards */
     public enum MultiCardType {
@@ -2637,7 +2638,7 @@ public class CardDbAdapter {
                 Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             /* Open the log */
             try (FileWriter logWriter = new FileWriter(
-                    new File(fileDirAbsPath, "mtgf_sqlite_log.txt"), true)) {
+                    new File(fileDirAbsPath, DB_LOG_FILE_NAME), true)) {
                 /* Datestamp it */
                 logWriter.write("Date : " + (new Date()).toString() + '\n');
                 logWriter.write("From : " + methodName + '\n');
