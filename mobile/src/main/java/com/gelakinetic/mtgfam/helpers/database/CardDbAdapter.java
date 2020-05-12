@@ -2636,7 +2636,7 @@ public class CardDbAdapter {
     public static void appendToLogFile(StringBuilder sb, String methodName) {
         /* Try to open up a log */
         String fileDirAbsPath = FamiliarActivity.getExternalFileDirPath();
-        if (BuildConfig.DEBUG && null != fileDirAbsPath &&
+        if (null != fileDirAbsPath &&
                 Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             /* Open the log */
             try (FileWriter logWriter = new FileWriter(
