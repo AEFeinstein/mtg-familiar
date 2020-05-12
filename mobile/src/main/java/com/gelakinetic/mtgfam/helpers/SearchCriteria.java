@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.helpers;
 
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.List;
@@ -58,4 +59,8 @@ public class SearchCriteria implements Serializable {
     public boolean moJhoStoFilter;
     public String watermark = null;
     public boolean isCommander;
+
+    public String toJson() {
+        return (new Gson()).toJson(this);
+    }
 }

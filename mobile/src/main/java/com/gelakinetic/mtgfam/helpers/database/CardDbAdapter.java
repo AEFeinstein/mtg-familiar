@@ -790,6 +790,8 @@ public class CardDbAdapter {
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
                                 boolean consolidate, String orderByStr, SQLiteDatabase mDb)
             throws FamiliarDbException {
+        appendToLogFile(new StringBuilder(criteria.toJson()), new Throwable().getStackTrace()[0].getMethodName());
+
         StringBuilder statement = new StringBuilder(" WHERE 1=1");
 
         if (criteria.name != null) {

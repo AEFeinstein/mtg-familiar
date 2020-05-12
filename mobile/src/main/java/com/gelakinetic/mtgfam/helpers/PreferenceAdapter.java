@@ -1032,7 +1032,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(key, (new Gson()).toJson(searchCriteria));
+        edit.putString(key, searchCriteria.toJson());
         edit.apply();
     }
 
