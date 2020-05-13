@@ -42,6 +42,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -242,9 +243,9 @@ public class ResultListFragment extends FamiliarFragment {
         }
 
         if(mCursor == null) {
-            CardDbAdapter.appendToLogFile(new StringBuilder("Null cursor"), "onCreateView");
+            FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "onCreateView");
         } else {
-            CardDbAdapter.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
+            FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
         }
         FragmentManager fm = Objects.requireNonNull(getFragmentManager());
         Bundle res = getFamiliarActivity().getFragmentResults();
@@ -334,9 +335,9 @@ public class ResultListFragment extends FamiliarFragment {
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
                     PreferenceAdapter.getSearchSortOrder(getContext()), database);
             if(mCursor == null) {
-                CardDbAdapter.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
+                FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
             } else {
-                CardDbAdapter.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "doSearch");
+                FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "doSearch");
             }
         }
     }

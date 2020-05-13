@@ -97,5 +97,6 @@
     <string name="key_SearchCriteria" translatable="false">search_criteria</string>
     <string name="key_SearchCriteriaPerm" translatable="false">search_criteria_permanent</string>
     <string name="key_tcgpGroups" translatable="false">tcgp_groups</string>
+    <string name="key_loggingPref" translatable="false">logging_enabled</string>
 
 </resources>

@@ -98,6 +98,7 @@ import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -282,7 +283,6 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
-    private static String extFileDirPath = null;
 
     /**
      * Open an inputStream to the HTML content at the given URL.
@@ -463,8 +463,7 @@ public class FamiliarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Save this for static access by loggers
-        extFileDirPath = this.getApplicationContext().getExternalFilesDir(null).getAbsolutePath();
-        logDeviceInfo();
+        FamiliarLogger.initLogger(this);
 
         PrefsFragment.checkOverrideSystemLanguage(this);
 
@@ -557,26 +556,7 @@ public class FamiliarActivity extends AppCompatActivity {
             boolean shouldCloseDrawer = false;
             switch (mPageEntries[i].mNameResource) {
                 case R.string.main_about: {
-                    try (BufferedReader br = new BufferedReader(new FileReader(
-                            new File(this.getExternalFilesDir(null), CardDbAdapter.DB_LOG_FILE_NAME)))) {
-                        // Read the entire log file to a String
-                        StringBuilder sb = new StringBuilder();
-                        String line;
-                        while (null != (line = br.readLine())) {
-                            sb.append(line).append('\n');
-                        }
-
-                        // Send an email intent with the contents of the log
-                        ShareCompat.IntentBuilder.from(this)
-                                .setType("message/rfc822")
-                                .addEmailTo("mtg.familiar@gmail.com")
-                                .setSubject("Database Log")
-                                .setText(sb.toString())
-                                .setChooserTitle("Send Database Log")
-                                .startChooser();
-                    } catch (IOException e) {
-                        // Eh
-                    }
+                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_LOGGING);
                     shouldCloseDrawer = true;
                     break;
                 }
@@ -1892,49 +1872,5 @@ public class FamiliarActivity extends AppCompatActivity {
             parcel.recycle();
             FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + size + " bytes");
         }
-    }
-
-    /**
-     * TODO
-     */
-    private void logDeviceInfo() {
-        // Log SDK, manufacturer, and model
-        CardDbAdapter.appendToLogFile(new StringBuilder("Android SDK: ").append(Build.VERSION.SDK_INT)
-                .append(", Manufacturer: ").append(Build.MANUFACTURER)
-                .append(", Model: ").append(Build.MODEL), "SYS Info");
-
-        // Log CPU info
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo").start().getInputStream()))) {
-            String line;
-            StringBuilder sb = new StringBuilder("/proc/cpuinfo\n");
-            while (null != (line = br.readLine())) {
-                sb.append(line).append('\n');
-            }
-            CardDbAdapter.appendToLogFile(sb, "CPU Info");
-        } catch (IOException e) {
-            // Eh
-        }
-
-        // Log memory info
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start().getInputStream()))) {
-            String line;
-            StringBuilder sb = new StringBuilder("/proc/meminfo\n");
-            while (null != (line = br.readLine())) {
-                sb.append(line).append('\n');
-            }
-            CardDbAdapter.appendToLogFile(sb, "MEM Info");
-        } catch (IOException e) {
-            // Eh
-        }
-    }
-    
-    /**
-     * TODO
-     */
-    @Nullable
-    public static String getExternalFileDirPath() {
-        return extFileDirPath;
     }
 }
