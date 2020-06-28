@@ -96,13 +96,13 @@ task pmdMain(type: Pmd, group: "verification") {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.3'
+    buildToolsVersion '30.0.0'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 73
-        versionName "3.6.6.dbg.1"
+        versionCode 74
+        versionName "3.6.6.dbg.2"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
