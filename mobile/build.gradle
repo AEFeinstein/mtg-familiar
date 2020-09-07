@@ -96,7 +96,7 @@ task pmdMain(type: Pmd, group: "verification") {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '30.0.0'
+    buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
@@ -138,24 +138,24 @@ dependencies {
     spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.7'
     //noinspection GradleDependency
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
 
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'junit:junit:4.13'
-    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.mockito:mockito-core:3.5.10'
 
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'org.apache.commons:commons-io:1.3.2'
     implementation 'org.apache.commons:commons-collections4:4.4'
 
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
-    implementation 'com.github.woxthebox:draglistview:1.7.0'
-    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation 'com.github.woxthebox:draglistview:1.7.2'
+    implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
@@ -163,7 +163,7 @@ dependencies {
     implementation 'com.github.machinarius:preferencefragment:0.1.2'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.splitwise:tokenautocomplete:3.0.2'
-    implementation 'com.google.code.findbugs:annotations:3.0.1u2', {
+    implementation 'com.google.code.findbugs:annotations:3.0.1', {
         // Need to exclude these, or build is broken by:
         //   com.android.dex.DexException: Multiple dex files define Ljavax/annotation/CheckForNull
         exclude module: 'jsr305'
