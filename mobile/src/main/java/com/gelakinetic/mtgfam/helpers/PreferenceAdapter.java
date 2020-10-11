@@ -192,6 +192,42 @@ public class PreferenceAdapter {
         edit.apply();
     }
 
+    /* Last DMTR update */
+    public static synchronized long getLastDMTRUpdate(@Nullable Context context) {
+        if (null == context) {
+            return 0;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_lastDMTRUpdate), 0);
+    }
+
+    public static synchronized void setLastDMTRUpdate(@Nullable Context context, long lastDMTRUpdate) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_lastDMTRUpdate), lastDMTRUpdate);
+        edit.apply();
+    }
+
+    /* Last DIPG update */
+    public static synchronized long getLastDIPGUpdate(@Nullable Context context) {
+        if (null == context) {
+            return 0;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_lastDIPGUpdate), 0);
+    }
+
+    public static synchronized void setLastDIPGUpdate(@Nullable Context context, long lastDIPGUpdate) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_lastDIPGUpdate), lastDIPGUpdate);
+        edit.apply();
+    }
+    
     /* TTS show dialog */
     public static synchronized boolean getTtsShowDialog(@Nullable Context context) {
         if (null == context) {

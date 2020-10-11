@@ -49,10 +49,14 @@ public class JudgesCornerFragment extends FamiliarFragment {
     public static final String MTR_LOCAL_FILE = "MTR.html";
     public static final String IPG_LOCAL_FILE = "IPG.html";
     public static final String JAR_LOCAL_FILE = "JAR.html";
+    public static final String DMTR_LOCAL_FILE = "DMTR.html";
+    public static final String DIPG_LOCAL_FILE = "DIPG.html";
     /* Constants to keep track of tabs */
     private static final String TAG_MTR = "MTR";
     private static final String TAG_IPG = "IPG";
     private static final String TAG_JAR = "JAR";
+    private static final String TAG_DMTR = "DMTR";
+    private static final String TAG_DIPG = "DIPG";
     private static final String TAG_COUNTER = "COUNTER";
 
     /**
@@ -72,6 +76,8 @@ public class JudgesCornerFragment extends FamiliarFragment {
         mTabs.add(new PagerItem(getString(R.string.judges_corner_MTR), TAG_MTR));
         mTabs.add(new PagerItem(getString(R.string.judges_corner_IPG), TAG_IPG));
         mTabs.add(new PagerItem(getString(R.string.judges_corner_JAR), TAG_JAR));
+        mTabs.add(new PagerItem(getString(R.string.judges_corner_DMTR), TAG_DMTR));
+        mTabs.add(new PagerItem(getString(R.string.judges_corner_DIPG), TAG_DIPG));
         mTabs.add(new PagerItem(getString(R.string.judges_corner_counter), TAG_COUNTER));
     }
 
@@ -172,6 +178,22 @@ public class JudgesCornerFragment extends FamiliarFragment {
                         JarBundle.putString(PAGE_NAME, getString(R.string.judges_corner_JAR));
                         mFragment = new HtmlDocFragment();
                         mFragment.setArguments(JarBundle);
+                        break;
+                    }
+                    case TAG_DMTR: {
+                        Bundle dMtrBundle = new Bundle();
+                        dMtrBundle.putString(HTML_DOC, DMTR_LOCAL_FILE);
+                        dMtrBundle.putString(PAGE_NAME, getString(R.string.judges_corner_DMTR));
+                        mFragment = new HtmlDocFragment();
+                        mFragment.setArguments(dMtrBundle);
+                        break;
+                    }
+                    case TAG_DIPG: {
+                        Bundle dIpgBundle = new Bundle();
+                        dIpgBundle.putString(HTML_DOC, DIPG_LOCAL_FILE);
+                        dIpgBundle.putString(PAGE_NAME, getString(R.string.judges_corner_DIPG));
+                        mFragment = new HtmlDocFragment();
+                        mFragment.setArguments(dIpgBundle);
                         break;
                     }
                     default:
