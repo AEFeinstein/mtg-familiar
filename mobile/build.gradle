@@ -1,4 +1,4 @@
-import com.github.spotbugs.SpotBugsTask
+//import com.github.spotbugs.SpotBugsTask
 
 /*
  * Copyright 2017 Adam Feinstein
@@ -24,7 +24,7 @@ apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'com.github.spotbugs'
 
-check.dependsOn 'pmdMain', 'checkstyleMain', 'spotbugsMain'
+check.dependsOn 'pmdMain', 'checkstyleMain' //, 'spotbugsMain'
 
 repositories {
     mavenCentral()
@@ -33,44 +33,44 @@ repositories {
 
 def configDir = "${project.rootDir}/config"
 
-sourceSets {
-    // we define `main` sourceSet here, so SpotBugs Gradle Plugin generates `spotbugsMain` task
-    main {
-        java.srcDirs = ['src/main/java']
-    }
-}
+//sourceSets {
+//    // we define `main` sourceSet here, so SpotBugs Gradle Plugin generates `spotbugsMain` task
+//    main {
+//        java.srcDirs = ['src/main/java']
+//    }
+//}
+//
+//task compileJava(overwrite: true) {
+//    dependsOn 'compileDebugJavaWithJavac'
+//    group = "build"
+//}
+//
+//spotbugs {
+//    toolVersion = '3.1.9'
+//    ignoreFailures = true
+//    effort = "max"
+//    reportLevel = "high"
+//    excludeFilter = new File("$configDir/findbugs/findbugs.filter.xml")
+//}
+//
+//tasks.withType(SpotBugsTask) {
+//    dependsOn 'assembleDebug'
+//    group = "verification"
+//
+//    classes = files("${project.rootDir}/mobile/build/intermediates/javac")
+//    ignoreFailures = true
+//
+//    // configure automatically generated tasks
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//        html {
+//            destination file("$project.buildDir/reports/spotbugs.html")
+//        }
+//    }
+//}
 
-task compileJava(overwrite: true) {
-    dependsOn 'compileDebugJavaWithJavac'
-    group = "build"
-}
-
-spotbugs {
-    toolVersion = '3.1.9'
-    ignoreFailures = true
-    effort = "max"
-    reportLevel = "high"
-    excludeFilter = new File("$configDir/findbugs/findbugs.filter.xml")
-}
-
-tasks.withType(SpotBugsTask) {
-    dependsOn 'assembleDebug'
-    group = "verification"
-
-    classes = files("${project.rootDir}/mobile/build/intermediates/javac")
-    ignoreFailures = true
-
-    // configure automatically generated tasks
-    reports {
-        xml.enabled = false
-        html.enabled = true
-        html {
-            destination file("$project.buildDir/reports/spotbugs.html")
-        }
-    }
-}
-
-task checkstyleMain(type: Checkstyle, group: "verification", overwrite: true) {
+task checkstyleMain(type: Checkstyle, group: "verification") {
     ignoreFailures = true
     configFile file("$configDir/checkstyle/checkstyle.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
@@ -80,7 +80,7 @@ task checkstyleMain(type: Checkstyle, group: "verification", overwrite: true) {
     classpath = files()
 }
 
-task pmdMain(type: Pmd, group: "verification", overwrite: true) {
+task pmdMain(type: Pmd, group: "verification") {
     ignoreFailures = true
     ruleSetFiles = files("$configDir/pmd/pmd.xml")
     reports {
