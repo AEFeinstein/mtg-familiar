@@ -31,6 +31,8 @@
     <string name="key_lastRulesUpdate" translatable="false">lastRulesUpdate</string>
     <string name="key_lastMTRUpdate" translatable="false">lastMTRUpdate</string>
     <string name="key_lastIPGUpdate" translatable="false">lastIPGUpdate</string>
+    <string name="key_lastDMTRUpdate" translatable="false">lastDMTRUpdate</string>
+    <string name="key_lastDIPGUpdate" translatable="false">lastDIPGUpdate</string>
     <string name="key_lastJARUpdate" translatable="false">lastJARUpdate</string>
     <string name="key_ttsShowDialog" translatable="false">ttsShowDialog</string>
     <string name="key_autoupdate" translatable="false">autoupdate</string>

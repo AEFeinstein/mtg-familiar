@@ -400,6 +400,20 @@ public class DbUpdaterService extends IntentService {
                 logWriter.write("JAR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
 
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DMTR, logWriter)) {
+                updatedStuff.add(getString(R.string.update_added_dmtr));
+            }
+            if (logWriter != null) {
+                logWriter.write("DMTR date: " + mtrIpgParser.mPrettyDate + '\n');
+            }
+
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DIPG, logWriter)) {
+                updatedStuff.add(getString(R.string.update_added_dipg));
+            }
+            if (logWriter != null) {
+                logWriter.write("DIPG date: " + mtrIpgParser.mPrettyDate + '\n');
+            }
+
             /* If everything went well so far, commit the date and show the update complete notification */
             if (commitDates) {
                 parser.commitDates(this);
