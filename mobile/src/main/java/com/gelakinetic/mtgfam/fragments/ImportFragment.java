@@ -115,6 +115,7 @@ public class ImportFragment extends FamiliarFragment {
         startButton.setOnClickListener(view -> {
             ((Button) view).setText(R.string.import_loading);
             importDeck();
+            ((Button) view).setText(R.string.import_start);
         });
 
         return myFragmentView;
@@ -134,8 +135,15 @@ public class ImportFragment extends FamiliarFragment {
         final FamiliarActivity activity = getFamiliarActivity();
 
         /* Don't allow the fields to be empty */
-        if (getDeckNameInput() == null || getDeckNameInput().length() == 0 ||
-                getDeckTextInput() == null || getDeckTextInput().length() == 0) {
+        if (getDeckNameInput() == null || getDeckNameInput().length() == 0) {
+            SnackbarWrapper.makeAndShowText(getFamiliarActivity(), "Please enter a name for this deck", SnackbarWrapper.LENGTH_LONG);
+            mImportStarted = false;
+            return;
+        }
+
+        if (getDeckTextInput() == null || getDeckTextInput().length() == 0) {
+            SnackbarWrapper.makeAndShowText(getFamiliarActivity(), "Please enter some cards to import", SnackbarWrapper.LENGTH_LONG);
+            mImportStarted = false;
             return;
         }
 
