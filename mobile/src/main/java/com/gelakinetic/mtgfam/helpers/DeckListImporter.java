@@ -14,7 +14,7 @@ public class DeckListImporter {
     private List<MtgCard> mParsedCards = new ArrayList<>();
     private List<String> mErrorLines = new ArrayList<>();
     private boolean mReadingSideBoard = false;
-    private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])? *([^(\\[\\n\\r]+)(?:[(\\[](\\w{2,6})[)\\]])? *(\\d+)?$");
+    private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])? *([^(\\[\\n\\r]+)(?:[(\\[](\\w{2,6})[)\\]])? *(\\d+)?$", Pattern.CASE_INSENSITIVE);
     private static final Pattern mNamePattern = Pattern.compile("^//\\s*NAME\\s?:\\s*(.*)\\s*$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     @NonNull
@@ -48,19 +48,24 @@ public class DeckListImporter {
         try {
             Matcher match = mCardPattern.matcher(line);
 
-            String cardName = match.group(3).trim();
-            /* deal with split cards (/ or // in name): only include first half */
-            cardName = cardName.split("\\s/+\\s", 2)[0];
+            if(match.find()) {
+                String cardName = match.group(3).trim();
+                /* deal with split cards (/ or // in name): only include first half */
+                cardName = cardName.split("\\s/+\\s", 2)[0];
 
-            int numberOf = parseInt(match.group(1));
+                int numberOf = parseInt(match.group(1));
 
-            String set = match.group(2);
-            String set2 = match.group(4);
-            String cardSet = null != set ? set : null != set2 ? set2 : "";
-//          String idxInSet = match.group(5);
-            final boolean isFoil = false;
+                String set = match.group(2);
+                String set2 = match.group(4);
+                String cardSet = null != set ? set : null != set2 ? set2 : "";
+//              String idxInSet = match.group(5);
+                final boolean isFoil = false;
 
-            mParsedCards.add(new MtgCard(cardName, cardSet, isFoil, numberOf, currentIsSideBoard));
+                mParsedCards.add(new MtgCard(cardName, cardSet, isFoil, numberOf, currentIsSideBoard));
+            }
+            else{
+                mErrorLines.add(currentIsSideBoard ? "SB: " + line : line);
+            }
         } catch (NullPointerException | IllegalStateException e) {
             mErrorLines.add(currentIsSideBoard ? "SB: " + line : line);
         }

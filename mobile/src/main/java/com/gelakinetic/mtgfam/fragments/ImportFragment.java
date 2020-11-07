@@ -19,56 +19,32 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
-import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DeckListImporter;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
-import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Objects;
-
-import static com.gelakinetic.mtgfam.FamiliarActivity.FRAGMENT_TAG;
 
 /**
  * This fragment shows a simple editText, and allows you to import from it.
@@ -78,6 +54,8 @@ public class ImportFragment extends FamiliarFragment {
     /* UI Elements */
     private EditText mDeckName;
     private EditText mDeckText;
+    private boolean mImportStarted;
+    private AsyncTask<Void, String[], DeckListImporter> mImportTask;
 
     /**
      * @return The current text in mDeckName
@@ -118,8 +96,8 @@ public class ImportFragment extends FamiliarFragment {
         mDeckName = myFragmentView.findViewById(R.id.importName);
         mDeckText = myFragmentView.findViewById(R.id.import_editText);
 
+        /* Try to guess the deck name from the text field when it changes */
         mDeckText.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void onTextChanged(CharSequence s, int start, int countBefore, int countAfter) {
                 /* the `100` below is a bit arbitrary,
@@ -153,45 +131,38 @@ public class ImportFragment extends FamiliarFragment {
      */
     private void importDeck() {
 
+        if (mImportStarted) {
+            return;
+        }
+        mImportStarted = true;
+
+        final FamiliarActivity activity = getFamiliarActivity();
+
         /* Don't allow the fields to be empty */
         if (getDeckNameInput() == null || getDeckNameInput().length() == 0 ||
                 getDeckTextInput() == null || getDeckTextInput().length() == 0) {
             return;
         }
 
+        /* TODO: check if deck already exists */
+
+        activity.setLoading();
+
         final String name = String.valueOf(getDeckNameInput());
         final String lines = String.valueOf(getDeckTextInput());
 
-        final DeckListImporter importer = new DeckListImporter();
-        try (BufferedReader br = new BufferedReader(new StringReader(lines))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                importer.parseLine(line);
-            }
-        } catch (IOException e) {
-            /* TODO: show some kind of message here?
-             * I don't think StringReader actually throws unless it's closed... */
-            return;
+        mImportTask = new ImportTask(name, lines).execute();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        if (mImportTask != null) {
+            mImportTask.cancel(true);
+            mImportTask = null;
         }
-
-        /* TODO: handle errors in parsing */
-        /* TODO: match cards with database */
-        /* TODO: handle errors in card matching */
-
-        /*
-        ArrayList<String> nonFoilSets;
-        FamiliarDbHandle handle = new FamiliarDbHandle();
-        try {
-            SQLiteDatabase database = DatabaseManager.openDatabase(getContext(), false, handle);
-            nonFoilSets = CardDbAdapter.getNonFoilSets(database);
-        } catch (SQLiteException | FamiliarDbException | IllegalStateException ignored) {
-            nonFoilSets = new ArrayList<>();
-        } finally {
-            DatabaseManager.closeDatabase(getContext(), handle);
-        }
-
-        /* Save the decklist */
-        // DecklistHelpers.WriteCompressedDecklist(getActivity(), compressedDecklist, getDeckNameInput());
     }
 
     /**
@@ -203,6 +174,92 @@ public class ImportFragment extends FamiliarFragment {
 
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.decklist_menu, menu);
+    }
 
+    /* TODO: make class static to prevent leaks? */
+    private class ImportTask extends AsyncTask<Void, String[], DeckListImporter> {
+
+        private final String mLines;
+        private final String mName;
+        private ArrayList<MtgCard> unknownCards = new ArrayList<>();
+        private ArrayList<MtgCard> importedCards = new ArrayList<>();
+
+        ImportTask(String name, String lines) {
+            mName = name;
+            mLines = lines;
+        }
+
+        @Override
+        protected DeckListImporter doInBackground(Void... voids) {
+            final DeckListImporter importer = new DeckListImporter();
+            try (BufferedReader br = new BufferedReader(new StringReader(mLines))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    importer.parseLine(line);
+                }
+            } catch (IOException e) {
+                /* TODO: show some kind of message here?
+                 * I don't think StringReader actually throws unless it's closed... */
+                return importer;
+            }
+
+            /* report errors in parsing */
+            if (!importer.getErrorLines().isEmpty()) {
+                publishProgress(importer.getErrorLines().toArray(new String[0]));
+            }
+
+            /* match cards with database */
+            try {
+                /* TODO: does error snackbar get shown properly? We're not on UI thread... */
+                MtgCard.initCardListFromDb(getContext(), importer.getParsedCards());
+            } catch (FamiliarDbException fde) {
+                handleFamiliarDbException(false);
+            }
+
+            /* find out which cards are known */
+            for (MtgCard card : importer.getParsedCards()) {
+                if (card.getMultiverseId() == 0) {
+                    unknownCards.add(card);
+                } else {
+                    importedCards.add(card);
+                }
+            }
+
+            /* Save the decklist */
+            if (!importedCards.isEmpty()) {
+                DecklistHelpers.WriteDecklist(getFamiliarActivity(), importedCards, mName);
+            }
+
+            return importer;
+        }
+
+        @Override
+        protected void onProgressUpdate(String[]... errorLines) {
+            getDeckTextInput().clear();
+            for (String line : errorLines[0]) {
+                getDeckTextInput().append(line).append(System.getProperty("line.separator"));
+            }
+
+            SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
+                    getString(R.string.import_parse_error_toast),
+                    SnackbarWrapper.LENGTH_LONG);
+        }
+
+        @Override
+        protected void onPostExecute(DeckListImporter importer) {
+            getFamiliarActivity().clearLoading();
+            mImportStarted = false;
+
+            int unknownCount = unknownCards.size();
+            if (unknownCount > 0) {
+                SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
+                        getResources().getQuantityString(R.plurals.import_card_unknown_toast, unknownCount, unknownCount),
+                        SnackbarWrapper.LENGTH_LONG);
+            } else if (importedCards.size() > 0) {
+                SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
+                        getString(R.string.import_complete_toast),
+                        SnackbarWrapper.LENGTH_LONG);
+            }
+        }
     }
 }

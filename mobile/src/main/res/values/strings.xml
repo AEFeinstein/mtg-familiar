@@ -438,6 +438,8 @@ Good luck, and have fun!
     <string name="pref_consolidate_summary">"Only show the most recent printing of a card"</string>
     <string name="pref_persist_search_title">"Save Search Options"</string>
     <string name="pref_persist_search_summary">"Save search options when leaving the search page"</string>
+    <string name="pref_hide_online_title">"Hide Online Only Cards"</string>
+    <string name="pref_hide_online_summary">"Don't show online only cards anywhere"</string>
     <string name="pref_show_set_title">"Show Set"</string>
     <string name="pref_show_mana_title">"Show Mana Cost"</string>
     <string name="pref_show_type_title">"Show Type/Subtype"</string>
@@ -561,6 +563,12 @@ Good luck, and have fun!
     <!-- Deck Importer -->
     <string name="import_start">"Import"</string>
     <string name="import_deck_name_hint">"Deck name"</string>
-    <string name="import_paste_hint">paste deck here…</string>
-    <string name="import_loading">Importing…</string>
+    <string name="import_paste_hint">"paste deck here…"</string>
+    <string name="import_loading">"Importing…"</string>
+    <string name="import_parse_error_toast">"Had some trouble parsing these lines."</string>
+    <plurals name="import_card_unknown_toast">
+        <item quantity="one">"One card was not recognized and was not imported."</item>
+        <item quantity="other">"%1$d cards were not recognized and were not imported."</item>
+    </plurals>
+    <string name="import_complete_toast">"Deck imported successfully."</string>
 </resources>

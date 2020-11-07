@@ -26,6 +26,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,9 +37,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -78,7 +77,7 @@ public class DecklistFragment extends FamiliarListFragment {
     private TextView mDeckCards;
 
     /* Decklist and adapters */
-    public final List<CompressedDecklistInfo> mCompressedDecklist = Collections.synchronizedList(new ArrayList<>());
+    public final ArrayList<CompressedDecklistInfo> mCompressedDecklist = new ArrayList<>();
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
@@ -255,7 +254,7 @@ public class DecklistFragment extends FamiliarListFragment {
         if (shouldZero) {
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0, 0));
         } else {
-            int[] counts = new int[2];
+            int counts[] = new int[2];
             ((DecklistDataAdapter) getCardDataAdapter(0)).getDeckCardCounts(counts);
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
                     counts[0] + counts[1],
@@ -572,10 +571,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 return true;
             }
             case R.id.deck_menu_import: {
-                /* Import plaintext decklist */
-                /* TODO: open import fragment
-                 *  I don't know how the Fragment stack should be handled...
-                 */
+                startNewFragment(new ImportFragment(), null);
                 return true;
             }
             case R.id.deck_menu_delete: {
@@ -613,7 +609,6 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 mLegalityCheckerTask = new LegalityCheckerTask();
                 mLegalityCheckerTask.execute(this);
-                return true;
             }
             case R.id.deck_menu_settings: {
                 showDialog(DecklistDialogFragment.DIALOG_PRICE_SETTING, null, false);
@@ -889,7 +884,7 @@ public class DecklistFragment extends FamiliarListFragment {
          *
          * @param values the data set
          */
-        DecklistDataAdapter(List<CompressedDecklistInfo> values) {
+        DecklistDataAdapter(ArrayList<CompressedDecklistInfo> values) {
             super(values, DecklistFragment.this);
         }
 
@@ -903,14 +898,14 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemReadded() {
-            synchronized (this.items) {
+            synchronized (mCompressedDecklist) {
                 // Resort the decklist
-                Collections.sort(this.items, mDecklistChain);
+                Collections.sort(mCompressedDecklist, mDecklistChain);
 
                 // Reset the headers
                 updateDeckCounts(false);
                 clearHeaders();
-                Collections.sort(this.items, mDecklistChain);
+                Collections.sort(mCompressedDecklist, mDecklistChain);
                 setHeaderValues();
 
                 // Call super to notify the adapter, etc
@@ -920,11 +915,11 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemRemoved() {
-            synchronized (this.items) {
+            synchronized (mCompressedDecklist) {
                 // Reset the headers
                 updateDeckCounts(false);
                 clearHeaders();
-                Collections.sort(this.items, mDecklistChain);
+                Collections.sort(mCompressedDecklist, mDecklistChain);
                 setHeaderValues();
 
                 // Update the number of cards listed
@@ -938,8 +933,8 @@ public class DecklistFragment extends FamiliarListFragment {
         @Override
         protected void onItemRemovedFinal() {
             // After the snackbar times out, write the decklist to the disk
-            synchronized (this.items) {
-                DecklistHelpers.WriteCompressedDecklist(getActivity(), this.items, getCurrentDeckName());
+            synchronized (mCompressedDecklist) {
+                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
             }
         }
 
@@ -1028,51 +1023,35 @@ public class DecklistFragment extends FamiliarListFragment {
             int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
 
-            /* Make sure the index is in-bounds, or a request for the sideboard */
-            String targetType;
-            if (-1 == typeIndex) {
-                /* This value isn't used */
-                targetType = "sb";
-            } else if (0 <= typeIndex && typeIndex < types.length) {
-                targetType = types[typeIndex];
-            } else {
-                return 0;
-            }
-
-            /* Iterate over the deck */
             for (int i = 0; i < getItemCount(); i++) {
                 CompressedDecklistInfo cdi = getItem(i);
-
-                /* Make sure nothing's null. Don't count header items */
-                if (null == cdi || cdi.header != null) {
+                if (Objects.requireNonNull(cdi).header != null) {
                     continue;
                 }
-
-                /* If the card is not in the sideboard and we're looking for non-sideboard cards */
-                if (!cdi.mIsSideboard && 0 <= typeIndex) {
-                    /* If the card matches the type */
-                    if (cdi.getType().contains(targetType)) {
-                        /* Check if this card was counted as a previous type */
-                        boolean alreadyCounted = false;
-                        for (int acIdx = 0; acIdx < typeIndex; acIdx++) {
-                            if (cdi.getType().contains(types[acIdx])) {
-                                /* The card was already counted, so don't count it again */
-                                alreadyCounted = true;
-                                break;
-                            }
-                        }
-                        /* The card was not already counted, so add it to this count */
-                        if (!alreadyCounted) {
-                            totalCards += cdi.getTotalNumber();
-                        }
+                if (    /* The type is not above -1 OR is not in the sideboard */
+                        (!(typeIndex > -1) || !cdi.mIsSideboard)
+                                /* The type is above -1 OR the card is in the sideboard */
+                                && (typeIndex > -1 || cdi.mIsSideboard)
+                                /* The card is in the sideboard OR the card is the wanted type */
+                                && (cdi.mIsSideboard || cdi.getType().contains(types[typeIndex]))) {
+                    /* There of course are edge cases */
+                    final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]
+                            .equals(types[5]);
+                    final boolean isCreature = cdi.getType().contains(types[0]);
+                    if (typeIndex > -1 /* Make sure we aren't working on the sideboard */
+                            /* Are we looking for enchantments or is the object a creature? */
+                            && (lookForEnchant || isCreature)
+                            /* Are we looking for enchantments or are we looking for a land? */
+                            && (lookForEnchant || types[typeIndex].contains(types[6]))
+                            /* Is the current object a creature or is it an artifact? */
+                            && (isCreature || cdi.getType().contains(types[4]))) {
+                        continue; /* Skip right over to the next iteration */
                     }
-                    /* If the card is in the sideboard and we're looking for sideboard cards */
-                } else if (cdi.mIsSideboard && -1 == typeIndex) {
                     totalCards += cdi.getTotalNumber();
                 }
             }
-            /* Return the total count */
             return totalCards;
+
         }
 
         /**
@@ -1095,7 +1074,7 @@ public class DecklistFragment extends FamiliarListFragment {
          *
          * @param counts The counts, [0] is the dec and [1] is the sideboard. Must be at least length two
          */
-        void getDeckCardCounts(int[] counts) {
+        void getDeckCardCounts(int counts[]) {
             counts[0] = 0;
             counts[1] = 0;
             for (int i = 0; i < getItemCount(); i++) {
