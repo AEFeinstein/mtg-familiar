@@ -651,8 +651,12 @@ public class CardDbAdapter {
                 } else {
                     sql.append(" OR ");
                 }
-                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE AND ");
-                sql.append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
+                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE");
+                if (sanitizeString(card.getExpansion(), false).length() > 0) {
+                    sql.append(" AND ").append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
+                } else {
+                    sql.append(")");
+                }
             }
             sql.append(" ORDER BY s_").append(KEY_DATE).append(" DESC");
 
