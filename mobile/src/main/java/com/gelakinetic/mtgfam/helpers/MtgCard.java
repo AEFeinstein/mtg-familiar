@@ -25,7 +25,6 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -34,13 +33,12 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
+import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import javax.annotation.Nullable;
 
 /**
  * Encapsulate all information about a magic card
@@ -342,7 +340,10 @@ public class MtgCard extends Card {
 
                 // Match that to a card in the initial list
                 for (MtgCard card : cards) {
-                    if (card.getName().equals(name) && card.getExpansion().equals(set)) {
+                    if (card.getName().equals(name) &&
+                            /* getMultiverseId() == 0 means card is not initiated yet */
+                            ((card.getExpansion().isEmpty() && card.getMultiverseId() == 0) ||
+                                    card.getExpansion().equals(set))) {
                         try {
                             // Fill in the initial list with data from the cursor
                             card.initFromCursor(mCtx, cardCursor);

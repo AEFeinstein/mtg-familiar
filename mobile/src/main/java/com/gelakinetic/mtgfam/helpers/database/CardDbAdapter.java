@@ -28,23 +28,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
-
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
@@ -311,6 +302,8 @@ public class CardDbAdapter {
     public static final int LEGAL = 0;
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
+
+    private static final String[] ILLEGAL_SETS = {"UG", "UNH", "UST", "ARS", "PCP", "PP2"};
 
     /* The various types of multi-cards */
     public enum MultiCardType {
