@@ -23,16 +23,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
-
 import androidx.annotation.NonNull;
-
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.DeckListImporter;
@@ -45,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This fragment shows a simple editText, and allows you to import from it.
@@ -207,17 +202,17 @@ public class ImportFragment extends FamiliarFragment {
             if (!importer.getErrorLines().isEmpty()) {
                 publishProgress(importer.getErrorLines().toArray(new String[0]));
             }
-
+            List<MtgCard> cardList = importer.getParsedCards();
             /* match cards with database */
             try {
                 /* TODO: does error snackbar get shown properly? We're not on UI thread... */
-                MtgCard.initCardListFromDb(getContext(), importer.getParsedCards());
+                MtgCard.initCardListFromDb(getContext(), cardList);
             } catch (FamiliarDbException fde) {
                 handleFamiliarDbException(false);
             }
 
             /* find out which cards are known */
-            for (MtgCard card : importer.getParsedCards()) {
+            for (MtgCard card : cardList) {
                 if (card.getMultiverseId() == 0) {
                     unknownCards.add(card);
                 } else {
@@ -227,7 +222,7 @@ public class ImportFragment extends FamiliarFragment {
 
             /* Save the decklist */
             if (!importedCards.isEmpty()) {
-                DecklistHelpers.WriteDecklist(getFamiliarActivity(), importedCards, mName);
+                DecklistHelpers.WriteDecklist(getFamiliarActivity(), importedCards, mName + ".deck");
             }
 
             return importer;
