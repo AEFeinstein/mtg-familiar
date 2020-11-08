@@ -32,8 +32,7 @@
         android:gravity="top"
         android:hint="@string/import_paste_hint"
         android:importantForAutofill="no"
-        android:singleLine="false"
-        android:inputType="text" />
+        android:inputType="textMultiLine" />
 
     <View
         android:layout_width="match_parent"
