@@ -564,6 +564,8 @@ Good luck, and have fun!
     <string name="import_start">"Import"</string>
     <string name="import_deck_name_hint">"Deck name"</string>
     <string name="import_paste_hint">"paste deck here…"</string>
+    <string name="empty_deck_name">"Please enter a name for this deck"</string>
+    <string name="empty_deck_text">"Please enter some cards to import"</string>
     <string name="import_loading">"Importing…"</string>
     <string name="import_parse_error_toast">"Had some trouble parsing these lines."</string>
     <plurals name="import_card_unknown_toast">

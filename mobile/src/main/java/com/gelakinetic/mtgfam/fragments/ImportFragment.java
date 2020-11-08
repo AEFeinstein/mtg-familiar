@@ -136,13 +136,13 @@ public class ImportFragment extends FamiliarFragment {
 
         /* Don't allow the fields to be empty */
         if (getDeckNameInput() == null || getDeckNameInput().length() == 0) {
-            SnackbarWrapper.makeAndShowText(getFamiliarActivity(), "Please enter a name for this deck", SnackbarWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(getFamiliarActivity(), R.string.empty_deck_name, SnackbarWrapper.LENGTH_LONG);
             mImportStarted = false;
             return;
         }
 
         if (getDeckTextInput() == null || getDeckTextInput().length() == 0) {
-            SnackbarWrapper.makeAndShowText(getFamiliarActivity(), "Please enter some cards to import", SnackbarWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(getFamiliarActivity(), R.string.empty_deck_text, SnackbarWrapper.LENGTH_LONG);
             mImportStarted = false;
             return;
         }
@@ -210,6 +210,7 @@ public class ImportFragment extends FamiliarFragment {
             if (!importer.getErrorLines().isEmpty()) {
                 publishProgress(importer.getErrorLines().toArray(new String[0]));
             }
+            /* store local copy of cards so they can be updated */
             List<MtgCard> cardList = importer.getParsedCards();
             /* match cards with database */
             try {
