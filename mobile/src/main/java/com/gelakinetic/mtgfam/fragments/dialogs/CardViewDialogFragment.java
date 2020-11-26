@@ -218,7 +218,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         new ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                     @Override
                     protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
-                        getParentCardViewFragment().setInfoFromID(data.getMultiverseId());
+                        getParentCardViewFragment().setInfoFromID(data.getDbId());
                     }
                 };
                 Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
