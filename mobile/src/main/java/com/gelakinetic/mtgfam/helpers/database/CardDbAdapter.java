@@ -1482,42 +1482,44 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a multiverseId for a multicard, return the full card name, which has each half of the
-     * card separated by "//".
-     * <p>
-     * TODO online only pref
+     * Given a collector's number and expansion, return the combined name for a multi-card
      *
-     * @param multiverseId The multiverse id to search for
-     * @param isAscending  Whether the query should be sorted in ascending or descending order
-     * @param mDb          The database to query
-     * @return A String name
+     * @param expansion The expansion for this card
+     * @param number    The card's number, with a letter suffix
+     * @param mDb       The database to search
+     * @return The whole, combined name for this multi-part card
      * @throws FamiliarDbException If something goes wrong
      */
-    public static String getSplitName(int multiverseId, boolean isAscending, SQLiteDatabase mDb)
+    public static String getCombinedName(String expansion, String number, SQLiteDatabase mDb)
             throws FamiliarDbException {
-        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER + " from "
-                + DATABASE_TABLE_CARDS + " WHERE " + KEY_MULTIVERSEID + " = "
-                + multiverseId + " ORDER BY " + KEY_NUMBER;
 
-        if (isAscending) {
-            statement += " ASC";
-        } else {
-            statement += " DESC";
+        // Remove all non-digit chars
+        for (int i = 0; i < number.length(); i++) {
+            if (!Character.isDigit(number.charAt(i))) {
+                number = number.replace(Character.toString(number.charAt(i)), "");
+            }
         }
 
-        try (Cursor c = mDb.rawQuery(statement, null)) {
+        // Select all rows from the database for cards with this number
+        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
+                " FROM " + DATABASE_TABLE_CARDS +
+                " WHERE " + KEY_SET + " = '" + expansion + "' AND " + KEY_NUMBER + " LIKE '" + number + "%'" +
+                " ORDER BY " + KEY_NUMBER + " ASC";
 
-            if (c.getCount() == 2) {
-                c.moveToFirst();
-                String retVal;
-                retVal = c.getString(c.getColumnIndex(KEY_NAME));
-                retVal += " // ";
-                c.moveToNext();
+        // For every returned row
+        try (Cursor c = mDb.rawQuery(statement, null)) {
+            String retVal = "";
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                // If we're not starting off, append the delimiter
+                if (!retVal.isEmpty()) {
+                    retVal += " // ";
+                }
+                // Append the card name
                 retVal += c.getString(c.getColumnIndex(KEY_NAME));
-                return retVal;
-            } else {
-                return null;
+                c.moveToNext();
             }
+            return retVal;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
