@@ -44,8 +44,8 @@ import java.util.ArrayList;
  */
 class CardAndSetParser {
     /* Hardcoded URLs */
-    private static final String PATCHES_URL = "https://raw.githubusercontent.com/aefeinstein/GathererScraper/master/patches.json";
-    private static final String LEGALITY_URL = "https://raw.githubusercontent.com/aefeinstein/GathererScraper/master/legality.json";
+    private static final String PATCHES_URL = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/patches.json";
+    private static final String LEGALITY_URL = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/legality.json";
 
     /**
      * Used to store various dates before committing them
