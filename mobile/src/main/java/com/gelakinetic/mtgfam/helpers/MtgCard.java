@@ -724,7 +724,7 @@ public class MtgCard extends Card {
      */
     private URL getGathererImageUrl() throws MalformedURLException {
         // Gatherer doesn't use HTTPS as of 1/6/2019
-        return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
+        return new URL("https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
     }
 
     public String getSetName() {
