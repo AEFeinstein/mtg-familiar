@@ -351,7 +351,7 @@ public class MtgCard extends Card {
                     if (card.getName().equals(name) && card.getExpansion().equals(set)) {
                         try {
                             // Fill in the initial list with data from the cursor
-                            card.initFromCursor(mCtx, cardCursor);
+                            card.initFromCursor(mCtx, cardCursor, database);
                         } catch (java.lang.InstantiationException e) {
                             // Eat it
                         }
@@ -377,7 +377,7 @@ public class MtgCard extends Card {
      * @param cardCursor A cursor pointing to this card's information from the database
      * @throws InstantiationException If this card can't be initialized
      */
-    private void initFromCursor(Context context, Cursor cardCursor) throws InstantiationException {
+    private void initFromCursor(Context context, Cursor cardCursor, SQLiteDatabase database) throws InstantiationException, FamiliarDbException {
 
         try {
             /* Note the card price is loading */
@@ -404,6 +404,12 @@ public class MtgCard extends Card {
             this.mText = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ABILITY));
             this.mFlavor = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_FLAVOR));
             this.mMultiverseId = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MULTIVERSEID));
+
+            // This card doesn't have a multiverseID, try to find an equivalent
+            if (mMultiverseId < 1) {
+                this.mMultiverseId = CardDbAdapter.getEquivalentMultiverseId(this.mName, database);
+            }
+
             this.mArtist = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ARTIST));
             this.mWatermark = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_WATERMARK));
             this.mColorIdentity = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR_IDENTITY));
@@ -601,9 +607,8 @@ public class MtgCard extends Card {
 
     @Override
     public int hashCode() {
-        int hash = 29;
-        hash = hash * 31 + mMultiverseId;
-        return hash;
+        // xor the name and expansion hash codes, used for equals()
+        return this.mName.hashCode() ^ this.mExpansion.hashCode();
     }
 
     /**

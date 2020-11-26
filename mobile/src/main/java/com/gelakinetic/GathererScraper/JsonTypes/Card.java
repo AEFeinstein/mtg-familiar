@@ -205,9 +205,7 @@ public class Card implements Comparable<Card> {
 
         @Override
         public int hashCode() {
-            int hash = 23;
-            hash = hash * 31 + super.hashCode();
-            return hash * 31 + this.mMultiverseId;
+            return getLanguageCode().hashCode();
         }
 
         public int getMultiverseId() {
