@@ -1496,9 +1496,10 @@ public class CardDbAdapter {
         // Remove all non-digit chars
         for (int i = 0; i < number.length(); i++) {
             if (!Character.isDigit(number.charAt(i))) {
-                number = number.replace(Character.toString(number.charAt(i)), "");
+                number = number.replace(Character.toString(number.charAt(i)), "-");
             }
         }
+        number = number.replace("-", "");
 
         // Select all rows from the database for cards with this number
         String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
@@ -1520,6 +1521,34 @@ public class CardDbAdapter {
                 c.moveToNext();
             }
             return retVal;
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * For cards without a multiverse ID, find an equivalent for Gatherer lookups
+     *
+     * @param mName The name of this card
+     * @param mDb   The database to query for another multiverse ID
+     * @return A multiverse ID for a different card with the same name
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static int getEquivalentMultiverseId(String mName, SQLiteDatabase mDb) throws FamiliarDbException {
+        // Select all rows from the database for cards with this number
+        String statement = "SELECT " + KEY_MULTIVERSEID + ", " + KEY_DATE +
+                " FROM (" + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + ")" +
+                " WHERE (" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = '" + mName + "')" +
+                " ORDER BY " + KEY_DATE + " DESC";
+
+        // For every returned row
+        try (Cursor c = mDb.rawQuery(statement, null)) {
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                return c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
+            } else {
+                return 0;
+            }
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }

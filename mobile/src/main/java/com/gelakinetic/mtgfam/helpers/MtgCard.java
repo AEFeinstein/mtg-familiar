@@ -50,7 +50,7 @@ public class MtgCard extends Card {
 
     /* Wish and trade list fields */
     String mSetName;
-    private String mSetNameMtgi;
+    private String mSetCodeMtgi;
     public int mNumberOf;
     public int mPrice; /* In cents */
     public String mMessage;
@@ -88,7 +88,7 @@ public class MtgCard extends Card {
 
         // From MtgCard
         this.mSetName = "";
-        this.mSetNameMtgi = "";
+        this.mSetCodeMtgi = "";
         this.mNumberOf = 0;
         this.mPrice = 0; /* In cents */
         this.mMessage = "";
@@ -128,7 +128,7 @@ public class MtgCard extends Card {
 
             // From MtgCard
             this.mSetName = card.mSetName;
-            this.mSetNameMtgi = card.mSetNameMtgi;
+            this.mSetCodeMtgi = card.mSetCodeMtgi;
             this.mNumberOf = card.mNumberOf;
             this.mPrice = card.mPrice; /* In cents */
             this.mMessage = card.mMessage;
@@ -229,7 +229,7 @@ public class MtgCard extends Card {
         this.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
         this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
         this.mSetName = CardDbAdapter.getSetNameFromCode(this.mExpansion, database);
-        this.mSetNameMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
+        this.mSetCodeMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
         this.mNumber = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_NUMBER));
         this.mCmc = cardCursor.getInt((cardCursor
@@ -253,6 +253,12 @@ public class MtgCard extends Card {
                 .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
         this.mMultiverseId = cardCursor.getInt(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
+
+        // This card doesn't have a multiverseID, try to find an equivalent
+        if (mMultiverseId < 1) {
+            this.mMultiverseId = CardDbAdapter.getEquivalentMultiverseId(this.mName, database);
+        }
+
         this.mArtist = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_ARTIST));
         this.mWatermark = cardCursor.getString(cardCursor
@@ -403,7 +409,7 @@ public class MtgCard extends Card {
             this.mColorIdentity = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR_IDENTITY));
 
             this.mSetName = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_NAME));
-            this.mSetNameMtgi = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CODE_MTGI));
+            this.mSetCodeMtgi = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CODE_MTGI));
 
             // Don't mess with any of the other MtgCard specific fields that may have been loaded fron files, like mIsCustomPrice
 
@@ -665,44 +671,14 @@ public class MtgCard extends Card {
      * @return The URL for this attempt
      */
     public String getImageUrlString(int attempt, String cardLanguage, Context ctx) {
-
-        // Some trickery to figure out if we have a token
-        boolean isToken = false;
-        if (mType.contains("Token") || // try to take the easy way out
-                (mCmc == 0 && // Tokens have a CMC of 0
-                        // The only tokens in Gatherer are from Duel Decks
-                        mSetName.contains("Duel Decks") &&
-                        // The only tokens in Gatherer are creatures
-                        mType.contains("Creature"))) {
-            isToken = true;
-        }
-
-        // If the card is english or a token, skip over the foreign MTGI attempt
-        if (cardLanguage.equalsIgnoreCase("en") || isToken) {
-            attempt++;
-        }
-
-        // If the card is a token, skip over the other MTGI attempt too
-        if (isToken && attempt >= 2) {
-            attempt++;
-        }
-
         // Try getting a URL
         try {
             switch (attempt) {
                 case 0: {
-                    // Try magiccards.info, foreign
-                    return getMtgiPicUrl(cardLanguage, ctx).toString();
+                    // Try scryfall
+                    return getScryfallImageUrl(cardLanguage).toString();
                 }
                 case 1: {
-                    // Try scryfall
-                    return getScryfallImageUrl().toString();
-                }
-                case 2: {
-                    // Try magiccards.info, but english this time
-                    return getMtgiPicUrl("en", ctx).toString();
-                }
-                case 3: {
                     // try gatherer
                     return getGathererImageUrl().toString();
                 }
@@ -718,65 +694,26 @@ public class MtgCard extends Card {
     }
 
     /**
-     * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image.
-     *
-     * @param cardLanguage The language of the card
-     * @param ctx          A context to get strings with
-     * @return a URL to the card's image
-     * @throws MalformedURLException If we screw up building the URL
-     */
-    private URL getMtgiPicUrl(String cardLanguage, Context ctx) throws MalformedURLException {
-
-        final String mtgiExtras = "https://magiccards.info/extras/";
-        String picURL;
-        if (mType.toLowerCase().contains(ctx.getString(R.string.search_Ongoing).toLowerCase()) ||
-                /* extra space to not confuse with planeswalker */
-                mType.toLowerCase().contains(ctx.getString(R.string.search_Plane).toLowerCase() + " ") ||
-                mType.toLowerCase().contains(ctx.getString(R.string.search_Phenomenon).toLowerCase()) ||
-                mType.toLowerCase().contains(ctx.getString(R.string.search_Scheme).toLowerCase())) {
-            switch (mExpansion) {
-                case "PC2":
-                    picURL = mtgiExtras + "plane/planechase-2012-edition/" + mName + ".jpg";
-                    picURL = picURL.replace(" ", "-")
-                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                    break;
-                case "PCH":
-                    String cardNameTmp = mName;
-                    if (cardNameTmp.equalsIgnoreCase("tazeem")) {
-                        cardNameTmp = "tazeem-release-promo";
-                    } else if (cardNameTmp.equalsIgnoreCase("celestine reef")) {
-                        cardNameTmp = "celestine-reef-pre-release-promo";
-                    } else if (cardNameTmp.equalsIgnoreCase("horizon boughs")) {
-                        cardNameTmp = "horizon-boughs-gateway-promo";
-                    }
-                    picURL = mtgiExtras + "plane/planechase/" + cardNameTmp + ".jpg";
-                    picURL = picURL.replace(" ", "-")
-                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                    break;
-                case "ARC":
-                    picURL = mtgiExtras + "scheme/archenemy/" + mName + ".jpg";
-                    picURL = picURL.replace(" ", "-")
-                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                    break;
-                default:
-                    picURL = "https://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" +
-                            mNumber + ".jpg";
-                    break;
-            }
-        } else {
-            picURL = "https://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" + mNumber + ".jpg";
-        }
-        return new URL(picURL.toLowerCase(Locale.ENGLISH));
-    }
-
-    /**
      * Easily gets the URL for the Scryfall image for a card by multiverseid.
      *
+     * @param lang The requested language for this card
      * @return URL of the card image
      * @throws MalformedURLException If we screw up building the URL
      */
-    private URL getScryfallImageUrl() throws MalformedURLException {
-        return new URL("https://api.scryfall.com/cards/multiverse/" + mMultiverseId + "?format=image&version=normal");
+    private URL getScryfallImageUrl(String lang) throws MalformedURLException {
+        String numberNoLetter = this.mNumber;
+        for (int i = 0; i < numberNoLetter.length(); i++) {
+            if (!Character.isDigit(numberNoLetter.charAt(i))) {
+                numberNoLetter = numberNoLetter.replace(Character.toString(numberNoLetter.charAt(i)), "-");
+            }
+        }
+        numberNoLetter = numberNoLetter.replace("-", "");
+
+        String urlStr = "https://api.scryfall.com/cards/" + this.mSetCodeMtgi.toLowerCase() + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
+        if (this.mNumber.endsWith("b")) {
+            urlStr += "&face=back";
+        }
+        return new URL(urlStr);
     }
 
     /**
