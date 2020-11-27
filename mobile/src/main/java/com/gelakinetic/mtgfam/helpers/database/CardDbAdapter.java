@@ -1543,12 +1543,15 @@ public class CardDbAdapter {
 
         // For every returned row
         try (Cursor c = mDb.rawQuery(statement, null)) {
-            if (c.getCount() > 0) {
-                c.moveToFirst();
-                return c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
-            } else {
-                return 0;
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                int multiverseId = c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
+                if (multiverseId > 0) {
+                    return multiverseId;
+                }
+                c.moveToNext();
             }
+            return 0;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
