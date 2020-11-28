@@ -1538,7 +1538,7 @@ public class CardDbAdapter {
         // Select all rows from the database for cards with this number
         String statement = "SELECT " + KEY_MULTIVERSEID + ", " + KEY_DATE +
                 " FROM (" + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + ")" +
-                " WHERE (" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = '" + mName + "')" +
+                " WHERE (" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + sanitizeString(mName, false) + ")" +
                 " ORDER BY " + KEY_DATE + " DESC";
 
         // For every returned row
