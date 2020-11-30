@@ -54,6 +54,9 @@ public class Card implements Comparable<Card> {
     // The card's expansion
     protected String mExpansion = "";
 
+    // The card's expansion
+    protected String mScryfallSetCode = "";
+
     // The card's rarity
     protected char mRarity = '\0';
 
@@ -113,6 +116,10 @@ public class Card implements Comparable<Card> {
 
     public String getExpansion() {
         return mExpansion;
+    }
+
+    public String getScryfallSetCode() {
+        return mScryfallSetCode;
     }
 
     public char getRarity() {

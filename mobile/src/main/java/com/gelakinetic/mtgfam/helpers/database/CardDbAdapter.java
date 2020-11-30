@@ -53,7 +53,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 111;
+    public static final int DATABASE_VERSION = 112;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -68,6 +68,7 @@ public class CardDbAdapter {
     public static final String KEY_ID = "_id";
     public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1;
     public static final String KEY_SET = "expansion";
+    public static final String KEY_SCRYFALL_SET_CODE = "scryfall_set_code";
     public static final String KEY_SUPERTYPE = "supertype";
     public static final String KEY_SUBTYPE = "subtype";
     public static final String KEY_ABILITY = "cardtext";
@@ -136,6 +137,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_ID,
             DATABASE_TABLE_CARDS + "." + KEY_NAME,
             DATABASE_TABLE_CARDS + "." + KEY_SET,
+            DATABASE_TABLE_CARDS + "." + KEY_SCRYFALL_SET_CODE,
             DATABASE_TABLE_CARDS + "." + KEY_NUMBER,
             DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE,
             DATABASE_TABLE_CARDS + "." + KEY_MANACOST,
@@ -225,6 +227,7 @@ public class CardDbAdapter {
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_NAME + " text not null, " +
                     KEY_SET + " text not null, " +
+                    KEY_SCRYFALL_SET_CODE + " text not null, " +
                     KEY_SUPERTYPE + " text not null, " +
                     KEY_SUBTYPE + " text not null, " +
                     KEY_RARITY + " integer, " +
@@ -1569,6 +1572,7 @@ public class CardDbAdapter {
         String delimiter = " - ";
         initialValues.put(KEY_NAME, card.getName());
         initialValues.put(KEY_SET, card.getExpansion());
+        initialValues.put(KEY_SCRYFALL_SET_CODE, card.getScryfallSetCode());
         String[] types = card.getType().split(delimiter);
         if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);

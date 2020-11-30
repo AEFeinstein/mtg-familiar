@@ -50,7 +50,6 @@ public class MtgCard extends Card {
 
     /* Wish and trade list fields */
     String mSetName;
-    private String mSetCodeMtgi;
     public int mNumberOf;
     public int mPrice; /* In cents */
     public String mMessage;
@@ -69,6 +68,7 @@ public class MtgCard extends Card {
         /* Database fields */
         mName = "";
         mExpansion = "";
+        mScryfallSetCode = "";
         mType = "";
         mRarity = '\0';
         mManaCost = "";
@@ -88,7 +88,6 @@ public class MtgCard extends Card {
 
         // From MtgCard
         this.mSetName = "";
-        this.mSetCodeMtgi = "";
         this.mNumberOf = 0;
         this.mPrice = 0; /* In cents */
         this.mMessage = "";
@@ -106,6 +105,7 @@ public class MtgCard extends Card {
             // From Card
             this.mName = card.mName;
             this.mExpansion = card.mExpansion;
+            this.mScryfallSetCode = card.mScryfallSetCode;
             this.mType = card.mType;
             this.mRarity = card.mRarity;
             this.mManaCost = card.mManaCost;
@@ -128,7 +128,6 @@ public class MtgCard extends Card {
 
             // From MtgCard
             this.mSetName = card.mSetName;
-            this.mSetCodeMtgi = card.mSetCodeMtgi;
             this.mNumberOf = card.mNumberOf;
             this.mPrice = card.mPrice; /* In cents */
             this.mMessage = card.mMessage;
@@ -229,7 +228,8 @@ public class MtgCard extends Card {
         this.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
         this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
         this.mSetName = CardDbAdapter.getSetNameFromCode(this.mExpansion, database);
-        this.mSetCodeMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
+        this.mScryfallSetCode = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_SCRYFALL_SET_CODE));
         this.mNumber = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_NUMBER));
         this.mCmc = cardCursor.getInt((cardCursor
@@ -386,6 +386,7 @@ public class MtgCard extends Card {
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             this.mName = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
             this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+            this.mScryfallSetCode = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SCRYFALL_SET_CODE));
             this.mNumber = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NUMBER));
             this.mCmc = cardCursor.getInt((cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_CMC)));
             this.mColor = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR));
@@ -415,7 +416,6 @@ public class MtgCard extends Card {
             this.mColorIdentity = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR_IDENTITY));
 
             this.mSetName = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_NAME));
-            this.mSetCodeMtgi = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CODE_MTGI));
 
             // Don't mess with any of the other MtgCard specific fields that may have been loaded fron files, like mIsCustomPrice
 
@@ -703,47 +703,14 @@ public class MtgCard extends Card {
         if (attempt > 0) {
             return null;
         }
+
+        // Strip the last part of the number, if it is a letter
         String numberNoLetter = this.mNumber;
-        for (int i = 0; i < numberNoLetter.length(); i++) {
-            if (!Character.isDigit(numberNoLetter.charAt(i))) {
-                numberNoLetter = numberNoLetter.replace(Character.toString(numberNoLetter.charAt(i)), "-");
-            }
+        if (Character.isAlphabetic(numberNoLetter.charAt(numberNoLetter.length() - 1))) {
+            numberNoLetter = numberNoLetter.substring(0, numberNoLetter.length() - 1);
         }
-        numberNoLetter = numberNoLetter.replace("-", "");
 
-        String code = this.mSetCodeMtgi;
-
-        // Familiar merges a few scryfall sets together, so un-merge them for image lookups
-        // Note, this guessing doesn't work because of overlapping collector's numbers
-//        String allMergedSetCodes[][] = {
-//                {"MB1", "CMB1"},
-//                {"ARC", "OARC"},
-//                {"E01", "OE01"},
-//                {"HOP", "OHOP"},
-//                {"PC2", "OPC2"},
-//                {"PCA", "OPCA"},
-//                {"PDRC", "PHPR", "PPRE"},
-//                {"PMEI", "S00"},
-//                {"PVAN", "PMOA"}};
-//        for (String mergedSetCodes[] : allMergedSetCodes) {
-//            boolean found = false;
-//            for (String mergedSetCode : mergedSetCodes) {
-//                if (code.equals(mergedSetCode)) {
-//                    if (attempt >= mergedSetCodes.length) {
-//                        return null;
-//                    } else {
-//                        code = mergedSetCodes[attempt];
-//                        found = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (found) {
-//                break;
-//            }
-//        }
-
-        code = code.toLowerCase();
+        String code = this.mScryfallSetCode.toLowerCase();
 
         String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
         if (this.mNumber.endsWith("b")) {
