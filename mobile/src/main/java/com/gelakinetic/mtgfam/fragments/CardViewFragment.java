@@ -796,7 +796,9 @@ public class CardViewFragment extends FamiliarFragment {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         // Peek at the next URL
-                        if (null == mCard.getImageUrlString(attempt + 1, cardLanguage)) {
+                        String thisUrl = mCard.getImageUrlString(attempt, cardLanguage);
+                        String nextUrl = mCard.getImageUrlString(attempt + 1, cardLanguage);
+                        if (thisUrl.equals(nextUrl)) {
                             // All lookups failed
                             if (onlyCheckCache) {
                                 // It's only checking the cache. This comes first

@@ -61,7 +61,6 @@ public class MtgCard extends Card {
     private int mIndex;
     private boolean mIsSelected;
     private boolean mIsSideboard;
-    private boolean mTriedGathererImageUrl = false;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -676,20 +675,15 @@ public class MtgCard extends Card {
      * @return The URL for this attempt
      */
     public String getImageUrlString(int attempt, String cardLanguage) {
-        if (mTriedGathererImageUrl) {
-            // Return null, indicating we're out of attempts
-            return null;
-        }
         // Try getting a URL
         try {
             // Try scryfall first
-            String url;
-            if (null == (url = getScryfallImageUrl(cardLanguage, attempt).toString())) {
+            URL url;
+            if (null == (url = getScryfallImageUrl(cardLanguage, attempt))) {
                 // If scryfall returns null, try gatherer
-                url = getGathererImageUrl().toString();
-                mTriedGathererImageUrl = true;
+                url = getGathererImageUrl();
             }
-            return url;
+            return url.toString();
         } catch (MalformedURLException | NullPointerException e) {
             // Return null, indicating a bad URL
             return null;
