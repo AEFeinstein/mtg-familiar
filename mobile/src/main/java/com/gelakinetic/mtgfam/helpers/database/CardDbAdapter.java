@@ -1313,6 +1313,10 @@ public class CardDbAdapter {
 
             if (null == orderByStr) {
                 orderByStr = KEY_NAME + " COLLATE UNICODE";
+            } else {
+                // When sorting by set, sort by date first, then name
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " asc", CardDbAdapter.KEY_DATE + " asc," + CardDbAdapter.KEY_SET + " asc");
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " desc", CardDbAdapter.KEY_DATE + " desc," + CardDbAdapter.KEY_SET + " desc");
             }
 
             if (consolidate) {
