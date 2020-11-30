@@ -61,6 +61,7 @@ public class MtgCard extends Card {
     private int mIndex;
     private boolean mIsSelected;
     private boolean mIsSideboard;
+    private boolean mTriedGathererImageUrl = false;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -672,26 +673,23 @@ public class MtgCard extends Card {
      *
      * @param attempt      The attempt number, should increment by one for each attempt
      * @param cardLanguage The language to get the image for
-     * @param ctx          A context to use
      * @return The URL for this attempt
      */
-    public String getImageUrlString(int attempt, String cardLanguage, Context ctx) {
+    public String getImageUrlString(int attempt, String cardLanguage) {
+        if (mTriedGathererImageUrl) {
+            // Return null, indicating we're out of attempts
+            return null;
+        }
         // Try getting a URL
         try {
-            switch (attempt) {
-                case 0: {
-                    // Try scryfall
-                    return getScryfallImageUrl(cardLanguage).toString();
-                }
-                case 1: {
-                    // try gatherer
-                    return getGathererImageUrl().toString();
-                }
-                default: {
-                    // Return null, indicating we're out of attempts
-                    return null;
-                }
+            // Try scryfall first
+            String url;
+            if (null == (url = getScryfallImageUrl(cardLanguage, attempt).toString())) {
+                // If scryfall returns null, try gatherer
+                url = getGathererImageUrl().toString();
+                mTriedGathererImageUrl = true;
             }
+            return url;
         } catch (MalformedURLException | NullPointerException e) {
             // Return null, indicating a bad URL
             return null;
@@ -701,11 +699,16 @@ public class MtgCard extends Card {
     /**
      * Easily gets the URL for the Scryfall image for a card by multiverseid.
      *
-     * @param lang The requested language for this card
+     * @param lang    The requested language for this card
+     * @param attempt
      * @return URL of the card image
      * @throws MalformedURLException If we screw up building the URL
      */
-    private URL getScryfallImageUrl(String lang) throws MalformedURLException {
+    private URL getScryfallImageUrl(String lang, int attempt) throws MalformedURLException {
+        // Only do one attempt for scryfall
+        if (attempt > 0) {
+            return null;
+        }
         String numberNoLetter = this.mNumber;
         for (int i = 0; i < numberNoLetter.length(); i++) {
             if (!Character.isDigit(numberNoLetter.charAt(i))) {
@@ -714,7 +717,41 @@ public class MtgCard extends Card {
         }
         numberNoLetter = numberNoLetter.replace("-", "");
 
-        String urlStr = "https://api.scryfall.com/cards/" + this.mSetCodeMtgi.toLowerCase() + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
+        String code = this.mSetCodeMtgi;
+
+        // Familiar merges a few scryfall sets together, so un-merge them for image lookups
+        // Note, this guessing doesn't work because of overlapping collector's numbers
+//        String allMergedSetCodes[][] = {
+//                {"MB1", "CMB1"},
+//                {"ARC", "OARC"},
+//                {"E01", "OE01"},
+//                {"HOP", "OHOP"},
+//                {"PC2", "OPC2"},
+//                {"PCA", "OPCA"},
+//                {"PDRC", "PHPR", "PPRE"},
+//                {"PMEI", "S00"},
+//                {"PVAN", "PMOA"}};
+//        for (String mergedSetCodes[] : allMergedSetCodes) {
+//            boolean found = false;
+//            for (String mergedSetCode : mergedSetCodes) {
+//                if (code.equals(mergedSetCode)) {
+//                    if (attempt >= mergedSetCodes.length) {
+//                        return null;
+//                    } else {
+//                        code = mergedSetCodes[attempt];
+//                        found = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (found) {
+//                break;
+//            }
+//        }
+
+        code = code.toLowerCase();
+
+        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
         if (this.mNumber.endsWith("b")) {
             urlStr += "&face=back";
         }

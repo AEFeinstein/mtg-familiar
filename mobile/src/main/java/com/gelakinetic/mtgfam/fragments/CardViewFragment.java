@@ -790,13 +790,13 @@ public class CardViewFragment extends FamiliarFragment {
 
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
-                .load(mCard.getImageUrlString(attempt, cardLanguage, getContext()))
+                .load(mCard.getImageUrlString(attempt, cardLanguage))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         // Peek at the next URL
-                        if (null == mCard.getImageUrlString(attempt + 1, cardLanguage, getContext())) {
+                        if (null == mCard.getImageUrlString(attempt + 1, cardLanguage)) {
                             // All lookups failed
                             if (onlyCheckCache) {
                                 // It's only checking the cache. This comes first
