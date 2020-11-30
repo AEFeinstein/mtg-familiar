@@ -182,7 +182,6 @@
         <item>@string/main_rules</item>
         <item>@string/main_mojhosto</item>
         <item>@string/main_judges_corner</item>
-        <item>@string/main_profile</item>
     </string-array>
     <string-array name="default_widget_buttons_array_entries">
         <item>@string/main_card_search</item>
