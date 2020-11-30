@@ -167,6 +167,19 @@ public class CardViewFragment extends FamiliarFragment {
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
     private boolean mIsOnlineOnly = false;
+    private View.OnClickListener showEntireSet = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            SearchCriteria setSearch = new SearchCriteria();
+            assert mSetTextView.getText() != null;
+            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
+            Bundle arguments = new Bundle();
+            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
+            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, arguments);
+        }
+    };
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -254,16 +267,8 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mArtistTextView);
         registerForContextMenu(mNumberTextView);
 
-        mSetTextView.setOnClickListener(v -> {
-            SearchCriteria setSearch = new SearchCriteria();
-            assert mSetTextView.getText() != null;
-            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
-            Bundle arguments = new Bundle();
-            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
-            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
-            ResultListFragment rlFrag = new ResultListFragment();
-            startNewFragment(rlFrag, arguments);
-        });
+        mSetTextView.setOnClickListener(showEntireSet);
+        mSetImageView.setOnClickListener(showEntireSet);
 
         mCardImageView.setOnLongClickListener(view -> {
             saveImageWithGlide(MAIN_PAGE);
