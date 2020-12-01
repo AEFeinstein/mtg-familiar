@@ -87,6 +87,7 @@ public class TradeFragment extends FamiliarListFragment {
 
     private int mOrderAddedIdx = 0;
     private TextView mTradeNameView;
+    private TextView mTradePriceDifference;
 
     /**
      * Initialize the view and set up the button actions.
@@ -135,6 +136,7 @@ public class TradeFragment extends FamiliarListFragment {
                 v -> addCardToTrade(RIGHT));
 
         mTradeNameView = myFragmentView.findViewById(R.id.trade_name);
+        mTradePriceDifference = myFragmentView.findViewById(R.id.trade_price_diff);
 
         return myFragmentView;
     }
@@ -516,11 +518,14 @@ public class TradeFragment extends FamiliarListFragment {
      * This function iterates through the cards in the given list and sums together their prices.
      *
      * @param side RIGHT, LEFT, or BOTH, depending on the side to update
+     *             Always update both sides, regardless
      */
     public void updateTotalPrices(int side) {
         if (this.isAdded()) {
-            if (side == LEFT || side == BOTH) {
-                float totalPrice = 0;
+            float leftPrice = 0;
+            float rightPrice = 0;
+            {
+                // First do the left side
                 int totalCards = 0;
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as
@@ -529,7 +534,7 @@ public class TradeFragment extends FamiliarListFragment {
                     for (MtgCard data : mListLeft) {
                         totalCards += data.mNumberOf;
                         if (data.hasPrice()) {
-                            totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
+                            leftPrice += data.mNumberOf * (data.mPrice / 100.0f);
                         } else {
                             hasBadValues = true;
                         }
@@ -541,13 +546,13 @@ public class TradeFragment extends FamiliarListFragment {
                         ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
                         ContextCompat.getColor(Objects.requireNonNull(getContext()),
                                 getResourceIdFromAttr(R.attr.color_text));
-                final String leftPrice =
-                        String.format(Locale.US, PRICE_FORMAT, totalPrice)
+                final String leftPriceStr =
+                        String.format(Locale.US, PRICE_FORMAT, leftPrice)
                                 + " (" + totalCards + ")";
-                setTotalPrice(leftPrice, color, TradeFragment.LEFT);
+                setTotalPrice(leftPriceStr, color, TradeFragment.LEFT);
             }
-            if (side == RIGHT || side == BOTH) {
-                float totalPrice = 0;
+            {
+                // Then do the right side
                 int totalCards = 0;
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as "bad,"
@@ -556,7 +561,7 @@ public class TradeFragment extends FamiliarListFragment {
                     for (MtgCard data : mListRight) {
                         totalCards += data.mNumberOf;
                         if (data.hasPrice()) {
-                            totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
+                            rightPrice += data.mNumberOf * (data.mPrice / 100.0f);
                         } else {
                             hasBadValues = true;
                         }
@@ -569,10 +574,21 @@ public class TradeFragment extends FamiliarListFragment {
                         ContextCompat.getColor(Objects.requireNonNull(getContext()),
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
-                final String rightPrice =
-                        String.format(Locale.US, PRICE_FORMAT, totalPrice)
+                final String rightPriceStr =
+                        String.format(Locale.US, PRICE_FORMAT, rightPrice)
                                 + " (" + totalCards + ")";
-                setTotalPrice(rightPrice, color, TradeFragment.RIGHT);
+                setTotalPrice(rightPriceStr, color, TradeFragment.RIGHT);
+            }
+
+            // Display the difference
+            float priceDiff = leftPrice - rightPrice;
+            mTradePriceDifference.setText(String.format(Locale.getDefault(), "%c" + PRICE_FORMAT, (priceDiff < 0 ? '-' : '+'), Math.abs(priceDiff)));
+            if (priceDiff < 0) {
+                mTradePriceDifference.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                        R.color.material_red_500));
+            } else {
+                mTradePriceDifference.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                        R.color.material_green_500));
             }
         }
     }

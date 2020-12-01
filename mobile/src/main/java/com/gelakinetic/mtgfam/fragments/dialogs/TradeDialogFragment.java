@@ -180,7 +180,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             lSide.remove(positionForDialog);
                         }
                         aaSide.notifyDataSetChanged();
-                        getParentTradeFragment().updateTotalPrices(sideForDialog);
+                        getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                         getParentTradeFragment().removeDialog(getFragmentManager());
                     });
 
@@ -198,7 +198,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         }
 
                         aaSide.notifyDataSetChanged();
-                        getParentTradeFragment().updateTotalPrices(sideForDialog);
+                        getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                     });
 
                     /* Create the callback for when the dialog is successfully closed or when the card
@@ -266,7 +266,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                         /* Notify things to update */
                         aaSide.notifyDataSetChanged();
-                        getParentTradeFragment().updateTotalPrices(sideForDialog);
+                        getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                     };
 
                     /* Set up the button to show info about this card */
