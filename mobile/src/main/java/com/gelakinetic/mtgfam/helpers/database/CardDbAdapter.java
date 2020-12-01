@@ -32,6 +32,7 @@ import android.provider.BaseColumns;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.Language;
+import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
@@ -411,6 +412,7 @@ public class CardDbAdapter {
                             " FROM " + table +
                             " GROUP BY " + colKey +
                             " ORDER BY " + colKey;
+            FamiliarLogger.logRawQuery(query, null, new Throwable().getStackTrace()[0].getMethodName());
             cursor = database.rawQuery(query, null);
 
             // If the cursor is null or has no results, return an empty array
@@ -476,6 +478,8 @@ public class CardDbAdapter {
             }
             String[] allCardDataKeys = new String[ALL_CARD_DATA_KEYS.size()];
             ALL_CARD_DATA_KEYS.toArray(allCardDataKeys);
+            FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr.toString(), null,
+                    null, null, orderByStr, null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr.toString(), null,
                     null, null, orderByStr, null);
 
@@ -532,6 +536,7 @@ public class CardDbAdapter {
                 sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
             }
 
+            FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor c = mDb.rawQuery(sql.toString(), null);
             if (c != null) {
                 c.moveToFirst();
@@ -569,6 +574,7 @@ public class CardDbAdapter {
             }
             sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = ").append(multiverseId).append(" GROUP BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_CODE).append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
 
+            FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor cursor = database.rawQuery(sql.toString(), null);
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -612,6 +618,7 @@ public class CardDbAdapter {
 
             sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name).append(" COLLATE NOCASE").append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = ").append(setCode).append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
 
+            FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor c = mDb.rawQuery(sql.toString(), null);
             if (c != null) {
                 c.moveToFirst();
@@ -669,6 +676,7 @@ public class CardDbAdapter {
             }
             sql.append(" ORDER BY s_").append(KEY_DATE).append(" DESC");
 
+            FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor c = mDb.rawQuery(sql.toString(), null);
             if (c != null) {
                 c.moveToFirst();
@@ -781,6 +789,8 @@ public class CardDbAdapter {
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
                                 boolean consolidate, String orderByStr, SQLiteDatabase mDb)
             throws FamiliarDbException {
+        FamiliarLogger.appendToLogFile(new StringBuilder(criteria.toJson()), new Throwable().getStackTrace()[0].getMethodName());
+
         StringBuilder statement = new StringBuilder(" WHERE 1=1");
 
         if (criteria.name != null) {
@@ -1347,6 +1357,7 @@ public class CardDbAdapter {
                 sql += " ORDER BY " + orderByStr
                         + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, " + KEY_ID + " DESC)";
             }
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor cursor = mDb.rawQuery(sql, null);
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -1372,6 +1383,9 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
                 + KEY_SET + " = '" + set + "')";
+        FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS,
+                new String[]{KEY_ID}, statement, null, null, null,
+                KEY_ID, null, new Throwable().getStackTrace()[0].getMethodName());
         try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
                 new String[]{KEY_ID}, statement, null, null, null,
                 KEY_ID, null)) {
@@ -1399,6 +1413,9 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
                 + KEY_SET + " = '" + set + "')";
+        FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS,
+                new String[]{KEY_NAME}, statement, null, null, null,
+                KEY_NAME, null, new Throwable().getStackTrace()[0].getMethodName());
         try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
                 new String[]{KEY_NAME}, statement, null, null, null,
                 KEY_NAME, null)) {
@@ -1419,6 +1436,9 @@ public class CardDbAdapter {
      */
     public static long getIdFromName(String name, SQLiteDatabase mDb) throws FamiliarDbException {
         String statement = "(" + KEY_NAME + " = " + sanitizeString(name, false) + ")";
+        FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS,
+                new String[]{KEY_ID}, statement, null, null, null,
+                KEY_NAME, null, new Throwable().getStackTrace()[0].getMethodName());
         try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
                 new String[]{KEY_ID}, statement, null, null, null,
                 KEY_NAME, null)) {
@@ -1456,6 +1476,8 @@ public class CardDbAdapter {
              * This builds a query that looks like: SELECT <columns> FROM <table>
              * WHERE rowid = <rowId>
              */
+            FamiliarLogger.logBuiltQuery(columns, "rowid = ?", new String[]{rowId},
+                    KEY_NAME, null, KEY_NAME, new Throwable().getStackTrace()[0].getMethodName());
             Cursor cursor = builder.query(mDb, columns, "rowid = ?", new String[]{rowId},
                     KEY_NAME, null, KEY_NAME);
 
@@ -1503,6 +1525,7 @@ public class CardDbAdapter {
                             DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE, " +
                             DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC" +
                             " ) GROUP BY " + KEY_NAME;
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -1723,6 +1746,7 @@ public class CardDbAdapter {
                             " WHERE (" + KEY_NAME + " = " + sanitizeString(name, false) +
                             " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%", false) + ")";
 
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             cursor = database.rawQuery(sql, null);
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
@@ -1815,6 +1839,7 @@ public class CardDbAdapter {
                     " FROM " + DATABASE_TABLE_BANNED_CARDS +
                     " WHERE " + KEY_FORMAT + " = '" + format + "'" +
                     " GROUP BY " + KEY_LEGALITY;
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -1884,6 +1909,7 @@ public class CardDbAdapter {
             /* Finish the coalesce with a 0 */
             sql += "0) AS " + KEY_LEGALITY;
 
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             c = mDb.rawQuery(sql, null);
 
             c.moveToFirst();
@@ -1975,6 +2001,8 @@ public class CardDbAdapter {
             throws FamiliarDbException {
 
         String[] columns = new String[]{KEY_NAME};
+        FamiliarLogger.logQuery(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null, new Throwable().getStackTrace()[0].getMethodName());
         try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
                 + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null)) {
             if (c != null && c.getCount() > 0) {
@@ -1995,6 +2023,9 @@ public class CardDbAdapter {
      */
     public static boolean isOnlineOnly(String setCode, SQLiteDatabase database) throws FamiliarDbException {
         String[] columns = new String[]{KEY_ONLINE_ONLY};
+        FamiliarLogger.logQuery(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                        + "=\"" + setCode + "\"", null, null, null, null, null,
+                new Throwable().getStackTrace()[0].getMethodName());
         try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
                 + "=\"" + setCode + "\"", null, null, null, null, null)) {
 
@@ -2022,6 +2053,7 @@ public class CardDbAdapter {
             String sql = "SELECT " + KEY_NAME_TCGPLAYER +
                     " FROM " + DATABASE_TABLE_SETS +
                     " WHERE " + KEY_CODE + " = " + sanitizeString(setCode, false) + ";";
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             c = mDb.rawQuery(sql, null);
             c.moveToFirst();
 
@@ -2121,6 +2153,7 @@ public class CardDbAdapter {
             String sql = "SELECT " + KEY_CODE +
                     " FROM " + DATABASE_TABLE_SETS +
                     " WHERE " + KEY_CAN_BE_FOIL + " = 0;";
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             c = database.rawQuery(sql, null);
             c.moveToFirst();
 
@@ -2180,6 +2213,7 @@ public class CardDbAdapter {
                     "SELECT " + KEY_CAN_BE_FOIL +
                             " FROM " + DATABASE_TABLE_SETS +
                             " WHERE " + KEY_CODE + " = \"" + setCode + "\"";
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             c = mDb.rawQuery(sql, null);
 
             /* Check if the cursor returned any values first */
@@ -2214,6 +2248,7 @@ public class CardDbAdapter {
                     "SELECT " + KEY_CODE +
                             " FROM " + DATABASE_TABLE_SETS +
                             " WHERE " + KEY_CAN_BE_FOIL + " = 1";
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             c = mDb.rawQuery(sql, null);
             c.moveToFirst();
             while (!c.isAfterLast()) {
@@ -2245,6 +2280,7 @@ public class CardDbAdapter {
                     " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS +
                     " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
                     " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -2375,6 +2411,7 @@ public class CardDbAdapter {
                 /* No category specified; return the main categories */
                 String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                         + " WHERE " + KEY_SUBCATEGORY + " = -1";
+                FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                 return mDb.rawQuery(sql, null);
             } else if (subcategory == -1) {
                 /* No subcategory specified; return the subcategories under the given category */
@@ -2382,6 +2419,7 @@ public class CardDbAdapter {
                         " WHERE " + KEY_CATEGORY + " = " + category +
                         " AND " + KEY_SUBCATEGORY + " > -1" +
                         " AND " + KEY_ENTRY + " IS NULL";
+                FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                 return mDb.rawQuery(sql, null);
             } else {
                 /* Both specified; return the rules under the given subcategory */
@@ -2389,6 +2427,7 @@ public class CardDbAdapter {
                         " WHERE " + KEY_CATEGORY + " = " + category +
                         " AND " + KEY_SUBCATEGORY + " = " + subcategory +
                         " AND " + KEY_ENTRY + " IS NOT NULL";
+                FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                 return mDb.rawQuery(sql, null);
             }
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
@@ -2420,6 +2459,7 @@ public class CardDbAdapter {
                     String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
                             + " AND " + KEY_ENTRY + " IS NOT NULL";
+                    FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                     return mDb.rawQuery(sql, null);
                 } else if (subcategory == -1) {
                     /* No subcategory; we're searching from a category page, so
@@ -2428,6 +2468,7 @@ public class CardDbAdapter {
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
                             + " AND " + KEY_ENTRY + " IS NOT NULL"
                             + " AND " + KEY_CATEGORY + " = " + category;
+                    FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                     return mDb.rawQuery(sql, null);
                 } else {
                     /* We're searching within a subcategory, so restrict within
@@ -2437,6 +2478,7 @@ public class CardDbAdapter {
                             + " AND " + KEY_ENTRY + " IS NOT NULL"
                             + " AND " + KEY_CATEGORY + " = " + category
                             + " AND " + KEY_SUBCATEGORY + " = " + subcategory;
+                    FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                     return mDb.rawQuery(sql, null);
                 }
             }
@@ -2466,6 +2508,7 @@ public class CardDbAdapter {
                         " WHERE " + KEY_CATEGORY + " = " + category +
                         " AND " + KEY_SUBCATEGORY + " = " + subcategory +
                         " AND " + KEY_ENTRY + " = " + sanitizeString(entry, false);
+                FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
                 c = mDb.rawQuery(sql, null);
                 if (c != null) {
                     c.moveToFirst();
@@ -2500,6 +2543,7 @@ public class CardDbAdapter {
                     " WHERE " + KEY_CATEGORY + " = " + category +
                     " AND " + KEY_SUBCATEGORY + " = " + subcategory +
                     " AND " + KEY_ENTRY + " IS NULL";
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             c = mDb.rawQuery(sql, null);
             if (c != null) {
                 c.moveToFirst();
@@ -2591,6 +2635,7 @@ public class CardDbAdapter {
     public static Cursor getGlossaryTerms(SQLiteDatabase mDb) throws FamiliarDbException {
         try {
             String sql = "SELECT * FROM " + DATABASE_TABLE_GLOSSARY;
+            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -2638,5 +2683,6 @@ public class CardDbAdapter {
      */
     public static String removeAccentMarks(String str) {
         return StringUtils.stripAccents(str);
+
     }
 }

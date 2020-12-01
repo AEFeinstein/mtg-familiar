@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
@@ -54,6 +55,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_CHANGE_LOG = 101;
     //    public static final int DIALOG_DONATE = 102;
     public static final int DIALOG_TTS = 103;
+    public static final int DIALOG_LOGGING = 104;
 
     /**
      * Overridden to create the specific dialogs
@@ -185,6 +187,9 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                         })
                         .negativeText(R.string.dialog_cancel);
                 return builder.build();
+            }
+            case DIALOG_LOGGING: {
+                return FamiliarLogger.createDialog(getFamiliarActivity(), builder);
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

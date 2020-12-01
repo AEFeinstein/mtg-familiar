@@ -555,7 +555,16 @@ Good luck, and have fun!
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="life_counter_commander_experience_counter">Experience Counters</string>
+
     <string name="search_settype">Set Type</string>
     <string name="card_on_reserved_list">On Reserved List</string>
     <string name="card_not_on_reserved_list">Not on Reserved List</string>
+
+    <string name="logging_title">Logging Menu</string>
+    <string name="logging_enabled">Logging Enabled</string>
+    <string name="logging_share">Share Log</string>
+    <string name="logging_export_db">Export Database</string>
+    <string name="logging_database_copied_to">"Database copied to "</string>
+    <string name="logging_database_log">Database Log</string>
+    <string name="logging_send_database_log">Send Database Log</string>
 </resources>

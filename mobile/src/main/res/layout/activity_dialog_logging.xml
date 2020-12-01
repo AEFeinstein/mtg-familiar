@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Switch
+        android:id="@+id/logging_switch"
+        style="@style/forty_eight"
+        android:layout_width="match_parent"
+        android:text="@string/logging_enabled" />
+
+    <Button
+        android:id="@+id/share_log"
+        style="@style/forty_eight"
+        android:layout_width="match_parent"
+        android:text="@string/logging_share" />
+
+    <Button
+        android:id="@+id/export_db"
+        style="@style/forty_eight"
+        android:layout_width="match_parent"
+        android:text="@string/logging_export_db" />
+</LinearLayout>
