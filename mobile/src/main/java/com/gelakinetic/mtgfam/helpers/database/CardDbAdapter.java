@@ -1544,13 +1544,10 @@ public class CardDbAdapter {
     public static String getCombinedName(String expansion, String number, SQLiteDatabase mDb)
             throws FamiliarDbException {
 
-        // Remove all non-digit chars
-        for (int i = 0; i < number.length(); i++) {
-            if (!Character.isDigit(number.charAt(i))) {
-                number = number.replace(Character.toString(number.charAt(i)), "-");
-            }
+        // Strip the last part of the number, if it is a letter
+        if (Character.isAlphabetic(number.charAt(number.length() - 1))) {
+            number = number.substring(0, number.length() - 1);
         }
-        number = number.replace("-", "");
 
         // Select all rows from the database for cards with this number
         String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
