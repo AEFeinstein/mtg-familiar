@@ -87,7 +87,7 @@
     <!--"</string>-->
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
-    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.6.6"&gt;Changelog&lt;/a&gt;"</string>
+    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.6.6.dbg.3"&gt;Changelog&lt;/a&gt;"</string>
     <string name="main_tts_warning_title">"Text-to-Speech"</string>
     <string name="main_tts_warning_text">"This application has text-to-speech capability for some of its features, but you don't seem to have it installed. If you want to install it, use the Install Text-to-Speech link in the settings menu."</string>
     <string name="main_export_data_title">"Save Data to SD"</string>
@@ -556,4 +556,12 @@ Good luck, and have fun!
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="life_counter_commander_experience_counter">Experience Counters</string>
+
+    <string name="logging_title">Logging Menu</string>
+    <string name="logging_enabled">Logging Enabled</string>
+    <string name="logging_share">Share Log</string>
+    <string name="logging_export_db">Export Database</string>
+    <string name="logging_database_copied_to">"Database copied to "</string>
+    <string name="logging_database_log">Database Log</string>
+    <string name="logging_send_database_log">Send Database Log</string>
 </resources>

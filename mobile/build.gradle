@@ -99,10 +99,10 @@ android {
     buildToolsVersion '30.0.2'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 72
-        versionName "3.6.6"
+        versionCode 75
+        versionName "3.6.6.dbg.3"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -134,8 +134,8 @@ android {
 
 dependencies {
 
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
-    spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.7'
+    // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
+    // spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.7'
     //noinspection GradleDependency
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.3.0'

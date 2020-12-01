@@ -67,6 +67,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -97,6 +98,7 @@ import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -113,6 +115,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -458,6 +461,10 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Save this for static access by loggers
+        FamiliarLogger.initLogger(this);
+
         PrefsFragment.checkOverrideSystemLanguage(this);
 
         /* Figure out what theme the app is currently in, and change it if necessary */
@@ -548,6 +555,11 @@ public class FamiliarActivity extends AppCompatActivity {
         mDrawerList.setOnItemLongClickListener((adapterView, view, i, l) -> {
             boolean shouldCloseDrawer = false;
             switch (mPageEntries[i].mNameResource) {
+                case R.string.main_about: {
+                    showDialogFragment(FamiliarActivityDialogFragment.DIALOG_LOGGING);
+                    shouldCloseDrawer = true;
+                    break;
+                }
                 case R.string.main_force_update_title: {
                     if (getNetworkState(FamiliarActivity.this, true) != -1) {
                         FamiliarDbHandle handle = new FamiliarDbHandle();
