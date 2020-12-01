@@ -54,7 +54,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 111;
+    public static final int DATABASE_VERSION = 115;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -69,6 +69,7 @@ public class CardDbAdapter {
     public static final String KEY_ID = "_id";
     public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1;
     public static final String KEY_SET = "expansion";
+    public static final String KEY_SCRYFALL_SET_CODE = "scryfall_set_code";
     public static final String KEY_SUPERTYPE = "supertype";
     public static final String KEY_SUBTYPE = "subtype";
     public static final String KEY_ABILITY = "cardtext";
@@ -96,6 +97,7 @@ public class CardDbAdapter {
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
     private static final String KEY_ONLINE_ONLY = "online_only";
     private static final String KEY_BORDER_COLOR = "border_color";
+    public static final String KEY_SET_TYPE = "set_type";
     private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
     private static final String KEY_RULINGS = "rulings";
@@ -137,6 +139,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_ID,
             DATABASE_TABLE_CARDS + "." + KEY_NAME,
             DATABASE_TABLE_CARDS + "." + KEY_SET,
+            DATABASE_TABLE_CARDS + "." + KEY_SCRYFALL_SET_CODE,
             DATABASE_TABLE_CARDS + "." + KEY_NUMBER,
             DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE,
             DATABASE_TABLE_CARDS + "." + KEY_MANACOST,
@@ -193,8 +196,8 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_DATE,
             DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL,
             DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY,
-            DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR
-    ));
+            DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR,
+            DATABASE_TABLE_SETS + "." + KEY_SET_TYPE));
 
     /* SQL Strings used to create the database tables */
     private static final String DATABASE_CREATE_FORMATS =
@@ -226,6 +229,7 @@ public class CardDbAdapter {
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_NAME + " text not null, " +
                     KEY_SET + " text not null, " +
+                    KEY_SCRYFALL_SET_CODE + " text not null, " +
                     KEY_SUPERTYPE + " text not null, " +
                     KEY_SUBTYPE + " text not null, " +
                     KEY_RARITY + " integer, " +
@@ -281,6 +285,7 @@ public class CardDbAdapter {
                     KEY_CAN_BE_FOIL + " integer, " +
                     KEY_ONLINE_ONLY + " integer, " +
                     KEY_BORDER_COLOR + " text, " +
+                    KEY_SET_TYPE + " text, " +
                     KEY_DATE + " integer);";
 
     private static final String DATABASE_CREATE_RULES =
@@ -390,6 +395,7 @@ public class CardDbAdapter {
     /**
      * Return a String array of all the unique values in a given column in DATABASE_TABLE_CARDS.
      *
+     * @param table       The database table to get a column from
      * @param colKey      The column to return unique values from
      * @param shouldSplit Whether or not each individual word from the column should be considered
      *                    unique, or whether the full String should be considered unique
@@ -397,13 +403,13 @@ public class CardDbAdapter {
      * @return A String array of unique values from the given column
      * @throws FamiliarDbException If something goes wrong
      */
-    public static String[] getUniqueColumnArray(String colKey, boolean shouldSplit,
+    public static String[] getUniqueColumnArray(String table, String colKey, boolean shouldSplit,
                                                 SQLiteDatabase database) throws FamiliarDbException {
         Cursor cursor = null;
         try {
             String query =
                     "SELECT " + KEY_ID + ", " + colKey +
-                            " FROM " + DATABASE_TABLE_CARDS +
+                            " FROM " + table +
                             " GROUP BY " + colKey +
                             " ORDER BY " + colKey;
             FamiliarLogger.logRawQuery(query, null, new Throwable().getStackTrace()[0].getMethodName());
@@ -1152,6 +1158,23 @@ public class CardDbAdapter {
             statement.append(")");
         }
 
+        if (criteria.setTypes != null && !criteria.setTypes.isEmpty()) {
+            statement.append(" AND (");
+
+            boolean first = true;
+
+            for (String setType : criteria.setTypes) {
+                if (first) {
+                    first = false;
+                } else {
+                    statement.append(" OR ");
+                }
+                statement.append(KEY_SET_TYPE + " = '").append(setType).append("'");
+            }
+
+            statement.append(")");
+        }
+
         if (criteria.powChoice != NO_ONE_CARES) {
             statement.append(" AND (");
 
@@ -1312,6 +1335,7 @@ public class CardDbAdapter {
                 sel.append(DATABASE_TABLE_CARDS + ".").append(s).append(" AS ").append(s);
             }
             sel.append(", " + DATABASE_TABLE_SETS + "." + KEY_DATE);
+            sel.append(", " + DATABASE_TABLE_SETS + "." + KEY_SET_TYPE);
 
             String sql = "SELECT * FROM (SELECT " + sel + " FROM " + DATABASE_TABLE_CARDS
                     + " JOIN " + DATABASE_TABLE_SETS + " ON "
@@ -1320,6 +1344,10 @@ public class CardDbAdapter {
 
             if (null == orderByStr) {
                 orderByStr = KEY_NAME + " COLLATE UNICODE";
+            } else {
+                // When sorting by set, sort by date first, then name
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " asc", CardDbAdapter.KEY_DATE + " asc," + CardDbAdapter.KEY_SET + " asc");
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " desc", CardDbAdapter.KEY_DATE + " desc," + CardDbAdapter.KEY_SET + " desc");
             }
 
             if (consolidate) {
@@ -1505,42 +1533,73 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a multiverseId for a multicard, return the full card name, which has each half of the
-     * card separated by "//".
-     * <p>
-     * TODO online only pref
+     * Given a collector's number and expansion, return the combined name for a multi-card
      *
-     * @param multiverseId The multiverse id to search for
-     * @param isAscending  Whether the query should be sorted in ascending or descending order
-     * @param mDb          The database to query
-     * @return A String name
+     * @param expansion The expansion for this card
+     * @param number    The card's number, with a letter suffix
+     * @param mDb       The database to search
+     * @return The whole, combined name for this multi-part card
      * @throws FamiliarDbException If something goes wrong
      */
-    public static String getSplitName(int multiverseId, boolean isAscending, SQLiteDatabase mDb)
+    public static String getCombinedName(String expansion, String number, SQLiteDatabase mDb)
             throws FamiliarDbException {
-        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER + " from "
-                + DATABASE_TABLE_CARDS + " WHERE " + KEY_MULTIVERSEID + " = "
-                + multiverseId + " ORDER BY " + KEY_NUMBER;
 
-        if (isAscending) {
-            statement += " ASC";
-        } else {
-            statement += " DESC";
+        // Strip the last part of the number, if it is a letter
+        if (Character.isAlphabetic(number.charAt(number.length() - 1))) {
+            number = number.substring(0, number.length() - 1);
         }
 
-        try (Cursor c = mDb.rawQuery(statement, null)) {
+        // Select all rows from the database for cards with this number
+        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
+                " FROM " + DATABASE_TABLE_CARDS +
+                " WHERE " + KEY_SET + " = '" + expansion + "' AND " + KEY_NUMBER + " LIKE '" + number + "%'" +
+                " ORDER BY " + KEY_NUMBER + " ASC";
 
-            if (c.getCount() == 2) {
-                c.moveToFirst();
-                String retVal;
-                retVal = c.getString(c.getColumnIndex(KEY_NAME));
-                retVal += " // ";
-                c.moveToNext();
+        // For every returned row
+        try (Cursor c = mDb.rawQuery(statement, null)) {
+            String retVal = "";
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                // If we're not starting off, append the delimiter
+                if (!retVal.isEmpty()) {
+                    retVal += " // ";
+                }
+                // Append the card name
                 retVal += c.getString(c.getColumnIndex(KEY_NAME));
-                return retVal;
-            } else {
-                return null;
+                c.moveToNext();
             }
+            return retVal;
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * For cards without a multiverse ID, find an equivalent for Gatherer lookups
+     *
+     * @param mName The name of this card
+     * @param mDb   The database to query for another multiverse ID
+     * @return A multiverse ID for a different card with the same name
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static int getEquivalentMultiverseId(String mName, SQLiteDatabase mDb) throws FamiliarDbException {
+        // Select all rows from the database for cards with this number
+        String statement = "SELECT " + KEY_MULTIVERSEID + ", " + KEY_DATE +
+                " FROM (" + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + ")" +
+                " WHERE (" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + sanitizeString(mName, false) + ")" +
+                " ORDER BY " + KEY_DATE + " DESC";
+
+        // For every returned row
+        try (Cursor c = mDb.rawQuery(statement, null)) {
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                int multiverseId = c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
+                if (multiverseId > 0) {
+                    return multiverseId;
+                }
+                c.moveToNext();
+            }
+            return 0;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -1558,6 +1617,7 @@ public class CardDbAdapter {
         String delimiter = " - ";
         initialValues.put(KEY_NAME, card.getName());
         initialValues.put(KEY_SET, card.getExpansion());
+        initialValues.put(KEY_SCRYFALL_SET_CODE, card.getScryfallSetCode());
         String[] types = card.getType().split(delimiter);
         if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);
@@ -1824,6 +1884,7 @@ public class CardDbAdapter {
                     " WHEN " + format + " = 'Vintage' THEN NULL" +
                     " WHEN " + format + " = 'Commander' THEN NULL" +
                     " WHEN " + format + " = 'Pauper' THEN NULL" +
+                    " WHEN " + format + " = 'Reserved List' THEN NULL" +
                     " ELSE 1";
             sql += " END END,";
 
@@ -1883,6 +1944,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_NAME_TCGPLAYER, set.mName_tcgp);
         initialValues.put(KEY_ONLINE_ONLY, set.mIsOnlineOnly);
         initialValues.put(KEY_BORDER_COLOR, set.mBorderColor);
+        initialValues.put(KEY_SET_TYPE, set.mType);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
     }
@@ -1899,7 +1961,7 @@ public class CardDbAdapter {
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
-            return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
+            return sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{CardDbAdapter.KEY_CODE, CardDbAdapter.KEY_NAME}, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);

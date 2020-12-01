@@ -50,7 +50,6 @@ public class MtgCard extends Card {
 
     /* Wish and trade list fields */
     String mSetName;
-    private String mSetNameMtgi;
     public int mNumberOf;
     public int mPrice; /* In cents */
     public String mMessage;
@@ -69,6 +68,7 @@ public class MtgCard extends Card {
         /* Database fields */
         mName = "";
         mExpansion = "";
+        mScryfallSetCode = "";
         mType = "";
         mRarity = '\0';
         mManaCost = "";
@@ -88,7 +88,6 @@ public class MtgCard extends Card {
 
         // From MtgCard
         this.mSetName = "";
-        this.mSetNameMtgi = "";
         this.mNumberOf = 0;
         this.mPrice = 0; /* In cents */
         this.mMessage = "";
@@ -106,6 +105,7 @@ public class MtgCard extends Card {
             // From Card
             this.mName = card.mName;
             this.mExpansion = card.mExpansion;
+            this.mScryfallSetCode = card.mScryfallSetCode;
             this.mType = card.mType;
             this.mRarity = card.mRarity;
             this.mManaCost = card.mManaCost;
@@ -128,7 +128,6 @@ public class MtgCard extends Card {
 
             // From MtgCard
             this.mSetName = card.mSetName;
-            this.mSetNameMtgi = card.mSetNameMtgi;
             this.mNumberOf = card.mNumberOf;
             this.mPrice = card.mPrice; /* In cents */
             this.mMessage = card.mMessage;
@@ -229,7 +228,8 @@ public class MtgCard extends Card {
         this.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
         this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
         this.mSetName = CardDbAdapter.getSetNameFromCode(this.mExpansion, database);
-        this.mSetNameMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
+        this.mScryfallSetCode = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_SCRYFALL_SET_CODE));
         this.mNumber = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_NUMBER));
         this.mCmc = cardCursor.getInt((cardCursor
@@ -253,6 +253,12 @@ public class MtgCard extends Card {
                 .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
         this.mMultiverseId = cardCursor.getInt(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
+
+        // This card doesn't have a multiverseID, try to find an equivalent
+        if (mMultiverseId < 1) {
+            this.mMultiverseId = CardDbAdapter.getEquivalentMultiverseId(this.mName, database);
+        }
+
         this.mArtist = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_ARTIST));
         this.mWatermark = cardCursor.getString(cardCursor
@@ -345,7 +351,7 @@ public class MtgCard extends Card {
                     if (card.getName().equals(name) && card.getExpansion().equals(set)) {
                         try {
                             // Fill in the initial list with data from the cursor
-                            card.initFromCursor(mCtx, cardCursor);
+                            card.initFromCursor(mCtx, cardCursor, database);
                         } catch (java.lang.InstantiationException e) {
                             // Eat it
                         }
@@ -371,7 +377,7 @@ public class MtgCard extends Card {
      * @param cardCursor A cursor pointing to this card's information from the database
      * @throws InstantiationException If this card can't be initialized
      */
-    private void initFromCursor(Context context, Cursor cardCursor) throws InstantiationException {
+    private void initFromCursor(Context context, Cursor cardCursor, SQLiteDatabase database) throws InstantiationException, FamiliarDbException {
 
         try {
             /* Note the card price is loading */
@@ -380,6 +386,7 @@ public class MtgCard extends Card {
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             this.mName = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
             this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+            this.mScryfallSetCode = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SCRYFALL_SET_CODE));
             this.mNumber = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NUMBER));
             this.mCmc = cardCursor.getInt((cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_CMC)));
             this.mColor = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR));
@@ -398,12 +405,17 @@ public class MtgCard extends Card {
             this.mText = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ABILITY));
             this.mFlavor = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_FLAVOR));
             this.mMultiverseId = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MULTIVERSEID));
+
+            // This card doesn't have a multiverseID, try to find an equivalent
+            if (mMultiverseId < 1) {
+                this.mMultiverseId = CardDbAdapter.getEquivalentMultiverseId(this.mName, database);
+            }
+
             this.mArtist = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ARTIST));
             this.mWatermark = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_WATERMARK));
             this.mColorIdentity = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR_IDENTITY));
 
             this.mSetName = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_NAME));
-            this.mSetNameMtgi = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CODE_MTGI));
 
             // Don't mess with any of the other MtgCard specific fields that may have been loaded fron files, like mIsCustomPrice
 
@@ -595,9 +607,8 @@ public class MtgCard extends Card {
 
     @Override
     public int hashCode() {
-        int hash = 29;
-        hash = hash * 31 + mMultiverseId;
-        return hash;
+        // xor the name and expansion hash codes, used for equals()
+        return this.mName.hashCode() ^ this.mExpansion.hashCode();
     }
 
     /**
@@ -661,26 +672,18 @@ public class MtgCard extends Card {
      *
      * @param attempt      The attempt number, should increment by one for each attempt
      * @param cardLanguage The language to get the image for
-     * @param ctx          A context to use
      * @return The URL for this attempt
      */
-    public String getImageUrlString(int attempt, String cardLanguage, Context ctx) {
+    public String getImageUrlString(int attempt, String cardLanguage) {
         // Try getting a URL
         try {
-            switch (attempt) {
-                case 0: {
-                    // Try scryfall
-                    return getScryfallImageUrl().toString();
-                }
-                case 1: {
-                    // try gatherer
-                    return getGathererImageUrl().toString();
-                }
-                default: {
-                    // Return null, indicating we're out of attempts
-                    return null;
-                }
+            // Try scryfall first
+            URL url;
+            if (null == (url = getScryfallImageUrl(cardLanguage, attempt))) {
+                // If scryfall returns null, try gatherer
+                url = getGathererImageUrl();
             }
+            return url.toString();
         } catch (MalformedURLException | NullPointerException e) {
             // Return null, indicating a bad URL
             return null;
@@ -690,11 +693,30 @@ public class MtgCard extends Card {
     /**
      * Easily gets the URL for the Scryfall image for a card by multiverseid.
      *
+     * @param lang    The requested language for this card
+     * @param attempt
      * @return URL of the card image
      * @throws MalformedURLException If we screw up building the URL
      */
-    private URL getScryfallImageUrl() throws MalformedURLException {
-        return new URL("https://api.scryfall.com/cards/multiverse/" + mMultiverseId + "?format=image&version=normal");
+    private URL getScryfallImageUrl(String lang, int attempt) throws MalformedURLException {
+        // Only do one attempt for scryfall
+        if (attempt > 0) {
+            return null;
+        }
+
+        // Strip the last part of the number, if it is a letter
+        String numberNoLetter = this.mNumber;
+        if (Character.isAlphabetic(numberNoLetter.charAt(numberNoLetter.length() - 1))) {
+            numberNoLetter = numberNoLetter.substring(0, numberNoLetter.length() - 1);
+        }
+
+        String code = this.mScryfallSetCode.toLowerCase();
+
+        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
+        if (this.mNumber.endsWith("b")) {
+            urlStr += "&face=back";
+        }
+        return new URL(urlStr);
     }
 
     /**
@@ -705,7 +727,7 @@ public class MtgCard extends Card {
      */
     private URL getGathererImageUrl() throws MalformedURLException {
         // Gatherer doesn't use HTTPS as of 1/6/2019
-        return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
+        return new URL("https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
     }
 
     public String getSetName() {

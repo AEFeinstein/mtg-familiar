@@ -89,7 +89,6 @@ import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
 import com.gelakinetic.mtgfam.fragments.MoJhoStoFragment;
 import com.gelakinetic.mtgfam.fragments.PrefsFragment;
-import com.gelakinetic.mtgfam.fragments.ProfileFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
@@ -146,7 +145,6 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_RULES = "android.intent.action.RULES";
     public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
-    public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
     public static final String ACTION_DECKLIST = "android.intent.action.DECKLIST";
 
     /* Used to request permissions */
@@ -180,7 +178,6 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false, new Class[]{RulesFragment.class}),
             new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false, new Class[]{JudgesCornerFragment.class, DeckCounterFragment.class, HtmlDocFragment.class}),
             new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false, new Class[]{MoJhoStoFragment.class}),
-            new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false, new Class[]{ProfileFragment.class}),
             new DrawerEntry(0, 0, true, null),
             new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false, null),
             new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false, null),
@@ -616,8 +613,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 case R.string.main_judges_corner:
                 case R.string.main_mojhosto:
                 case R.string.main_card_search:
-                case R.string.main_life_counter:
-                case R.string.main_profile: {
+                case R.string.main_life_counter: {
                     selectItem(mPageEntries[i].mNameResource, null, true, false);
                     break;
                 }
@@ -1013,9 +1009,6 @@ public class FamiliarActivity extends AppCompatActivity {
             case ACTION_MOJHOSTO:
                 selectItem(R.string.main_mojhosto, null, true, false);
                 break;
-            case ACTION_PROFILE:
-                selectItem(R.string.main_profile, null, true, false);
-                break;
             case ACTION_DECKLIST:
                 selectItem(R.string.main_decklist, null, true, false);
                 break;
@@ -1062,8 +1055,6 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_judges_corner, null, true, false);
         } else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
             selectItem(R.string.main_mojhosto, null, true, false);
-        } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
-            selectItem(R.string.main_profile, null, true, false);
         } else if (defaultFragment.equals(this.getString(R.string.main_decklist))) {
             selectItem(R.string.main_decklist, null, true, false);
         } else {
@@ -1168,10 +1159,6 @@ public class FamiliarActivity extends AppCompatActivity {
             }
             case R.string.main_mojhosto: {
                 newFrag = new MoJhoStoFragment();
-                break;
-            }
-            case R.string.main_profile: {
-                newFrag = new ProfileFragment();
                 break;
             }
             default:

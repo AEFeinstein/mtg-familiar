@@ -54,6 +54,9 @@ public class Expansion {
     // The color of the border, either Black, White, or Silver
     public String mBorderColor = "";
 
+    // The type of set
+    public String mType;
+
     // MD5 digest for scraped cards, to see when things change
     public String mDigest = "";
 }

@@ -166,7 +166,7 @@ public class MarketPriceFetcher {
                 /* If this isn't a multi-card, don't iterate so much */
                 int numMultiCardOptions = 1;
                 if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
-                    numMultiCardOptions = 4;
+                    numMultiCardOptions = 3;
                 }
 
                 /* Iterate through all possible queries for this card
@@ -195,12 +195,8 @@ public class MarketPriceFetcher {
                                             tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.getExpansion(), params.getNumber().replace("a", "b"), database);
                                             break;
                                         case 2:
-                                            /* Try the combined name in one direction */
-                                            tcgCardName = CardDbAdapter.getSplitName(params.getMultiverseId(), true, database);
-                                            break;
-                                        case 3:
-                                            /* Try the combined name in the other direction */
-                                            tcgCardName = CardDbAdapter.getSplitName(params.getMultiverseId(), false, database);
+                                            /* Try the combined name */
+                                            tcgCardName = CardDbAdapter.getCombinedName(params.getExpansion(), params.getNumber(), database);
                                             break;
                                         default:
                                             /* Something went wrong */
@@ -457,7 +453,7 @@ public class MarketPriceFetcher {
 
         if (null == card.getName() || card.getName().isEmpty() ||
                 null == card.getExpansion() || card.getExpansion().isEmpty() ||
-                0 == card.getMultiverseId()) {
+                null == card.getNumber()) {
             throw new InstantiationException("card must have a name and expansion to fetch price");
         }
 

@@ -167,6 +167,19 @@ public class CardViewFragment extends FamiliarFragment {
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
     private boolean mIsOnlineOnly = false;
+    private View.OnClickListener showEntireSet = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            SearchCriteria setSearch = new SearchCriteria();
+            assert mSetTextView.getText() != null;
+            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
+            Bundle arguments = new Bundle();
+            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
+            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, arguments);
+        }
+    };
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -254,16 +267,8 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mArtistTextView);
         registerForContextMenu(mNumberTextView);
 
-        mSetTextView.setOnClickListener(v -> {
-            SearchCriteria setSearch = new SearchCriteria();
-            assert mSetTextView.getText() != null;
-            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
-            Bundle arguments = new Bundle();
-            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
-            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
-            ResultListFragment rlFrag = new ResultListFragment();
-            startNewFragment(rlFrag, arguments);
-        });
+        mSetTextView.setOnClickListener(showEntireSet);
+        mSetImageView.setOnClickListener(showEntireSet);
 
         mCardImageView.setOnLongClickListener(view -> {
             saveImageWithGlide(MAIN_PAGE);
@@ -790,13 +795,15 @@ public class CardViewFragment extends FamiliarFragment {
 
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
-                .load(mCard.getImageUrlString(attempt, cardLanguage, getContext()))
+                .load(mCard.getImageUrlString(attempt, cardLanguage))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         // Peek at the next URL
-                        if (null == mCard.getImageUrlString(attempt + 1, cardLanguage, getContext())) {
+                        String thisUrl = mCard.getImageUrlString(attempt, cardLanguage);
+                        String nextUrl = mCard.getImageUrlString(attempt + 1, cardLanguage);
+                        if (thisUrl.equals(nextUrl)) {
                             // All lookups failed
                             if (onlyCheckCache) {
                                 // It's only checking the cache. This comes first
@@ -1223,11 +1230,14 @@ public class CardViewFragment extends FamiliarFragment {
 
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
-                    frag.mFormats[i] =
-                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                    frag.mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
                     switch (CardDbAdapter.checkLegality(frag.mCard.getName(), frag.mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
-                            frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
+                            if ("Reserved List".equals(frag.mFormats[i])) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_not_on_reserved_list);
+                            } else {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
+                            }
                             break;
                         case CardDbAdapter.RESTRICTED:
                             /* For backwards compatibility, we list cards that are legal in
@@ -1242,7 +1252,11 @@ public class CardViewFragment extends FamiliarFragment {
                             }
                             break;
                         case CardDbAdapter.BANNED:
-                            frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
+                            if ("Reserved List".equals(frag.mFormats[i])) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_on_reserved_list);
+                            } else {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
+                            }
                             break;
                         default:
                             frag.mLegalities[i] = frag.getString(R.string.error);
@@ -1304,7 +1318,7 @@ public class CardViewFragment extends FamiliarFragment {
             frag.mRulingsArrayList = new ArrayList<>();
             try {
                 // Gatherer doesn't use HTTPS as of 1/6/2019
-                url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
+                url = new URL("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
                 is = FamiliarActivity.getHttpInputStream(url, null, frag.getContext());
                 if (is == null) {
                     throw new IOException("null stream");

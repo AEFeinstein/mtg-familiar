@@ -70,8 +70,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
             new WidgetEntry(R.id.widget_timer, R.drawable.ic_drawer_timer_light, R.drawable.ic_drawer_timer_dark, FamiliarActivity.ACTION_ROUND_TIMER),
             new WidgetEntry(R.id.widget_rules, R.drawable.ic_drawer_rules_light, R.drawable.ic_drawer_rules_dark, FamiliarActivity.ACTION_RULES),
             new WidgetEntry(R.id.widget_mojhosto, R.drawable.ic_drawer_mojhosto_light, R.drawable.ic_drawer_mojhosto_dark, FamiliarActivity.ACTION_MOJHOSTO),
-            new WidgetEntry(R.id.widget_judge, R.drawable.ic_drawer_judge_light, R.drawable.ic_drawer_judge_dark, FamiliarActivity.ACTION_JUDGE),
-            new WidgetEntry(R.id.widget_profile, R.drawable.ic_drawer_profile_light, R.drawable.ic_drawer_profile_dark, FamiliarActivity.ACTION_PROFILE)
+            new WidgetEntry(R.id.widget_judge, R.drawable.ic_drawer_judge_light, R.drawable.ic_drawer_judge_dark, FamiliarActivity.ACTION_JUDGE)
     };
 
     int mLayout;

@@ -72,7 +72,6 @@
     <string name="main_settings_title">"Settings"</string>
     <!-- <string name="main_donate_title">"Donate"</string> -->
     <!-- <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
-    <string name="main_profile">"Profile"</string>
     <!--<string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;-->
     <!--&lt;br&gt;-->
     <!--Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;-->
@@ -87,7 +86,7 @@
     <!--"</string>-->
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
-    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.6.6.dbg.3"&gt;Changelog&lt;/a&gt;"</string>
+    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.7.0"&gt;Changelog&lt;/a&gt;"</string>
     <string name="main_tts_warning_title">"Text-to-Speech"</string>
     <string name="main_tts_warning_text">"This application has text-to-speech capability for some of its features, but you don't seem to have it installed. If you want to install it, use the Install Text-to-Speech link in the settings menu."</string>
     <string name="main_export_data_title">"Save Data to SD"</string>
@@ -556,6 +555,10 @@ Good luck, and have fun!
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="life_counter_commander_experience_counter">Experience Counters</string>
+
+    <string name="search_settype">Set Type</string>
+    <string name="card_on_reserved_list">On Reserved List</string>
+    <string name="card_not_on_reserved_list">Not on Reserved List</string>
 
     <string name="logging_title">Logging Menu</string>
     <string name="logging_enabled">Logging Enabled</string>

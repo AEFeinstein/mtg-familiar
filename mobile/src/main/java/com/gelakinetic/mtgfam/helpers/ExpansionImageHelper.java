@@ -34,21 +34,21 @@ public class ExpansionImageHelper {
         private String mExpansionName;
         private String mExpansionCode;
         private char mRarity;
-        private long mMultiverseId;
+        private long mDbId;
 
-        public ExpansionImageData(String name, String code, char rarity, long multiverseID) {
+        public ExpansionImageData(String name, String code, char rarity, long dbID) {
             mExpansionName = name;
             mExpansionCode = code;
             mRarity = rarity;
-            mMultiverseId = multiverseID;
+            mDbId = dbID;
         }
 
         public String getSetCode() {
             return mExpansionCode;
         }
 
-        public long getMultiverseId() {
-            return mMultiverseId;
+        public long getDbId() {
+            return mDbId;
         }
     }
 
@@ -147,7 +147,7 @@ public class ExpansionImageHelper {
 
             // Then load the image
             Glide.with(context)
-                    .load("https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/symbols/" + set + "_" + rarity + ".png")
+                    .load("https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/symbols/" + set + "_" + rarity + ".png")
                     .dontAnimate()
                     .fitCenter()
                     .override(width, height)

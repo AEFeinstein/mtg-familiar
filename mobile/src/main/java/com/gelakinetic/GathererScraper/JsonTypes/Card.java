@@ -54,6 +54,9 @@ public class Card implements Comparable<Card> {
     // The card's expansion
     protected String mExpansion = "";
 
+    // The card's expansion
+    protected String mScryfallSetCode = "";
+
     // The card's rarity
     protected char mRarity = '\0';
 
@@ -113,6 +116,10 @@ public class Card implements Comparable<Card> {
 
     public String getExpansion() {
         return mExpansion;
+    }
+
+    public String getScryfallSetCode() {
+        return mScryfallSetCode;
     }
 
     public char getRarity() {
@@ -205,9 +212,7 @@ public class Card implements Comparable<Card> {
 
         @Override
         public int hashCode() {
-            int hash = 23;
-            hash = hash * 31 + super.hashCode();
-            return hash * 31 + this.mMultiverseId;
+            return getLanguageCode().hashCode();
         }
 
         public int getMultiverseId() {

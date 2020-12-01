@@ -218,7 +218,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         new ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                     @Override
                     protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
-                        getParentCardViewFragment().setInfoFromID(data.getMultiverseId());
+                        getParentCardViewFragment().setInfoFromID(data.getDbId());
                     }
                 };
                 Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
@@ -258,7 +258,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
                 // Gatherer doesn't use HTTPS as of 1/6/2019
                 textViewUrl.setText(Html.fromHtml(
-                        "<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
+                        "<a href=https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
                                 getParentCardViewFragment().mCard.getMultiverseId() + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
