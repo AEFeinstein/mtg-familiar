@@ -53,7 +53,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 113;
+    public static final int DATABASE_VERSION = 114;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -96,6 +96,7 @@ public class CardDbAdapter {
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
     private static final String KEY_ONLINE_ONLY = "online_only";
     private static final String KEY_BORDER_COLOR = "border_color";
+    public static final String KEY_SET_TYPE = "set_type";
     private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
     private static final String KEY_RULINGS = "rulings";
@@ -194,8 +195,8 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_DATE,
             DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL,
             DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY,
-            DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR
-    ));
+            DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR,
+            DATABASE_TABLE_SETS + "." + KEY_SET_TYPE));
 
     /* SQL Strings used to create the database tables */
     private static final String DATABASE_CREATE_FORMATS =
@@ -283,6 +284,7 @@ public class CardDbAdapter {
                     KEY_CAN_BE_FOIL + " integer, " +
                     KEY_ONLINE_ONLY + " integer, " +
                     KEY_BORDER_COLOR + " text, " +
+                    KEY_SET_TYPE + " text, " +
                     KEY_DATE + " integer);";
 
     private static final String DATABASE_CREATE_RULES =
@@ -392,6 +394,7 @@ public class CardDbAdapter {
     /**
      * Return a String array of all the unique values in a given column in DATABASE_TABLE_CARDS.
      *
+     * @param table       The database table to get a column from
      * @param colKey      The column to return unique values from
      * @param shouldSplit Whether or not each individual word from the column should be considered
      *                    unique, or whether the full String should be considered unique
@@ -399,13 +402,13 @@ public class CardDbAdapter {
      * @return A String array of unique values from the given column
      * @throws FamiliarDbException If something goes wrong
      */
-    public static String[] getUniqueColumnArray(String colKey, boolean shouldSplit,
+    public static String[] getUniqueColumnArray(String table, String colKey, boolean shouldSplit,
                                                 SQLiteDatabase database) throws FamiliarDbException {
         Cursor cursor = null;
         try {
             String query =
                     "SELECT " + KEY_ID + ", " + colKey +
-                            " FROM " + DATABASE_TABLE_CARDS +
+                            " FROM " + table +
                             " GROUP BY " + colKey +
                             " ORDER BY " + colKey;
             cursor = database.rawQuery(query, null);
@@ -1145,6 +1148,23 @@ public class CardDbAdapter {
             statement.append(")");
         }
 
+        if (criteria.setTypes != null && !criteria.setTypes.isEmpty()) {
+            statement.append(" AND (");
+
+            boolean first = true;
+
+            for (String setType : criteria.setTypes) {
+                if (first) {
+                    first = false;
+                } else {
+                    statement.append(" OR ");
+                }
+                statement.append(KEY_SET_TYPE + " = '").append(setType).append("'");
+            }
+
+            statement.append(")");
+        }
+
         if (criteria.powChoice != NO_ONE_CARES) {
             statement.append(" AND (");
 
@@ -1305,6 +1325,7 @@ public class CardDbAdapter {
                 sel.append(DATABASE_TABLE_CARDS + ".").append(s).append(" AS ").append(s);
             }
             sel.append(", " + DATABASE_TABLE_SETS + "." + KEY_DATE);
+            sel.append(", " + DATABASE_TABLE_SETS + "." + KEY_SET_TYPE);
 
             String sql = "SELECT * FROM (SELECT " + sel + " FROM " + DATABASE_TABLE_CARDS
                     + " JOIN " + DATABASE_TABLE_SETS + " ON "
@@ -1899,6 +1920,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_NAME_TCGPLAYER, set.mName_tcgp);
         initialValues.put(KEY_ONLINE_ONLY, set.mIsOnlineOnly);
         initialValues.put(KEY_BORDER_COLOR, set.mBorderColor);
+        initialValues.put(KEY_SET_TYPE, set.mType);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
     }
@@ -1915,7 +1937,7 @@ public class CardDbAdapter {
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
-            return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
+            return sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{CardDbAdapter.KEY_CODE, CardDbAdapter.KEY_NAME}, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);

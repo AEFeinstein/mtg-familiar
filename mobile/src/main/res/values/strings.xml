@@ -555,4 +555,5 @@ Good luck, and have fun!
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="life_counter_commander_experience_counter">Experience Counters</string>
+    <string name="search_settype">Set Type</string>
 </resources>
