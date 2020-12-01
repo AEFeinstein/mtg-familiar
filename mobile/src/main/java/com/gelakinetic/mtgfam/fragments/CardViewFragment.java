@@ -1230,11 +1230,14 @@ public class CardViewFragment extends FamiliarFragment {
 
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
-                    frag.mFormats[i] =
-                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                    frag.mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
                     switch (CardDbAdapter.checkLegality(frag.mCard.getName(), frag.mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
-                            frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
+                            if ("Reserved List".equals(frag.mFormats[i])) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_not_on_reserved_list);
+                            } else {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
+                            }
                             break;
                         case CardDbAdapter.RESTRICTED:
                             /* For backwards compatibility, we list cards that are legal in
@@ -1249,7 +1252,11 @@ public class CardViewFragment extends FamiliarFragment {
                             }
                             break;
                         case CardDbAdapter.BANNED:
-                            frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
+                            if ("Reserved List".equals(frag.mFormats[i])) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_on_reserved_list);
+                            } else {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
+                            }
                             break;
                         default:
                             frag.mLegalities[i] = frag.getString(R.string.error);
