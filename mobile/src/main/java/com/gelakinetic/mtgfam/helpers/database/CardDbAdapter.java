@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
@@ -487,6 +488,48 @@ public class CardDbAdapter {
                 cursor.moveToFirst();
             }
             return cursor;
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    public static MtgCard getCubeCard(String cName, SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            StringBuilder select = new StringBuilder();
+            boolean first = true;
+            for (String field : ALL_CARD_DATA_KEYS) {
+                if (first) {
+                    first = false;
+                } else {
+                    select.append(", ");
+                }
+                select.append(field);
+            }
+            select.append(", sets.online_only, sets.set_type, sets.date");
+
+            String sqlQuery = "SELECT " + select.toString() + " " +
+                    "FROM cards JOIN sets " +
+                    "  ON cards.expansion = sets.code " +
+                    "WHERE " +
+                    "  cards.suggest_text_1 = " + sanitizeString(cName, false) + " " +
+                    "  AND sets.online_only = 0 " +
+                    "  AND (sets.set_type == 'core' OR sets.set_type == 'expansion' OR sets.set_type == 'masters' OR sets.set_type == 'commander' OR sets.set_type == 'draft_innovation' OR sets.set_type == 'starter')" +
+                    "ORDER BY " +
+                    "  sets.date DESC, " +
+                    "  cards.multiverseid ASC";
+
+            Cursor c = mDb.rawQuery(sqlQuery, null);
+
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                MtgCard card = new MtgCard(mDb, c);
+                c.close();
+                return card;
+            } else {
+                Log.w("CUBE", "No card found for \"" + cName + "\"");
+                return null;
+            }
+
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
