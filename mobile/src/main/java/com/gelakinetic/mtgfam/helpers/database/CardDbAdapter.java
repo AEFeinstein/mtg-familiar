@@ -898,7 +898,7 @@ public class CardDbAdapter {
             // Planeswalkers can be commanders
             statement.append(" AND ((").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
             // In brawl, every planeswalker is a commander! Otherwise it needs special text
-            if (!"Brawl".equals(criteria.format)) {
+            if (!("Brawl".equals(criteria.format) || "Historic".equals(criteria.format))) {
                 statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ABILITY).append(" LIKE '%can be your commander%'");
             }
 
@@ -1344,14 +1344,14 @@ public class CardDbAdapter {
 
             if (null == orderByStr) {
                 orderByStr = KEY_NAME + " COLLATE UNICODE";
-            } else {
+            } else if (!(criteria.setLogic != MOST_RECENT_PRINTING && criteria.setLogic != ALL_PRINTINGS)) {
                 // When sorting by set, sort by date first, then name
                 orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " asc", CardDbAdapter.KEY_DATE + " asc," + CardDbAdapter.KEY_SET + " asc");
                 orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " desc", CardDbAdapter.KEY_DATE + " desc," + CardDbAdapter.KEY_SET + " desc");
             }
 
             if (consolidate) {
-                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, " + KEY_ID + " DESC"
+                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC, " + KEY_ID + " DESC"
                         + ") GROUP BY " + KEY_NAME + " ORDER BY " + orderByStr;
             } else {
                 sql += " ORDER BY " + orderByStr
