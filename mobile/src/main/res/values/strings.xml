@@ -357,14 +357,6 @@ Mana pool will also be cleared."</string>
     <string name="rules_coppied">"Rule copied to clipboard"</string>
     <string name="rules_copy_tag">"MTG Rule"</string>
 
-    <!-- Profile activity -->
-    <string name="profile_update_dci">"Update DCI Number"</string>
-    <string name="profile_remove_dci">"Remove DCI Number"</string>
-    <string name="profile_update_dci_dialog_title">"Enter your DCI number"</string>
-    <string name="profile_invalid_dci">"Invalid DCI number entered"</string>
-    <string name="profile_no_dci">"You have not entered your DCI number"</string>
-    <string name="profile_planeswalker_points">"Planeswalker Points"</string>
-
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"MoJhoSto Basic Rules"</string>
     <string name="mojhosto_rules_text">"

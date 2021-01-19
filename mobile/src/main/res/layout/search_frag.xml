@@ -121,7 +121,8 @@
                 android:hint="@string/search_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:importantForAutofill="no" />
 
             <!-- Spinner below by Reuben Kriegel -->
 
@@ -623,7 +624,8 @@
                 android:hint="@string/search_flavor_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:importantForAutofill="no" />
 
             <AutoCompleteTextView
                 android:id="@+id/artistsearch"
@@ -645,7 +647,8 @@
                 android:hint="@string/search_collectors_number"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:importantForAutofill="no" />
         </LinearLayout>
     </ScrollView>
 

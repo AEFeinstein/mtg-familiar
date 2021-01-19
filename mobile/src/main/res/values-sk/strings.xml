@@ -8,7 +8,6 @@
     <string name="dialog_both">"Oboje"</string>
     <string name="dialog_life">"Život"</string>
     <string name="dialog_thanks">"Vďaka!"</string>
-    <string name="dialog_thanks_anyway">"Aj tak ďakujeme!"</string>
     <string name="dialog_enjoy">"Užite si to!"</string>
     <string name="update_notification">"Vyhľadávajú sa aktualizácie databázy"</string>
     <string name="update_updating_set">"Pridávajú sa %s"</string>
@@ -27,8 +26,6 @@
     <string name="not_deleted">"nevymazané"</string>
     <string name="no_network">"Sieť nie je k dispozícii"</string>
     <string name="filter_title_view_card">"Zobraziť kartu"</string>
-    <string name="tutor_cards_notice">"Powered by TutorCards"</string>
-    <string name="tutor_cards_fail">"TutorCards nie je v dosahu"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"STRÁNKY"</string>
@@ -46,23 +43,10 @@
     <string name="main_decklist">"Deck builder"</string>
     <string name="main_force_update_title">"Aktualizovať"</string>
     <string name="main_settings_title">"Nastavenia"</string>
-    <string name="main_donate_title">"Podporte nás"</string>
-    <string name="main_donate_dialog_title">"Podporte vývojárov"</string>
 
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
-    <string name="main_profile">"Profil"</string>
-    <string name="main_donate_text">"Koľko by ste zaplatili za prémiovú MTG aplikáciu, ako je táto? 1 000 €? 10 000 €?&lt;br&gt;
-&lt;br&gt;
-Ak toto čítate, už dávno viete, že ju dávame úplne zadarmo!&lt;br&gt;
-&lt;br&gt;
-Kódovanie je však tvrdá práca a my vývojári sme vďační za každé extra euro raz za čas.&lt;br&gt;
-&lt;br&gt;
-Máme draftovacie návyky, ktoré musíme živiť, OK?&lt;br&gt;
-&lt;br&gt;
-Kliknutím na tlačidlo nižšie nás môžete podporiť prostredníctvom služby PayPal. 1 € je super. 5 € je ešte viac super! Chápete ako to funguje.&lt;br&gt;
-&lt;br&gt;
-Takže, ako štedro sa dnes cítite?"</string>
+
 
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
@@ -166,7 +150,6 @@ For 2-4:   %1$d nájdené karty. -->
     <plurals name="search_toast_results">
         <item quantity="one">"%1$d nájdená karta"</item>
         <item quantity="few">"%1$d nájdené karty"</item>
-        <item quantity="many">"%1$d nájdených kariet"</item>
         <item quantity="other">"%1$d nájdených kariet"</item>
     </plurals>
     <string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
@@ -176,7 +159,6 @@ For 2-4:   %1$d nájdené karty. -->
     <string name="search_NOT_any_selected_types">"NIE akýkoľvek vybraný typ(y)"</string>
     <string name="search_All_words">"Všetky slová"</string>
     <string name="search_Any_words">"Akékoľvek slovo(á)"</string>
-    <string name="search_Exact_phrase">"Presná fráza"</string>
     <string name="search_Most_recent_printing">"Najnovšia verzia"</string>
     <string name="search_Original_printing">"Originálna verzia"</string>
     <string name="search_All_printings">"Všetky verzie"</string>
@@ -193,7 +175,6 @@ For 2-4:   %1$d nájdené karty. -->
     <string name="search_Rare">"Rare"</string>
     <string name="search_Mythic">"Mythic"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Typ"</string>
     <string name="search_mana_cost">"Manová cena"</string>
     <string name="search_collectors_number">"Zberateľské číslo"</string>
     <string name="search_color_title">"Farba"</string>
@@ -222,10 +203,6 @@ For 2-4:   %1$d nájdené karty. -->
     <string name="card_view_price_not_found">"Cena sa nenašla"</string>
     <string name="card_view_image_not_found">"Obrázok sa nenašiel"</string>
     <string name="card_view_no_external_storage">"Nepodarilo sa pristúpiť k externému úložisku, prosím skontrolujte svoju SD kartu."</string>
-    <string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
-    <string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
-    <string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
-    <string name="card_view_no_image">"Nepodarilo sa nájsť obrázok na uloženie, prosím skúste to znova."</string>
     <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
     <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
     <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
@@ -250,13 +227,11 @@ Manapool bude tiež vymazaný."</string>
     <plurals name="life_counter_spoken_life">
         <item quantity="one">"%1$s má %2$d život."</item>
         <item quantity="few">"%1$s má %2$d životov."</item>
-        <item quantity="many">"%1$s má %2$d životov."</item>
         <item quantity="other">"%1$s má %2$d životov."</item>
     </plurals>
     <plurals name="life_counter_spoken_poison">
         <item quantity="one">"%1$s má %2$d poison žetón."</item>
         <item quantity="few">"%1$s má %2$d poison žetónov."</item>
-        <item quantity="many">"%1$s má %2$d poison žetónov."</item>
         <item quantity="other">"%1$s má %2$d poison žetónov."</item>
     </plurals>
     <string name="life_counter_over_9000">"nad 9000"</string>
@@ -282,22 +257,18 @@ Manapool bude tiež vymazaný."</string>
     <string name="dice_tails">"orol"</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Vymazať všetko"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Pridať kartu"</string>
-    <string name="trader_save">"Uložiť výmenu"</string>
     <string name="trader_load">"Načítať výmenu"</string>
     <string name="trader_delete">"Zmazať výmenu"</string>
     <string name="trader_edit_dialog_remove">"Odstrániť"</string>
     <string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
     <string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
     <string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
-    <string name="trader_select_dialog_title">"Vyberte výmenu"</string>
-    <string name="trader_delete_dialog_title">"Zmazať výmenu"</string>
     <string name="trader_edit_dialog_info">"Podrobnosti"</string>
     <string name="trader_toast_no_trades">"Nemáte žiadne uložené výmeny."</string>
     <string name="trader_toast_save_error">"Výmenu sa nepodarilo uložiť; prosím skúste to znova."</string>
@@ -357,12 +328,6 @@ Manapool bude tiež vymazaný."</string>
     <string name="rules_copy_tag">"Pravidlo MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Aktualizovať DCI číslo"</string>
-    <string name="profile_remove_dci">"Odstrániť DCI číslo"</string>
-    <string name="profile_update_dci_dialog_title">"Vložte vaše DCI číslo"</string>
-    <string name="profile_invalid_dci">"Zadali ste neplatné DCI číslo"</string>
-    <string name="profile_no_dci">"Nezadali ste vaše DCI číslo"</string>
-    <string name="profile_planeswalker_points">"PLANESWALKER BODY"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Pravidlá MoJhoSto"</string>
@@ -399,8 +364,6 @@ Veľa šťastia a zabavte sa!"</string>
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Všeobecné nastavenia"</string>
-    <string name="pref_screen_search">"Vyhľadávanie"</string>
-    <string name="pref_screen_trade_wishlist">"Výmena a Zoznam želaní"</string>
     <string name="pref_cat_default_fragment">"Predvolená stránka"</string>
     <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
     <string name="pref_cat_updates">"Aktualizácie databázy"</string>
@@ -558,7 +521,6 @@ Veľa šťastia a zabavte sa!"</string>
     <plurals name="decklist_cards_count">
         <item quantity="one">"%1$d/%2$d karta"</item>
         <item quantity="few">"%1$d/%2$d karty"</item>
-        <item quantity="many">"%1$d/%2$d kariet"</item>
         <item quantity="other">"%1$d/%2$d kariet"</item>
     </plurals>
 
@@ -598,8 +560,6 @@ Standard ....... Not Legal -->
     <string name="life_counter_commander_experience_counter">"Experience žetóny"</string>
     <string name="trader_new">"Nová výmena"</string>
     <string name="trader_save_as">"Uložiť výmenu ako"</string>
-    <string name="pref_hide_online_title">"Skryť iba-online karty"</string>
-    <string name="pref_hide_online_summary">"Nezobrazovať iba-online karty kdekoľvek"</string>
     <string name="decklist_new">"Nový balík"</string>
     <string name="is_commander">"Je Commander"</string>
     <string name="update_added_dmtr">"nové pravidlá turnaja Digital Magic"</string>

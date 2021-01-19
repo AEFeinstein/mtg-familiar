@@ -8,7 +8,6 @@
     <string name="dialog_both">"Entrambi"</string>
     <string name="dialog_life">"Vita"</string>
     <string name="dialog_thanks">"Grazie!"</string>
-    <string name="dialog_thanks_anyway">"Grazie comunque!"</string>
     <string name="dialog_enjoy">"Divertiti!"</string>
     <string name="update_notification">"Sto controllando gli aggiornamenti del database"</string>
     <string name="update_updating_set">"Sto aggiungendo %s"</string>
@@ -25,8 +24,6 @@
     <string name="not_deleted">"non eliminato"</string>
     <string name="no_network">"La rete non è disponibile"</string>
     <string name="filter_title_view_card">"Guarda la carta"</string>
-    <string name="tutor_cards_notice">"Offerto da TutorCards"</string>
-    <string name="tutor_cards_fail">"TutorCards non è raggiungibile"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PAGINE"</string>
@@ -46,24 +43,10 @@
     <string name="main_decklist">"Deck Builder"</string>
     <string name="main_force_update_title">"Forza aggiornamento"</string>
     <string name="main_settings_title">"Impostazioni"</string>
-    <string name="main_donate_title">"Dona"</string>
-    <string name="main_donate_dialog_title">"Fai una donazione agli sviluppatori"</string>
 
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
-    <string name="main_profile">"Profilo"</string>
-    <string name="main_donate_text">"Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;
-&lt;br&gt;
-Beh, se stai leggendo questo avviso, sai anche che la stiamo regalando!&lt;br&gt;
-&lt;br&gt;
-Programmare è un duro lavoro, e noi sviluppatori apprezziamo i dollari extra qui o là.&lt;br&gt;
-&lt;br&gt;
-Abbiamo l'abitudine di nutrirci, OK?&lt;br&gt;
-&lt;br&gt;
-Puoi toccare il bottone qua sotto per donare via PayPal. $1 è figo. $5 è più figo. La scelta è tua.&lt;br&gt;
-&lt;br&gt;
-Quindi, quanto ti senti generoso oggi?
-"</string>
+
 
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
@@ -168,7 +151,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
     <string name="search_NOT_any_selected_types">"NESSUN tipo selezionato"</string>
     <string name="search_All_words">"Tutte le parole"</string>
     <string name="search_Any_words">"Qualunque parola"</string>
-    <string name="search_Exact_phrase">"Frase esatta"</string>
     <string name="search_Most_recent_printing">"Stampa più recente"</string>
     <string name="search_Original_printing">"Stampa originale"</string>
     <string name="search_All_printings">"Tutte le ristampe"</string>
@@ -185,7 +167,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
     <string name="search_Rare">"Rara"</string>
     <string name="search_Mythic">"Mitica"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Tipo"</string>
     <string name="search_mana_cost">"Costo di mana"</string>
     <string name="search_collectors_number">"Numero del collezionista"</string>
     <string name="search_color_title">"Colore"</string>
@@ -214,10 +195,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_price_not_found">"Prezzo non trovato"</string>
     <string name="card_view_image_not_found">"Immagine non trovata"</string>
     <string name="card_view_no_external_storage">"Non riesco ad accere alla memoria esterna, controlla la scheda SD."</string>
-    <string name="card_view_no_pictures_folder">"Non riesco a trovare la cartella delle immagini, prova ancora."</string>
-    <string name="card_view_unable_to_create_dir">"Impossibile creare la cartella per il salvataggio delle immagini, per favore riprova."</string>
-    <string name="card_view_unable_to_create_file">"Impossibile creare il file immagine, per favore riprova."</string>
-    <string name="card_view_no_image">"Non riesco a trovare l'immagine da salvare, prova ancora."</string>
     <string name="card_view_unable_to_save_image">"Impossibile salvare l'immagine, per favore riprova."</string>
     <string name="card_view_save_failure">"Salvataggio dell'immagine fallito, per favore riprova."</string>
     <string name="card_view_image_saved">"Immagine salvata in "</string>
@@ -271,22 +248,18 @@ Verrà azzerata anche la riserva di mana"</string>
     <string name="dice_tails">"croce"</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Il caricamento della riserva di mana è fallito!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Cancella tutto"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Aggiungi una carta"</string>
-    <string name="trader_save">"Salva Scambio"</string>
     <string name="trader_load">"Carica Scambio"</string>
     <string name="trader_delete">"Elimina Scambio"</string>
     <string name="trader_edit_dialog_remove">"Rimuovi"</string>
     <string name="trader_edit_dialog_reset_price">"Resetta Prezzo"</string>
     <string name="trader_clear_dialog_title">"Azzera Scambio"</string>
     <string name="trader_clear_dialog_text">"Vuoi davvero eliminare lo scambio corrente?"</string>
-    <string name="trader_select_dialog_title">"Seleziona uno Scambio"</string>
-    <string name="trader_delete_dialog_title">"Elimina uno Scambio"</string>
     <string name="trader_edit_dialog_info">"Informazione sulla carta"</string>
     <string name="trader_toast_no_trades">"Non hai salvato scambi."</string>
     <string name="trader_toast_save_error">"Lo scambio non può essere salvato, riprova più tardi."</string>
@@ -346,12 +319,6 @@ Verrà azzerata anche la riserva di mana"</string>
     <string name="rules_copy_tag">"Regola di MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Aggiorna il numero DCI"</string>
-    <string name="profile_remove_dci">"Rimuovi il numero DCI"</string>
-    <string name="profile_update_dci_dialog_title">"Inserisci il tuo numero DCI"</string>
-    <string name="profile_invalid_dci">"Inserito numero DCI non valido"</string>
-    <string name="profile_no_dci">"Non hai inserito il tuo numero DCI"</string>
-    <string name="profile_planeswalker_points">"Punti Planeswalker"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Regole base del MoJhoSto"</string>
@@ -387,8 +354,6 @@ Buona fortuna, e divertiti!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Impostazioni Generali"</string>
-    <string name="pref_screen_search">"Ricerca e Risultati"</string>
-    <string name="pref_screen_trade_wishlist">"Scambio e Carte desiderate"</string>
     <string name="pref_cat_default_fragment">"Pagina di default"</string>
     <string name="pref_default_fragment_mode_summary">"La prima cosa che vedi quando apri l'applicazione"</string>
     <string name="pref_cat_updates">"Aggiornamento del database"</string>
@@ -585,8 +550,6 @@ Standard ....... Not Legal -->
     <string name="life_counter_commander_experience_counter">"Segnalini Esperienza"</string>
     <string name="trader_new">"Nuovo Scambio"</string>
     <string name="trader_save_as">"Salva Scambio come"</string>
-    <string name="pref_hide_online_title">"Nascondi le carte solo online"</string>
-    <string name="pref_hide_online_summary">"Non mostrare le carte solo online ovunque"</string>
     <string name="decklist_new">"Nuovo mazzo"</string>
     <string name="is_commander">"È commander"</string>
     <string name="update_added_dmtr">"Nuove Digital Magic Tournament Rules"</string>
