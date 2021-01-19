@@ -218,29 +218,27 @@ public class ResultListFragment extends FamiliarFragment {
         }
 
         /* Sub-optimal, but KitKat is silly */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mListView.setOnScrollListener(new ListView.OnScrollListener() {
+        mListView.setOnScrollListener(new ListView.OnScrollListener() {
 
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                    switch (scrollState) {
-                        case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                            absListView.setFastScrollAlwaysVisible(false);
-                            break;
-                        case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                            absListView.setFastScrollAlwaysVisible(true);
-                            break;
-                        default:
-                            break;
-                    }
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        absListView.setFastScrollAlwaysVisible(false);
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        absListView.setFastScrollAlwaysVisible(true);
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                @Override
-                public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
 
-                }
-            });
-        }
+            }
+        });
 
         if(mCursor == null) {
             FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "onCreateView");

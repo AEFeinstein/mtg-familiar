@@ -139,29 +139,27 @@ public class RulesFragment extends FamiliarFragment {
         boolean isClickable;
 
         /* Sub-optimal, but KitKat is silly */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            list.setOnScrollListener(new ListView.OnScrollListener() {
+        list.setOnScrollListener(new ListView.OnScrollListener() {
 
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                    switch (scrollState) {
-                        case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                            absListView.setFastScrollAlwaysVisible(false);
-                            break;
-                        case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                            absListView.setFastScrollAlwaysVisible(true);
-                            break;
-                        default:
-                            break;
-                    }
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        absListView.setFastScrollAlwaysVisible(false);
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        absListView.setFastScrollAlwaysVisible(true);
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                @Override
-                public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
 
-                }
-            });
-        }
+            }
+        });
 
         /* Populate the cursor with information from the database */
         Cursor cursor = null;

@@ -263,11 +263,7 @@ public class HtmlDocFragment extends FamiliarFragment {
 
         if (null != mWebView) {
             if (!findAllCalled) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    mWebView.findAllAsync(searchTerm);
-                } else {
-                    mWebView.findAll(searchTerm);
-                }
+                mWebView.findAllAsync(searchTerm);
                 findAllCalled = true;
                 getFamiliarActivity().invalidateOptionsMenu();
             } else {

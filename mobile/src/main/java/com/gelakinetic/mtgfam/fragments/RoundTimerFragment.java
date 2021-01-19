@@ -130,44 +130,23 @@ public class RoundTimerFragment extends FamiliarFragment {
         am.cancel(easterEggPI);
 
         if (set) {
-            if (Build.VERSION.SDK_INT >= 19) {
-                /* Set all applicable alarms */
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+            /* Set all applicable alarms */
+            am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
 
-                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
-                }
-            } else {
-                /* Set all applicable alarms */
-                am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
-
-                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
-                }
+            if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
             }
         }
     }

@@ -58,9 +58,6 @@ public class ImageGetterHelper {
             return new SpannedString("");
         }
         source = source.replace("{", "<img src=\"").replace("}", "\"/>");
-        if (Build.VERSION.SDK_INT == 16) {
-            source = source.replace("<", " <").replace(">", " >").replace("  ", " ");
-        }
         return Html.fromHtml(source, imageGetter, null);
     }
 
@@ -74,9 +71,6 @@ public class ImageGetterHelper {
         /* Make sure we're not formatting a null string */
         if (source == null) {
             return new SpannedString("");
-        }
-        if (Build.VERSION.SDK_INT == 16) {
-            source = source.replace("<", " <").replace(">", " >").replace("  ", " ");
         }
         return Html.fromHtml(source);
     }
