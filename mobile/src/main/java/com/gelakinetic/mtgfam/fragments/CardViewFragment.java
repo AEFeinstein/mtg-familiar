@@ -89,6 +89,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -167,7 +168,7 @@ public class CardViewFragment extends FamiliarFragment {
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
     private boolean mIsOnlineOnly = false;
-    private View.OnClickListener showEntireSet = new View.OnClickListener() {
+    private final View.OnClickListener showEntireSet = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             SearchCriteria setSearch = new SearchCriteria();
@@ -707,7 +708,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
     }
 
-    private class MediaStoreInfo {
+    private static class MediaStoreInfo {
         private final String filePath;
         private final long mediaStoreId;
 
@@ -933,7 +934,7 @@ public class CardViewFragment extends FamiliarFragment {
      *                 This information will vary depending on the class of v.
      */
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NotNull ContextMenu menu, @NotNull View v, ContextMenuInfo menuInfo) {
 
         super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -955,7 +956,7 @@ public class CardViewFragment extends FamiliarFragment {
      * consume it here.
      */
     @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
+    public boolean onContextItemSelected(android.view.@NotNull MenuItem item) {
         if (getUserVisibleHint()) {
             String copyText = null;
             if (item.getItemId() == R.id.copy) {
@@ -1028,7 +1029,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @return true if acted upon, false if otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (null == mCard || mCard.getName() == null) {
             /*disable menu buttons if the card isn't initialized */
             return false;
@@ -1121,7 +1122,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.card_menu, menu);
     }
@@ -1136,26 +1137,18 @@ public class CardViewFragment extends FamiliarFragment {
      * @see #onCreateOptionsMenu
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NotNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         try {
             /* If the image has been loaded to the main page, remove the menu option for image */
-            if (PreferenceAdapter.getPicFirst(getContext())) {
-                menu.findItem(R.id.image).setVisible(false);
-            } else {
-                menu.findItem(R.id.image).setVisible(true);
-            }
+            menu.findItem(R.id.image).setVisible(!PreferenceAdapter.getPicFirst(getContext()));
         } catch (NullPointerException e) {
             // eh, couldn't find the menu item. Image _should_ be there
         }
 
         /* If this is an online-only card, hide the price lookup button */
-        if (mIsOnlineOnly) {
-            menu.findItem(R.id.price).setVisible(false);
-        } else {
-            menu.findItem(R.id.price).setVisible(true);
-        }
+        menu.findItem(R.id.price).setVisible(!mIsOnlineOnly);
         /* This code removes the "change set" button if there is only one set.
          * Turns out some users use it to view the full set name when there is only one set/
          * I'm leaving it here, but commented, for posterity */
@@ -1375,19 +1368,16 @@ public class CardViewFragment extends FamiliarFragment {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    /* Permission granted, run the task again */
-                    saveImageWithGlide(mSaveImageWhereTo);
-                } else {
-                    /* Permission denied */
-                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_save_image,
-                            SnackbarWrapper.LENGTH_LONG);
-                }
+        if (requestCode == FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                /* Permission granted, run the task again */
+                saveImageWithGlide(mSaveImageWhereTo);
+            } else {
+                /* Permission denied */
+                SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_save_image,
+                        SnackbarWrapper.LENGTH_LONG);
             }
         }
     }

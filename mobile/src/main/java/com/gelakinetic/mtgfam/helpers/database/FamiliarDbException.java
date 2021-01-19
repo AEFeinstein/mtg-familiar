@@ -40,8 +40,8 @@ public class FamiliarDbException extends Exception {
         mInnerException = e;
         // Log this exception
         StringBuilder sb = new StringBuilder(e.getMessage());
-        sb.append(e.getMessage() + '\n');
-        sb.append(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e) + '\n');
+        sb.append(e.getMessage()).append('\n');
+        sb.append(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e)).append('\n');
         FamiliarLogger.appendToLogFile(sb, "FamiliarDbException");
     }
 

@@ -34,6 +34,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.astuetz.PagerSlidingTabStrip;
 import com.gelakinetic.mtgfam.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -237,7 +239,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#createFragment()}.
          */
         @Override
-        public FamiliarFragment getItem(int i) {
+        public @NotNull FamiliarFragment getItem(int i) {
             return mTabs.get(i).createFragment();
         }
 

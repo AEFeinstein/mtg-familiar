@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -135,7 +136,7 @@ class CardAndSetParser {
             if (stream == null) {
                 throw new IOException("No Stream");
             }
-            JsonReader reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
+            JsonReader reader = new JsonReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
             Gson gson = CardAndSetParser.getGson();
 
             legalityData = gson.fromJson(reader, LegalityData.class);

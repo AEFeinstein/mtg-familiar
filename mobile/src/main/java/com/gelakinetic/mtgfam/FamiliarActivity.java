@@ -590,6 +590,7 @@ public class FamiliarActivity extends AppCompatActivity {
                It's more precise than a delayed handler. Other options have to close the drawer
                themselves */
             boolean shouldCloseDrawer = false;
+            //noinspection StatementWithEmptyBody
             if ((mPageEntries[i].mNameResource == R.string.main_extras) ||
                     (mPageEntries[i].mNameResource == R.string.main_pages)) {
                 /* It's a header */
@@ -1198,7 +1199,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param newConfig The new device configuration.
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         /* Pass any configuration change to the drawer toggles */
         mDrawerToggle.onConfigurationChanged(newConfig);
@@ -1431,17 +1432,15 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-                    mDrawerLayout.closeDrawer(mDrawerList);
-                } else {
-                    mDrawerLayout.openDrawer(mDrawerList);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                mDrawerLayout.closeDrawer(mDrawerList);
+            } else {
+                mDrawerLayout.openDrawer(mDrawerList);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -1609,7 +1608,7 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * This nested class encapsulates the necessary information for an entry in the drawer menu.
      */
-    class DrawerEntry {
+    static class DrawerEntry {
         final int mNameResource;
         final int mIconAttr;
         final boolean mIsDivider;

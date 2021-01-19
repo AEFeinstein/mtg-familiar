@@ -192,7 +192,7 @@ public class Card implements Comparable<Card> {
 
         @Override
         public int compareTo(@NonNull ForeignPrinting o) {
-            return Integer.valueOf(this.mMultiverseId).compareTo(o.mMultiverseId);
+            return Integer.compare(this.mMultiverseId, o.mMultiverseId);
         }
 
         @Override
@@ -247,7 +247,7 @@ public class Card implements Comparable<Card> {
             } else if (this_num < other_num) {
                 return -1;
             } else {
-                return Character.valueOf(this.getNumberChar()).compareTo(other.getNumberChar());
+                return Character.compare(this.getNumberChar(), other.getNumberChar());
             }
         }
 

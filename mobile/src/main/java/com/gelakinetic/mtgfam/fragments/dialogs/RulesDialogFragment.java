@@ -88,61 +88,53 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        switch (DIALOG_SEARCH) {
-            case DIALOG_SEARCH: {
-                /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
-                        null, false);
-                assert textEntryView != null;
-                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
-                textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
+        /* Inflate a view to type in the player's name, and show it in an AlertDialog */
+        @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
+                null, false);
+        assert textEntryView != null;
+        final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
+        textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
-                String title;
-                if (getParentRulesFragment().mCategory == -1) {
-                    title = getString(R.string.rules_search_all);
-                } else {
-                    FamiliarDbHandle handle = new FamiliarDbHandle();
-                    try {
-                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
-                        title = String.format(getString(R.string.rules_search_cat),
-                                CardDbAdapter.getCategoryName(getParentRulesFragment().mCategory, getParentRulesFragment().mSubcategory, database));
-                    } catch (SQLiteException | FamiliarDbException e) {
-                        title = String.format(getString(R.string.rules_search_cat),
-                                getString(R.string.rules_this_cat));
-                    } finally {
-                        DatabaseManager.closeDatabase(getActivity(), handle);
-                    }
-                }
-
-                Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(title)
-                        .customView(textEntryView, false)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog1, which) -> {
-                            if (nameInput.getText() == null) {
-                                dialog1.dismiss();
-                                return;
-                            }
-                            String keyword = nameInput.getText().toString();
-                            if (keyword.length() < 3) {
-                                SnackbarWrapper.makeAndShowText(getActivity(),
-                                        R.string.rules_short_key_toast, SnackbarWrapper.LENGTH_LONG);
-                            } else {
-                                searchArgs = new Bundle();
-                                searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);
-                                searchArgs.putInt(RulesFragment.CATEGORY_KEY, getParentRulesFragment().mCategory);
-                                searchArgs.putInt(RulesFragment.SUBCATEGORY_KEY, getParentRulesFragment().mSubcategory);
-                            }
-                        })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
-                Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                return dialog;
-            }
-            default: {
-                savedInstanceState.putInt("id", DIALOG_SEARCH);
-                return super.onCreateDialog(savedInstanceState);
+        String title;
+        if (getParentRulesFragment().mCategory == -1) {
+            title = getString(R.string.rules_search_all);
+        } else {
+            FamiliarDbHandle handle = new FamiliarDbHandle();
+            try {
+                SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+                title = String.format(getString(R.string.rules_search_cat),
+                        CardDbAdapter.getCategoryName(getParentRulesFragment().mCategory, getParentRulesFragment().mSubcategory, database));
+            } catch (SQLiteException | FamiliarDbException e) {
+                title = String.format(getString(R.string.rules_search_cat),
+                        getString(R.string.rules_this_cat));
+            } finally {
+                DatabaseManager.closeDatabase(getActivity(), handle);
             }
         }
+
+        Dialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(title)
+                .customView(textEntryView, false)
+                .positiveText(R.string.dialog_ok)
+                .onPositive((dialog1, which) -> {
+                    if (nameInput.getText() == null) {
+                        dialog1.dismiss();
+                        return;
+                    }
+                    String keyword = nameInput.getText().toString();
+                    if (keyword.length() < 3) {
+                        SnackbarWrapper.makeAndShowText(getActivity(),
+                                R.string.rules_short_key_toast, SnackbarWrapper.LENGTH_LONG);
+                    } else {
+                        searchArgs = new Bundle();
+                        searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);
+                        searchArgs.putInt(RulesFragment.CATEGORY_KEY, getParentRulesFragment().mCategory);
+                        searchArgs.putInt(RulesFragment.SUBCATEGORY_KEY, getParentRulesFragment().mSubcategory);
+                    }
+                })
+                .negativeText(R.string.dialog_cancel)
+                .build();
+        Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        return dialog;
     }
 }

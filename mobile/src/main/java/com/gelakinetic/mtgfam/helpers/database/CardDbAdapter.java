@@ -1557,18 +1557,18 @@ public class CardDbAdapter {
 
         // For every returned row
         try (Cursor c = mDb.rawQuery(statement, null)) {
-            String retVal = "";
+            StringBuilder retVal = new StringBuilder();
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 // If we're not starting off, append the delimiter
-                if (!retVal.isEmpty()) {
-                    retVal += " // ";
+                if (retVal.length() > 0) {
+                    retVal.append(" // ");
                 }
                 // Append the card name
-                retVal += c.getString(c.getColumnIndex(KEY_NAME));
+                retVal.append(c.getString(c.getColumnIndex(KEY_NAME)));
                 c.moveToNext();
             }
-            return retVal;
+            return retVal.toString();
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }

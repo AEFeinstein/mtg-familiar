@@ -41,6 +41,8 @@ import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -231,7 +233,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.gathering_menu, menu);
     }
@@ -337,7 +339,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @param menu The menu to show or hide the "announce life totals" button in.
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NotNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem removePlayer = menu.findItem(R.id.remove_player);
@@ -348,11 +350,7 @@ public class GatheringsFragment extends FamiliarFragment {
         assert loadGathering != null;
 
         try {
-            if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
-                removePlayer.setVisible(false);
-            } else {
-                removePlayer.setVisible(true);
-            }
+            removePlayer.setVisible(mLinearLayout.getChildCount() != 0 && getFamiliarActivity().mIsMenuVisible);
         } catch (NullPointerException e) {
             /* the if () statement throwing a NullPointerException for some users. I don't know which part was null,
             or why, but this catches it well enough */

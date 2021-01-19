@@ -54,7 +54,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
         try {
             if (null != getParentSearchViewFragment()) {

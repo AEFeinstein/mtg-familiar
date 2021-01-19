@@ -23,10 +23,10 @@ import java.util.ArrayList;
 
 public class LegalityData {
 
-    public Format mFormats[];
+    public Format[] mFormats;
     public long mTimestamp;
 
-    public class Format {
+    public static class Format {
         public String mName;
         public final ArrayList<String> mSets = new ArrayList<>();
         public final ArrayList<String> mRestrictedlist = new ArrayList<>();

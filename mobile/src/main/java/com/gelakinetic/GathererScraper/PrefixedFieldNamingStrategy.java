@@ -62,7 +62,7 @@ public class PrefixedFieldNamingStrategy implements FieldNamingStrategy {
      */
     private static String lowercaseFirstLetter(String s) {
         if (s.length() > 0) {
-            char c[] = s.toCharArray();
+            char[] c = s.toCharArray();
             c[0] = Character.toLowerCase(c[0]);
             s = new String(c);
         }

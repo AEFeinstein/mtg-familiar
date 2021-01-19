@@ -56,6 +56,8 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -509,7 +511,7 @@ public class RulesFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.rules_menu, menu);
     }
@@ -517,7 +519,7 @@ public class RulesFragment extends FamiliarFragment {
     /**
      * This is an abstract class which can be displayed with a RulesListAdapter in the fragment
      */
-    private abstract class DisplayItem {
+    private abstract static class DisplayItem {
         /**
          * @return The string text associated with this entry
          */
@@ -537,7 +539,7 @@ public class RulesFragment extends FamiliarFragment {
     /**
      * This is a rule to be displayed in the list view
      */
-    private class RuleItem extends DisplayItem {
+    private static class RuleItem extends DisplayItem {
         private final int mCategory;
         private final int mSubcategory;
         private final String mEntry;
@@ -596,7 +598,7 @@ public class RulesFragment extends FamiliarFragment {
     /**
      * This is a glossary item to be displayed in the list view
      */
-    private class GlossaryItem extends DisplayItem {
+    private static class GlossaryItem extends DisplayItem {
         private final String mTerm;
         private final String mDefinition;
         private final boolean mClickable;
@@ -663,12 +665,10 @@ public class RulesFragment extends FamiliarFragment {
                     case BANNED:
                         mLegality = getString(R.string.card_view_banned);
                         break;
-                    case NONE:
-                        mLegality = "";
-                        break;
                     case SETS:
                         mLegality = getString(R.string.rules_legal_sets);
                         break;
+                    case NONE:
                     default:
                         mLegality = "";
                         break;
@@ -680,14 +680,11 @@ public class RulesFragment extends FamiliarFragment {
                         break;
                     case RESTRICTED:
                         mLegality = getString(R.string.card_view_restricted);
-
-                        break;
-                    case NONE:
-                        mLegality = "";
                         break;
                     case SETS:
                         mLegality = getString(R.string.rules_legal_sets);
                         break;
+                    case NONE:
                     default:
                         mLegality = "";
                         break;

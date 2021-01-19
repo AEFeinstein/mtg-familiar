@@ -44,6 +44,8 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -290,7 +292,7 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (findAllCalled) {
             inflater.inflate(R.menu.htmldoc_menu, menu);
@@ -304,7 +306,7 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @return true if the button was handled, false otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         /* Handle item selection */
         if (null != mWebView) {
             if (item.getItemId() == R.id.arrow_down) {

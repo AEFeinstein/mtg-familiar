@@ -287,7 +287,7 @@ class RulesParser {
     /**
      * Nested class which encapsulates all necessary information about a rule
      */
-    class RuleItem {
+    static class RuleItem {
         public final int category;
         public final int subcategory;
         public final String entry;
@@ -324,7 +324,7 @@ class RulesParser {
     /**
      * Nested class which encapsulates all necessary information about a glossary entry
      */
-    class GlossaryItem {
+    static class GlossaryItem {
         public final String term;
         public String definition;
 

@@ -205,7 +205,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
      * @param dialog A DialogInterface for the dismissed dialog
      */
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
         try {
             final FamiliarActivity activity = getFamiliarActivity();
