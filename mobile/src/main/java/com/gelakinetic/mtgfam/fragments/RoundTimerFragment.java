@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -280,24 +279,23 @@ public class RoundTimerFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.set_timer_ringtone:
-                Uri soundFile = Uri.parse(PreferenceAdapter.getTimerSound(getContext()));
+        if (item.getItemId() == R.id.set_timer_ringtone) {
+            Uri soundFile = Uri.parse(PreferenceAdapter.getTimerSound(getContext()));
 
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.timer_tone_dialog_title));
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, soundFile);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, Settings.System.DEFAULT_NOTIFICATION_URI);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.timer_tone_dialog_title));
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, soundFile);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, Settings.System.DEFAULT_NOTIFICATION_URI);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
-                startActivityForResult(intent, RINGTONE_REQUEST_CODE); /* This result is caught in the activity */
-                return true;
-            case R.id.set_timer_warnings:
-                showDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            startActivityForResult(intent, RINGTONE_REQUEST_CODE); /* This result is caught in the activity */
+            return true;
+        } else if (item.getItemId() == R.id.set_timer_warnings) {
+            showDialog();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

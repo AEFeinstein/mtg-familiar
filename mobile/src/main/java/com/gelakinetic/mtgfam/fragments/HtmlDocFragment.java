@@ -307,18 +307,17 @@ public class HtmlDocFragment extends FamiliarFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
         if (null != mWebView) {
-            switch (item.getItemId()) {
-                case R.id.arrow_down:
-                    mWebView.findNext(true);
-                    return true;
-                case R.id.arrow_up:
-                    mWebView.findNext(false);
-                    return true;
-                case R.id.cancel:
-                    mWebView.clearMatches();
-                    findAllCalled = false;
-                    getFamiliarActivity().invalidateOptionsMenu();
-                    return true;
+            if (item.getItemId() == R.id.arrow_down) {
+                mWebView.findNext(true);
+                return true;
+            } else if (item.getItemId() == R.id.arrow_up) {
+                mWebView.findNext(false);
+                return true;
+            } else if (item.getItemId() == R.id.cancel) {
+                mWebView.clearMatches();
+                findAllCalled = false;
+                getFamiliarActivity().invalidateOptionsMenu();
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);

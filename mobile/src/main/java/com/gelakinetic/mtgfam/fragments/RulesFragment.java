@@ -25,7 +25,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -371,17 +370,16 @@ public class RulesFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.rules_menu_exit:
-                FragmentManager fm = Objects.requireNonNull(getFragmentManager());
-                if (!fm.isStateSaved()) {
-                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                        fm.popBackStack();
-                    }
+        if (item.getItemId() == R.id.rules_menu_exit) {
+            FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+            if (!fm.isStateSaved()) {
+                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
                 }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

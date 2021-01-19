@@ -193,35 +193,34 @@ public class GatheringsFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_gathering:
-                showDialog(GatheringsDialogFragment.DIALOG_DELETE_GATHERING);
-                return true;
-            case R.id.remove_player:
-                showDialog(GatheringsDialogFragment.DIALOG_REMOVE_PLAYER);
-                return true;
-            case R.id.add_player:
-                /* Use the correct default life for commander mode */
-                switch (mDisplayModeSpinner.getSelectedItemPosition()) {
-                    case 1:
-                    case 0: {
-                        AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE));
-                        break;
-                    }
-                    case 2: {
-                        AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE_COMMANDER));
-                        break;
-                    }
+        if (item.getItemId() == R.id.delete_gathering) {
+            showDialog(GatheringsDialogFragment.DIALOG_DELETE_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.remove_player) {
+            showDialog(GatheringsDialogFragment.DIALOG_REMOVE_PLAYER);
+            return true;
+        } else if (item.getItemId() == R.id.add_player) {
+            /* Use the correct default life for commander mode */
+            switch (mDisplayModeSpinner.getSelectedItemPosition()) {
+                case 1:
+                case 0: {
+                    AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE));
+                    break;
                 }
-                return true;
-            case R.id.load_gathering:
-                showDialog(GatheringsDialogFragment.DIALOG_LOAD_GATHERING);
-                return true;
-            case R.id.save_gathering:
-                showDialog(GatheringsDialogFragment.DIALOG_SAVE_GATHERING);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                case 2: {
+                    AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE_COMMANDER));
+                    break;
+                }
+            }
+            return true;
+        } else if (item.getItemId() == R.id.load_gathering) {
+            showDialog(GatheringsDialogFragment.DIALOG_LOAD_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.save_gathering) {
+            showDialog(GatheringsDialogFragment.DIALOG_SAVE_GATHERING);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

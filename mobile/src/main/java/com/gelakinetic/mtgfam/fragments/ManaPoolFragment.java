@@ -194,14 +194,13 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.clear_all:
-                for (ManaPoolItem manaPoolItem : mManaPoolItems) {
-                    manaPoolItem.clearCount();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.clear_all) {
+            for (ManaPoolItem manaPoolItem : mManaPoolItems) {
+                manaPoolItem.clearCount();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

@@ -344,36 +344,29 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.add_player:
-                /* Add the player to the ArrayList, set the commander info, and draw the new view */
-                addPlayer();
-                setCommanderInfo(-1);
-                addPlayerView(mPlayers.get(mPlayers.size() - 1));
-                return true;
-            case R.id.remove_player:
-                /* Show a dialog of players to remove */
-                showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
-                return true;
-            case R.id.announce_life:
-                /* Vocalize the current life totals */
-                announceLifeTotals();
-                return true;
-            case R.id.edit_gatherings:
-                /* Start a GatheringsFragment to edit gatherings */
-                GatheringsFragment rlFrag = new GatheringsFragment();
-                startNewFragment(rlFrag, null);
-                return true;
-            case R.id.set_gathering:
-                /* Show a dialog of gatherings a user can set */
-                showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
-                return true;
-            case R.id.display_mode:
-                /* Show a dialog to change the display mode (normal, compact, commander) */
-                showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.add_player) {                /* Add the player to the ArrayList, set the commander info, and draw the new view */
+            addPlayer();
+            setCommanderInfo(-1);
+            addPlayerView(mPlayers.get(mPlayers.size() - 1));
+            return true;
+        } else if (item.getItemId() == R.id.remove_player) {                /* Show a dialog of players to remove */
+            showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
+            return true;
+        } else if (item.getItemId() == R.id.announce_life) {                /* Vocalize the current life totals */
+            announceLifeTotals();
+            return true;
+        } else if (item.getItemId() == R.id.edit_gatherings) {                /* Start a GatheringsFragment to edit gatherings */
+            GatheringsFragment rlFrag = new GatheringsFragment();
+            startNewFragment(rlFrag, null);
+            return true;
+        } else if (item.getItemId() == R.id.set_gathering) {                /* Show a dialog of gatherings a user can set */
+            showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.display_mode) {                /* Show a dialog to change the display mode (normal, compact, commander) */
+            showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

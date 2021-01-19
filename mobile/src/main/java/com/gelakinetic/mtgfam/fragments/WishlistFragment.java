@@ -297,39 +297,34 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.wishlist_menu_clear:
-                /* Show a dialog to confirm clearing the wishlist */
-                showDialog(WishlistDialogFragment.DIALOG_CONFIRMATION, null);
-                return true;
-            case R.id.wishlist_menu_settings:
-                /* Show a dialog to change which price (low/avg/high) is used */
-                showDialog(WishlistDialogFragment.DIALOG_PRICE_SETTING, null);
-                return true;
-            case R.id.wishlist_menu_sort:
-                /* Show a dialog to change the sort criteria the list uses */
-                showDialog(WishlistDialogFragment.DIALOG_SORT, null);
-                return true;
-            case R.id.wishlist_menu_share:
-                /* Share the plaintext wishlist */
-                /* Use a more generic send text intent. It can also do emails */
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-                synchronized (mCompressedWishlist) {
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(),
-                            mShowCardInfo, mShowIndividualPrices, getPriceSetting()));
-                }
-                sendIntent.setType("text/plain");
+        if (item.getItemId() == R.id.wishlist_menu_clear) {                /* Show a dialog to confirm clearing the wishlist */
+            showDialog(WishlistDialogFragment.DIALOG_CONFIRMATION, null);
+            return true;
+        } else if (item.getItemId() == R.id.wishlist_menu_settings) {                /* Show a dialog to change which price (low/avg/high) is used */
+            showDialog(WishlistDialogFragment.DIALOG_PRICE_SETTING, null);
+            return true;
+        } else if (item.getItemId() == R.id.wishlist_menu_sort) {                /* Show a dialog to change the sort criteria the list uses */
+            showDialog(WishlistDialogFragment.DIALOG_SORT, null);
+            return true;
+        } else if (item.getItemId() == R.id.wishlist_menu_share) {                /* Share the plaintext wishlist */
+            /* Use a more generic send text intent. It can also do emails */
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+            synchronized (mCompressedWishlist) {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(),
+                        mShowCardInfo, mShowIndividualPrices, getPriceSetting()));
+            }
+            sendIntent.setType("text/plain");
 
-                try {
-                    startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
-                } catch (android.content.ActivityNotFoundException ex) {
-                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client, SnackbarWrapper.LENGTH_SHORT);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            try {
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+            } catch (android.content.ActivityNotFoundException ex) {
+                SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client, SnackbarWrapper.LENGTH_SHORT);
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

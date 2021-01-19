@@ -1125,18 +1125,17 @@ public class SearchViewFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.search_menu_clear:
-                clear();
-                return true;
-            case R.id.search_menu_save_defaults:
-                persistOptions();
-                return true;
-            case R.id.search_menu_load_defaults:
-                fetchPersistedOptions();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.search_menu_clear) {
+            clear();
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_save_defaults) {
+            persistOptions();
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_load_defaults) {
+            fetchPersistedOptions();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

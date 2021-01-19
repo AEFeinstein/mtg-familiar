@@ -359,43 +359,33 @@ public class TradeFragment extends FamiliarListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.trader_menu_clear: {
-                showDialog(TradeDialogFragment.DIALOG_CONFIRMATION, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_settings: {
-                showDialog(TradeDialogFragment.DIALOG_PRICE_SETTING, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_save_as: {
-                showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE_AS, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_new: {
-                showDialog(TradeDialogFragment.DIALOG_NEW_TRADE, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_load: {
-                showDialog(TradeDialogFragment.DIALOG_LOAD_TRADE, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_delete: {
-                showDialog(TradeDialogFragment.DIALOG_DELETE_TRADE, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_sort: {
-                /* show a dialog to change the sort criteria the list uses */
-                showDialog(TradeDialogFragment.DIALOG_SORT, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_share: {
-                shareTrade();
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
+        if (item.getItemId() == R.id.trader_menu_clear) {
+            showDialog(TradeDialogFragment.DIALOG_CONFIRMATION, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_settings) {
+            showDialog(TradeDialogFragment.DIALOG_PRICE_SETTING, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_save_as) {
+            showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE_AS, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_new) {
+            showDialog(TradeDialogFragment.DIALOG_NEW_TRADE, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_load) {
+            showDialog(TradeDialogFragment.DIALOG_LOAD_TRADE, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_delete) {
+            showDialog(TradeDialogFragment.DIALOG_DELETE_TRADE, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_sort) {
+            /* show a dialog to change the sort criteria the list uses */
+            showDialog(TradeDialogFragment.DIALOG_SORT, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_share) {
+            shareTrade();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

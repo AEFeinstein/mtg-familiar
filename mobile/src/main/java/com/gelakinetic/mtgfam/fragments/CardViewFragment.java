@@ -958,43 +958,37 @@ public class CardViewFragment extends FamiliarFragment {
     public boolean onContextItemSelected(android.view.MenuItem item) {
         if (getUserVisibleHint()) {
             String copyText = null;
-            switch (item.getItemId()) {
-                case R.id.copy: {
-                    copyText = mCopyString;
-                    break;
+            if (item.getItemId() == R.id.copy) {
+                copyText = mCopyString;
+            } else if (item.getItemId() == R.id.copyall) {
+                if (mNameTextView.getText() != null &&
+                        mCostTextView.getText() != null &&
+                        mTypeTextView.getText() != null &&
+                        mSetTextView.getText() != null &&
+                        mAbilityTextView.getText() != null &&
+                        mFlavorTextView.getText() != null &&
+                        mPowTouTextView.getText() != null &&
+                        mArtistTextView.getText() != null &&
+                        mNumberTextView.getText() != null) {
+                    // Hacky, but it works
+                    String costText =
+                            convertHtmlToPlainText(Html.toHtml(
+                                    new SpannableString(mCostTextView.getText())));
+                    String abilityText =
+                            convertHtmlToPlainText(Html.toHtml(
+                                    new SpannableString(mAbilityTextView.getText())));
+                    copyText = mNameTextView.getText().toString() + '\n' +
+                            costText + '\n' +
+                            mTypeTextView.getText().toString() + '\n' +
+                            mSetTextView.getText().toString() + '\n' +
+                            abilityText + '\n' +
+                            mFlavorTextView.getText().toString() + '\n' +
+                            mPowTouTextView.getText().toString() + '\n' +
+                            mArtistTextView.getText().toString() + '\n' +
+                            mNumberTextView.getText().toString();
                 }
-                case R.id.copyall: {
-                    if (mNameTextView.getText() != null &&
-                            mCostTextView.getText() != null &&
-                            mTypeTextView.getText() != null &&
-                            mSetTextView.getText() != null &&
-                            mAbilityTextView.getText() != null &&
-                            mFlavorTextView.getText() != null &&
-                            mPowTouTextView.getText() != null &&
-                            mArtistTextView.getText() != null &&
-                            mNumberTextView.getText() != null) {
-                        // Hacky, but it works
-                        String costText =
-                                convertHtmlToPlainText(Html.toHtml(
-                                        new SpannableString(mCostTextView.getText())));
-                        String abilityText =
-                                convertHtmlToPlainText(Html.toHtml(
-                                        new SpannableString(mAbilityTextView.getText())));
-                        copyText = mNameTextView.getText().toString() + '\n' +
-                                costText + '\n' +
-                                mTypeTextView.getText().toString() + '\n' +
-                                mSetTextView.getText().toString() + '\n' +
-                                abilityText + '\n' +
-                                mFlavorTextView.getText().toString() + '\n' +
-                                mPowTouTextView.getText().toString() + '\n' +
-                                mArtistTextView.getText().toString() + '\n' +
-                                mNumberTextView.getText().toString();
-                    }
-                    break;
-                }
-                default: {
-                    return super.onContextItemSelected(item);
-                }
+            } else {
+                return super.onContextItemSelected(item);
             }
 
             if (copyText != null) {
@@ -1040,94 +1034,83 @@ public class CardViewFragment extends FamiliarFragment {
             return false;
         }
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.image: {
-                loadImageWithGlide(null, true);
-                return true;
-            }
-            case R.id.price: {
-                try {
-                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
-                            marketPriceInfo -> {
-                                if (CardViewFragment.this.isAdded()) {
-                                    if (marketPriceInfo != null) {
-                                        mPriceInfo = marketPriceInfo;
-                                    } else {
-                                        mPriceInfo = null;
-                                        mErrorMessage = getString(R.string.card_view_price_not_found);
-                                    }
-                                }
-                            },
-                            throwable -> {
-                                if (CardViewFragment.this.isAdded()) {
-                                    mPriceInfo = null;
-                                    mErrorMessage = throwable.getMessage();
-                                }
-                            },
-                            () -> {
-                                if (mPriceInfo == null) {
-                                    // This was a failure
-                                    CardViewFragment.this.removeDialog(getFragmentManager());
-                                    if (null != mErrorMessage) {
-                                        SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
-                                    }
+        else if (item.getItemId() == R.id.image) {
+            loadImageWithGlide(null, true);
+            return true;
+        } else if (item.getItemId() == R.id.price) {
+            try {
+                mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
+                        marketPriceInfo -> {
+                            if (CardViewFragment.this.isAdded()) {
+                                if (marketPriceInfo != null) {
+                                    mPriceInfo = marketPriceInfo;
                                 } else {
-                                    // This was a success
-                                    showDialog(CardViewDialogFragment.GET_PRICE);
+                                    mPriceInfo = null;
+                                    mErrorMessage = getString(R.string.card_view_price_not_found);
                                 }
-                            });
+                            }
+                        },
+                        throwable -> {
+                            if (CardViewFragment.this.isAdded()) {
+                                mPriceInfo = null;
+                                mErrorMessage = throwable.getMessage();
+                            }
+                        },
+                        () -> {
+                            if (mPriceInfo == null) {
+                                // This was a failure
+                                CardViewFragment.this.removeDialog(getFragmentManager());
+                                if (null != mErrorMessage) {
+                                    SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
+                                }
+                            } else {
+                                // This was a success
+                                showDialog(CardViewDialogFragment.GET_PRICE);
+                            }
+                        });
 
-                } catch (java.lang.InstantiationException e) {
-                    mErrorMessage = getString(R.string.card_view_price_not_found);
-                }
+            } catch (java.lang.InstantiationException e) {
+                mErrorMessage = getString(R.string.card_view_price_not_found);
+            }
 
+            return true;
+        } else if (item.getItemId() == R.id.changeset) {
+            showDialog(CardViewDialogFragment.CHANGE_SET);
+            return true;
+        } else if (item.getItemId() == R.id.legality) {
+            mActivity.setLoading();
+            if (mAsyncTask != null) {
+                mAsyncTask.cancel(true);
+            }
+            mAsyncTask = new FetchLegalityTask();
+            ((FetchLegalityTask) mAsyncTask).execute(this);
+            return true;
+        } else if (item.getItemId() == R.id.cardrulings) {
+            if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
                 return true;
             }
-            case R.id.changeset: {
-                showDialog(CardViewDialogFragment.CHANGE_SET);
-                return true;
-            }
-            case R.id.legality: {
-                mActivity.setLoading();
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new FetchLegalityTask();
-                ((FetchLegalityTask) mAsyncTask).execute(this);
-                return true;
-            }
-            case R.id.cardrulings: {
-                if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
-                    return true;
-                }
 
-                mActivity.setLoading();
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new FetchRulingsTask();
-                ((FetchRulingsTask) mAsyncTask).execute(this);
-                return true;
+            mActivity.setLoading();
+            if (mAsyncTask != null) {
+                mAsyncTask.cancel(true);
             }
-            case R.id.addtowishlist: {
-                showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
-                return true;
-            }
-            case R.id.addtodecklist: {
-                showDialog(CardViewDialogFragment.ADD_TO_DECKLIST);
-                return true;
-            }
-            case R.id.sharecard: {
-                showDialog(CardViewDialogFragment.SHARE_CARD);
-                return true;
-            }
-            case R.id.translatecard: {
-                showDialog(CardViewDialogFragment.TRANSLATE_CARD);
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
+            mAsyncTask = new FetchRulingsTask();
+            ((FetchRulingsTask) mAsyncTask).execute(this);
+            return true;
+        } else if (item.getItemId() == R.id.addtowishlist) {
+            showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
+            return true;
+        } else if (item.getItemId() == R.id.addtodecklist) {
+            showDialog(CardViewDialogFragment.ADD_TO_DECKLIST);
+            return true;
+        } else if (item.getItemId() == R.id.sharecard) {
+            showDialog(CardViewDialogFragment.SHARE_CARD);
+            return true;
+        } else if (item.getItemId() == R.id.translatecard) {
+            showDialog(CardViewDialogFragment.TRANSLATE_CARD);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

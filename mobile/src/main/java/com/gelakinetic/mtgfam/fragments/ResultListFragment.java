@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -240,7 +239,7 @@ public class ResultListFragment extends FamiliarFragment {
             }
         });
 
-        if(mCursor == null) {
+        if (mCursor == null) {
             FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "onCreateView");
         } else {
             FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
@@ -332,7 +331,7 @@ public class ResultListFragment extends FamiliarFragment {
 
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
                     PreferenceAdapter.getSearchSortOrder(getContext()), database);
-            if(mCursor == null) {
+            if (mCursor == null) {
                 FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
             } else {
                 FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "doSearch");
@@ -471,20 +470,18 @@ public class ResultListFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.search_menu_random_search:
-                try {
-                    startCardViewFrag(-1);
-                } catch (SQLiteException | FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-                return true;
-            case R.id.search_menu_sort: {
-                showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
-                return true;
+        if (item.getItemId() == R.id.search_menu_random_search) {
+            try {
+                startCardViewFrag(-1);
+            } catch (SQLiteException | FamiliarDbException e) {
+                handleFamiliarDbException(true);
             }
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_sort) {
+            showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
