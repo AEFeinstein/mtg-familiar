@@ -1961,7 +1961,7 @@ public class CardDbAdapter {
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
-            return sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{CardDbAdapter.KEY_CODE, CardDbAdapter.KEY_NAME}, null,
+            return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);
