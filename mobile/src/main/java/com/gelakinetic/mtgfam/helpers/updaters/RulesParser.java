@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,7 +84,7 @@ class RulesParser {
             if (this.mInputStream == null) {
                 throw new IOException("No Stream");
             }
-            this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream));
+            this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream, StandardCharsets.UTF_8));
 
             /*First line will be the date formatted as YYYY-MM-DD */
             String line = this.mBufferedReader.readLine();

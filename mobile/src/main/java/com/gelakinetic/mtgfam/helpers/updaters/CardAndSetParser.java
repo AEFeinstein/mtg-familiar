@@ -104,7 +104,7 @@ class CardAndSetParser {
             if (stream == null) {
                 throw new IOException("No Stream");
             }
-            InputStreamReader isr = new InputStreamReader(stream);
+            InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
 
             JsonReader reader = new JsonReader(isr);
             Gson gson = CardAndSetParser.getGson();

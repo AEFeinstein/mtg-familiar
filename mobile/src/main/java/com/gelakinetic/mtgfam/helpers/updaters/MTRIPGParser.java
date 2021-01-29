@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -166,7 +167,7 @@ class MTRIPGParser {
 
     private boolean parseDocument(int mode, InputStream is) throws IOException {
         boolean updated = false;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
         String line = reader.readLine();
         String[] parts = line.split("-");
