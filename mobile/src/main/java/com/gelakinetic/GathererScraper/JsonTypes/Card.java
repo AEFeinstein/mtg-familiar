@@ -31,6 +31,7 @@ import java.util.ArrayList;
  * @author AEFeinstein
  *
  */
+@SuppressWarnings("CanBeFinal")
 public class Card implements Comparable<Card> {
 
     // The card's name
@@ -167,10 +168,11 @@ public class Card implements Comparable<Card> {
     }
 
     // Private class for encapsulating foreign printing information
+    @SuppressWarnings("CanBeFinal")
     public static class ForeignPrinting implements Comparable<ForeignPrinting> {
-        private final int mMultiverseId;
-        private final String mName;
-        private final String mLanguageCode;
+        private int mMultiverseId;
+        private String mName;
+        private String mLanguageCode;
 
         public ForeignPrinting(ForeignPrinting fp) {
             if (null != fp) {

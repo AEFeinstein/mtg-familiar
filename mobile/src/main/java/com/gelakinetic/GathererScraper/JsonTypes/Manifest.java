@@ -23,11 +23,13 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("CanBeFinal")
 public class Manifest {
 
     public long mTimestamp;
-    public final ArrayList<ManifestEntry> mPatches = new ArrayList<>();
+    public ArrayList<ManifestEntry> mPatches = new ArrayList<>();
 
+    @SuppressWarnings("CanBeFinal")
     public static class ManifestEntry implements Comparable<ManifestEntry> {
         public String mName;
         public String mURL;
