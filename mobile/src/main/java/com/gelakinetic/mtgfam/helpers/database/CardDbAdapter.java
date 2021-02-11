@@ -318,8 +318,6 @@ public class CardDbAdapter {
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
 
-    private static final String[] ILLEGAL_SETS = {"UG", "UNH", "UST", "ARS", "PCP", "PP2"};
-
     /* The various types of multi-cards */
     public enum MultiCardType {
         NOPE,

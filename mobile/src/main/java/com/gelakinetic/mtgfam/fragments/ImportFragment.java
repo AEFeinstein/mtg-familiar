@@ -215,6 +215,7 @@ public class ImportFragment extends FamiliarFragment {
             /* match cards with database */
             try {
                 /* TODO: does error snackbar get shown properly? We're not on UI thread... */
+                //Issues happen here if ImportTask is made static
                 MtgCard.initCardListFromDb(getContext(), cardList);
             } catch (FamiliarDbException fde) {
                 handleFamiliarDbException(false);
