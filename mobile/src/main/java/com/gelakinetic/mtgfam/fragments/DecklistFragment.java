@@ -48,6 +48,7 @@ import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
+import com.gelakinetic.mtgfam.helpers.DeckListImporter;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -573,6 +574,9 @@ public class DecklistFragment extends FamiliarListFragment {
             return true;
         } else if (item.getItemId() == R.id.deck_menu_clear) {
             showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_import) {
+            startNewFragment(new ImportFragment(), null);
             return true;
         } else if (item.getItemId() == R.id.deck_menu_share) {
             /* Share plaintext decklist */
