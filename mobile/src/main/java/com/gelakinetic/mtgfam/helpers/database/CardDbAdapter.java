@@ -28,15 +28,24 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
+
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
