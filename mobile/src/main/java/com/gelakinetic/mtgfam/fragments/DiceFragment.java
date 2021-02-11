@@ -163,13 +163,10 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
     private void flipCoin() {
         if (mDieOutput != null) {
             String output;
-            switch (mRandom.nextInt(2)) {
-                case 0:
-                    output = getString(R.string.dice_heads);
-                    break;
-                default:
-                    output = getString(R.string.dice_tails);
-                    break;
+            if (mRandom.nextInt(2) == 0) {
+                output = getString(R.string.dice_heads);
+            } else {
+                output = getString(R.string.dice_tails);
             }
             mDieOutput.setText(output);
         }

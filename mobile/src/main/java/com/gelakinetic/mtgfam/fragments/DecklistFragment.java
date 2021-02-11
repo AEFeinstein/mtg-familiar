@@ -27,25 +27,47 @@ import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.*;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
+import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
+import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-import org.apache.commons.collections4.comparators.ComparatorChain;
 
-import java.util.*;
+import org.apache.commons.collections4.comparators.ComparatorChain;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This fragment shows a deck, and allows you to add to and modify it.
@@ -537,69 +559,54 @@ public class DecklistFragment extends FamiliarListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         /* handle item selection */
-        switch (item.getItemId()) {
-            case R.id.deck_menu_new: {
-                showDialog(DecklistDialogFragment.DIALOG_NEW_DECK, null, false);
-                return true;
+        if (item.getItemId() == R.id.deck_menu_new) {
+            showDialog(DecklistDialogFragment.DIALOG_NEW_DECK, null, false);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_save_as) {
+            showDialog(DecklistDialogFragment.DIALOG_SAVE_DECK_AS, null, false);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_load) {
+            showDialog(DecklistDialogFragment.DIALOG_LOAD_DECK, null, false);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_delete) {
+            showDialog(DecklistDialogFragment.DIALOG_DELETE_DECK, null, false);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_clear) {
+            showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_share) {
+            /* Share plaintext decklist */
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.decklist_share_title);
+            synchronized (mCompressedDecklist) {
+                sendIntent.putExtra(Intent.EXTRA_TEXT, DecklistHelpers
+                        .getSharableDecklist(mCompressedDecklist, getActivity()));
             }
-            case R.id.deck_menu_save_as: {
-                showDialog(DecklistDialogFragment.DIALOG_SAVE_DECK_AS, null, false);
-                return true;
+            sendIntent.setType("text/plain");
+            try {
+                startActivity(Intent.createChooser(sendIntent,
+                        getString(R.string.decklist_share)));
+            } catch (ActivityNotFoundException anfe) {
+                SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
+                        SnackbarWrapper.LENGTH_LONG);
             }
-            case R.id.deck_menu_load: {
-                showDialog(DecklistDialogFragment.DIALOG_LOAD_DECK, null, false);
-                return true;
-            }
-            case R.id.deck_menu_import: {
-                startNewFragment(new ImportFragment(), null);
-                return true;
-            }
-            case R.id.deck_menu_delete: {
-                showDialog(DecklistDialogFragment.DIALOG_DELETE_DECK, null, false);
-                return true;
-            }
-            case R.id.deck_menu_clear: {
-                showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
-                return true;
-            }
-            case R.id.deck_menu_share: {
-                /* Share plaintext decklist */
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.decklist_share_title);
-                synchronized (mCompressedDecklist) {
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, DecklistHelpers
-                            .getSharableDecklist(mCompressedDecklist, getActivity()));
-                }
-                sendIntent.setType("text/plain");
-                try {
-                    startActivity(Intent.createChooser(sendIntent,
-                            getString(R.string.decklist_share)));
-                } catch (ActivityNotFoundException anfe) {
-                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
-                            SnackbarWrapper.LENGTH_LONG);
-                }
-                return true;
-            }
-            case R.id.deck_menu_legality: {
-                getFamiliarActivity().setLoading();
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_legality) {
+            getFamiliarActivity().setLoading();
 
-                if (null != mLegalityCheckerTask) {
-                    mLegalityCheckerTask.cancel(true);
-                }
-                mLegalityCheckerTask = new LegalityCheckerTask();
-                mLegalityCheckerTask.execute(this);
-                return true;
+            if (null != mLegalityCheckerTask) {
+                mLegalityCheckerTask.cancel(true);
             }
-            case R.id.deck_menu_settings: {
-                showDialog(DecklistDialogFragment.DIALOG_PRICE_SETTING, null, false);
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
+            mLegalityCheckerTask = new LegalityCheckerTask();
+            mLegalityCheckerTask.execute(this);
+            return true;
+        } else if (item.getItemId() == R.id.deck_menu_settings) {
+            showDialog(DecklistDialogFragment.DIALOG_PRICE_SETTING, null, false);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-
     }
 
     /**
@@ -736,7 +743,7 @@ public class DecklistFragment extends FamiliarListFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.decklist_menu, menu);

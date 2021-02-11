@@ -202,7 +202,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         return adb.build();
     }
 
-    private class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {
+    private static class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {
 
         /**
          * Constructor. It sets the item list
@@ -268,7 +268,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         /**
          * This is a subclass for each view
          */
-        class sortItemViewHolder extends DragItemAdapter.ViewHolder {
+        static class sortItemViewHolder extends DragItemAdapter.ViewHolder {
 
             final CheckBox mCheckbox;
             final TextView mText;

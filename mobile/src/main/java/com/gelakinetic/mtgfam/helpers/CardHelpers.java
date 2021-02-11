@@ -155,7 +155,7 @@ public class CardHelpers {
                 String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
                 char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
 
-                if (targetFoilCardNumberOfs.keySet().contains(setCode) && !foilSets.contains(setCode)) {
+                if (targetFoilCardNumberOfs.containsKey(setCode) && !foilSets.contains(setCode)) {
                     // The card is foil, but the set isn't. This happens for foil-only sets like Masterpieces
                     // Add a non-foil row
                     View wishlistRow = createDialogRow(
@@ -285,16 +285,13 @@ public class CardHelpers {
                 /* Write the wishlist */
                 WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
                 /* notify the fragment of a change in the wishlist */
-                fragment.onWishlistChanged(mCardName); //
             } else {
                 DecklistHelpers.WriteDecklist(
                         activity,
                         list,
-                        deckName + DecklistFragment.DECK_EXTENSION
-                );
-                fragment.onWishlistChanged(mCardName);
-
+                        deckName + DecklistFragment.DECK_EXTENSION);
             }
+            fragment.onWishlistChanged(mCardName);
         };
 
         /* If the button should be shown, show it and attach a listener */

@@ -47,7 +47,7 @@ public class MarketPriceInfo {
         }
     }
 
-    class Price {
+    static class Price {
         final double low;
         final double mid;
         final double high;
@@ -157,7 +157,7 @@ public class MarketPriceInfo {
                 "&utm_source=" + affiliateCode;
     }
 
-    public class PriceAndFoil {
+    public static class PriceAndFoil {
         public final boolean isFoil;
         public final double price;
 

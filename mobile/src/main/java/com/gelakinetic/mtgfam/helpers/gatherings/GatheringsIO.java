@@ -223,11 +223,7 @@ public class GatheringsIO {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(_gatheringFile);
-        } catch (ParserConfigurationException pce) {
-            return new Gathering(playerList, 0);
-        } catch (SAXException se) {
-            return new Gathering(playerList, 0);
-        } catch (IOException ioe) {
+        } catch (ParserConfigurationException | IOException | SAXException pce) {
             return new Gathering(playerList, 0);
         }
 
@@ -299,11 +295,7 @@ public class GatheringsIO {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(_gatheringFile);
-        } catch (ParserConfigurationException pce) {
-            return null;
-        } catch (SAXException se) {
-            return null;
-        } catch (IOException ioe) {
+        } catch (ParserConfigurationException | IOException | SAXException pce) {
             return null;
         }
 

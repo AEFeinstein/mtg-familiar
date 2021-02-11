@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * This class contains all information of a patch.
  * It is mainly used to export to/import from a json file.:
  */
+@SuppressWarnings("CanBeFinal")
 public class Patch {
 
     // The patch's expansion

@@ -120,7 +120,6 @@
         app:srcCompat="@drawable/ic_drawer_mojhosto_dark" />
 
     <ImageButton
-        android:id="@+id/widget_profile"
         style="?android:attr/buttonBarButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

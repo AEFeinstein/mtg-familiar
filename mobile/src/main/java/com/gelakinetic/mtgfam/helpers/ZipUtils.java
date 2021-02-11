@@ -65,8 +65,7 @@ public class ZipUtils {
         String sharedPrefsDir = activity.getFilesDir().getPath();
         sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
 
-        File sdCard = activity.getFilesDir();
-        File zipOut = new File(sdCard, BACKUP_FILE_NAME);
+        File zipOut = new File(activity.getApplicationContext().getExternalFilesDir(null), BACKUP_FILE_NAME);
         if (zipOut.exists()) {
             if (!zipOut.delete()) {
                 return;
@@ -105,7 +104,7 @@ public class ZipUtils {
         }
 
         /* Try unzipping the file */
-        try (ZipFile zipFile = new ZipFile(new File(activity.getFilesDir(), BACKUP_FILE_NAME))) {
+        try (ZipFile zipFile = new ZipFile(new File(activity.getApplicationContext().getExternalFilesDir(null), BACKUP_FILE_NAME))) {
             unZipIt(zipFile, activity);
             SnackbarWrapper.makeAndShowText(activity, R.string.main_import_success, SnackbarWrapper.LENGTH_SHORT);
         } catch (IOException e) {

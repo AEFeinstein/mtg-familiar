@@ -89,6 +89,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -167,6 +168,19 @@ public class CardViewFragment extends FamiliarFragment {
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
     private boolean mIsOnlineOnly = false;
+    private final View.OnClickListener showEntireSet = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            SearchCriteria setSearch = new SearchCriteria();
+            assert mSetTextView.getText() != null;
+            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
+            Bundle arguments = new Bundle();
+            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
+            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, arguments);
+        }
+    };
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -254,16 +268,8 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mArtistTextView);
         registerForContextMenu(mNumberTextView);
 
-        mSetTextView.setOnClickListener(v -> {
-            SearchCriteria setSearch = new SearchCriteria();
-            assert mSetTextView.getText() != null;
-            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
-            Bundle arguments = new Bundle();
-            arguments.putBoolean(SearchViewFragment.CRITERIA_FLAG, true);
-            PreferenceAdapter.setSearchCriteria(getContext(), setSearch);
-            ResultListFragment rlFrag = new ResultListFragment();
-            startNewFragment(rlFrag, arguments);
-        });
+        mSetTextView.setOnClickListener(showEntireSet);
+        mSetImageView.setOnClickListener(showEntireSet);
 
         mCardImageView.setOnLongClickListener(view -> {
             saveImageWithGlide(MAIN_PAGE);
@@ -702,7 +708,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
     }
 
-    private class MediaStoreInfo {
+    private static class MediaStoreInfo {
         private final String filePath;
         private final long mediaStoreId;
 
@@ -790,13 +796,15 @@ public class CardViewFragment extends FamiliarFragment {
 
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
-                .load(mCard.getImageUrlString(attempt, cardLanguage, getContext()))
+                .load(mCard.getImageUrlString(attempt, cardLanguage))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         // Peek at the next URL
-                        if (null == mCard.getImageUrlString(attempt + 1, cardLanguage, getContext())) {
+                        String thisUrl = mCard.getImageUrlString(attempt, cardLanguage);
+                        String nextUrl = mCard.getImageUrlString(attempt + 1, cardLanguage);
+                        if (thisUrl.equals(nextUrl)) {
                             // All lookups failed
                             if (onlyCheckCache) {
                                 // It's only checking the cache. This comes first
@@ -926,7 +934,7 @@ public class CardViewFragment extends FamiliarFragment {
      *                 This information will vary depending on the class of v.
      */
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NotNull ContextMenu menu, @NotNull View v, ContextMenuInfo menuInfo) {
 
         super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -948,46 +956,40 @@ public class CardViewFragment extends FamiliarFragment {
      * consume it here.
      */
     @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
+    public boolean onContextItemSelected(android.view.@NotNull MenuItem item) {
         if (getUserVisibleHint()) {
             String copyText = null;
-            switch (item.getItemId()) {
-                case R.id.copy: {
-                    copyText = mCopyString;
-                    break;
+            if (item.getItemId() == R.id.copy) {
+                copyText = mCopyString;
+            } else if (item.getItemId() == R.id.copyall) {
+                if (mNameTextView.getText() != null &&
+                        mCostTextView.getText() != null &&
+                        mTypeTextView.getText() != null &&
+                        mSetTextView.getText() != null &&
+                        mAbilityTextView.getText() != null &&
+                        mFlavorTextView.getText() != null &&
+                        mPowTouTextView.getText() != null &&
+                        mArtistTextView.getText() != null &&
+                        mNumberTextView.getText() != null) {
+                    // Hacky, but it works
+                    String costText =
+                            convertHtmlToPlainText(Html.toHtml(
+                                    new SpannableString(mCostTextView.getText())));
+                    String abilityText =
+                            convertHtmlToPlainText(Html.toHtml(
+                                    new SpannableString(mAbilityTextView.getText())));
+                    copyText = mNameTextView.getText().toString() + '\n' +
+                            costText + '\n' +
+                            mTypeTextView.getText().toString() + '\n' +
+                            mSetTextView.getText().toString() + '\n' +
+                            abilityText + '\n' +
+                            mFlavorTextView.getText().toString() + '\n' +
+                            mPowTouTextView.getText().toString() + '\n' +
+                            mArtistTextView.getText().toString() + '\n' +
+                            mNumberTextView.getText().toString();
                 }
-                case R.id.copyall: {
-                    if (mNameTextView.getText() != null &&
-                            mCostTextView.getText() != null &&
-                            mTypeTextView.getText() != null &&
-                            mSetTextView.getText() != null &&
-                            mAbilityTextView.getText() != null &&
-                            mFlavorTextView.getText() != null &&
-                            mPowTouTextView.getText() != null &&
-                            mArtistTextView.getText() != null &&
-                            mNumberTextView.getText() != null) {
-                        // Hacky, but it works
-                        String costText =
-                                convertHtmlToPlainText(Html.toHtml(
-                                        new SpannableString(mCostTextView.getText())));
-                        String abilityText =
-                                convertHtmlToPlainText(Html.toHtml(
-                                        new SpannableString(mAbilityTextView.getText())));
-                        copyText = mNameTextView.getText().toString() + '\n' +
-                                costText + '\n' +
-                                mTypeTextView.getText().toString() + '\n' +
-                                mSetTextView.getText().toString() + '\n' +
-                                abilityText + '\n' +
-                                mFlavorTextView.getText().toString() + '\n' +
-                                mPowTouTextView.getText().toString() + '\n' +
-                                mArtistTextView.getText().toString() + '\n' +
-                                mNumberTextView.getText().toString();
-                    }
-                    break;
-                }
-                default: {
-                    return super.onContextItemSelected(item);
-                }
+            } else {
+                return super.onContextItemSelected(item);
             }
 
             if (copyText != null) {
@@ -1027,100 +1029,89 @@ public class CardViewFragment extends FamiliarFragment {
      * @return true if acted upon, false if otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (null == mCard || mCard.getName() == null) {
             /*disable menu buttons if the card isn't initialized */
             return false;
         }
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.image: {
-                loadImageWithGlide(null, true);
-                return true;
-            }
-            case R.id.price: {
-                try {
-                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
-                            marketPriceInfo -> {
-                                if (CardViewFragment.this.isAdded()) {
-                                    if (marketPriceInfo != null) {
-                                        mPriceInfo = marketPriceInfo;
-                                    } else {
-                                        mPriceInfo = null;
-                                        mErrorMessage = getString(R.string.card_view_price_not_found);
-                                    }
-                                }
-                            },
-                            throwable -> {
-                                if (CardViewFragment.this.isAdded()) {
-                                    mPriceInfo = null;
-                                    mErrorMessage = throwable.getMessage();
-                                }
-                            },
-                            () -> {
-                                if (mPriceInfo == null) {
-                                    // This was a failure
-                                    CardViewFragment.this.removeDialog(getFragmentManager());
-                                    if (null != mErrorMessage) {
-                                        SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
-                                    }
+        else if (item.getItemId() == R.id.image) {
+            loadImageWithGlide(null, true);
+            return true;
+        } else if (item.getItemId() == R.id.price) {
+            try {
+                mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
+                        marketPriceInfo -> {
+                            if (CardViewFragment.this.isAdded()) {
+                                if (marketPriceInfo != null) {
+                                    mPriceInfo = marketPriceInfo;
                                 } else {
-                                    // This was a success
-                                    showDialog(CardViewDialogFragment.GET_PRICE);
+                                    mPriceInfo = null;
+                                    mErrorMessage = getString(R.string.card_view_price_not_found);
                                 }
-                            });
+                            }
+                        },
+                        throwable -> {
+                            if (CardViewFragment.this.isAdded()) {
+                                mPriceInfo = null;
+                                mErrorMessage = throwable.getMessage();
+                            }
+                        },
+                        () -> {
+                            if (mPriceInfo == null) {
+                                // This was a failure
+                                CardViewFragment.this.removeDialog(getFragmentManager());
+                                if (null != mErrorMessage) {
+                                    SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
+                                }
+                            } else {
+                                // This was a success
+                                showDialog(CardViewDialogFragment.GET_PRICE);
+                            }
+                        });
 
-                } catch (java.lang.InstantiationException e) {
-                    mErrorMessage = getString(R.string.card_view_price_not_found);
-                }
+            } catch (java.lang.InstantiationException e) {
+                mErrorMessage = getString(R.string.card_view_price_not_found);
+            }
 
+            return true;
+        } else if (item.getItemId() == R.id.changeset) {
+            showDialog(CardViewDialogFragment.CHANGE_SET);
+            return true;
+        } else if (item.getItemId() == R.id.legality) {
+            mActivity.setLoading();
+            if (mAsyncTask != null) {
+                mAsyncTask.cancel(true);
+            }
+            mAsyncTask = new FetchLegalityTask();
+            ((FetchLegalityTask) mAsyncTask).execute(this);
+            return true;
+        } else if (item.getItemId() == R.id.cardrulings) {
+            if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
                 return true;
             }
-            case R.id.changeset: {
-                showDialog(CardViewDialogFragment.CHANGE_SET);
-                return true;
-            }
-            case R.id.legality: {
-                mActivity.setLoading();
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new FetchLegalityTask();
-                ((FetchLegalityTask) mAsyncTask).execute(this);
-                return true;
-            }
-            case R.id.cardrulings: {
-                if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
-                    return true;
-                }
 
-                mActivity.setLoading();
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new FetchRulingsTask();
-                ((FetchRulingsTask) mAsyncTask).execute(this);
-                return true;
+            mActivity.setLoading();
+            if (mAsyncTask != null) {
+                mAsyncTask.cancel(true);
             }
-            case R.id.addtowishlist: {
-                showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
-                return true;
-            }
-            case R.id.addtodecklist: {
-                showDialog(CardViewDialogFragment.ADD_TO_DECKLIST);
-                return true;
-            }
-            case R.id.sharecard: {
-                showDialog(CardViewDialogFragment.SHARE_CARD);
-                return true;
-            }
-            case R.id.translatecard: {
-                showDialog(CardViewDialogFragment.TRANSLATE_CARD);
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
+            mAsyncTask = new FetchRulingsTask();
+            ((FetchRulingsTask) mAsyncTask).execute(this);
+            return true;
+        } else if (item.getItemId() == R.id.addtowishlist) {
+            showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
+            return true;
+        } else if (item.getItemId() == R.id.addtodecklist) {
+            showDialog(CardViewDialogFragment.ADD_TO_DECKLIST);
+            return true;
+        } else if (item.getItemId() == R.id.sharecard) {
+            showDialog(CardViewDialogFragment.SHARE_CARD);
+            return true;
+        } else if (item.getItemId() == R.id.translatecard) {
+            showDialog(CardViewDialogFragment.TRANSLATE_CARD);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -1131,7 +1122,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.card_menu, menu);
     }
@@ -1146,26 +1137,18 @@ public class CardViewFragment extends FamiliarFragment {
      * @see #onCreateOptionsMenu
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NotNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         try {
             /* If the image has been loaded to the main page, remove the menu option for image */
-            if (PreferenceAdapter.getPicFirst(getContext())) {
-                menu.findItem(R.id.image).setVisible(false);
-            } else {
-                menu.findItem(R.id.image).setVisible(true);
-            }
+            menu.findItem(R.id.image).setVisible(!PreferenceAdapter.getPicFirst(getContext()));
         } catch (NullPointerException e) {
             // eh, couldn't find the menu item. Image _should_ be there
         }
 
         /* If this is an online-only card, hide the price lookup button */
-        if (mIsOnlineOnly) {
-            menu.findItem(R.id.price).setVisible(false);
-        } else {
-            menu.findItem(R.id.price).setVisible(true);
-        }
+        menu.findItem(R.id.price).setVisible(!mIsOnlineOnly);
         /* This code removes the "change set" button if there is only one set.
          * Turns out some users use it to view the full set name when there is only one set/
          * I'm leaving it here, but commented, for posterity */
@@ -1223,11 +1206,14 @@ public class CardViewFragment extends FamiliarFragment {
 
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
-                    frag.mFormats[i] =
-                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                    frag.mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
                     switch (CardDbAdapter.checkLegality(frag.mCard.getName(), frag.mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
-                            frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
+                            if ("Reserved List".equals(frag.mFormats[i])) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_not_on_reserved_list);
+                            } else {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
+                            }
                             break;
                         case CardDbAdapter.RESTRICTED:
                             /* For backwards compatibility, we list cards that are legal in
@@ -1242,7 +1228,11 @@ public class CardViewFragment extends FamiliarFragment {
                             }
                             break;
                         case CardDbAdapter.BANNED:
-                            frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
+                            if ("Reserved List".equals(frag.mFormats[i])) {
+                                frag.mLegalities[i] = frag.getString(R.string.card_on_reserved_list);
+                            } else {
+                                frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
+                            }
                             break;
                         default:
                             frag.mLegalities[i] = frag.getString(R.string.error);
@@ -1304,7 +1294,7 @@ public class CardViewFragment extends FamiliarFragment {
             frag.mRulingsArrayList = new ArrayList<>();
             try {
                 // Gatherer doesn't use HTTPS as of 1/6/2019
-                url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
+                url = new URL("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
                 is = FamiliarActivity.getHttpInputStream(url, null, frag.getContext());
                 if (is == null) {
                     throw new IOException("null stream");
@@ -1378,19 +1368,16 @@ public class CardViewFragment extends FamiliarFragment {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    /* Permission granted, run the task again */
-                    saveImageWithGlide(mSaveImageWhereTo);
-                } else {
-                    /* Permission denied */
-                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_save_image,
-                            SnackbarWrapper.LENGTH_LONG);
-                }
+        if (requestCode == FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                /* Permission granted, run the task again */
+                saveImageWithGlide(mSaveImageWhereTo);
+            } else {
+                /* Permission denied */
+                SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_save_image,
+                        SnackbarWrapper.LENGTH_LONG);
             }
         }
     }

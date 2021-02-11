@@ -31,31 +31,31 @@ public class ExpansionImageHelper {
     }
 
     public static class ExpansionImageData {
-        private String mExpansionName;
-        private String mExpansionCode;
-        private char mRarity;
-        private long mMultiverseId;
+        private final String mExpansionName;
+        private final String mExpansionCode;
+        private final char mRarity;
+        private final long mDbId;
 
-        public ExpansionImageData(String name, String code, char rarity, long multiverseID) {
+        public ExpansionImageData(String name, String code, char rarity, long dbID) {
             mExpansionName = name;
             mExpansionCode = code;
             mRarity = rarity;
-            mMultiverseId = multiverseID;
+            mDbId = dbID;
         }
 
         public String getSetCode() {
             return mExpansionCode;
         }
 
-        public long getMultiverseId() {
-            return mMultiverseId;
+        public long getDbId() {
+            return mDbId;
         }
     }
 
     private class ChangeSetListViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView setName;
-        private ImageView setImage;
+        private final TextView setName;
+        private final ImageView setImage;
         private ExpansionImageData data;
 
         ChangeSetListViewHolder(@NonNull ViewGroup view, ChangeSetListAdapter changeSetListAdapter) {
@@ -84,7 +84,7 @@ public class ExpansionImageHelper {
         private final Context mContext;
         private final ExpansionImageData[] mExpansions;
         private Dialog dialog;
-        private ExpansionImageSize mImageSize;
+        private final ExpansionImageSize mImageSize;
 
         protected ChangeSetListAdapter(Context context, LinkedHashSet<ExpansionImageData> expansions, ExpansionImageSize size) {
             mContext = context;
@@ -147,7 +147,7 @@ public class ExpansionImageHelper {
 
             // Then load the image
             Glide.with(context)
-                    .load("https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/symbols/" + set + "_" + rarity + ".png")
+                    .load("https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/symbols/" + set + "_" + rarity + ".png")
                     .dontAnimate()
                     .fitCenter()
                     .override(width, height)

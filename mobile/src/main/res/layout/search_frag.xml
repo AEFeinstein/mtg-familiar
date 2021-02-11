@@ -121,7 +121,8 @@
                 android:hint="@string/search_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:importantForAutofill="no" />
 
             <!-- Spinner below by Reuben Kriegel -->
 
@@ -587,6 +588,17 @@
                 android:drawSelectorOnTop="false"
                 android:entries="@array/set_spinner" />
 
+            <com.gelakinetic.mtgfam.helpers.view.CompletionView
+                android:id="@+id/settypesearch"
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/search_settype"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -612,7 +624,8 @@
                 android:hint="@string/search_flavor_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:importantForAutofill="no" />
 
             <AutoCompleteTextView
                 android:id="@+id/artistsearch"
@@ -634,7 +647,8 @@
                 android:hint="@string/search_collectors_number"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:importantForAutofill="no" />
         </LinearLayout>
     </ScrollView>
 

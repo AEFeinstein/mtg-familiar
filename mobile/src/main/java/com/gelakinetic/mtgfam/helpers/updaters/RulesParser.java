@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +37,7 @@ import java.util.Date;
 class RulesParser {
 
     /* URL and delimiting tokens */
-    private static final String SOURCE = "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/MagicCompRules.txt";
+    private static final String SOURCE = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/rules/MagicCompRules.txt";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String RULES_TOKEN = "RULES_VERYLONGSTRINGOFLETTERSUNLIKELYTOBEFOUNDINTHEACTUALRULES";
     @SuppressWarnings("SpellCheckingInspection")
@@ -83,7 +84,7 @@ class RulesParser {
             if (this.mInputStream == null) {
                 throw new IOException("No Stream");
             }
-            this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream));
+            this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream, StandardCharsets.UTF_8));
 
             /*First line will be the date formatted as YYYY-MM-DD */
             String line = this.mBufferedReader.readLine();
@@ -287,7 +288,7 @@ class RulesParser {
     /**
      * Nested class which encapsulates all necessary information about a rule
      */
-    class RuleItem {
+    static class RuleItem {
         public final int category;
         public final int subcategory;
         public final String entry;
@@ -324,7 +325,7 @@ class RulesParser {
     /**
      * Nested class which encapsulates all necessary information about a glossary entry
      */
-    class GlossaryItem {
+    static class GlossaryItem {
         public final String term;
         public String definition;
 

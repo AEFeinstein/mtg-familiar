@@ -86,8 +86,8 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
             String[] returnTypes = {
                     CardDbAdapter.KEY_NAME,
                     CardDbAdapter.KEY_SET,
-                    CardDbAdapter.KEY_MULTIVERSEID,
-                    CardDbAdapter.KEY_SUBTYPE, CardDbAdapter.KEY_SUPERTYPE,
+                    CardDbAdapter.KEY_SUBTYPE,
+                    CardDbAdapter.KEY_SUPERTYPE,
                     CardDbAdapter.KEY_NUMBER};
             String orderByStr = CardDbAdapter.KEY_SET + " ASC, " + CardDbAdapter.KEY_NUMBER + " ASC";
             Cursor allCards = CardDbAdapter.Search(criteria, false, returnTypes, false, orderByStr, database);

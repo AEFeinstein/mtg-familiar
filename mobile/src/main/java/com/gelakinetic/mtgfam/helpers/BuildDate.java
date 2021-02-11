@@ -46,9 +46,7 @@ class BuildDate {
             ZipEntry ze = zf.getEntry("classes.dex");
             long time = ze.getTime();
             return new Date(time);
-        } catch (PackageManager.NameNotFoundException e) {
-            return new GregorianCalendar(1990, 2, 13).getTime();
-        } catch (IOException e) {
+        } catch (PackageManager.NameNotFoundException | IOException e) {
             return new GregorianCalendar(1990, 2, 13).getTime();
         }
     }

@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -44,8 +45,8 @@ import java.util.ArrayList;
  */
 class CardAndSetParser {
     /* Hardcoded URLs */
-    private static final String PATCHES_URL = "https://raw.githubusercontent.com/aefeinstein/GathererScraper/master/patches.json";
-    private static final String LEGALITY_URL = "https://raw.githubusercontent.com/aefeinstein/GathererScraper/master/legality.json";
+    private static final String PATCHES_URL = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/patches-v2/patches.json";
+    private static final String LEGALITY_URL = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/patches-v2/legality.json";
 
     /**
      * Used to store various dates before committing them
@@ -103,7 +104,7 @@ class CardAndSetParser {
             if (stream == null) {
                 throw new IOException("No Stream");
             }
-            InputStreamReader isr = new InputStreamReader(stream);
+            InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
 
             JsonReader reader = new JsonReader(isr);
             Gson gson = CardAndSetParser.getGson();
@@ -135,7 +136,7 @@ class CardAndSetParser {
             if (stream == null) {
                 throw new IOException("No Stream");
             }
-            JsonReader reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
+            JsonReader reader = new JsonReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
             Gson gson = CardAndSetParser.getGson();
 
             legalityData = gson.fromJson(reader, LegalityData.class);

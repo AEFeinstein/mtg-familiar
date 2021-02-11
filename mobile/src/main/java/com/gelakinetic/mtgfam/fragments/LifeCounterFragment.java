@@ -52,6 +52,8 @@ import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.view.ViewUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -313,7 +315,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.life_counter_menu, menu);
     }
@@ -324,15 +326,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param menu The menu to show or hide the "announce life totals" button in.
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NotNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem menuItem = menu.findItem(R.id.announce_life);
         assert menuItem != null;
-        if (!mTtsInit || getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
-            menuItem.setVisible(false);
-        } else {
-            menuItem.setVisible(true);
-        }
+        menuItem.setVisible(mTtsInit && getFamiliarActivity() != null && getFamiliarActivity().mIsMenuVisible);
     }
 
     /**
@@ -344,36 +342,29 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.add_player:
-                /* Add the player to the ArrayList, set the commander info, and draw the new view */
-                addPlayer();
-                setCommanderInfo(-1);
-                addPlayerView(mPlayers.get(mPlayers.size() - 1));
-                return true;
-            case R.id.remove_player:
-                /* Show a dialog of players to remove */
-                showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
-                return true;
-            case R.id.announce_life:
-                /* Vocalize the current life totals */
-                announceLifeTotals();
-                return true;
-            case R.id.edit_gatherings:
-                /* Start a GatheringsFragment to edit gatherings */
-                GatheringsFragment rlFrag = new GatheringsFragment();
-                startNewFragment(rlFrag, null);
-                return true;
-            case R.id.set_gathering:
-                /* Show a dialog of gatherings a user can set */
-                showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
-                return true;
-            case R.id.display_mode:
-                /* Show a dialog to change the display mode (normal, compact, commander) */
-                showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.add_player) {                /* Add the player to the ArrayList, set the commander info, and draw the new view */
+            addPlayer();
+            setCommanderInfo(-1);
+            addPlayerView(mPlayers.get(mPlayers.size() - 1));
+            return true;
+        } else if (item.getItemId() == R.id.remove_player) {                /* Show a dialog of players to remove */
+            showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
+            return true;
+        } else if (item.getItemId() == R.id.announce_life) {                /* Vocalize the current life totals */
+            announceLifeTotals();
+            return true;
+        } else if (item.getItemId() == R.id.edit_gatherings) {                /* Start a GatheringsFragment to edit gatherings */
+            GatheringsFragment rlFrag = new GatheringsFragment();
+            startNewFragment(rlFrag, null);
+            return true;
+        } else if (item.getItemId() == R.id.set_gathering) {                /* Show a dialog of gatherings a user can set */
+            showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.display_mode) {                /* Show a dialog to change the display mode (normal, compact, commander) */
+            showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

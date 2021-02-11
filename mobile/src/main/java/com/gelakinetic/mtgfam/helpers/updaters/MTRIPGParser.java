@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -48,15 +49,15 @@ class MTRIPGParser {
     public static final int MODE_DIPG = 3;
     public static final int MODE_DMTR = 4;
     private static final String MTR_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/MagicTournamentRules-light.html";
+            "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/rules/mtr.html";
     private static final String IPG_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/InfractionProcedureGuide-light.html";
+            "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/rules/ipg.html";
     private static final String JAR_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/JudgingAtRegular-light.html";
+            "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/rules/jar.html";
     private static final String DMTR_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/DigitalTournamentRules-light.html";
+            "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/rules/dmtr.html";
     private static final String DIPG_SOURCE =
-            "https://raw.githubusercontent.com/AEFeinstein/GathererScraper/master/rules/DigitalInfractionProcedureGuide-light.html";
+            "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/rules/dipg.html";
     private static final String MTR_LOCAL_FILE = "MTR.html";
     private static final String IPG_LOCAL_FILE = "IPG.html";
     private static final String JAR_LOCAL_FILE = "JAR.html";
@@ -166,7 +167,7 @@ class MTRIPGParser {
 
     private boolean parseDocument(int mode, InputStream is) throws IOException {
         boolean updated = false;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
         String line = reader.readLine();
         String[] parts = line.split("-");

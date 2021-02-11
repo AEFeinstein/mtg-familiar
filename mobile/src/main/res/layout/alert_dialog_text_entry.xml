@@ -29,7 +29,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:inputType="textCapSentences"
-        android:maxLines="1">
+        android:maxLines="1"
+        android:importantForAutofill="no">
 
         <requestFocus />
 

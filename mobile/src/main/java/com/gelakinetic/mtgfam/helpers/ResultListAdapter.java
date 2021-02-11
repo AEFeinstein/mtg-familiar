@@ -177,7 +177,8 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     textField.setText(csq);
                     break;
                 }
-                case CardDbAdapter.KEY_POWER: {
+                case CardDbAdapter.KEY_POWER:
+                case CardDbAdapter.KEY_TOUGHNESS: {
                     float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     boolean shouldShowSign =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
@@ -185,17 +186,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     if (p != CardDbAdapter.NO_ONE_CARES) {
                         hidePT = false;
                         textField.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign));
-                    }
-                    break;
-                }
-                case CardDbAdapter.KEY_TOUGHNESS: {
-                    float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                    boolean shouldShowSign =
-                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
-                    if (t != CardDbAdapter.NO_ONE_CARES) {
-                        hidePT = false;
-                        textField.setText(CardDbAdapter.getPrintedPTL(t, shouldShowSign));
                     }
                     break;
                 }

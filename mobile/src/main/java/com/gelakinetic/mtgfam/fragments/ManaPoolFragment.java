@@ -36,6 +36,8 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.NumberButtonOnClickListener;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -194,14 +196,13 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.clear_all:
-                for (ManaPoolItem manaPoolItem : mManaPoolItems) {
-                    manaPoolItem.clearCount();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.clear_all) {
+            for (ManaPoolItem manaPoolItem : mManaPoolItems) {
+                manaPoolItem.clearCount();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -212,7 +213,7 @@ public class ManaPoolFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.manapool_menu, menu);
     }

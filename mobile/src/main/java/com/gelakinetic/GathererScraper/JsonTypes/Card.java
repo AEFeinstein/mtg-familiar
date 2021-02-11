@@ -31,6 +31,7 @@ import java.util.ArrayList;
  * @author AEFeinstein
  *
  */
+@SuppressWarnings("CanBeFinal")
 public class Card implements Comparable<Card> {
 
     // The card's name
@@ -53,6 +54,9 @@ public class Card implements Comparable<Card> {
 
     // The card's expansion
     protected String mExpansion = "";
+
+    // The card's expansion
+    protected String mScryfallSetCode = "";
 
     // The card's rarity
     protected char mRarity = '\0';
@@ -115,6 +119,10 @@ public class Card implements Comparable<Card> {
         return mExpansion;
     }
 
+    public String getScryfallSetCode() {
+        return mScryfallSetCode;
+    }
+
     public char getRarity() {
         return mRarity;
     }
@@ -160,10 +168,11 @@ public class Card implements Comparable<Card> {
     }
 
     // Private class for encapsulating foreign printing information
+    @SuppressWarnings("CanBeFinal")
     public static class ForeignPrinting implements Comparable<ForeignPrinting> {
-        private final int mMultiverseId;
-        private final String mName;
-        private final String mLanguageCode;
+        private int mMultiverseId;
+        private String mName;
+        private String mLanguageCode;
 
         public ForeignPrinting(ForeignPrinting fp) {
             if (null != fp) {
@@ -185,7 +194,7 @@ public class Card implements Comparable<Card> {
 
         @Override
         public int compareTo(@NonNull ForeignPrinting o) {
-            return Integer.valueOf(this.mMultiverseId).compareTo(o.mMultiverseId);
+            return Integer.compare(this.mMultiverseId, o.mMultiverseId);
         }
 
         @Override
@@ -205,9 +214,7 @@ public class Card implements Comparable<Card> {
 
         @Override
         public int hashCode() {
-            int hash = 23;
-            hash = hash * 31 + super.hashCode();
-            return hash * 31 + this.mMultiverseId;
+            return getLanguageCode().hashCode();
         }
 
         public int getMultiverseId() {
@@ -242,7 +249,7 @@ public class Card implements Comparable<Card> {
             } else if (this_num < other_num) {
                 return -1;
             } else {
-                return Character.valueOf(this.getNumberChar()).compareTo(other.getNumberChar());
+                return Character.compare(this.getNumberChar(), other.getNumberChar());
             }
         }
 

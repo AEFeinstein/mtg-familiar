@@ -65,10 +65,10 @@
     <string name="key_timerSound" translatable="false">timerSound</string>
     <string name="key_tradePrice" translatable="false">tradePrice</string>
     <string name="key_wishlistPrice" translatable="false">wishlistPrice</string>
-    <string name="key_date" translatable="false">date</string>
-    <string name="key_lastUpdate" translatable="false">lastUpdate</string>
-    <string name="key_lastTCGNameUpdate" translatable="false">lastTCGNameUpdate</string>
-    <string name="key_lastFoilInfoUpdate" translatable="false">lastFoilInfoUpdate</string>
+    <string name="key_date" translatable="false" tools:keep="@string/key_date">date</string>
+    <string name="key_lastUpdate" translatable="false" tools:keep="@string/key_lastUpdate">lastUpdate</string>
+    <string name="key_lastTCGNameUpdate" translatable="false" tools:keep="@string/key_lastTCGNameUpdate">lastTCGNameUpdate</string>
+    <string name="key_lastFoilInfoUpdate" translatable="false" tools:keep="@string/key_lastFoilInfoUpdate">lastFoilInfoUpdate</string>
     <string name="key_lifeTimer" translatable="false">lifeTimer</string>
     <string name="key_currentRoundTimer" translatable="false">currentRoundTimer</string>
     <string name="key_bounceDrawer" translatable="false">bounceDrawer</string>
@@ -77,16 +77,16 @@
     <string name="key_dci_number" translatable="false">dciNumber</string>
     <string name="key_imageCacheSize" translatable="false">imageCacheSize</string>
     <string name="key_language" translatable="false">language</string>
-    <string name="key_trade_sort_order" translatable="false">trade_sort_order</string>
-    <string name="key_trade_sort_type" translatable="false">trade_sort_type</string>
-    <string name="key_num_tutor_cards_searches" translatable="false">num_tc_searches</string>
+    <string name="key_trade_sort_order" translatable="false" tools:keep="@string/key_trade_sort_order">trade_sort_order</string>
+    <string name="key_trade_sort_type" translatable="false" tools:keep="@string/key_trade_sort_type">trade_sort_type</string>
+    <string name="key_num_tutor_cards_searches" translatable="false" tools:keep="@string/key_num_tutor_cards_searches">num_tc_searches</string>
     <string name="key_database_version" translatable="false">databaseVersion</string>
     <string name="key_widgetNumButtons" translatable="false">widget_num_buttons_</string>
     <string name="key_searchSortOrder" translatable="false">search_sort_order</string>
     <string name="key_trade_sort_order_2" translatable="false">trade_sort_order_2</string>
     <string name="key_wishlist_sort_order_2" translatable="false">wishlist_sort_order_2</string>
     <string name="key_legality_timestamp" translatable="false">legality_timestamp</string>
-    <string name="key_last_update_timestamp" translatable="false">last_update_timestamp</string>
+    <string name="key_last_update_timestamp" translatable="false" tools:keep="@string/key_last_update_timestamp">last_update_timestamp</string>
     <string name="key_tap_symbol" translatable="false">tapSymbol</string>
     <string name="key_white_symbol" translatable="false">whiteSymbol</string>
     <string name="key_undoTimeout" translatable="false">undo_timeout</string>
@@ -99,5 +99,6 @@
     <string name="key_SearchCriteria" translatable="false">search_criteria</string>
     <string name="key_SearchCriteriaPerm" translatable="false">search_criteria_permanent</string>
     <string name="key_tcgpGroups" translatable="false">tcgp_groups</string>
+    <string name="key_loggingPref" translatable="false">logging_enabled</string>
 
 </resources>

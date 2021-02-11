@@ -33,7 +33,8 @@
         android:inputType="number"
         android:maxLength="2"
         android:selectAllOnFocus="true"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:importantForAutofill="no" />
 
     <AutoCompleteTextView
         android:id="@+id/name_search"

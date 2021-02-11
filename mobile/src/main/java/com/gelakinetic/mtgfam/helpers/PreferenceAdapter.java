@@ -1068,7 +1068,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(key, (new Gson()).toJson(searchCriteria));
+        edit.putString(key, searchCriteria.toJson());
         edit.apply();
     }
 
@@ -1118,5 +1118,23 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
             return true;
         }
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_hideOnlineCards), false);
+    }
+
+    /* 15-minute warning pref */
+    public static synchronized boolean getLoggingPref(@Nullable Context context) {
+        if (null == context) {
+            return false;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_loggingPref), false);
+    }
+
+    public static synchronized void setLoggingPref(@Nullable Context context, boolean loggingPref) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_loggingPref), loggingPref);
+        edit.apply();
     }
 }

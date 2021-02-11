@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -270,7 +271,7 @@ public class DbUpdaterService extends IntentService {
                                     ArrayList<Expansion> setsToAdd = new ArrayList<>();
 
                                     GZIPInputStream gis = new GZIPInputStream(streamToRead);
-                                    JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
+                                    JsonReader reader = new JsonReader(new InputStreamReader(gis, StandardCharsets.UTF_8));
                                     parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
                                     streamToRead.close();
                                     updatedStuff.add(set.mName);

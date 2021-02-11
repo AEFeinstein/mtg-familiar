@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +41,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -50,6 +50,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -217,30 +219,33 @@ public class ResultListFragment extends FamiliarFragment {
         }
 
         /* Sub-optimal, but KitKat is silly */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mListView.setOnScrollListener(new ListView.OnScrollListener() {
+        mListView.setOnScrollListener(new ListView.OnScrollListener() {
 
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                    switch (scrollState) {
-                        case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                            absListView.setFastScrollAlwaysVisible(false);
-                            break;
-                        case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                            absListView.setFastScrollAlwaysVisible(true);
-                            break;
-                        default:
-                            break;
-                    }
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        absListView.setFastScrollAlwaysVisible(false);
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        absListView.setFastScrollAlwaysVisible(true);
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                @Override
-                public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
 
-                }
-            });
+            }
+        });
+
+        if (mCursor == null) {
+            FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "onCreateView");
+        } else {
+            FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
         }
-
         FragmentManager fm = Objects.requireNonNull(getFragmentManager());
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
@@ -328,6 +333,11 @@ public class ResultListFragment extends FamiliarFragment {
 
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
                     PreferenceAdapter.getSearchSortOrder(getContext()), database);
+            if (mCursor == null) {
+                FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
+            } else {
+                FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "doSearch");
+            }
         }
     }
 
@@ -448,7 +458,7 @@ public class ResultListFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.result_list_menu, menu);
     }
@@ -462,20 +472,18 @@ public class ResultListFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.search_menu_random_search:
-                try {
-                    startCardViewFrag(-1);
-                } catch (SQLiteException | FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-                return true;
-            case R.id.search_menu_sort: {
-                showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
-                return true;
+        if (item.getItemId() == R.id.search_menu_random_search) {
+            try {
+                startCardViewFrag(-1);
+            } catch (SQLiteException | FamiliarDbException e) {
+                handleFamiliarDbException(true);
             }
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_sort) {
+            showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
