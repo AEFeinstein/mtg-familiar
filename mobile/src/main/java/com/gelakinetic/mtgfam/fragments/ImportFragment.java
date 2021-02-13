@@ -225,7 +225,12 @@ public class ImportFragment extends FamiliarFragment {
             /* find out which cards are known */
             for (MtgCard card : cardList) {
                 if (card.getMultiverseId() == 0) {
-                    unknownCards.add(card);
+                    try {
+                        MtgCard noSetCard = new MtgCard(getActivity(), card.getName(), null, card.mIsFoil, card.mNumberOf);
+                        importedCards.add(noSetCard);
+                    } catch (java.lang.InstantiationException e) {
+                        unknownCards.add(card);
+                    }
                 } else {
                     importedCards.add(card);
                 }
