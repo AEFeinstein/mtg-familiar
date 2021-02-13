@@ -34,6 +34,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -173,7 +174,7 @@ public class ImportFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.decklist_menu, menu);
@@ -184,8 +185,8 @@ public class ImportFragment extends FamiliarFragment {
 
         private final String mLines;
         private final String mName;
-        private ArrayList<MtgCard> unknownCards = new ArrayList<>();
-        private ArrayList<MtgCard> importedCards = new ArrayList<>();
+        private final ArrayList<MtgCard> unknownCards = new ArrayList<>();
+        private final ArrayList<MtgCard> importedCards = new ArrayList<>();
 
         ImportTask(String name, String lines) {
             mName = name;

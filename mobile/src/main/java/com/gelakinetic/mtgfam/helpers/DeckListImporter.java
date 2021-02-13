@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +10,8 @@ import java.util.regex.Pattern;
 import static java.lang.Integer.parseInt;
 
 public class DeckListImporter {
-    private List<MtgCard> mParsedCards = new ArrayList<>();
-    private List<String> mErrorLines = new ArrayList<>();
+    private final List<MtgCard> mParsedCards = new ArrayList<>();
+    private final List<String> mErrorLines = new ArrayList<>();
     private boolean mReadingSideBoard = false;
     private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])? *([^(\\[\\n\\r]+)(?:[(\\[](\\w{2,6})[)\\]])? *(\\d+)?$", Pattern.CASE_INSENSITIVE);
     private static final Pattern mNamePattern = Pattern.compile("^//\\s*NAME\\s?:\\s*(.*)\\s*$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
