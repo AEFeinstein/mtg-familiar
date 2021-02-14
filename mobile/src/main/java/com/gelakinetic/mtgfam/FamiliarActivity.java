@@ -109,8 +109,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetcher;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -1199,7 +1197,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param newConfig The new device configuration.
      */
     @Override
-    public void onConfigurationChanged(@NotNull Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         /* Pass any configuration change to the drawer toggles */
         mDrawerToggle.onConfigurationChanged(newConfig);
@@ -1269,7 +1267,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * by the next receiver, return false.
      */
     @Override
-    public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             Toolbar toolbar = findViewById(R.id.toolbar);
             if (toolbar != null) {
@@ -1306,7 +1304,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @return Return? How about an exception!
      */
     @Override
-    @NotNull
+    @NonNull
     public android.app.FragmentManager getFragmentManager() {
         FamiliarActivity.DebugLog(Log.WARN, "Suggestion", "Use .getSupportFragmentManager()");
         return super.getFragmentManager();
@@ -1431,7 +1429,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @return True if the click was acted upon, false otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
                 mDrawerLayout.closeDrawer(mDrawerList);
@@ -1484,7 +1482,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param savedInstanceState a Bundle which contains the saved state
      */
     @Override
-    protected void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey(CURRENT_FRAG)) {
             mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);

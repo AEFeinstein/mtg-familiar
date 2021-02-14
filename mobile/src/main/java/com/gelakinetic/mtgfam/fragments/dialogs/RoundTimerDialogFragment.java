@@ -25,11 +25,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 
+import androidx.annotation.NonNull;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -40,7 +40,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
 
     private static final int DIALOG_SET_WARNINGS = 1;
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {

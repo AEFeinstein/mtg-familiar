@@ -38,8 +38,6 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
     public static final String KEY_PRICE = "key_price";
     public static final String KEY_ORDER = "key_order";
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {

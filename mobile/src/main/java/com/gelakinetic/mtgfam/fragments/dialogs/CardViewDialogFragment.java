@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -53,8 +54,6 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
         return null;
     }
 
-    @NotNull
+    @NonNull
     @Override
     @SuppressWarnings("SpellCheckingInspection")
     public Dialog onCreateDialog(Bundle savedInstanceState) {

@@ -26,14 +26,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.HtmlDocFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -58,7 +57,7 @@ public class HtmlDialogFragment extends FamiliarDialogFragment {
         return null;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {

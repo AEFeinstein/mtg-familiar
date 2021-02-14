@@ -23,13 +23,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -54,7 +53,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     }
 
     @Override
-    public void onDismiss(@NotNull DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         try {
             if (null != getParentSearchViewFragment()) {
@@ -65,7 +64,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {

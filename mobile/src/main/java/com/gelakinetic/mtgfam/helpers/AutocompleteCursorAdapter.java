@@ -40,8 +40,6 @@ import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardSearchProvider;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -157,7 +155,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
      * @return a CharSequence representing the value
      */
     @Override
-    public CharSequence convertToString(@NotNull Cursor cursor) {
+    public CharSequence convertToString(@NonNull Cursor cursor) {
         try {
             return cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
         } catch (Exception e) {

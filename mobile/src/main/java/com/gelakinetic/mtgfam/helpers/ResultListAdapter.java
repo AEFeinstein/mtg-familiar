@@ -30,12 +30,11 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
@@ -96,7 +95,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
      * @param cursor  The cursor from which to get the data. The cursor is already moved to the correct position.
      */
     @Override
-    public void bindView(@NotNull View view, Context context, @NotNull Cursor cursor) {
+    public void bindView(@NonNull View view, Context context, @NonNull Cursor cursor) {
 
         boolean hideCost = true;
         boolean hideType = true;

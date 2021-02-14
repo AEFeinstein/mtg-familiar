@@ -89,7 +89,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -935,7 +934,7 @@ public class CardViewFragment extends FamiliarFragment {
      *                 This information will vary depending on the class of v.
      */
     @Override
-    public void onCreateContextMenu(@NotNull ContextMenu menu, @NotNull View v, ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, ContextMenuInfo menuInfo) {
 
         super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -957,7 +956,7 @@ public class CardViewFragment extends FamiliarFragment {
      * consume it here.
      */
     @Override
-    public boolean onContextItemSelected(android.view.@NotNull MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         if (getUserVisibleHint()) {
             String copyText = null;
             if (item.getItemId() == R.id.copy) {
@@ -1030,7 +1029,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @return true if acted upon, false if otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (null == mCard || mCard.getName() == null) {
             /*disable menu buttons if the card isn't initialized */
             return false;
@@ -1123,7 +1122,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.card_menu, menu);
     }
@@ -1138,7 +1137,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @see #onCreateOptionsMenu
      */
     @Override
-    public void onPrepareOptionsMenu(@NotNull Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         try {
