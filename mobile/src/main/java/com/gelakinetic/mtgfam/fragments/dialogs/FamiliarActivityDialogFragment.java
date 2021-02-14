@@ -34,14 +34,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -65,7 +65,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
      * @return The new dialog instance to be displayed. All dialogs are created with the AlertDialog builder, so
      * onCreateView() does not need to be implemented
      */
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
@@ -205,7 +205,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
      * @param dialog A DialogInterface for the dismissed dialog
      */
     @Override
-    public void onDismiss(@NotNull DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         try {
             final FamiliarActivity activity = getFamiliarActivity();

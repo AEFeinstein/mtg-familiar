@@ -47,8 +47,6 @@ import com.gelakinetic.mtgfam.helpers.NotificationHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -266,7 +264,7 @@ public class RoundTimerFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.timer_menu, menu);
     }

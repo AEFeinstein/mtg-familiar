@@ -37,3 +37,5 @@ local.properties
 *.ipr
 *~
 *.swp
+
+mobile/src/main/assets/tcgp_keys.json

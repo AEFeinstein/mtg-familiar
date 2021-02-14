@@ -27,11 +27,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -46,7 +46,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_STONEHEWER = 3;
     public static final int DIALOG_JHOIRA = 4;
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {

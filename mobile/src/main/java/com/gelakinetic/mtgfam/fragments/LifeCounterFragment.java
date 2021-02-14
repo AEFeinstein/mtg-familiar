@@ -52,8 +52,6 @@ import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.view.ViewUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -315,7 +313,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.life_counter_menu, menu);
     }
@@ -326,7 +324,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param menu The menu to show or hide the "announce life totals" button in.
      */
     @Override
-    public void onPrepareOptionsMenu(@NotNull Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem menuItem = menu.findItem(R.id.announce_life);
         assert menuItem != null;

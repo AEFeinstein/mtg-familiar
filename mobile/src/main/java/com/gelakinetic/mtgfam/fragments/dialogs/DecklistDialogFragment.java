@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -38,8 +39,6 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Objects;
@@ -74,7 +73,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {

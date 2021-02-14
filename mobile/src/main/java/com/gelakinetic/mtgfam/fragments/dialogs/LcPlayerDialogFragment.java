@@ -29,14 +29,13 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -74,7 +73,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
         mLcPlayer = player;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
