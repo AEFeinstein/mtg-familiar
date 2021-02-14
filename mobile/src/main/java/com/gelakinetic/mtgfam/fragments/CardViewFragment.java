@@ -98,6 +98,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1300,7 +1301,7 @@ public class CardViewFragment extends FamiliarFragment {
                     throw new IOException("null stream");
                 }
 
-                String gathererPage = IOUtils.toString(is);
+                String gathererPage = IOUtils.toString(is, StandardCharsets.UTF_8);
                 String date;
 
                 Document document = Jsoup.parse(gathererPage);
