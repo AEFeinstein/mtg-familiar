@@ -205,11 +205,6 @@ public class ImportFragment extends FamiliarFragment {
                  * I don't think StringReader actually throws unless it's closed... */
                 return importer;
             }
-
-            /* report errors in parsing */
-            if (!importer.getErrorLines().isEmpty()) {
-                publishProgress(importer.getErrorLines().toArray(new String[0]));
-            }
             /* store local copy of cards so they can be updated */
             List<MtgCard> cardList = importer.getParsedCards();
             /* match cards with database */
@@ -234,7 +229,7 @@ public class ImportFragment extends FamiliarFragment {
                     importedCards.add(card);
                 }
             }
-
+            publishProgress(importer.getErrorLines().toArray(new String[0]));
             /* Save the decklist */
             if (!importedCards.isEmpty()) {
                 DecklistHelpers.WriteDecklist(getFamiliarActivity(), importedCards, mName + ".deck");
@@ -246,13 +241,17 @@ public class ImportFragment extends FamiliarFragment {
         @Override
         protected void onProgressUpdate(String[]... errorLines) {
             getDeckTextInput().clear();
-            for (String line : errorLines[0]) {
-                getDeckTextInput().append(line).append(System.getProperty("line.separator"));
+            if (errorLines[0].length > 0 || unknownCards.size() > 0) {
+                for (String line : errorLines[0]) {
+                    getDeckTextInput().append(line).append(System.getProperty("line.separator"));
+                }
+                for (MtgCard card : unknownCards) {
+                    getDeckTextInput().append(String.valueOf(card.mNumberOf)).append(" ").append(card.getName()).append(System.getProperty("line.separator"));
+                }
+                SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
+                        getString(R.string.import_parse_error_toast),
+                        SnackbarWrapper.LENGTH_LONG);
             }
-
-            SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
-                    getString(R.string.import_parse_error_toast),
-                    SnackbarWrapper.LENGTH_LONG);
         }
 
         @Override
