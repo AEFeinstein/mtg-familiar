@@ -13,7 +13,7 @@ public class DeckListImporter {
     private final List<MtgCard> mParsedCards = new ArrayList<>();
     private final List<String> mErrorLines = new ArrayList<>();
     private boolean mReadingSideBoard = false;
-    private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})])? *([^(\\[\\n\\r]+)(?:[(\\[](\\w{2,6})[)\\]])? *(\\d+)?$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern mCardPattern = Pattern.compile("^(\\d+)\\s+(?:\\[(\\w{2,6})*])? *([^(\\[\\n\\r]+)(?:[(\\[](\\w{2,6})[)\\]])? *(\\d+)?$", Pattern.CASE_INSENSITIVE);
     private static final Pattern mNamePattern = Pattern.compile("^//\\s*NAME\\s?:\\s*(.*)\\s*$", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     @NonNull
