@@ -18,62 +18,58 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="top"
-    android:baselineAligned="false"
-    android:orientation="vertical">
-
-    <EditText
-        android:id="@+id/import_editText"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="top"
-        android:hint="@string/import_paste_hint"
-        android:importantForAutofill="no"
-        android:inputType="textMultiLine" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/color_drawer_divider_item" />
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="top"
+              android:baselineAligned="false"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            style="@style/forty_eight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/importName"
-            style="@style/text.medium"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="2"
-            android:hint="@string/import_deck_name_hint"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingLeft="10dp"
-            android:paddingEnd="10dp"
-            android:paddingRight="10dp"
-            android:selectAllOnFocus="true" />
+                android:id="@+id/importName"
+                style="@style/text.medium"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/import_deck_name_hint"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:selectAllOnFocus="true" />
 
         <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?attr/colorPrimary_attr" />
+                android:layout_width="1dp"
+                android:layout_height="48dp"
+                android:background="?attr/colorPrimary_attr" />
 
         <Button
-            android:id="@+id/import_start"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/import_start"
-            android:textStyle="bold" />
-
+                android:id="@+id/import_start"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/import_start"
+                android:textStyle="bold" />
     </LinearLayout>
 
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?attr/color_drawer_divider_item" />
+
+    <EditText
+            android:id="@+id/import_editText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:hint="@string/import_paste_hint"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine" />
 </LinearLayout>
