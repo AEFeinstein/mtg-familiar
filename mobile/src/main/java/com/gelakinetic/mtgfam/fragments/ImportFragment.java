@@ -177,7 +177,6 @@ public class ImportFragment extends FamiliarFragment {
     public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.decklist_menu, menu);
     }
 
     /* TODO: make class static to prevent leaks? */
