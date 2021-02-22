@@ -29,10 +29,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.DeckListImporter;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
-import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
+import com.gelakinetic.mtgfam.helpers.*;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import org.jetbrains.annotations.NotNull;
 
@@ -258,7 +255,9 @@ public class ImportFragment extends FamiliarFragment {
         protected void onPostExecute(DeckListImporter importer) {
             getFamiliarActivity().clearLoading();
             mImportStarted = false;
-
+            if (importedCards.size() > 0) {
+                PreferenceAdapter.setLastLoadedDecklist(getContext(), mName);
+            }
             int unknownCount = unknownCards.size();
             if (unknownCount > 0) {
                 SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
