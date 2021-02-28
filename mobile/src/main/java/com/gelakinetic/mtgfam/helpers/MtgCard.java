@@ -233,7 +233,7 @@ public class MtgCard extends Card {
             boolean isFoil,
             int numberOf,
             boolean isSideboard) throws InstantiationException {
-        new MtgCard(activity, cardName, cardSet, isFoil, numberOf);
+        this(activity, cardName, cardSet, isFoil, numberOf);
         this.mIsSideboard = isSideboard;
     }
     /**
