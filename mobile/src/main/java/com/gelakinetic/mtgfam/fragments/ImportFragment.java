@@ -217,7 +217,7 @@ public class ImportFragment extends FamiliarFragment {
             for (MtgCard card : cardList) {
                 if (card.getMultiverseId() == 0) {
                     try {
-                        MtgCard noSetCard = new MtgCard(getActivity(), card.getName(), null, card.mIsFoil, card.mNumberOf);
+                        MtgCard noSetCard = new MtgCard(getActivity(), card.getName(), null, card.mIsFoil, card.mNumberOf, card.isSideboard());
                         importedCards.add(noSetCard);
                     } catch (java.lang.InstantiationException e) {
                         unknownCards.add(card);
