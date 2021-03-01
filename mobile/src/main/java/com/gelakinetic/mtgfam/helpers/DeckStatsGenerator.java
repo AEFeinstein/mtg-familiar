@@ -64,4 +64,8 @@ public class DeckStatsGenerator {
         }
         return new Map[]{typeStats, colorStats, cmcStats};
     }
+
+    public Map[] getStats() {
+        return new Map[]{typeStats, colorStats, cmcStats};
+    }
 }
