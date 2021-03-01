@@ -217,6 +217,26 @@ public class MtgCard extends Card {
     }
 
     /**
+     * Construct a MtgCard based on the given parameters.
+     *
+     * @param activity activity the method is being called from
+     * @param cardName name of the card to make
+     * @param cardSet  set code of the card to make
+     * @param isFoil   if the card is foil or not
+     * @param numberOf how many copies of the card are needed
+     * @param isSideboard Whether this card is in the sideboard
+     */
+    public MtgCard(
+            Activity activity,
+            String cardName,
+            String cardSet,
+            boolean isFoil,
+            int numberOf,
+            boolean isSideboard) throws InstantiationException {
+        this(activity, cardName, cardSet, isFoil, numberOf);
+        this.mIsSideboard = isSideboard;
+    }
+    /**
      * Initialize all the database variables for this MtgCard from a Cursor
      *
      * @param database   The database the Cursor comes from

@@ -36,6 +36,11 @@
         android:title="@string/decklist_load"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/deck_menu_import"
+        android:icon="@drawable/ic_menu_arrow_down"
+        android:title="@string/decklist_import"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/deck_menu_save_as"
         android:icon="@drawable/ic_menu_save"
         android:title="@string/decklist_save_as"

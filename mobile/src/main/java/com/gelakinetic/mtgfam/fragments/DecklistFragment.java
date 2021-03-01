@@ -573,6 +573,9 @@ public class DecklistFragment extends FamiliarListFragment {
         } else if (item.getItemId() == R.id.deck_menu_clear) {
             showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
             return true;
+        } else if (item.getItemId() == R.id.deck_menu_import) {
+            startNewFragment(new ImportFragment(), null);
+            return true;
         } else if (item.getItemId() == R.id.deck_menu_share) {
             /* Share plaintext decklist */
             Intent sendIntent = new Intent();
