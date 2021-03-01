@@ -17,11 +17,11 @@ public class DeckStatsGenerator {
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    DeckStatsGenerator(List<MtgCard> mDeckToStat) {
+    public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
         runStats();
     }
-    void resetStats() {
+    private void resetStats() {
         typeStats = new HashMap<>();
         typeStats.put("Creature", 0);
         typeStats.put("Planeswalker", 0);
@@ -49,7 +49,7 @@ public class DeckStatsGenerator {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    void runStats() {
+    public Map[] runStats() {
         resetStats();
         for (MtgCard card : mDeckToStat) {
             colorStats.computeIfPresent(card.getColor(), (k, v) -> (v++));
@@ -62,5 +62,6 @@ public class DeckStatsGenerator {
             } //Can have more than 1 type
             while (match.find());
         }
+        return new Map[]{typeStats, colorStats, cmcStats};
     }
 }
