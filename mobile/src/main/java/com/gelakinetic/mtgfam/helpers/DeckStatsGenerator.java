@@ -56,28 +56,30 @@ public class DeckStatsGenerator {
         for (MtgCard card : mDeckToStat) {
             if (!card.getColor().isEmpty()) {
                 for (String color : card.getColor().split("//B", 5)) {
-                    colorStats.computeIfPresent(color, (k, v) -> (v++));
+                    colorStats.computeIfPresent(color, (k, v) -> (v + 1));
                 }
             } else {
                 //Catch colorless
-                colorStats.computeIfPresent(card.getColor(), (k, v) -> (v++));
+                colorStats.computeIfPresent(card.getColor(), (k, v) -> (v + 1));
             }
-            cmcStats.computeIfPresent(Math.min(card.getCmc(), 7), (k, v) -> (v++));
+            cmcStats.computeIfPresent(Math.min(card.getCmc(), 7), (k, v) -> (v + 1));
             Matcher match = mTypePattern.matcher(card.getType());
             //Must have at least 1 type
             match.find();
             do {
-                typeStats.computeIfPresent(match.group(0), (k, v) -> (v++));
+                typeStats.computeIfPresent(match.group(0), (k, v) -> (v + 1));
             } //Can have more than 1 type
             while (match.find());
         }
-        for (Map<String, Float> statMap : new Map<String, Float>[]{typeStats, colorStats}) {
-            for (String key : statMap.keySet()) {
-                statMap.compute(key, (k, v) -> (v / mDeckSize));
-            }
+
+        for (String type : typeStats.keySet()) {
+            typeStats.computeIfPresent(type, (k, v) -> (v / mDeckSize));
+        }
+        for (String color : colorStats.keySet()) {
+            typeStats.computeIfPresent(color, (k, v) -> (v / mDeckSize));
         }
         for (Integer cmc : cmcStats.keySet()) {
-            cmcStats.compute(cmc, (k, v) -> (v / mDeckSize));
+            cmcStats.computeIfPresent(cmc, (k, v) -> (v / mDeckSize));
         }
     }
 
