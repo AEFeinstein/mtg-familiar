@@ -11,10 +11,17 @@ import androidx.annotation.RequiresApi;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.DeckStatsGenerator;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +31,10 @@ import java.util.Map;
 
 public class DeckStatsFragment extends FamiliarFragment {
     private DeckStatsGenerator mStatGenerator;
-    private List<MtgCard> mDeckToStat;
+    private final List<MtgCard> mDeckToStat;
     private PieChart mTypeChart;
     private PieChart mColorChart;
+    private BarChart mCmcChart;
 
     public DeckStatsFragment(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
@@ -38,19 +46,61 @@ public class DeckStatsFragment extends FamiliarFragment {
                 inflater.inflate(R.layout.stat_frag, container, false);
         assert myFragmentView != null;
         mStatGenerator = new DeckStatsGenerator(mDeckToStat);
-        mTypeChart = (PieChart) myFragmentView.findViewById(R.id.chart);
-        List<PieEntry> entries = new ArrayList<>();
-        Map<String, Float> typeColorMap = mStatGenerator.getTypeStats();
-        for (String type : typeColorMap.keySet()) {
-            if (typeColorMap.get(type) != 0) {
-                entries.add(new PieEntry(typeColorMap.get(type), type));
+        mTypeChart = (PieChart) myFragmentView.findViewById(R.id.type_chart);
+        mColorChart = (PieChart) myFragmentView.findViewById(R.id.color_chart);
+        mCmcChart = (BarChart) myFragmentView.findViewById(R.id.cmc_graph);
+        //Type graph
+        List<PieEntry> typeEntries = new ArrayList<>();
+        Map<String, Float> typeMap = mStatGenerator.getTypeStats();
+        for (String type : typeMap.keySet()) {
+            if (typeMap.get(type) != 0) {
+                typeEntries.add(new PieEntry(typeMap.get(type), type));
             }
         }
-        PieDataSet set = new PieDataSet(entries, "Card Types");
-        set.setColors(new int[] {R.color.bpblack, R.color.bpBlue, R.color.bpDarker_red, R.color.glyph_green, R.color.bpLight_gray, R.color.mythic_light}, getContext());
-        PieData data = new PieData(set);
-        mTypeChart.setData(data);
+        PieDataSet typeSet = new PieDataSet(typeEntries, "Card Types");
+        typeSet.setColors(new int[] {R.color.bpblack, R.color.bpBlue, R.color.bpDarker_red, R.color.glyph_green, R.color.bpLight_gray, R.color.mythic_light}, getContext());
+        PieData typeData = new PieData(typeSet);
+        typeData.setValueFormatter(new PercentFormatter());
+        mTypeChart.setData(typeData);
         mTypeChart.invalidate();
+        //Color graph
+        List<PieEntry> colorEntries = new ArrayList<>();
+        Map<String, Float> colorMap = mStatGenerator.getColorStats();
+        for (String color : colorMap.keySet()) {
+            if (colorMap.get(color) != 0) {
+                if (!color.isEmpty()) {
+                    colorEntries.add(new PieEntry(colorMap.get(color), color));
+                } else {
+                    colorEntries.add(new PieEntry(colorMap.get(color), "Colorless"));
+                }
+            }
+        }
+        PieDataSet colorSet = new PieDataSet(colorEntries, "Card Colors");
+        colorSet.setColors(new int[] {R.color.glyph_white, R.color.icon_blue, R.color.bpblack, R.color.icon_red, R.color.icon_green, R.color.light_grey}, getContext());
+        PieData colorData = new PieData(colorSet);
+        colorData.setValueFormatter(new PercentFormatter());
+        mColorChart.setData(colorData);
+        mColorChart.invalidate();
+        //Cmc graph
+        List<BarEntry> cmcEntries = new ArrayList<>();
+        Map<Integer, Integer> cmcMap = mStatGenerator.getCmcStats();
+        for (Integer cmc : cmcMap.keySet()) {
+            cmcEntries.add(new BarEntry(cmc, cmcMap.get(cmc)));
+        }
+        BarDataSet cmcSet = new BarDataSet(cmcEntries, "CMC Graph");
+        BarData cmcData = new BarData(cmcSet);
+        mCmcChart.setData(cmcData);
+        mCmcChart.getXAxis().setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getAxisLabel(float value, AxisBase axis) {
+                if (value == 7) {
+                    return "7+";
+                } else {
+                    return Integer.toString((int) value);
+                }
+            }
+        });
+        mCmcChart.invalidate();
         return myFragmentView;
     }
 }

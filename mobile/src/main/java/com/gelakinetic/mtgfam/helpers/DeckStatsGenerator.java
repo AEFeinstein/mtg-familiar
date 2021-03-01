@@ -14,7 +14,7 @@ public class DeckStatsGenerator {
     private Float mDeckSize;
     private Map<String, Float> typeStats;
     private Map<String, Float> colorStats;
-    private Map<Integer, Float> cmcStats;
+    private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -40,14 +40,14 @@ public class DeckStatsGenerator {
         colorStats.put("G", (float) 0);
         colorStats.put("", (float) 0);
         cmcStats = new HashMap<>();
-        cmcStats.put(0, (float) 0);
-        cmcStats.put(1, (float) 0);
-        cmcStats.put(2, (float) 0);
-        cmcStats.put(3, (float) 0);
-        cmcStats.put(4, (float) 0);
-        cmcStats.put(5, (float) 0);
-        cmcStats.put(6, (float) 0);
-        cmcStats.put(7, (float) 0);
+        cmcStats.put(0, 0);
+        cmcStats.put(1, 0);
+        cmcStats.put(2, 0);
+        cmcStats.put(3, 0);
+        cmcStats.put(4, 0);
+        cmcStats.put(5, 0);
+        cmcStats.put(6, 0);
+        cmcStats.put(7, 0);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -78,9 +78,6 @@ public class DeckStatsGenerator {
         for (String color : colorStats.keySet()) {
             typeStats.computeIfPresent(color, (k, v) -> (v / mDeckSize));
         }
-        for (Integer cmc : cmcStats.keySet()) {
-            cmcStats.computeIfPresent(cmc, (k, v) -> (v / mDeckSize));
-        }
     }
 
     public Map<String, Float> getTypeStats() {
@@ -89,7 +86,7 @@ public class DeckStatsGenerator {
     public Map<String, Float> getColorStats() {
         return colorStats;
     }
-    public Map<Integer, Float> getCmcStats() {
+    public Map<Integer, Integer> getCmcStats() {
         return cmcStats;
     }
 }
