@@ -81,7 +81,13 @@ public class DeckStatsGenerator {
         }
     }
 
-    public Map[] getStats() {
-        return new Map[]{typeStats, colorStats, cmcStats};
+    public Map<String, Float> getTypeStats() {
+        return typeStats;
+    }
+    public Map<String, Float> getColorStats() {
+        return colorStats;
+    }
+    public Map<Integer, Float> getCmcStats() {
+        return cmcStats;
     }
 }
