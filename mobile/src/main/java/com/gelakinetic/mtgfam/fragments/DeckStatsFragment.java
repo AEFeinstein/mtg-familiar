@@ -28,21 +28,26 @@ public class DeckStatsFragment extends FamiliarFragment {
     private PieChart mTypeChart;
     private PieChart mColorChart;
 
+    public DeckStatsFragment(List<MtgCard> mDeckToStat) {
+        this.mDeckToStat = mDeckToStat;
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View myFragmentView =
                 inflater.inflate(R.layout.stat_frag, container, false);
         assert myFragmentView != null;
-        this.mDeckToStat = mDeckToStat;
         mStatGenerator = new DeckStatsGenerator(mDeckToStat);
         mTypeChart = (PieChart) myFragmentView.findViewById(R.id.chart);
         List<PieEntry> entries = new ArrayList<>();
         Map<String, Float> typeColorMap = mStatGenerator.getTypeStats();
         for (String type : typeColorMap.keySet()) {
-            entries.add(new PieEntry(typeColorMap.get(type), type));
+            if (typeColorMap.get(type) != 0) {
+                entries.add(new PieEntry(typeColorMap.get(type), type));
+            }
         }
         PieDataSet set = new PieDataSet(entries, "Card Types");
+        set.setColors(new int[] {R.color.bpblack, R.color.bpBlue, R.color.bpDarker_red, R.color.glyph_green, R.color.bpLight_gray, R.color.mythic_light}, getContext());
         PieData data = new PieData(set);
         mTypeChart.setData(data);
         mTypeChart.invalidate();

@@ -535,6 +535,7 @@ Good luck, and have fun!
     <string name="decklist_clear_dialog_text">"Are you sure you want to clear the current deck?"</string>
     <string name="decklist_share">"Share Deck"</string>
     <string name="decklist_share_title">"MTG Familiar Decklist"</string>
+    <string name="decklist_stats">"Deck Stats</string>
     <string name="decklist_instants">"Instants"</string>
     <string name="decklist_sorceries">"Sorceries"</string>
     <string name="decklist_others">"Others"</string>
@@ -564,7 +565,6 @@ Good luck, and have fun!
         <item quantity="other">"%1$d cards were not recognized and were not imported."</item>
     </plurals>
     <string name="import_complete_toast">"Deck imported successfully."</string>
-
     <string name="search_settype">Set Type</string>
     <string name="card_on_reserved_list">On Reserved List</string>
     <string name="card_not_on_reserved_list">Not on Reserved List</string>
