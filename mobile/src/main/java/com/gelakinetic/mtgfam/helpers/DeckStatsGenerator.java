@@ -9,15 +9,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class DeckStatsGenerator {
     private List<MtgCard> mDeckToStat;
-    private Float mDeckSize;
+    private float mDeckSize; //Defined as a Float to avoid integer division
     private Map<String, Float> typeStats;
     private Map<String, Float> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
         mDeckSize = (float) mDeckToStat.size();
@@ -55,7 +55,7 @@ public class DeckStatsGenerator {
         resetStats();
         for (MtgCard card : mDeckToStat) {
             if (!card.getColor().isEmpty()) {
-                for (String color : card.getColor().split("//B", 5)) {
+                for (String color : card.getColor().split("")) {
                     colorStats.computeIfPresent(color, (k, v) -> (v + 1));
                 }
             } else {
@@ -81,12 +81,21 @@ public class DeckStatsGenerator {
     }
 
     public Map<String, Float> getTypeStats() {
+        if (typeStats == null) {
+            runStats();
+        }
         return typeStats;
     }
     public Map<String, Float> getColorStats() {
+        if (colorStats == null) {
+            runStats();
+        }
         return colorStats;
     }
     public Map<Integer, Integer> getCmcStats() {
+        if (cmcStats == null) {
+            runStats();
+        }
         return cmcStats;
     }
 }
