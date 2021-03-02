@@ -45,11 +45,11 @@ public class GraphHelper {
     public void fillTypeGraph(PieChart chartToFill) {
         PieData typeData = createTypeData(mStatGenerator.getTypeStats());
         chartToFill.setData(typeData);
-        //mTypeChart.setDrawEntryLabels(false);
+        chartToFill.setDrawEntryLabels(false);
         chartToFill.getDescription().setEnabled(false);
-        chartToFill.getLegend().setEnabled(false);
-        //mTypeChart.getLegend().setWordWrapEnabled(true);
-        //mTypeChart.getLegend().setMaxSizePercent((float) 0.1);
+        //chartToFill.getLegend().setEnabled(false);
+        chartToFill.getLegend().setWordWrapEnabled(true);
+        chartToFill.getLegend().setMaxSizePercent((float) 0.1);
         chartToFill.setCenterText("Type Distribution");
         chartToFill.setTouchEnabled(false);
     }
