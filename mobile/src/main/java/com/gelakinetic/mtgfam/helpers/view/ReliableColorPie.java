@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.highlight.PieHighlighter;
-import com.github.mikephil.charting.renderer.PieChartRenderer;
 
 public class ReliableColorPie extends PieChart {
 

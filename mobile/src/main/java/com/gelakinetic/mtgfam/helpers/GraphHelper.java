@@ -107,7 +107,7 @@ public class GraphHelper {
             }
         }
         PieDataSet typeSet = new PieDataSet(typeEntries, "");
-        typeSet.setColors(new int[] {R.color.bpblack, R.color.bpBlue, R.color.bpDarker_red, R.color.glyph_green, R.color.bpLight_gray, R.color.mythic_light}, c);
+        typeSet.setColors(new int[] {R.color.bpblack, R.color.bpBlue, R.color.bpDarker_red, R.color.glyph_green, R.color.timeshifted_light, R.color.glyph_red, R.color.colorCheckbox_light}, c);
         PieData typeData = new PieData(typeSet);
         typeData.setValueFormatter(new ValueFormatter() {
             @Override
