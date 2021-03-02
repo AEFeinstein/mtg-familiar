@@ -10,6 +10,7 @@ import com.gelakinetic.mtgfam.helpers.view.ReliableColorPie;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -48,8 +49,11 @@ public class GraphHelper {
         chartToFill.setDrawEntryLabels(false);
         chartToFill.getDescription().setEnabled(false);
         //chartToFill.getLegend().setEnabled(false);
-        chartToFill.getLegend().setWordWrapEnabled(true);
-        chartToFill.getLegend().setMaxSizePercent((float) 0.1);
+        //chartToFill.getLegend().setWordWrapEnabled(true);
+        //chartToFill.getLegend().setMaxSizePercent((float) 0.1);
+        chartToFill.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        chartToFill.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        chartToFill.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         chartToFill.setCenterText("Type Distribution");
         chartToFill.setTouchEnabled(false);
     }
