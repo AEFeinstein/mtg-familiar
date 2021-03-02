@@ -60,13 +60,13 @@ public class DeckStatsGenerator {
     private void runStats() {
         resetStats();
         for (MtgCard card : mDeckToStat) {
-            if (!card.getColor().isEmpty()) {
+            if (!card.getColorIdentity().isEmpty()) {
                 for (String color : card.getColorIdentity().split("")) {
                     colorStats.computeIfPresent(color, (k, v) -> (v + 1));
                 }
             } else {
                 //Catch colorless
-                colorStats.computeIfPresent(card.getColor(), (k, v) -> (v + 1));
+                colorStats.computeIfPresent(card.getColorIdentity(), (k, v) -> (v + 1));
             }
             cmcStats.computeIfPresent(Math.min(card.getCmc(), 7), (k, v) -> (v + 1));
             Matcher match = mTypePattern.matcher(card.getType());
