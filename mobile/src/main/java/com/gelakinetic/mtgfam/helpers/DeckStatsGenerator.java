@@ -61,7 +61,7 @@ public class DeckStatsGenerator {
         resetStats();
         for (MtgCard card : mDeckToStat) {
             if (!card.getColor().isEmpty()) {
-                for (String color : card.getColor().split("")) {
+                for (String color : card.getColorIdentity().split("")) {
                     colorStats.computeIfPresent(color, (k, v) -> (v + 1));
                 }
             } else {
