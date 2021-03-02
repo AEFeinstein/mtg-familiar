@@ -23,6 +23,10 @@ public class DeckStatsGenerator {
         mDeckSize = (float) mDeckToStat.size();
         runStats();
     }
+
+    /**
+     * Clears any previous statistics contained by this DeckStatsGenerator
+     */
     private void resetStats() {
         typeStats = new HashMap<>();
         typeStats.put("Creature", (float) 0);
@@ -50,7 +54,9 @@ public class DeckStatsGenerator {
         cmcStats.put(7, 0);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    /**
+     * Calculates statistics for card colors, types, and cmcs for the provided List<MtgCard>
+     */
     private void runStats() {
         resetStats();
         for (MtgCard card : mDeckToStat) {
@@ -80,18 +86,32 @@ public class DeckStatsGenerator {
         }
     }
 
+    /**
+     * Calls runStats() if no typeStats exist then returns typeStats
+     * @return typeStats
+     */
     public Map<String, Float> getTypeStats() {
         if (typeStats == null) {
             runStats();
         }
         return typeStats;
     }
+
+    /**
+     * Calls runStats() if no colorStats exist then returns colorStats
+     * @return colorStats
+     */
     public Map<String, Float> getColorStats() {
         if (colorStats == null) {
             runStats();
         }
         return colorStats;
     }
+
+    /**
+     * Calls runStats() if no cmcStats exist then returns cmcStats
+     * @return cmcStats
+     */
     public Map<Integer, Integer> getCmcStats() {
         if (cmcStats == null) {
             runStats();
