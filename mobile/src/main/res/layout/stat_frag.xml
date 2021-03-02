@@ -17,7 +17,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
-            <com.github.mikephil.charting.charts.PieChart
+            <com.gelakinetic.mtgfam.helpers.view.ReliableColorPie
                     android:id="@+id/color_chart"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

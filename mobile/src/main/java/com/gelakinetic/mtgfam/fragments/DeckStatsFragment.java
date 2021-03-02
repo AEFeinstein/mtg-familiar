@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.DeckStatsGenerator;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.view.ReliableColorPie;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -34,14 +35,12 @@ import java.util.Map;
 public class DeckStatsFragment extends FamiliarFragment {
     private DeckStatsGenerator mStatGenerator;
     private final List<MtgCard> mDeckToStat;
-    private final Map<String, Integer> mColorChartColors;
     private PieChart mTypeChart;
     private PieChart mColorChart;
     private BarChart mCmcChart;
 
     public DeckStatsFragment(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
-        mColorChartColors = new HashMap<>();
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -50,15 +49,8 @@ public class DeckStatsFragment extends FamiliarFragment {
                 inflater.inflate(R.layout.stat_frag, container, false);
         assert myFragmentView != null;
         mStatGenerator = new DeckStatsGenerator(mDeckToStat);
-
-        mColorChartColors.put("W", getContext().getResources().getColor(R.color.glyph_white));
-        mColorChartColors.put("U", getContext().getResources().getColor(R.color.icon_blue));
-        mColorChartColors.put("B", getContext().getResources().getColor(R.color.bpblack));
-        mColorChartColors.put("R", getContext().getResources().getColor(R.color.icon_red));
-        mColorChartColors.put("G", getContext().getResources().getColor(R.color.icon_green));
-        mColorChartColors.put("", getContext().getResources().getColor(R.color.light_grey));
         mTypeChart = (PieChart) myFragmentView.findViewById(R.id.type_chart);
-        mColorChart = (PieChart) myFragmentView.findViewById(R.id.color_chart);
+        mColorChart = (ReliableColorPie) myFragmentView.findViewById(R.id.color_chart);
         mCmcChart = (BarChart) myFragmentView.findViewById(R.id.cmc_graph);
         //Type graph
         List<PieEntry> typeEntries = new ArrayList<>();
@@ -79,21 +71,20 @@ public class DeckStatsFragment extends FamiliarFragment {
         //Color graph
         List<PieEntry> colorEntries = new ArrayList<>();
         Map<String, Float> colorMap = mStatGenerator.getColorStats();
-        PieDataSet colorSet = new PieDataSet(colorEntries, "Card Colors");
+
         for (String color : colorMap.keySet()) {
             if (colorMap.get(color) != 0) {
                 if (!color.isEmpty()) {
                     colorEntries.add(new PieEntry(colorMap.get(color), color));
-                    colorSet.addColor(mColorChartColors.get(color));
                 } else {
                     colorEntries.add(new PieEntry(colorMap.get(color), "Colorless"));
-                    colorSet.addColor(mColorChartColors.get(color));
                 }
+
             }
         }
-        colorSet.notifyDataSetChanged();
+        PieDataSet colorSet = new PieDataSet(colorEntries, "Card Colors");
+        colorSet.setColors(new int[] {R.color.glyph_white, R.color.icon_blue, R.color.bpblack, R.color.icon_red, R.color.icon_green, R.color.light_grey}, getContext());
         PieData colorData = new PieData(colorSet);
-        colorData.setValueFormatter(new PercentFormatter());
         mColorChart.setData(colorData);
         mColorChart.getDescription().setEnabled(false);
         mColorChart.getLegend().setWordWrapEnabled(true);
