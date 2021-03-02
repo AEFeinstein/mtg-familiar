@@ -11,17 +11,18 @@
             android:layout_height="0dp"
             android:orientation="horizontal"
             android:layout_weight="1">
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/type_chart"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/type_chart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <com.gelakinetic.mtgfam.helpers.view.ReliableColorPie
-                    android:id="@+id/color_chart"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                android:id="@+id/color_chart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
         </LinearLayout>
 
     <com.github.mikephil.charting.charts.BarChart

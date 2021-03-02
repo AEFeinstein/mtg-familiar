@@ -67,18 +67,27 @@ public class DeckStatsFragment extends FamiliarFragment {
         //Type graph
         PieData typeData = createTypeData(mStatGenerator.getTypeStats());
         mTypeChart.setData(typeData);
+        //mTypeChart.setDrawEntryLabels(false);
         mTypeChart.getDescription().setEnabled(false);
-        mTypeChart.getLegend().setWordWrapEnabled(true);
+        mTypeChart.getLegend().setEnabled(false);
+        //mTypeChart.getLegend().setWordWrapEnabled(true);
+        //mTypeChart.getLegend().setMaxSizePercent((float) 0.1);
+        mTypeChart.setCenterText("Type Distribution");
+        mTypeChart.setTouchEnabled(false);
         mTypeChart.invalidate(); //refresh
         //Color graph
         PieData colorData = createColorData(mStatGenerator.getColorStats());
         mColorChart.setData(colorData);
+        mColorChart.setDrawEntryLabels(false);
+        mColorChart.setTouchEnabled(false);
         mColorChart.getDescription().setEnabled(false);
-        mColorChart.getLegend().setWordWrapEnabled(true);
+        mColorChart.getLegend().setEnabled(false);
+        mColorChart.setCenterText("Color Distribution");
         mColorChart.invalidate(); //refresh
         //Cmc graph
         BarData cmcData = createCmcData(mStatGenerator.getCmcStats());
         mCmcChart.setData(cmcData);
+        mCmcChart.setTouchEnabled(false);
         mCmcChart.getXAxis().setValueFormatter(new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
@@ -111,13 +120,20 @@ public class DeckStatsFragment extends FamiliarFragment {
                 typeEntries.add(new PieEntry(typeMap.get(type), type));
             }
         }
-        PieDataSet typeSet = new PieDataSet(typeEntries, "Card Types");
+        PieDataSet typeSet = new PieDataSet(typeEntries, "");
         typeSet.setColors(new int[] {R.color.bpblack, R.color.bpBlue, R.color.bpDarker_red, R.color.glyph_green, R.color.bpLight_gray, R.color.mythic_light}, getContext());
-        return new PieData(typeSet);
+        PieData typeData = new PieData(typeSet);
+        typeData.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getPieLabel(float value, PieEntry pieEntry) {
+                return "";
+            }
+        });
+        return typeData;
     }
 
     /**
-     * Creates a formatted PieData from the color Map supplied by the DeckStatsGenerator
+     * Creates a PieData from the color Map supplied by the DeckStatsGenerator
      * @param colorMap Map with color information
      * @return PieData containing color information
      */
@@ -134,7 +150,14 @@ public class DeckStatsFragment extends FamiliarFragment {
         }
         PieDataSet colorSet = new PieDataSet(colorEntries, "Card Colors");
         colorSet.setColors(new int[] {R.color.glyph_white, R.color.icon_blue, R.color.bpblack, R.color.icon_red, R.color.icon_green, R.color.light_grey}, getContext());
-        return new PieData(colorSet);
+        PieData colorData = new PieData(colorSet);
+        colorData.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getPieLabel(float value, PieEntry pieEntry) {
+                return "";
+            }
+        });
+        return colorData;
     }
 
     /**
@@ -153,7 +176,11 @@ public class DeckStatsFragment extends FamiliarFragment {
         cmcData.setValueFormatter(new ValueFormatter() {
             @Override
             public String getBarLabel(BarEntry barEntry) {
-                return Integer.toString((int) barEntry.getY()); //Don't show decimals
+                if (barEntry.getY() == 0) {
+                    return "";
+                } else {
+                    return Integer.toString((int) barEntry.getY()); //Don't show decimals
+                }
             }
         });
         return cmcData;
