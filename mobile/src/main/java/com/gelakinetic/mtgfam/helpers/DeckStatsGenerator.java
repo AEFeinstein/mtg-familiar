@@ -60,30 +60,32 @@ public class DeckStatsGenerator {
     private void runStats() {
         resetStats();
         for (MtgCard card : mDeckToStat) {
-            if (!card.getColorIdentity().isEmpty()) {
-                for (String color : card.getColorIdentity().split("")) {
-                    colorStats.computeIfPresent(color, (k, v) -> (v + card.mNumberOf));
+            if (!card.isSideboard()) {
+                if (!card.getColorIdentity().isEmpty()) {
+                    for (String color : card.getColorIdentity().split("")) {
+                        colorStats.computeIfPresent(color, (k, v) -> (v + card.mNumberOf));
+                    }
+                } else {
+                    //Catch colorless
+                    colorStats.computeIfPresent(card.getColorIdentity(), (k, v) -> (v + card.mNumberOf));
                 }
-            } else {
-                //Catch colorless
-                colorStats.computeIfPresent(card.getColorIdentity(), (k, v) -> (v + card.mNumberOf));
+                cmcStats.computeIfPresent(Math.min(card.getCmc(), 7), (k, v) -> (v + card.mNumberOf));
+                Matcher match = mTypePattern.matcher(card.getType());
+                //Must have at least 1 type
+                match.find();
+                do {
+                    typeStats.computeIfPresent(match.group(0), (k, v) -> (v + card.mNumberOf));
+                } //Can have more than 1 type
+                while (match.find());
+                mDeckSize += card.mNumberOf;
             }
-            cmcStats.computeIfPresent(Math.min(card.getCmc(), 7), (k, v) -> (v + card.mNumberOf));
-            Matcher match = mTypePattern.matcher(card.getType());
-            //Must have at least 1 type
-            match.find();
-            do {
-                typeStats.computeIfPresent(match.group(0), (k, v) -> (v + card.mNumberOf));
-            } //Can have more than 1 type
-            while (match.find());
-            mDeckSize += card.mNumberOf;
-        }
 
-        for (String type : typeStats.keySet()) {
-            typeStats.computeIfPresent(type, (k, v) -> (v / mDeckSize));
-        }
-        for (String color : colorStats.keySet()) {
-            typeStats.computeIfPresent(color, (k, v) -> (v / mDeckSize));
+            for (String type : typeStats.keySet()) {
+                typeStats.computeIfPresent(type, (k, v) -> (v / mDeckSize));
+            }
+            for (String color : colorStats.keySet()) {
+                typeStats.computeIfPresent(color, (k, v) -> (v / mDeckSize));
+            }
         }
     }
 
