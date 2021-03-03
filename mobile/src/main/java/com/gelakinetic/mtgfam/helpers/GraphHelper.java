@@ -56,14 +56,13 @@ public class GraphHelper {
         fillColorGraph(pieToFill);
         Legend pieLegend = pieToFill.getLegend();
         pieLegend.setEnabled(true);
-        pieLegend.setWordWrapEnabled(true);
-        pieLegend.setMaxSizePercent((float) .5);
+        formatPieLegend(pieLegend);
         pieLegend.setTextColor(mBackgroundColor);
-        LegendEntry[] filler = new LegendEntry[mTypes.size()];
+        LegendEntry[] spacer = new LegendEntry[mTypes.size()];
         for (int i = 0; i < mTypes.size(); i++) {
-            filler[i] = new LegendEntry(mTypes.get(i), Legend.LegendForm.SQUARE, Float.NaN, Float.NaN, null, mBackgroundColor);
+            spacer[i] = new LegendEntry(mTypes.get(i), Legend.LegendForm.SQUARE, Float.NaN, Float.NaN, null, mBackgroundColor);
         }
-        pieLegend.setCustom(filler);
+        pieLegend.setCustom(spacer);
     }
 
     /**
@@ -77,10 +76,9 @@ public class GraphHelper {
         chartToFill.getDescription().setEnabled(false);
         //chartToFill.getLegend().setEnabled(false);
         //chartToFill.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
-        //chartToFill.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        //chartToFill.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         //chartToFill.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        chartToFill.getLegend().setMaxSizePercent((float) .5);
-        chartToFill.getLegend().setWordWrapEnabled(true);
+        formatPieLegend(chartToFill.getLegend());
         //chartToFill.getLegend().setDirection(Legend.LegendDirection.RIGHT_TO_LEFT);
         chartToFill.setTransparentCircleColor(mBackgroundColor);
         chartToFill.setHoleColor(mBackgroundColor);
@@ -127,7 +125,12 @@ public class GraphHelper {
         chartToFill.getAxisLeft().setEnabled(false);
         chartToFill.getAxisRight().setEnabled(false);
         chartToFill.getDescription().setEnabled(false);
-        chartToFill.getLegend().setEnabled(false);
+        //chartToFill.getLegend().setEnabled(false);
+        Legend barLegend = chartToFill.getLegend();
+        barLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        barLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        barLegend.setForm(Legend.LegendForm.NONE);
+        barLegend.setTextSize(12);
     }
 
     /**
@@ -208,5 +211,14 @@ public class GraphHelper {
             }
         });
         return cmcData;
+    }
+
+    /**
+     * Method to format color and type legends to take up same amount of space.
+     * @param pieLegend Legend to format
+     */
+    private void formatPieLegend(Legend pieLegend) {
+        pieLegend.setMaxSizePercent((float) .5);
+        pieLegend.setWordWrapEnabled(true);
     }
 }
