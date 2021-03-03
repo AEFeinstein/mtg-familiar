@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -28,7 +29,8 @@ import java.util.Map;
 public class GraphHelper {
     private final Context c;
     private final DeckStatsGenerator mStatGenerator;
-    private int mBackgroundColor;
+    private final int mBackgroundColor;
+    private ArrayList<String> mTypes;
 
     /**
      * Creates a new GraphHelper
@@ -42,6 +44,29 @@ public class GraphHelper {
     }
 
     /**
+     * Fills all of the stat graphs at once, with the added benefit of adding an invisible legend
+     * to equally balance the color graph with the type graph
+     * @param chartToFill type PieChart to fill
+     * @param pieToFill color ReliableColorPie to fill
+     * @param barChartToFill cmc BarChart to fill
+     */
+    public void fillStatGraphs(PieChart chartToFill, ReliableColorPie pieToFill, BarChart barChartToFill) {
+        fillTypeGraph(chartToFill);
+        fillCmcGraph(barChartToFill);
+        fillColorGraph(pieToFill);
+        Legend pieLegend = pieToFill.getLegend();
+        pieLegend.setEnabled(true);
+        pieLegend.setWordWrapEnabled(true);
+        pieLegend.setMaxSizePercent((float) .5);
+        pieLegend.setTextColor(mBackgroundColor);
+        LegendEntry[] filler = new LegendEntry[mTypes.size()];
+        for (int i = 0; i < mTypes.size(); i++) {
+            filler[i] = new LegendEntry(mTypes.get(i), Legend.LegendForm.SQUARE, Float.NaN, Float.NaN, null, mBackgroundColor);
+        }
+        pieLegend.setCustom(filler);
+    }
+
+    /**
      * Formats a given PieChart for displaying type statistics
      * @param chartToFill PieChart to format
      */
@@ -51,11 +76,12 @@ public class GraphHelper {
         chartToFill.setDrawEntryLabels(false);
         chartToFill.getDescription().setEnabled(false);
         //chartToFill.getLegend().setEnabled(false);
-        //chartToFill.getLegend().setWordWrapEnabled(true);
-        //chartToFill.getLegend().setMaxSizePercent((float) 0.1);
-        chartToFill.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
-        chartToFill.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        chartToFill.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        //chartToFill.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        //chartToFill.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        //chartToFill.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        chartToFill.getLegend().setMaxSizePercent((float) .5);
+        chartToFill.getLegend().setWordWrapEnabled(true);
+        //chartToFill.getLegend().setDirection(Legend.LegendDirection.RIGHT_TO_LEFT);
         chartToFill.setTransparentCircleColor(mBackgroundColor);
         chartToFill.setHoleColor(mBackgroundColor);
         chartToFill.setCenterText("Type Distribution");
@@ -110,10 +136,12 @@ public class GraphHelper {
      * @return PieData containing type information
      */
     private PieData createTypeData(Map<String, Float> typeMap) {
+        mTypes = new ArrayList<>();
         List<PieEntry> typeEntries = new ArrayList<>();
         for (String type : typeMap.keySet()) {
             if (typeMap.get(type) != 0) {
                 typeEntries.add(new PieEntry(typeMap.get(type), type));
+                mTypes.add(type);
             }
         }
         PieDataSet typeSet = new PieDataSet(typeEntries, "");

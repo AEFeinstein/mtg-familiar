@@ -55,14 +55,9 @@ public class DeckStatsFragment extends FamiliarFragment {
         mTypeChart = myFragmentView.findViewById(R.id.type_chart);
         mColorChart = myFragmentView.findViewById(R.id.color_chart);
         mCmcChart = myFragmentView.findViewById(R.id.cmc_graph);
-        //Type graph
-        mGraphHelper.fillTypeGraph(mTypeChart);
+        mGraphHelper.fillStatGraphs(mTypeChart, mColorChart, mCmcChart);
         mTypeChart.invalidate(); //refresh
-        //Color graph
-        mGraphHelper.fillColorGraph(mColorChart);
         mColorChart.invalidate(); //refresh
-        //Cmc graph
-        mGraphHelper.fillCmcGraph(mCmcChart);
         mCmcChart.invalidate(); //refresh
         return myFragmentView;
     }
