@@ -28,6 +28,7 @@ import java.util.Map;
 public class GraphHelper {
     private final Context c;
     private final DeckStatsGenerator mStatGenerator;
+    private int mBackgroundColor;
 
     /**
      * Creates a new GraphHelper
@@ -37,6 +38,7 @@ public class GraphHelper {
     public GraphHelper(DeckStatsGenerator mStatGenerator, Context c) {
         this.mStatGenerator = mStatGenerator;
         this.c = c;
+        mBackgroundColor = c.getResources().getColor(R.color.background_light);
     }
 
     /**
@@ -54,6 +56,8 @@ public class GraphHelper {
         chartToFill.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
         chartToFill.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         chartToFill.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        chartToFill.setTransparentCircleColor(mBackgroundColor);
+        chartToFill.setHoleColor(mBackgroundColor);
         chartToFill.setCenterText("Type Distribution");
         chartToFill.setTouchEnabled(false);
     }
@@ -66,10 +70,12 @@ public class GraphHelper {
         PieData colorData = createColorData(mStatGenerator.getColorStats());
         pieToFill.setData(colorData);
         pieToFill.setDrawEntryLabels(false);
-        pieToFill.setTouchEnabled(false);
         pieToFill.getDescription().setEnabled(false);
         pieToFill.getLegend().setEnabled(false);
+        pieToFill.setTransparentCircleColor(mBackgroundColor);
+        pieToFill.setHoleColor(mBackgroundColor);
         pieToFill.setCenterText("Color Distribution");
+        pieToFill.setTouchEnabled(false);
     }
 
     /**
