@@ -71,7 +71,7 @@ public class DeckStatsFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sample_hand) {
-            startNewFragment(new SampleHandFrag(), null);
+            startNewFragment(new SampleHandFrag(mDeckToStat), null);
             return true;
         }
         return false;

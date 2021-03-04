@@ -19,6 +19,9 @@ public class SampleHandMaker {
     }
 
     public static List<MtgCard> drawSampleHand(List<MtgCard> mDeck, int numOfMulls) {
+        if (numOfMulls > 7) {
+            return new ArrayList<>();
+        }
         List<MtgCard> sampleHand = drawSampleHand(mDeck);
         for (int i = 0; i < numOfMulls; i++) {
             sampleHand.remove(6 - i);
