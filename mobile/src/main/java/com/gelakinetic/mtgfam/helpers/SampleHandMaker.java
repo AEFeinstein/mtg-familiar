@@ -32,8 +32,10 @@ public class SampleHandMaker {
     private static List<MtgCard> expandDeck(List<MtgCard> mDeck) {
         ArrayList<MtgCard> expandedDeck = new ArrayList<>();
         for (MtgCard card : mDeck) {
-            for (int i = 0; i < card.mNumberOf; i++) {
-                expandedDeck.add(card);
+            if (!card.isSideboard()) {
+                for (int i = 0; i < card.mNumberOf; i++) {
+                    expandedDeck.add(card);
+                }
             }
         }
         return expandedDeck;
