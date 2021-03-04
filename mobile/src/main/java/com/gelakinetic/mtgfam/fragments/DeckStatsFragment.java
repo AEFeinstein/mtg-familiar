@@ -1,12 +1,10 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.DeckStatsGenerator;
@@ -19,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class DeckStatsFragment extends FamiliarFragment {
     private final List<MtgCard> mDeckToStat;
     /* UI Elements */
@@ -51,7 +48,7 @@ public class DeckStatsFragment extends FamiliarFragment {
                 inflater.inflate(R.layout.stat_frag, container, false);
         assert myFragmentView != null;
         DeckStatsGenerator mStatGenerator = new DeckStatsGenerator(mDeckToStat);
-        mGraphHelper = new GraphHelper(mStatGenerator, getContext());
+        mGraphHelper = new GraphHelper(mStatGenerator, requireContext());
         mTypeChart = myFragmentView.findViewById(R.id.type_chart);
         mColorChart = myFragmentView.findViewById(R.id.color_chart);
         mCmcChart = myFragmentView.findViewById(R.id.cmc_graph);

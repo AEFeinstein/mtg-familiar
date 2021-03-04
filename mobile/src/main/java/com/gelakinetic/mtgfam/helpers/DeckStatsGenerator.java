@@ -1,15 +1,12 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.os.Build;
-import androidx.annotation.RequiresApi;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class DeckStatsGenerator {
     private List<MtgCard> mDeckToStat;
     private float mDeckSize; //Defined as a Float to avoid integer division
@@ -67,8 +64,8 @@ public class DeckStatsGenerator {
                 //Must have at least 1 type
                 typeMatcher.find();
                 do {
-                    typeStats.computeIfPresent(typeMatcher.group(0), (k, v) -> (v + card.mNumberOf));
-                    if (typeMatcher.group(0).equals("Land")) {
+                    mapAddIfPresent(typeStats, typeMatcher.group(0), card.mNumberOf);
+                    if (Objects.equals(typeMatcher.group(0), "Land")) {
                         isLand = true;
                     }
                 } //Can have more than 1 type
@@ -78,23 +75,23 @@ public class DeckStatsGenerator {
                     Matcher colorMatcher = mColorPattern.matcher(card.getManaCost());
                     if (colorMatcher.find()) {
                         do {
-                            colorStats.computeIfPresent(colorMatcher.group(0), (k, v) -> (v + card.mNumberOf));
+                            mapAddIfPresent(colorStats, colorMatcher.group(0), card.mNumberOf);
                         } while (colorMatcher.find());
                     } else {
                         //Catch colorless
-                        colorStats.computeIfPresent(card.getColor(), (k, v) -> (v + card.mNumberOf));
+                        mapAddIfPresent(colorStats, card.getColor(), card.mNumberOf);
                     }
-                    cmcStats.computeIfPresent(Math.min(card.getCmc(), 7), (k, v) -> (v + card.mNumberOf));
+                    mapAddIfPresent(cmcStats, Math.min(card.getCmc(), 7), card.mNumberOf);
                     mDeckSize += card.mNumberOf;
                 }
             }
         }
 
         for (String type : typeStats.keySet()) {
-            typeStats.computeIfPresent(type, (k, v) -> (v / mDeckSize));
+            mapDivideIfPresent(typeStats, type, mDeckSize);
         }
         for (String color : colorStats.keySet()) {
-            typeStats.computeIfPresent(color, (k, v) -> (v / mDeckSize));
+            mapDivideIfPresent(colorStats, color, mDeckSize);
         }
     }
 
@@ -129,5 +126,28 @@ public class DeckStatsGenerator {
             runStats();
         }
         return cmcStats;
+    }
+    private <K> void mapDivideIfPresent(Map<K, Float> map, K key, float divisor) {
+        if (map.get(key) != null) {
+            Float oldValue = map.get(key);
+            Float newValue = oldValue / divisor;
+            map.put(key, newValue);
+        }
+    }
+
+    private <K> void mapAddIfPresent(Map<K, Float> map, K key, float difference) {
+        if (map.get(key) != null) {
+            Float oldValue = map.get(key);
+            Float newValue = oldValue + difference;
+            map.put(key, newValue);
+        }
+    }
+
+    private <K> void mapAddIfPresent(Map<K, Integer> map, K key, int difference) {
+        if (map.get(key) != null) {
+            Integer oldValue = map.get(key);
+            Integer newValue = oldValue + difference;
+            map.put(key, newValue);
+        }
     }
 }

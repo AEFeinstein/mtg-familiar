@@ -14,8 +14,9 @@ import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 public class ReliableColorPieRenderer extends PieChartRenderer {
-    private Path mPathBuffer = new Path();
-    private RectF mInnerRectBuffer = new RectF();
+    private final Path mPathBuffer = new Path();
+    private final RectF mInnerRectBuffer = new RectF();
+
     public ReliableColorPieRenderer(PieChart chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(chart, animator, viewPortHandler);
     }

@@ -1,9 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.view.ReliableColorPie;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class GraphHelper {
     private final Context c;
     private final DeckStatsGenerator mStatGenerator;
