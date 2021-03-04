@@ -9,7 +9,7 @@ public class SampleHandMaker {
     public static List<MtgCard> drawSampleHand(List<MtgCard> mDeck) {
         ArrayList<MtgCard> sampleHand = new ArrayList<>();
         List<MtgCard> fullDeck = expandDeck(mDeck);
-        Random rand = new Random();
+        Random rand = new Random(System.currentTimeMillis());
         for (int i = 0; i < 7; i++) {
             int randCard = rand.nextInt(fullDeck.size());
             sampleHand.add(fullDeck.get(randCard));

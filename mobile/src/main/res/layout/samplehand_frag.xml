@@ -18,7 +18,18 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/hand_list"
+        style="@style/list_view_divider"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="?attr/color_drawer_divider_item"
+        android:dividerHeight="1dp"
+        android:fastScrollEnabled="true"
+        tools:listitem="@layout/result_list_card_row" />
 </LinearLayout>
