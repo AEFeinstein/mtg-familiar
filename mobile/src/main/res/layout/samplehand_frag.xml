@@ -16,12 +16,9 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/sample_hand"
-        android:title="@string/sample_hand"
-        app:showAsAction="ifRoom" />
-
-</menu>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+</LinearLayout>
