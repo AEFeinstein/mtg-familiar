@@ -82,6 +82,7 @@ public class SampleHandFrag extends FamiliarFragment{
         } else if (item.getItemId() == R.id.mulligan) {
             numOfMulls++;
             mHand = SampleHandMaker.drawSampleHand(mDeck, numOfMulls);
+
             fillData(mListView);
             return true;
         }
@@ -92,61 +93,67 @@ public class SampleHandFrag extends FamiliarFragment{
      * This function fills mListView with the info in mCursor using a ResultListAdapter
      */
     private void fillData(ListView mListView) {
-        long[] handIds = new long[mHand.size()];
-        Cursor mCursor = null;
-        FamiliarDbHandle handle = new FamiliarDbHandle();
-        try {
-            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
-            Cursor[] handCursors = new Cursor[mHand.size()];
-            for (int i = 0; i < mHand.size(); i++) {
-                handIds[i] = CardDbAdapter.fetchIdByName(mHand.get(i).getName(), database);
-                handCursors[i] = CardDbAdapter.fetchCards(new long[] {handIds[i]}, null, database);
+        int handSize = mHand.size();
+        if (handSize > 0) {
+            long handId;
+            Cursor mCursor = null;
+            FamiliarDbHandle handle = new FamiliarDbHandle();
+            try {
+                SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+                Cursor[] handCursors = new Cursor[handSize];
+                for (int i = 0; i < handSize; i++) {
+                    handId = CardDbAdapter.fetchIdByName(mHand.get(i).getName(), database);
+                    handCursors[i] = CardDbAdapter.fetchCards(new long[]{handId}, null, database);
+                }
+                mCursor = new MergeCursor(handCursors);
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(false);
             }
-            mCursor = new MergeCursor(handCursors);
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(false);
-        }
-        if (mCursor != null) {
-            ArrayList<String> fromList = new ArrayList<>();
-            ArrayList<Integer> toList = new ArrayList<>();
-            // Always get name, set, and rarity. This is for the wishlist quick add
-            fromList.add(CardDbAdapter.KEY_NAME);
-            toList.add(R.id.card_name);
-            fromList.add(CardDbAdapter.KEY_SET);
-            toList.add(R.id.cardset);
-            fromList.add(CardDbAdapter.KEY_RARITY);
-            toList.add(R.id.rarity);
-            if (PreferenceAdapter.getManaCostPref(getContext())) {
-                fromList.add(CardDbAdapter.KEY_MANACOST);
-                toList.add(R.id.cardcost);
-            }
-            if (PreferenceAdapter.getTypePref(getContext())) {
-                /* This will handle both sub and super type */
-                fromList.add(CardDbAdapter.KEY_SUPERTYPE);
-                toList.add(R.id.cardtype);
-            }
-            if (PreferenceAdapter.getAbilityPref(getContext())) {
-                fromList.add(CardDbAdapter.KEY_ABILITY);
-                toList.add(R.id.cardability);
-            }
-            if (PreferenceAdapter.getPTPref(getContext())) {
-                fromList.add(CardDbAdapter.KEY_POWER);
-                toList.add(R.id.cardp);
-                fromList.add(CardDbAdapter.KEY_TOUGHNESS);
-                toList.add(R.id.cardt);
-                fromList.add(CardDbAdapter.KEY_LOYALTY);
-                toList.add(R.id.cardt);
-            }
+            if (mCursor != null) {
+                ArrayList<String> fromList = new ArrayList<>();
+                ArrayList<Integer> toList = new ArrayList<>();
+                // Always get name, set, and rarity. This is for the wishlist quick add
+                fromList.add(CardDbAdapter.KEY_NAME);
+                toList.add(R.id.card_name);
+                fromList.add(CardDbAdapter.KEY_SET);
+                toList.add(R.id.cardset);
+                fromList.add(CardDbAdapter.KEY_RARITY);
+                toList.add(R.id.rarity);
+                if (PreferenceAdapter.getManaCostPref(getContext())) {
+                    fromList.add(CardDbAdapter.KEY_MANACOST);
+                    toList.add(R.id.cardcost);
+                }
+                if (PreferenceAdapter.getTypePref(getContext())) {
+                    /* This will handle both sub and super type */
+                    fromList.add(CardDbAdapter.KEY_SUPERTYPE);
+                    toList.add(R.id.cardtype);
+                }
+                if (PreferenceAdapter.getAbilityPref(getContext())) {
+                    fromList.add(CardDbAdapter.KEY_ABILITY);
+                    toList.add(R.id.cardability);
+                }
+                if (PreferenceAdapter.getPTPref(getContext())) {
+                    fromList.add(CardDbAdapter.KEY_POWER);
+                    toList.add(R.id.cardp);
+                    fromList.add(CardDbAdapter.KEY_TOUGHNESS);
+                    toList.add(R.id.cardt);
+                    fromList.add(CardDbAdapter.KEY_LOYALTY);
+                    toList.add(R.id.cardt);
+                }
 
-            String[] from = new String[fromList.size()];
-            fromList.toArray(from);
+                String[] from = new String[fromList.size()];
+                fromList.toArray(from);
 
-            int[] to = new int[toList.size()];
-            for (int i = 0; i < to.length; i++) {
-                to[i] = toList.get(i);
+                int[] to = new int[toList.size()];
+                for (int i = 0; i < to.length; i++) {
+                    to[i] = toList.get(i);
+                }
+
+                ResultListAdapter rla = new ResultListAdapter(getActivity(), mCursor, from, to);
+                mListView.setAdapter(rla);
             }
-
-            ResultListAdapter rla = new ResultListAdapter(getActivity(), mCursor, from, to);
+        } else {
+            ResultListAdapter rla = new ResultListAdapter(getActivity(), null, null, null);
             mListView.setAdapter(rla);
         }
     }
