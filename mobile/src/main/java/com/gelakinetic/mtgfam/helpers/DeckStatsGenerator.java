@@ -33,7 +33,7 @@ public class DeckStatsGenerator {
     private Map<String, Float> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
-    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRG\\d])+?[^WUBRG]*([WUBRG])*\\}");
+    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRGC\\d])+?[^WUBRGC]*([WUBRGC])*\\}(?![^(]*\\))");
 
     public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
@@ -59,6 +59,7 @@ public class DeckStatsGenerator {
         colorStats.put("B", (float) 0);
         colorStats.put("R", (float) 0);
         colorStats.put("G", (float) 0);
+        colorStats.put("C", (float) 0);
         colorStats.put("", (float) 0);
         cmcStats = new HashMap<>();
         cmcStats.put(0, 0);
@@ -93,21 +94,25 @@ public class DeckStatsGenerator {
                 if (!isLand) {
                     Matcher manaCostMatcher = mColorPattern.matcher(card.getManaCost());
                     Matcher rulesColorMatcher = mColorPattern.matcher(card.getText());
+                    boolean hasColor = true;
                     if (manaCostMatcher.find()) {
                         do {
                             for (int i = 1; i <= manaCostMatcher.groupCount(); i++) {
                                 mapAddIfPresent(colorStats, manaCostMatcher.group(i), card.mNumberOf);
                             }
                         } while (manaCostMatcher.find());
-                    } else if (!rulesColorMatcher.find()) {
-                        //Catch colorless
-                        mapAddIfPresent(colorStats, card.getColor(), card.mNumberOf);
                     } else {
+                        hasColor = false;
+                    }
+                    if (rulesColorMatcher.find()) {
                         do {
                             for (int i = 1; i <= rulesColorMatcher.groupCount(); i++) {
                                 mapAddIfPresent(colorStats, rulesColorMatcher.group(i), card.mNumberOf);
                             }
                         } while (rulesColorMatcher.find());
+                    } else if (!hasColor){
+                        //Catch colorless
+                        mapAddIfPresent(colorStats, card.getColor(), card.mNumberOf);
                     }
                     mapAddIfPresent(cmcStats, Math.min(card.getCmc(), 7), card.mNumberOf);
                     mDeckSize += card.mNumberOf;
