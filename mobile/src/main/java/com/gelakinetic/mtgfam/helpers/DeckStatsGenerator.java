@@ -33,11 +33,11 @@ public class DeckStatsGenerator {
     private Map<String, Float> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
-    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRGC\\d])+?[^WUBRGC]*([WUBRGC])*\\}(?![^(]*\\))");
+    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRGC\\d])+?[^WUBRGC]*([WUBRGC])*\\}(?![^(]*\\))"); //Escape is not redundant, will break stuff if removed
 
     public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
-        mDeckSize = (float) 0;
+        mDeckSize = (float) 0; //calculated as total physical cards
         runStats();
     }
 

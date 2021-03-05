@@ -32,4 +32,5 @@
         android:dividerHeight="1dp"
         android:fastScrollEnabled="true"
         tools:listitem="@layout/result_list_card_row" />
+    
 </LinearLayout>

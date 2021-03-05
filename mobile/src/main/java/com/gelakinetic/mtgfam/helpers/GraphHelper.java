@@ -126,7 +126,7 @@ public class GraphHelper {
                 if (value == 7) {
                     return "7+";
                 } else {
-                    return Integer.toString((int) value);
+                    return Integer.toString((int) value); //No decimals
                 }
             }
         });

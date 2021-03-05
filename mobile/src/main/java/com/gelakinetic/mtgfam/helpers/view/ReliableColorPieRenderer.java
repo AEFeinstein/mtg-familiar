@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers.view;
 
 import android.graphics.Canvas;
@@ -21,6 +40,9 @@ public class ReliableColorPieRenderer extends PieChartRenderer {
         super(chart, animator, viewPortHandler);
     }
 
+    /**
+     * Had to override this whole method to force color graph to use correct color for each entry
+     */
     @Override
     protected void drawDataSet(Canvas c, IPieDataSet dataSet) {
         float angle = 0;
@@ -74,6 +96,7 @@ public class ReliableColorPieRenderer extends PieChartRenderer {
 
             final boolean accountForSliceSpacing = sliceSpace > 0.f && sliceAngle <= 180.f;
 
+            //Makes color selection predictable when displaying graph of colors
             switch (dataSet.getEntryForIndex(j).getLabel()) {
                 case "W":
                     mRenderPaint.setColor(dataSet.getColor(0));

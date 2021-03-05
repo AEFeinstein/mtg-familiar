@@ -562,17 +562,20 @@ Good luck, and have fun!
     <string name="empty_deck_text">"Please enter some cards to import"</string>
     <string name="import_loading">"Importing…"</string>
     <string name="import_parse_error_toast">"Had some trouble parsing these lines."</string>
+    <string name="import_complete_toast">"Deck imported successfully."</string>
     <plurals name="import_card_unknown_toast">
         <item quantity="one">"One card was not recognized and was not imported."</item>
         <item quantity="other">"%1$d cards were not recognized and were not imported."</item>
     </plurals>
-    <string name="import_complete_toast">"Deck imported successfully."</string>
-    <string name="search_settype">Set Type</string>
-    <string name="card_on_reserved_list">On Reserved List</string>
-    <string name="card_not_on_reserved_list">Not on Reserved List</string>
+
+    <!-- Sample Hand -->
     <string name="sample_hand">Sample Hand</string>
     <string name="new_hand">New Hand</string>
     <string name="mulligan">Mulligan</string>
+
+    <string name="search_settype">Set Type</string>
+    <string name="card_on_reserved_list">On Reserved List</string>
+    <string name="card_not_on_reserved_list">Not on Reserved List</string>
     <string name="logging_title">Logging Menu</string>
     <string name="logging_enabled">Logging Enabled</string>
     <string name="logging_share">Share Log</string>
