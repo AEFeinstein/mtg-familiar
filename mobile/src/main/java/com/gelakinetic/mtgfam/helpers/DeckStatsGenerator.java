@@ -33,7 +33,7 @@ public class DeckStatsGenerator {
     private Map<String, Float> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
-    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRG])+?[^WUBRG]*([WUBRG])*\\}");
+    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRG\\d])+?[^WUBRG]*([WUBRG])*\\}");
 
     public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
