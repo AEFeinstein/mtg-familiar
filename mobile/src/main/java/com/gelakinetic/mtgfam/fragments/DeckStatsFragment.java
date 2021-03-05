@@ -47,6 +47,9 @@ public class DeckStatsFragment extends FamiliarFragment {
     private BarChart mCmcChart;
     private GraphHelper mGraphHelper;
 
+    /**
+     * @param mDeckToStat The deck to generate stats from
+     */
     public DeckStatsFragment(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
     }
@@ -63,7 +66,6 @@ public class DeckStatsFragment extends FamiliarFragment {
      *                           saved state as given here.
      * @return The view to be displayed.
      */
-
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View myFragmentView =
@@ -81,19 +83,28 @@ public class DeckStatsFragment extends FamiliarFragment {
         return myFragmentView;
     }
 
+    /**
+     * @param menu     The options menu in which you place your items.
+     * @param inflater The inflater to use to inflate the menu
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.stats_menu, menu);
     }
 
+    /**
+     * Handle an ActionBar item click.
+     *
+     * @param item the item clicked
+     * @return true if the click was acted on
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sample_hand) {
             startNewFragment(new SampleHandFrag(mDeckToStat), null);
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
-
 }

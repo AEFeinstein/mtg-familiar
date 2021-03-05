@@ -50,11 +50,29 @@ public class SampleHandFrag extends FamiliarFragment{
     private final List<MtgCard> mDeck;
     private List<MtgCard> mHand;
     private int numOfMulls = 0;
+    /* UI Elements */
     private ListView mListView;
 
+    /**
+     *
+     * @param mDeck The deck to make sample hands from
+     */
     public SampleHandFrag(List<MtgCard> mDeck) {
         this.mDeck = mDeck;
     }
+
+    /**
+     * Create the view, pull out UI elements, and set up the listener for the "add cards" button.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in
+     *                           the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should
+     *                           be attached to. The fragment should not add the view itself, but
+     *                           this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     *                           saved state as given here.
+     * @return The view to be displayed.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View myFragmentView =
@@ -62,37 +80,47 @@ public class SampleHandFrag extends FamiliarFragment{
         assert myFragmentView != null;
         mHand = SampleHandMaker.drawSampleHand(mDeck);
         mListView = myFragmentView.findViewById(R.id.hand_list);
-        fillData(mListView);
+        fillData();
         return myFragmentView;
     }
 
+    /**
+     * @param menu     The options menu in which you place your items.
+     * @param inflater The inflater to use to inflate the menu
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.samplehand_menu, menu);
     }
 
+    /**
+     * Handle an ActionBar item click.
+     *
+     * @param item the item clicked
+     * @return true if the click was acted on
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.new_hand) {
             mHand = SampleHandMaker.drawSampleHand(mDeck);
             numOfMulls = 0;
-            fillData(mListView);
+            fillData();
             return true;
         } else if (item.getItemId() == R.id.mulligan) {
             numOfMulls++;
             mHand = SampleHandMaker.drawSampleHand(mDeck, numOfMulls);
-
-            fillData(mListView);
+            fillData();
             return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
     /**
      * This function fills mListView with the info in mCursor using a ResultListAdapter
      */
-    private void fillData(ListView mListView) {
+    private void fillData() {
         int handSize = mHand.size();
         if (handSize > 0) {
             long handId;

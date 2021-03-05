@@ -25,6 +25,11 @@ import java.util.Random;
 
 public class SampleHandMaker {
 
+    /**
+     * Draws a sample hand from the provided deck with no mulligans taken
+     * @param mDeck The deck to draw a sample hand from
+     * @return The drawn sample hand
+     */
     public static List<MtgCard> drawSampleHand(List<MtgCard> mDeck) {
         ArrayList<MtgCard> sampleHand = new ArrayList<>();
         List<MtgCard> fullDeck = expandDeck(mDeck);
@@ -38,6 +43,12 @@ public class SampleHandMaker {
         return sampleHand;
     }
 
+    /**
+     * Draws a sample hand from the provided deck given how many mulligans have been taken
+     * @param mDeck The deck to draw a sample hand from
+     * @param numOfMulls The number of mulligans that have been taken
+     * @return The drawn sample hand
+     */
     public static List<MtgCard> drawSampleHand(List<MtgCard> mDeck, int numOfMulls) {
         List<MtgCard> sampleHand = drawSampleHand(mDeck);
         if (numOfMulls >= sampleHand.size()) {
@@ -50,6 +61,11 @@ public class SampleHandMaker {
         return sampleHand;
     }
 
+    /**
+     * Expands a deck to include a separate entry for each copy of a card
+     * @param mDeck The deck to expand
+     * @return The expanded deck
+     */
     private static List<MtgCard> expandDeck(List<MtgCard> mDeck) {
         ArrayList<MtgCard> expandedDeck = new ArrayList<>();
         for (MtgCard card : mDeck) {

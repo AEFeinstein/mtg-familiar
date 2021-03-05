@@ -160,6 +160,14 @@ public class DeckStatsGenerator {
         }
         return cmcStats;
     }
+
+    /**
+     * Replace computeIfPresent for division to keep minApi at 21
+     * @param map Map to divide values from
+     * @param key Key for which value to divide
+     * @param divisor What to divide by
+     * @param <K> Key type
+     */
     private <K> void mapDivideIfPresent(Map<K, Float> map, K key, float divisor) {
         if (map.get(key) != null) {
             Float oldValue = map.get(key);
@@ -168,6 +176,13 @@ public class DeckStatsGenerator {
         }
     }
 
+    /**
+     * Replace computeIfPresent for addition of Floats to keep minApi at 21
+     * @param map Map to add values from
+     * @param key Key for which value to add
+     * @param difference What to add
+     * @param <K> Key type
+     */
     private <K> void mapAddIfPresent(Map<K, Float> map, K key, float difference) {
         if (map.get(key) != null) {
             Float oldValue = map.get(key);
@@ -176,6 +191,13 @@ public class DeckStatsGenerator {
         }
     }
 
+    /**
+     * Replace computeIfPresent for addition of Integers to keep minApi at 21
+     * @param map Map to add values from
+     * @param key Key for which value to add
+     * @param difference What to add
+     * @param <K> Key type
+     */
     private <K> void mapAddIfPresent(Map<K, Integer> map, K key, int difference) {
         if (map.get(key) != null) {
             Integer oldValue = map.get(key);
