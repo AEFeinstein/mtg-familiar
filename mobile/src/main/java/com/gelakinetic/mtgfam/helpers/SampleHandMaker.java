@@ -29,7 +29,8 @@ public class SampleHandMaker {
         ArrayList<MtgCard> sampleHand = new ArrayList<>();
         List<MtgCard> fullDeck = expandDeck(mDeck);
         Random rand = new Random(System.currentTimeMillis());
-        for (int i = 0; i < 7; i++) {
+        int fullSize = fullDeck.size();
+        for (int i = 0; i < Math.min(7, fullSize); i++) {
             int randCard = rand.nextInt(fullDeck.size());
             sampleHand.add(fullDeck.get(randCard));
             fullDeck.remove(randCard);
@@ -38,12 +39,13 @@ public class SampleHandMaker {
     }
 
     public static List<MtgCard> drawSampleHand(List<MtgCard> mDeck, int numOfMulls) {
-        if (numOfMulls > 7) {
+        List<MtgCard> sampleHand = drawSampleHand(mDeck);
+        if (numOfMulls >= sampleHand.size()) {
             return new ArrayList<>();
         }
-        List<MtgCard> sampleHand = drawSampleHand(mDeck);
+
         for (int i = 0; i < numOfMulls; i++) {
-            sampleHand.remove(6 - i);
+            sampleHand.remove(sampleHand.size() - 1);
         }
         return sampleHand;
     }

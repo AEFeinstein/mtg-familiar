@@ -33,7 +33,7 @@ public class DeckStatsGenerator {
     private Map<String, Float> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
-    private static final Pattern mColorPattern = Pattern.compile("([WUBRG])+?");
+    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRG])+?\\}");
 
     public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
@@ -91,14 +91,19 @@ public class DeckStatsGenerator {
                 while (typeMatcher.find());
 
                 if (!isLand) {
-                    Matcher colorMatcher = mColorPattern.matcher(card.getManaCost());
-                    if (colorMatcher.find()) {
+                    Matcher manaCostMatcher = mColorPattern.matcher(card.getManaCost());
+                    Matcher rulesColorMatcher = mColorPattern.matcher(card.getText());
+                    if (manaCostMatcher.find()) {
                         do {
-                            mapAddIfPresent(colorStats, colorMatcher.group(0), card.mNumberOf);
-                        } while (colorMatcher.find());
-                    } else {
+                            mapAddIfPresent(colorStats, manaCostMatcher.group(1), card.mNumberOf);
+                        } while (manaCostMatcher.find());
+                    } else if (!rulesColorMatcher.find()) {
                         //Catch colorless
                         mapAddIfPresent(colorStats, card.getColor(), card.mNumberOf);
+                    } else {
+                        do {
+                            mapAddIfPresent(colorStats, rulesColorMatcher.group(1), card.mNumberOf);
+                        } while (rulesColorMatcher.find());
                     }
                     mapAddIfPresent(cmcStats, Math.min(card.getCmc(), 7), card.mNumberOf);
                     mDeckSize += card.mNumberOf;
