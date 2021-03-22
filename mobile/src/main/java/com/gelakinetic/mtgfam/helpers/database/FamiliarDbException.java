@@ -39,9 +39,17 @@ public class FamiliarDbException extends Exception {
     public FamiliarDbException(Exception e) {
         mInnerException = e;
         // Log this exception
-        StringBuilder sb = new StringBuilder(e.getMessage());
-        sb.append(e.getMessage()).append('\n');
-        sb.append(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e)).append('\n');
+        StringBuilder sb = new StringBuilder();
+        if (null != e) {
+            if (null != e.getMessage()) {
+                sb.append(e.getMessage()).append('\n');
+            } else {
+                sb.append("Exception message was null\n");
+            }
+            sb.append(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e)).append('\n');
+        } else {
+            sb.append("Exception was null\n");
+        }
         FamiliarLogger.appendToLogFile(sb, "FamiliarDbException");
     }
 
