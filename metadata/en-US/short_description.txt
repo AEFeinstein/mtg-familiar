@@ -1,0 +1,1 @@
+MTG Familiar is a collection of utilities for playing "Magic: The Gathering"
