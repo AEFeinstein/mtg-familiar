@@ -94,10 +94,14 @@ public class HtmlDocFragment extends FamiliarFragment {
                 if (savedInstanceState != null && savedInstanceState.containsKey(SCROLL_PCT)) {
                     // Delay the scrollTo to make it work
                     view.postDelayed(() -> {
-                        float webViewSize = mWebView.getContentHeight() - mWebView.getTop();
-                        float positionInWV = webViewSize * savedInstanceState.getFloat(SCROLL_PCT);
-                        int positionY = Math.round(mWebView.getTop() + positionInWV);
-                        mWebView.scrollTo(0, positionY);
+                        if (0 != savedInstanceState.getFloat(SCROLL_PCT)) {
+                            float webViewSize = mWebView.getContentHeight() - mWebView.getTop();
+                            float positionInWV = webViewSize * savedInstanceState.getFloat(SCROLL_PCT);
+                            int positionY = Math.round(mWebView.getTop() + positionInWV);
+                            mWebView.scrollTo(0, positionY);
+                            // Remove this to not scroll after clicking links
+                        }
+                        savedInstanceState.remove(SCROLL_PCT);
                     }, 300);
                 }
             }
