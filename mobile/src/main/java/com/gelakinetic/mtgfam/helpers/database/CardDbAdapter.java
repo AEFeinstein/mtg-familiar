@@ -1355,11 +1355,11 @@ public class CardDbAdapter {
             }
 
             if (consolidate) {
-                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC, " + KEY_ID + " DESC"
+                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC, (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " + 0) ASC"
                         + ") GROUP BY " + KEY_NAME + " ORDER BY " + orderByStr;
             } else {
                 sql += " ORDER BY " + orderByStr
-                        + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, " + KEY_ID + " DESC)";
+                        + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " + 0) ASC)";
             }
             FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor cursor = mDb.rawQuery(sql, null);
