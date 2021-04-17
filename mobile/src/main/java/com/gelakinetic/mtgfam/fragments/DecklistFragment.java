@@ -594,6 +594,13 @@ public class DecklistFragment extends FamiliarListFragment {
                         SnackbarWrapper.LENGTH_LONG);
             }
             return true;
+        } else if (item.getItemId() == R.id.deck_menu_stats) {
+            try {
+                startNewFragment(new DeckStatsFragment(DecklistHelpers.ReadDecklist(getActivity(), mCurrentDeck + ".deck", true)), null);
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(false);
+            }
+            return true;
         } else if (item.getItemId() == R.id.deck_menu_legality) {
             getFamiliarActivity().setLoading();
 

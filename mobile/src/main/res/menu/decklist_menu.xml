@@ -55,7 +55,11 @@
         android:icon="@drawable/ic_menu_share"
         android:title="@string/decklist_share"
         app:showAsAction="ifRoom" />
-
+    <item
+        android:id="@+id/deck_menu_stats"
+        android:icon="@drawable/ic_menu_arrow_down"
+        android:title="@string/decklist_stats"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_legality"
         android:icon="@drawable/ic_menu_legality"

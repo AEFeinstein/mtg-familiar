@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,7 +32,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.*;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -166,17 +166,8 @@ public class ImportFragment extends FamiliarFragment {
         }
     }
 
-    /**
-     * @param menu     The options menu in which you place your items.
-     * @param inflater The inflater to use to inflate the menu
-     */
-    @Override
-    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     /* TODO: make class static to prevent leaks? */
+    @SuppressLint("StaticFieldLeak")
     private class ImportTask extends AsyncTask<Void, String[], DeckListImporter> {
 
         private final String mLines;
