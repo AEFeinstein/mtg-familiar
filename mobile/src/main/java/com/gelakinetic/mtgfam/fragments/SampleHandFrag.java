@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -81,40 +82,19 @@ public class SampleHandFrag extends FamiliarFragment{
         mHand = SampleHandMaker.drawSampleHand(mDeck);
         mListView = myFragmentView.findViewById(R.id.hand_list);
         fillData();
-        return myFragmentView;
-    }
-
-    /**
-     * @param menu     The options menu in which you place your items.
-     * @param inflater The inflater to use to inflate the menu
-     */
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.samplehand_menu, menu);
-    }
-
-    /**
-     * Handle an ActionBar item click.
-     *
-     * @param item the item clicked
-     * @return true if the click was acted on
-     */
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.new_hand) {
+        Button newHandButton = myFragmentView.findViewById(R.id.new_hand);
+        Button mullButton = myFragmentView.findViewById(R.id.mulligan);
+        newHandButton.setOnClickListener(v -> {
             mHand = SampleHandMaker.drawSampleHand(mDeck);
             numOfMulls = 0;
             fillData();
-            return true;
-        } else if (item.getItemId() == R.id.mulligan) {
+        });
+        mullButton.setOnClickListener(v -> {
             numOfMulls++;
             mHand = SampleHandMaker.drawSampleHand(mDeck, numOfMulls);
             fillData();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        });
+        return myFragmentView;
     }
 
     /**

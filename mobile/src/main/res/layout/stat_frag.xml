@@ -48,5 +48,27 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorPrimary_attr" />
+
+    <LinearLayout
+        style="@android:style/Holo.ButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/color_background"
+        android:minHeight="48dp">
+
+        <Button
+            android:id="@+id/sample_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/sample_hand"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 </LinearLayout>
 
