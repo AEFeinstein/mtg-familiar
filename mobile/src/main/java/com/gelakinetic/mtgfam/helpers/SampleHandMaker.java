@@ -19,7 +19,10 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import org.apache.commons.collections4.comparators.ComparatorChain;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -31,6 +34,10 @@ public class SampleHandMaker {
      * @return The drawn sample hand
      */
     public static List<MtgCard> drawSampleHand(List<MtgCard> mDeck) {
+        ComparatorChain<MtgCard> compareChain = new ComparatorChain<>();
+        compareChain.addComparator(new CardHelpers.CardComparatorCMC());
+        compareChain.addComparator(new CardHelpers.CardComparatorColor());
+        compareChain.addComparator(new CardHelpers.CardComparatorName());
         ArrayList<MtgCard> sampleHand = new ArrayList<>();
         List<MtgCard> fullDeck = expandDeck(mDeck);
         Random rand = new Random(System.currentTimeMillis());
@@ -40,6 +47,7 @@ public class SampleHandMaker {
             sampleHand.add(fullDeck.get(randCard));
             fullDeck.remove(randCard);
         }
+        Collections.sort(sampleHand, compareChain);
         return sampleHand;
     }
 
