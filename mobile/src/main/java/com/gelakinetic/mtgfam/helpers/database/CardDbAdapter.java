@@ -1006,7 +1006,17 @@ public class CardDbAdapter {
         }
 
         if (criteria.collectorsNumber != null) {
-            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " = ").append(sanitizeString(criteria.collectorsNumber, false)).append(")");
+            statement.append(" AND (");
+            boolean first = true;
+            for (String part : criteria.collectorsNumber.split("\\s+")) {
+                if (first) {
+                    first = false;
+                } else {
+                    statement.append(" OR ");
+                }
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " LIKE ").append(sanitizeString(part, false));
+            }
+            statement.append(")");
         }
 
         /*
