@@ -33,7 +33,7 @@ public class DeckStatsGenerator {
     private Map<String, Float> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
-    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRGC\\d])+?[^WUBRGC]*([WUBRGC])*\\}(?![^(]*\\))"); //Escape is not redundant, will break stuff if removed
+    private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRGC\\d])+?[^WUBRGC]*?([WUBRGC])*\\}(?![^(]*\\))"); //Escape is not redundant, will break stuff if removed
 
     public DeckStatsGenerator(List<MtgCard> mDeckToStat) {
         this.mDeckToStat = mDeckToStat;
@@ -95,10 +95,17 @@ public class DeckStatsGenerator {
                     Matcher manaCostMatcher = mColorPattern.matcher(card.getManaCost());
                     Matcher rulesColorMatcher = mColorPattern.matcher(card.getText());
                     boolean hasColor = true;
+
                     if (manaCostMatcher.find()) {
                         do {
+                         /*   float numColors = (float) 0.0;
                             for (int i = 1; i <= manaCostMatcher.groupCount(); i++) {
-                                mapAddIfPresent(colorStats, manaCostMatcher.group(i), card.mNumberOf);
+                                if (colorStats.containsKey(manaCostMatcher.group(i))) {
+                                    numColors++;
+                                }
+                            }*/
+                            for (int j = 1; j <= manaCostMatcher.groupCount(); j++) {
+                                mapAddIfPresent(colorStats, manaCostMatcher.group(j), card.mNumberOf /* / numColors*/);
                             }
                         } while (manaCostMatcher.find());
                     } else {
