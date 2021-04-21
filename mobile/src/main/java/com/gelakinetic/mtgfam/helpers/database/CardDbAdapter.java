@@ -54,7 +54,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 117;
+    public static final int DATABASE_VERSION = 118;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -75,6 +75,7 @@ public class CardDbAdapter {
     public static final String KEY_ABILITY = "cardtext";
     public static final String KEY_COLOR = "color";
     public static final String KEY_MANACOST = "manacost";
+    public static final String KEY_MANACOSTSORTED = "manacostsorted";
     public static final String KEY_CMC = "cmc";
     public static final String KEY_POWER = "power";
     public static final String KEY_TOUGHNESS = "toughness";
@@ -143,6 +144,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NUMBER,
             DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE,
             DATABASE_TABLE_CARDS + "." + KEY_MANACOST,
+            DATABASE_TABLE_CARDS + "." + KEY_MANACOSTSORTED,
             DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
             DATABASE_TABLE_CARDS + "." + KEY_POWER,
             DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
@@ -234,6 +236,7 @@ public class CardDbAdapter {
                     KEY_SUBTYPE + " text not null, " +
                     KEY_RARITY + " integer, " +
                     KEY_MANACOST + " text, " +
+                    KEY_MANACOSTSORTED + " text, " +
                     KEY_CMC + " integer not null, " +
                     KEY_POWER + " real, " +
                     KEY_TOUGHNESS + " real, " +
@@ -1218,12 +1221,9 @@ public class CardDbAdapter {
         }
 
         if (null != criteria.manaCostLogic && null != criteria.manaCost) {
-            StringBuilder manaCost = new StringBuilder();
-            for (String mana : criteria.manaCost) {
-                manaCost.append('{').append(mana).append('}');
-            }
+            Collections.sort(criteria.manaCost);
             statement = criteria.manaCostLogic.appendToSql(statement,
-                    DATABASE_TABLE_CARDS + "." + KEY_MANACOST, manaCost.toString());
+                    DATABASE_TABLE_CARDS + "." + KEY_MANACOSTSORTED, criteria.manaCost);
         }
 
         if (criteria.cmc != -1) {
@@ -1762,6 +1762,7 @@ public class CardDbAdapter {
         }
         initialValues.put(KEY_RARITY, (int) card.getRarity());
         initialValues.put(KEY_MANACOST, card.getManaCost());
+        initialValues.put(KEY_MANACOSTSORTED, card.getManaCostSorted());
         initialValues.put(KEY_CMC, card.getCmc());
         initialValues.put(KEY_POWER, card.getPower());
         initialValues.put(KEY_TOUGHNESS, card.getToughness());

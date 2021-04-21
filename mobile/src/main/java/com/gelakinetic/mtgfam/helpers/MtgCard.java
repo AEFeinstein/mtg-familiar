@@ -261,6 +261,8 @@ public class MtgCard extends Card {
                 .getColumnIndex(CardDbAdapter.KEY_RARITY));
         this.mManaCost = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_MANACOST));
+        this.mSortedManaCost = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_MANACOSTSORTED));
         this.mPower = cardCursor.getInt(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_POWER));
         this.mToughness = cardCursor.getInt(cardCursor
@@ -419,6 +421,7 @@ public class MtgCard extends Card {
 
             this.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_RARITY));
             this.mManaCost = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MANACOST));
+            this.mSortedManaCost = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MANACOSTSORTED));
             this.mPower = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_POWER));
             this.mToughness = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_TOUGHNESS));
             this.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_LOYALTY));
