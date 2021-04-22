@@ -22,31 +22,63 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_weight="1">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/type_chart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <com.gelakinetic.mtgfam.helpers.view.ReliableColorPie
-            android:id="@+id/color_chart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/type_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    </LinearLayout>
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/type_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintTop_toTopOf="@id/type_view"
+                        app:layout_constraintDimensionRatio="1:1" />
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/cmc_graph"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/color_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.gelakinetic.mtgfam.helpers.view.ReliableColorPie
+                    android:id="@+id/color_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="@id/color_view"
+                    app:layout_constraintDimensionRatio="1:1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cmc_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/cmc_graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="@id/cmc_view"
+                    app:layout_constraintDimensionRatio="1:1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <View
         android:layout_width="match_parent"
@@ -71,4 +103,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
