@@ -95,12 +95,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* We're setting this to false if we return null, so we should reset it every time to be safe */
-        setShowsDialog(true);
         mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
         final int sideForDialog = getArguments().getInt(ID_SIDE);
         final int positionForDialog = getArguments().getInt(ID_POSITION);

@@ -77,11 +77,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        setShowsDialog(true);
         mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
         final String cardName = getArguments().getString(NAME_KEY);
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);

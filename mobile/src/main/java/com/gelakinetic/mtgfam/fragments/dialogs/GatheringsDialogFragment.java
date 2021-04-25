@@ -69,12 +69,8 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
-
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
 
         mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
 

@@ -71,6 +71,7 @@ public class FamiliarDialogFragment extends DialogFragment {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
         ft.commitAllowingStateLoss();
+        setShowsDialog(true);
     }
 
     /**
@@ -102,6 +103,15 @@ public class FamiliarDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // If the dialog shouldn't be shown, dismiss it immediately
+        if (!getShowsDialog()) {
+            this.dismissAllowingStateLoss();
+        }
+    }
+
     /**
      * Fixes a bug on rotation
      * http://stackoverflow.com/questions/8235080/fragments-dialogFragment-and-screen-rotation
@@ -122,7 +132,7 @@ public class FamiliarDialogFragment extends DialogFragment {
     @SuppressWarnings("SameReturnValue")
     Dialog DontShowDialog() {
         setShowsDialog(false);
-        return null;
+        return new Dialog(getContext());
     }
 
     /**
