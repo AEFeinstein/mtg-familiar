@@ -26,6 +26,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
 import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.R;
@@ -80,31 +82,9 @@ public class DeckStatsFragment extends FamiliarFragment {
         mTypeChart.invalidate(); //refresh
         mColorChart.invalidate(); //refresh
         mCmcChart.invalidate(); //refresh
+        Button sampleButton = myFragmentView.findViewById(R.id.sample_button);
+        sampleButton.setOnClickListener(v -> startNewFragment(new SampleHandFrag(mDeckToStat), null));
         return myFragmentView;
     }
 
-    /**
-     * @param menu     The options menu in which you place your items.
-     * @param inflater The inflater to use to inflate the menu
-     */
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.stats_menu, menu);
-    }
-
-    /**
-     * Handle an ActionBar item click.
-     *
-     * @param item the item clicked
-     * @return true if the click was acted on
-     */
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.sample_hand) {
-            startNewFragment(new SampleHandFrag(mDeckToStat), null);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

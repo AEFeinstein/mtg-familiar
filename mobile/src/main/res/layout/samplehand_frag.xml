@@ -27,10 +27,45 @@
         android:id="@+id/hand_list"
         style="@style/list_view_divider"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:divider="?attr/color_drawer_divider_item"
         android:dividerHeight="1dp"
         android:fastScrollEnabled="true"
         tools:listitem="@layout/result_list_card_row" />
-    
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorPrimary_attr" />
+
+    <LinearLayout
+        style="@android:style/Holo.ButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/color_background"
+        android:minHeight="48dp">
+
+        <Button
+            android:id="@+id/new_hand"
+            style="?android:attr/buttonBarButtonStyle"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/new_hand"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/mulligan"
+            style="?android:attr/buttonBarButtonStyle"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/mulligan"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 </LinearLayout>
