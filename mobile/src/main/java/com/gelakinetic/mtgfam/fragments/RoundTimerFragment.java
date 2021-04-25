@@ -48,7 +48,6 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 /**
  * This fragment starts and stops the round timer. When it is started, it commits the end time as a shared preference,

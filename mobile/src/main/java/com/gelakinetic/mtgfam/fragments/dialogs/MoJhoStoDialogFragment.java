@@ -33,8 +33,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
-import java.util.Objects;
-
 /**
  * Class that creates dialogs for MoJhoStoFragment
  */

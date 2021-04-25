@@ -52,7 +52,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 /**

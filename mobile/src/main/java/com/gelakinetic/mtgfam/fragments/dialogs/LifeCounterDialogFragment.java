@@ -35,7 +35,6 @@ import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Class that creates dialogs for LifeCounterFragment

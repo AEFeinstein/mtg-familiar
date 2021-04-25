@@ -41,8 +41,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
-import java.util.Objects;
-
 /**
  * This is the superclass for all fragments. It has a bunch of convenient methods
  */

@@ -40,7 +40,6 @@ import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardSearchProvider;
 
-import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 
 /**

@@ -43,8 +43,6 @@ import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
-import java.util.Objects;
-
 /**
  * Class that creates dialogs for FamiliarActivity
  */

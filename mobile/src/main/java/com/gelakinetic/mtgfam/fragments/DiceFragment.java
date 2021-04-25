@@ -38,7 +38,6 @@ import androidx.core.content.ContextCompat;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.NumberButtonOnClickListener;
 
-import java.util.Objects;
 import java.util.Random;
 
 /**

@@ -42,7 +42,6 @@ import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This fragment handles the creation, loading, and saving of Gatherings (default sets of players, lives, and view modes

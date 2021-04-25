@@ -31,8 +31,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
-import java.util.Objects;
-
 /**
  * Class that creates dialogs for RoundTimerFragment
  */

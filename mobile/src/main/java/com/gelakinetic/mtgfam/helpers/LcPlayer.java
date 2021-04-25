@@ -44,7 +44,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.LcPlayerDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Objects;
 
 public class LcPlayer {
     /* Handler for committing life changes */

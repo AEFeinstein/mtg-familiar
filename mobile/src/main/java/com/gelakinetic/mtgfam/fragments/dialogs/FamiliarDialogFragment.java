@@ -34,7 +34,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This is a superclass for all dialog fragments. It fixes some bugs and handles rotations nicely
