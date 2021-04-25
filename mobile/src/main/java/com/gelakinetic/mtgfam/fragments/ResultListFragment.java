@@ -210,7 +210,7 @@ public class ResultListFragment extends FamiliarFragment {
         /* Open up the database, search for stuff */
         try {
             mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
-            doSearch(Objects.requireNonNull(this.getArguments()), mDatabase);
+            doSearch(this.requireArguments(), mDatabase);
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
             return myFragmentView;
@@ -244,14 +244,14 @@ public class ResultListFragment extends FamiliarFragment {
         } else {
             FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
         }
-        FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+        FragmentManager fm = Objects.requireNonNull(getParentFragmentManager());
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
             if (null == mCursor || mCursor.getCount() == 1) {
                 /* Jump back past the result list (it wasn't displayed because this card is a singleton)
                  * or maybe the cursor was null for no good reason */
-                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
-                    getActivity().finish();
+                if (!requireActivity().isTaskRoot()) {
+                    requireActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
                 }
@@ -259,8 +259,8 @@ public class ResultListFragment extends FamiliarFragment {
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
                 SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT);
-                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
-                    getActivity().finish();
+                if (!requireActivity().isTaskRoot()) {
+                    requireActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
                 }
@@ -497,7 +497,7 @@ public class ResultListFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         if (dialogId == ResultListDialogFragment.DIALOG_SORT) {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
@@ -505,7 +505,7 @@ public class ResultListFragment extends FamiliarFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getSearchSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             ResultListDialogFragment newFragment = new ResultListDialogFragment();
             Bundle arguments = new Bundle();
@@ -513,7 +513,7 @@ public class ResultListFragment extends FamiliarFragment {
             arguments.putString(ResultListDialogFragment.NAME_KEY, cardName);
             arguments.putString(ResultListDialogFragment.NAME_SET, cardSet);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
     }
 
@@ -530,7 +530,7 @@ public class ResultListFragment extends FamiliarFragment {
             /* Close the old cursor */
             mCursor.close();
             /* Do the search again with the new "order by" options */
-            doSearch(Objects.requireNonNull(getArguments()), mDatabase);
+            doSearch(requireArguments(), mDatabase);
             /* Display the newly sorted data */
             fillData();
         } catch (SQLiteException | FamiliarDbException e) {
