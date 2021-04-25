@@ -23,14 +23,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
+
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.*;
+import com.gelakinetic.mtgfam.helpers.DeckListImporter;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -48,7 +59,7 @@ public class ImportFragment extends FamiliarFragment {
     private EditText mDeckName;
     private EditText mDeckText;
     private boolean mImportStarted;
-    private AsyncTask<Void, String[], DeckListImporter> mImportTask;
+    private AsyncTask<ImportFragment, String[], DeckListImporter> mImportTask;
 
     /**
      * @return The current text in mDeckName
@@ -152,7 +163,7 @@ public class ImportFragment extends FamiliarFragment {
         final String name = String.valueOf(getDeckNameInput());
         final String lines = String.valueOf(getDeckTextInput());
 
-        mImportTask = new ImportTask(name, lines).execute();
+        mImportTask = new ImportTask(this, name, lines).execute();
     }
 
     @Override
@@ -176,21 +187,22 @@ public class ImportFragment extends FamiliarFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    /* TODO: make class static to prevent leaks? */
-    private class ImportTask extends AsyncTask<Void, String[], DeckListImporter> {
+    private static class ImportTask extends AsyncTask<ImportFragment, String[], DeckListImporter> {
 
         private final String mLines;
         private final String mName;
         private final ArrayList<MtgCard> unknownCards = new ArrayList<>();
         private final ArrayList<MtgCard> importedCards = new ArrayList<>();
+        private final ImportFragment mFrag;
 
-        ImportTask(String name, String lines) {
+        ImportTask(ImportFragment importFragment, String name, String lines) {
             mName = name;
             mLines = lines;
+            mFrag = importFragment;
         }
 
         @Override
-        protected DeckListImporter doInBackground(Void... voids) {
+        protected DeckListImporter doInBackground(ImportFragment... args) {
             final DeckListImporter importer = new DeckListImporter();
             try (BufferedReader br = new BufferedReader(new StringReader(mLines))) {
                 String line;
@@ -208,16 +220,16 @@ public class ImportFragment extends FamiliarFragment {
             try {
                 /* TODO: does error snackbar get shown properly? We're not on UI thread... */
                 //Issues happen here if ImportTask is made static
-                MtgCard.initCardListFromDb(getContext(), cardList);
+                MtgCard.initCardListFromDb(mFrag.getContext(), cardList);
             } catch (FamiliarDbException fde) {
-                handleFamiliarDbException(false);
+                mFrag.handleFamiliarDbException(false);
             }
 
             /* find out which cards are known */
             for (MtgCard card : cardList) {
                 if (card.getMultiverseId() == 0) {
                     try {
-                        MtgCard noSetCard = new MtgCard(getActivity(), card.getName(), null, card.mIsFoil, card.mNumberOf, card.isSideboard());
+                        MtgCard noSetCard = new MtgCard(mFrag.getActivity(), card.getName(), null, card.mIsFoil, card.mNumberOf, card.isSideboard());
                         importedCards.add(noSetCard);
                     } catch (java.lang.InstantiationException e) {
                         unknownCards.add(card);
@@ -229,7 +241,7 @@ public class ImportFragment extends FamiliarFragment {
             publishProgress(importer.getErrorLines().toArray(new String[0]));
             /* Save the decklist */
             if (!importedCards.isEmpty()) {
-                DecklistHelpers.WriteDecklist(getFamiliarActivity(), importedCards, mName + ".deck");
+                DecklistHelpers.WriteDecklist(mFrag.getFamiliarActivity(), importedCards, mName + ".deck");
             }
 
             return importer;
@@ -237,35 +249,35 @@ public class ImportFragment extends FamiliarFragment {
 
         @Override
         protected void onProgressUpdate(String[]... errorLines) {
-            getDeckTextInput().clear();
+            mFrag.getDeckTextInput().clear();
             if (errorLines[0].length > 0 || unknownCards.size() > 0) {
                 for (String line : errorLines[0]) {
-                    getDeckTextInput().append(line).append(System.getProperty("line.separator"));
+                    mFrag.getDeckTextInput().append(line).append(System.getProperty("line.separator"));
                 }
                 for (MtgCard card : unknownCards) {
-                    getDeckTextInput().append(String.valueOf(card.mNumberOf)).append(" ").append(card.getName()).append(System.getProperty("line.separator"));
+                    mFrag.getDeckTextInput().append(String.valueOf(card.mNumberOf)).append(" ").append(card.getName()).append(System.getProperty("line.separator"));
                 }
-                SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
-                        getString(R.string.import_parse_error_toast),
+                SnackbarWrapper.makeAndShowText(mFrag.getFamiliarActivity(),
+                        mFrag.getString(R.string.import_parse_error_toast),
                         SnackbarWrapper.LENGTH_LONG);
             }
         }
 
         @Override
         protected void onPostExecute(DeckListImporter importer) {
-            getFamiliarActivity().clearLoading();
-            mImportStarted = false;
+            mFrag.getFamiliarActivity().clearLoading();
+            mFrag.mImportStarted = false;
             if (importedCards.size() > 0) {
-                PreferenceAdapter.setLastLoadedDecklist(getContext(), mName);
+                PreferenceAdapter.setLastLoadedDecklist(mFrag.getContext(), mName);
             }
             int unknownCount = unknownCards.size();
             if (unknownCount > 0) {
-                SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
-                        getResources().getQuantityString(R.plurals.import_card_unknown_toast, unknownCount, unknownCount),
+                SnackbarWrapper.makeAndShowText(mFrag.getFamiliarActivity(),
+                        mFrag.getResources().getQuantityString(R.plurals.import_card_unknown_toast, unknownCount, unknownCount),
                         SnackbarWrapper.LENGTH_LONG);
             } else if (importedCards.size() > 0) {
-                SnackbarWrapper.makeAndShowText(getFamiliarActivity(),
-                        getString(R.string.import_complete_toast),
+                SnackbarWrapper.makeAndShowText(mFrag.getFamiliarActivity(),
+                        mFrag.getString(R.string.import_complete_toast),
                         SnackbarWrapper.LENGTH_LONG);
             }
         }
