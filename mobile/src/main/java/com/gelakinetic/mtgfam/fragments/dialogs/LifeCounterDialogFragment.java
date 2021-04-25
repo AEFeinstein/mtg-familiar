@@ -67,8 +67,8 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()));
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(requireActivity());
+        mDialogId = requireArguments().getInt(ID_KEY);
 
         if (null == getParentLifeCounterFragment()) {
             return DontShowDialog();

@@ -82,7 +82,7 @@ public class CardHelpers {
         final Activity activity = fragment.getActivity();
 
         /* Create the custom view */
-        @SuppressLint("InflateParams") View customView = Objects.requireNonNull(fragment.getActivity()).getLayoutInflater()
+        @SuppressLint("InflateParams") View customView = fragment.requireActivity().getLayoutInflater()
                 .inflate(R.layout.wishlist_dialog, null, false);
         assert customView != null;
 
@@ -359,7 +359,7 @@ public class CardHelpers {
             boolean isFoil,
             ViewGroup viewGroup) {
 
-        View dialogRow = Objects.requireNonNull(fragment.getActivity()).getLayoutInflater()
+        View dialogRow = fragment.requireActivity().getLayoutInflater()
                 .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);

@@ -140,7 +140,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     @Nullable
     private Fragment getDialogParentFragment() {
-        return Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
     /**
@@ -169,7 +169,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return array of string file names, without the extension
      */
     String[] getFiles(String fileExtension) {
-        String[] files = Objects.requireNonNull(this.getActivity()).fileList();
+        String[] files = this.requireActivity().fileList();
         ArrayList<String> validFiles = new ArrayList<>();
         for (String fileName : files) {
             if (fileName.endsWith(fileExtension)) {
@@ -189,7 +189,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     boolean canCreateDialog() {
         return (null != getDialogParentFragment()) &&
-                (!Objects.requireNonNull(getDialogParentFragment().getActivity()).isFinishing());
+                (!getDialogParentFragment().requireActivity().isFinishing());
     }
 
     /**

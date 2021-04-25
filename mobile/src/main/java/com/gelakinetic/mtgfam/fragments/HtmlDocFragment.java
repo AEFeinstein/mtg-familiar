@@ -115,7 +115,7 @@ public class HtmlDocFragment extends FamiliarFragment {
                 } else {
                     /* Otherwise launch links externally */
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    Objects.requireNonNull(getContext()).startActivity(i);
+                    requireContext().startActivity(i);
                 }
                 return true;
             }
@@ -129,7 +129,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         mName = getArguments().getString(JudgesCornerFragment.PAGE_NAME);
 
         /* Get the document from the bundle, load it */
-        File file = new File(Objects.requireNonNull(getActivity()).getFilesDir(), Objects.requireNonNull(getArguments().getString(JudgesCornerFragment.HTML_DOC)));
+        File file = new File(requireActivity().getFilesDir(), requireArguments().getString(JudgesCornerFragment.HTML_DOC));
         StringBuilder html = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;

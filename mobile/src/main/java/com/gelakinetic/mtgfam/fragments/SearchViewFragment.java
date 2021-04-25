@@ -489,7 +489,7 @@ public class SearchViewFragment extends FamiliarFragment {
         final Map<String, String> symbolsByAutocomplete = new LinkedHashMap<>();
 
         SetAdapter(SearchViewFragment frag) {
-            super(Objects.requireNonNull(frag.getActivity()), R.layout.list_item_1);
+            super(frag.requireActivity(), R.layout.list_item_1);
             for (int index = 0; index < frag.mSetSymbols.length; index++) {
                 String autocomplete = "[" + frag.mSetSymbols[index] + "] " + frag.mSetNames[index];
                 String set = frag.mSetSymbols[index];
@@ -892,7 +892,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void persistOptions() {
         try {
-            FileOutputStream fileStream = Objects.requireNonNull(this.getActivity())
+            FileOutputStream fileStream = this.requireActivity()
                     .openFileOutput(DEFAULT_CRITERIA_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fileStream);
             os.writeObject(parseForm());
@@ -907,7 +907,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void fetchPersistedOptions() {
         try {
-            FileInputStream fileInputStream = Objects.requireNonNull(this.getActivity()).openFileInput(DEFAULT_CRITERIA_FILE);
+            FileInputStream fileInputStream = this.requireActivity().openFileInput(DEFAULT_CRITERIA_FILE);
             ObjectInputStream oInputStream = new ObjectInputStream(fileInputStream);
             SearchCriteria criteria = (SearchCriteria) oInputStream.readObject();
             oInputStream.close();
@@ -1149,7 +1149,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         /* Set the default color */
-        mFormatButton.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()), getResourceIdFromAttr(R.attr.color_text)));
+        mFormatButton.setTextColor(ContextCompat.getColor(requireContext(), getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
 
         if (mSetCheckedIndices == null || mRarityCheckedIndices == null) {

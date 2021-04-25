@@ -101,7 +101,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
 
         if (null == getParentCardViewFragment()) {
             return DontShowDialog();
@@ -216,7 +216,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         getParentCardViewFragment().setInfoFromID(data.getDbId());
                     }
                 };
-                Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                Dialog dialog = new MaterialDialog.Builder(requireActivity())
                         .title(R.string.card_view_set_dialog_title)
                         .adapter(adapter, null)
                         .build();
@@ -319,7 +319,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 // Write the decklist back
-                                DecklistHelpers.WriteDecklist(Objects.requireNonNull(getActivity()), decklist, deckFileName);
+                                DecklistHelpers.WriteDecklist(requireActivity(), decklist, deckFileName);
                             } catch (FamiliarDbException e) {
                                 getParentCardViewFragment().handleFamiliarDbException(false);
                             }
@@ -435,7 +435,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 lv.setAdapter(adapter);
                 lv.setOnItemLongClickListener((parent, view, position, id) -> {
                     /* Copy the translated name to the clipboard */
-                    ClipboardManager clipboard = (ClipboardManager) (Objects.requireNonNull(getParentCardViewFragment().getContext()).
+                    ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().requireContext().
                             getSystemService(android.content.Context.CLIPBOARD_SERVICE));
                     if (null != clipboard) {
                         ClipData cd = new ClipData(

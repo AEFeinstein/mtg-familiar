@@ -209,7 +209,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 /* Commit the endTime as -1 */
                 PreferenceAdapter.setRoundTimerEnd(getContext(), -1);
                 /* Cancel the alarms */
-                setOrCancelAlarms(Objects.requireNonNull(getActivity()), 0, false);
+                setOrCancelAlarms(requireActivity(), 0, false);
                 /* Stop the ActionBar timer display*/
                 getFamiliarActivity().stopUpdatingDisplay();
                 /* Set button text to start again */
@@ -231,7 +231,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 PreferenceAdapter.setRoundTimerEnd(getContext(), endTime);
 
                 /* Set the alarm, and any warning alarms if applicable */
-                setOrCancelAlarms(Objects.requireNonNull(getActivity()), endTime, true);
+                setOrCancelAlarms(requireActivity(), endTime, true);
                 /* Show the notification */
                 showTimerRunningNotification(getActivity(), endTime);
                 /* Start the ActionBar display Timer */

@@ -47,7 +47,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        @SuppressLint("InflateParams") final View v = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
+        @SuppressLint("InflateParams") final View v = requireActivity().getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
         final CheckBox chkFifteen = v.findViewById(R.id.timer_pref_fifteen);
         final CheckBox chkTen = v.findViewById(R.id.timer_pref_ten);
         final CheckBox chkFive = v.findViewById(R.id.timer_pref_five);

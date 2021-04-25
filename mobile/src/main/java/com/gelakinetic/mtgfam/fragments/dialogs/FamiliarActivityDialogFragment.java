@@ -72,11 +72,11 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
 
         assert getActivity().getPackageManager() != null;
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_ABOUT: {
 

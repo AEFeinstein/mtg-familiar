@@ -56,7 +56,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
 
         if (null == getParentResultListFragment()) {
             return DontShowDialog();
@@ -66,7 +66,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
             case QUICK_ADD: {
                 final String cardName = getArguments().getString(NAME_KEY);
                 final String cardSet = getArguments().getString(NAME_SET);
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .stackingBehavior(StackingBehavior.ALWAYS)
                         .title(Objects.requireNonNull(cardName))
                         .positiveText(R.string.result_list_Add_to_wishlist)
@@ -94,7 +94,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)

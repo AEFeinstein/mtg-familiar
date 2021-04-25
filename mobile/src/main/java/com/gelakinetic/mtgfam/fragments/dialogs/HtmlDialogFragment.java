@@ -69,7 +69,7 @@ public class HtmlDialogFragment extends FamiliarDialogFragment {
         }
 
         /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-        @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
+        @SuppressLint("InflateParams") View textEntryView = requireActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                 null, false);
         assert textEntryView != null;
         final EditText nameInput = textEntryView.findViewById(R.id.text_entry);

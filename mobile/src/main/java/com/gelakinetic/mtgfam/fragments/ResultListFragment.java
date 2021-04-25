@@ -210,7 +210,7 @@ public class ResultListFragment extends FamiliarFragment {
         /* Open up the database, search for stuff */
         try {
             mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
-            doSearch(Objects.requireNonNull(this.getArguments()), mDatabase);
+            doSearch(this.requireArguments(), mDatabase);
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
             return myFragmentView;
@@ -244,13 +244,13 @@ public class ResultListFragment extends FamiliarFragment {
         } else {
             FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
         }
-        FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+        FragmentManager fm = requireFragmentManager();
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
             if (null == mCursor || mCursor.getCount() == 1) {
                 /* Jump back past the result list (it wasn't displayed because this card is a singleton)
                  * or maybe the cursor was null for no good reason */
-                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
+                if (!requireActivity().isTaskRoot()) {
                     getActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
@@ -259,7 +259,7 @@ public class ResultListFragment extends FamiliarFragment {
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
                 SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT);
-                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
+                if (!requireActivity().isTaskRoot()) {
                     getActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
@@ -530,7 +530,7 @@ public class ResultListFragment extends FamiliarFragment {
             /* Close the old cursor */
             mCursor.close();
             /* Do the search again with the new "order by" options */
-            doSearch(Objects.requireNonNull(getArguments()), mDatabase);
+            doSearch(requireArguments(), mDatabase);
             /* Display the newly sorted data */
             fillData();
         } catch (SQLiteException | FamiliarDbException e) {

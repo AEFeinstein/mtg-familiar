@@ -239,7 +239,7 @@ public abstract class FamiliarFragment extends Fragment {
      */
     public void startNewFragment(FamiliarFragment frag, Bundle args) {
         try {
-            FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            FragmentManager fm = requireActivity().getSupportFragmentManager();
             if (fm != null) {
                 frag.setArguments(args);
                 FragmentTransaction ft = fm.beginTransaction();
@@ -338,7 +338,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @return The resource ID
      */
     public int getResourceIdFromAttr(int attr) {
-        return ((FamiliarActivity) Objects.requireNonNull(getActivity())).getResourceIdFromAttr(attr);
+        return ((FamiliarActivity) requireActivity()).getResourceIdFromAttr(attr);
     }
 
     /**

@@ -110,7 +110,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
         /* Now create and return a CursorLoader that will take care of creating a Cursor for the data being displayed.
          */
         String select = "(" + CardDbAdapter.KEY_NAME + ")";
-        return new CursorLoader(Objects.requireNonNull(mFragment.getActivity()), SEARCH_URI, CARD_NAME_PROJECTION, select, mAutocompleteFilter,
+        return new CursorLoader(mFragment.requireActivity(), SEARCH_URI, CARD_NAME_PROJECTION, select, mAutocompleteFilter,
                 CardDbAdapter.KEY_NAME + " COLLATE LOCALIZED ASC");
     }
 

@@ -155,7 +155,7 @@ public class GatheringsFragment extends FamiliarFragment {
             for (GatheringsPlayerData player : players) {
                 AddPlayerRow(player);
             }
-            Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+            requireActivity().invalidateOptionsMenu();
             mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
         }
     }
@@ -267,7 +267,7 @@ public class GatheringsFragment extends FamiliarFragment {
         }
 
         GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
-                Objects.requireNonNull(getActivity()).getFilesDir());
+                requireActivity().getFilesDir());
         getActivity().invalidateOptionsMenu();
     }
 
@@ -328,7 +328,7 @@ public class GatheringsFragment extends FamiliarFragment {
         ((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
         mLinearLayout.addView(newView);
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -355,7 +355,7 @@ public class GatheringsFragment extends FamiliarFragment {
             removePlayer.setVisible(true);
         }
 
-        if (GatheringsIO.getNumberOfGatherings(Objects.requireNonNull(getActivity()).getFilesDir()) <= 0 ||
+        if (GatheringsIO.getNumberOfGatherings(requireActivity().getFilesDir()) <= 0 ||
                 getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
             deleteGathering.setVisible(false);
             loadGathering.setVisible(false);

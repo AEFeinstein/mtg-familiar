@@ -80,7 +80,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         final int position = getArguments().getInt(POSITION_KEY);
 
         if (null == getParentLifeCounterFragment()) {
@@ -90,7 +90,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
         switch (mDialogId) {
             case DIALOG_SET_NAME: {
                 /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(
+                @SuppressLint("InflateParams") View textEntryView = requireActivity().getLayoutInflater().inflate(
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -148,7 +148,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                     absoluteText.setText(String.format(Locale.getDefault(), "%d", absolute[0]));
                 });
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
                 builder.title(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
                         mLcPlayer.mCommanderDamage.get(position).mName))
                         .customView(view, false)
@@ -164,7 +164,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_CHANGE_LIFE: {
                 /* Inflate a view to type in a new life, then show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView2 = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(
+                @SuppressLint("InflateParams") View textEntryView2 = requireActivity().getLayoutInflater().inflate(
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView2 != null;
                 final EditText lifeInput = textEntryView2.findViewById(R.id.text_entry);

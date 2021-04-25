@@ -62,12 +62,12 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         }
 
         /* Inflate the view */
-        @SuppressLint("InflateParams") View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        @SuppressLint("InflateParams") View view = requireActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
-        String searchSortOrder = Objects.requireNonNull(getArguments()).getString(SAVED_SORT_ORDER);
+        String searchSortOrder = requireArguments().getString(SAVED_SORT_ORDER);
 
         int idx = 0;
 

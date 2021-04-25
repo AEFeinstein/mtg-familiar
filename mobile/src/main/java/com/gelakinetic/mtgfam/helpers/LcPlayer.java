@@ -109,7 +109,7 @@ public class LcPlayer {
      */
     public LcPlayer(LifeCounterFragment fragment) {
         mFragment = fragment;
-        mName = Objects.requireNonNull(mFragment.getActivity()).getString(R.string.life_counter_default_name);
+        mName = mFragment.requireActivity().getString(R.string.life_counter_default_name);
     }
 
     /**
@@ -138,7 +138,7 @@ public class LcPlayer {
                     mHistoryList.invalidate();
                 }
                 mReadoutTextView.setText(formatInt(mLife, false));
-                mReadoutTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(mFragment.getContext()),
+                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.requireContext(),
                         R.color.material_red_500));
                 if (mCommanderReadoutTextView != null) {
                     mCommanderReadoutTextView.setText(formatInt(mLife, false));
@@ -152,7 +152,7 @@ public class LcPlayer {
                     mHistoryList.invalidate();
                 }
                 mReadoutTextView.setText(formatInt(mPoison, false));
-                mReadoutTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(mFragment.getContext()),
+                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.requireContext(),
                         R.color.material_green_500));
                 if (mCommanderReadoutTextView != null) {
                     mCommanderReadoutTextView.setText(formatInt(mPoison, false));
@@ -166,7 +166,7 @@ public class LcPlayer {
                     mHistoryList.invalidate();
                 }
                 mReadoutTextView.setText(formatInt(mLife, false));
-                mReadoutTextView.setTextColor(ContextCompat.getColor(Objects.requireNonNull(mFragment.getContext()),
+                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.requireContext(),
                         R.color.material_red_500));
                 if (mCommanderReadoutTextView != null) {
                     mCommanderReadoutTextView.setText(formatInt(mLife, false));
@@ -595,7 +595,7 @@ public class LcPlayer {
                     ViewGroup.LayoutParams rowParams = mCommanderRowView.getLayoutParams();
                     if (null != rowParams) {
                         rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
-                                Objects.requireNonNull(mFragment.getActivity()).getResources().getDisplayMetrics());
+                                mFragment.requireActivity().getResources().getDisplayMetrics());
                         if (isPortrait) {
                             rowParams.width = mGridLayoutWidth / 2;
                         } else {
@@ -637,7 +637,7 @@ public class LcPlayer {
         currently showing dialog, so make our own transaction and take care of that here. */
 
         ((FamiliarActivity) mFragment.getActivity())
-                .removeDialogFragment(Objects.requireNonNull(mFragment.getActivity()).getSupportFragmentManager());
+                .removeDialogFragment(mFragment.requireActivity().getSupportFragmentManager());
 
         /* Create and show the dialog. */
         LcPlayerDialogFragment newFragment = new LcPlayerDialogFragment();
@@ -705,10 +705,10 @@ public class LcPlayer {
             assert view != null;
 
             if (mCommitting && position == 0) {
-                ((TextView) view.findViewById(R.id.absolute)).setTextColor(ContextCompat.getColor(Objects.requireNonNull(mFragment.getContext()),
+                ((TextView) view.findViewById(R.id.absolute)).setTextColor(ContextCompat.getColor(mFragment.requireContext(),
                         mFragment.getResourceIdFromAttr(R.attr.colorPrimary_attr)));
             } else {
-                ((TextView) view.findViewById(R.id.absolute)).setTextColor(ContextCompat.getColor(Objects.requireNonNull(mFragment.getContext()),
+                ((TextView) view.findViewById(R.id.absolute)).setTextColor(ContextCompat.getColor(mFragment.requireContext(),
                         mFragment.getResourceIdFromAttr(R.attr.color_text)));
             }
 

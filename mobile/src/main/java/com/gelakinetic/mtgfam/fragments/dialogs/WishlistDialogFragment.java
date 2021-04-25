@@ -67,7 +67,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         String cardName = getArguments().getString(NAME_KEY);
 
         if (null == getParentWishlistFragment()) {
@@ -86,7 +86,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case DIALOG_PRICE_SETTING: {
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.pref_trade_price_title)
                         .items(getResources().getStringArray(R.array.trade_option_entries))
                         .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
@@ -102,7 +102,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_CONFIRMATION: {
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.wishlist_empty_dialog_title)
                         .content(R.string.wishlist_empty_dialog_text)
                         .positiveText(R.string.dialog_ok)
