@@ -30,7 +30,7 @@ public class DeckStatsGenerator {
     private List<MtgCard> mDeckToStat;
     private float mDeckSize; //Defined as a Float to avoid integer division
     private Map<String, Float> typeStats;
-    private Map<String, Float> colorStats;
+    private Map<String, Integer> colorStats;
     private Map<Integer, Integer> cmcStats;
     private static final Pattern mTypePattern = Pattern.compile("(Land|Creature|Planeswalker|Instant|Sorcery|Artifact|Enchantment)");
     private static final Pattern mColorPattern = Pattern.compile("\\{([WUBRGC\\d])+?[^WUBRGC]*?([WUBRGC])*\\}(?![^(]*\\))"); //Escape is not redundant, will break stuff if removed
@@ -54,13 +54,13 @@ public class DeckStatsGenerator {
         typeStats.put("Enchantment", (float) 0);
         typeStats.put("Land", (float) 0);
         colorStats = new HashMap<>();
-        colorStats.put("W", (float) 0);
-        colorStats.put("U", (float) 0);
-        colorStats.put("B", (float) 0);
-        colorStats.put("R", (float) 0);
-        colorStats.put("G", (float) 0);
-        colorStats.put("C", (float) 0);
-        colorStats.put("", (float) 0);
+        colorStats.put("W", 0);//(float) 0);
+        colorStats.put("U", 0);//(float) 0);
+        colorStats.put("B", 0);//(float) 0);
+        colorStats.put("R", 0);//(float) 0);
+        colorStats.put("G", 0);//(float) 0);
+        colorStats.put("C", 0);//(float) 0);
+        colorStats.put("", 0);//(float) 0);
         cmcStats = new HashMap<>();
         cmcStats.put(0, 0);
         cmcStats.put(1, 0);
@@ -130,9 +130,9 @@ public class DeckStatsGenerator {
         for (String type : typeStats.keySet()) {
             mapDivideIfPresent(typeStats, type, mDeckSize);
         }
-        for (String color : colorStats.keySet()) {
-            mapDivideIfPresent(colorStats, color, mDeckSize);
-        }
+        //for (String color : colorStats.keySet()) {
+        //    mapDivideIfPresent(colorStats, color, mDeckSize);
+        //}
     }
 
     /**
@@ -150,7 +150,7 @@ public class DeckStatsGenerator {
      * Calls runStats() if no colorStats exist then returns colorStats
      * @return colorStats
      */
-    public Map<String, Float> getColorStats() {
+    public Map<String, Integer> getColorStats() {
         if (colorStats == null) {
             runStats();
         }

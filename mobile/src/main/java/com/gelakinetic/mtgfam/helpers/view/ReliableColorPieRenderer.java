@@ -97,24 +97,24 @@ public class ReliableColorPieRenderer extends PieChartRenderer {
             final boolean accountForSliceSpacing = sliceSpace > 0.f && sliceAngle <= 180.f;
 
             //Makes color selection predictable when displaying graph of colors
-            switch (dataSet.getEntryForIndex(j).getLabel()) {
-                case "W":
+            switch (dataSet.getEntryForIndex(j).getLabel().charAt(0)) {
+                case 'W':
                     mRenderPaint.setColor(dataSet.getColor(0));
                     break;
-                case "U":
+                case 'U':
                     mRenderPaint.setColor(dataSet.getColor(1));
                     break;
-                case "B":
+                case 'B':
                     mRenderPaint.setColor(dataSet.getColor(2));
                     break;
-                case "R":
+                case 'R':
                     mRenderPaint.setColor(dataSet.getColor(3));
                     break;
-                case "G":
+                case 'G':
                     mRenderPaint.setColor(dataSet.getColor(4));
                     break;
-                case "C":
-                case "Colorless":
+                case 'C':
+                //case "Colorless":
                     mRenderPaint.setColor(dataSet.getColor(5));
                     break;
                 default:

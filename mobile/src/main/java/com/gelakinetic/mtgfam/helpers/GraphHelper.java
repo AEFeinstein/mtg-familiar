@@ -20,6 +20,8 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.view.ReliableColorPie;
@@ -27,7 +29,6 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -45,7 +46,7 @@ public class GraphHelper {
     private final Context c;
     private final DeckStatsGenerator mStatGenerator;
     private final int mBackgroundColor;
-    private ArrayList<String> mTypes;
+    //private ArrayList<String> mTypes;
 
     /**
      * Creates a new GraphHelper
@@ -69,15 +70,15 @@ public class GraphHelper {
         fillTypeGraph(chartToFill);
         fillCmcGraph(barChartToFill);
         fillColorGraph(pieToFill);
-        Legend pieLegend = pieToFill.getLegend();
-        pieLegend.setEnabled(true);
-        formatPieLegend(pieLegend);
-        pieLegend.setTextColor(mBackgroundColor);
-        LegendEntry[] spacer = new LegendEntry[mTypes.size()];
-        for (int i = 0; i < mTypes.size(); i++) {
-            spacer[i] = new LegendEntry(mTypes.get(i), Legend.LegendForm.SQUARE, Float.NaN, Float.NaN, null, mBackgroundColor);
-        }
-        pieLegend.setCustom(spacer);
+        //Legend pieLegend = pieToFill.getLegend();
+        //pieLegend.setEnabled(true);
+        //formatPieLegend(pieLegend);
+        //pieLegend.setTextColor(mBackgroundColor);
+        //LegendEntry[] spacer = new LegendEntry[mTypes.size()];
+        //for (int i = 0; i < mTypes.size(); i++) {
+        //    spacer[i] = new LegendEntry(mTypes.get(i), Legend.LegendForm.SQUARE, Float.NaN, Float.NaN, null, mBackgroundColor);
+        //}
+        //pieLegend.setCustom(spacer);
     }
 
     /**
@@ -87,9 +88,10 @@ public class GraphHelper {
     public void fillTypeGraph(PieChart chartToFill) {
         PieData typeData = createTypeData(mStatGenerator.getTypeStats());
         chartToFill.setData(typeData);
-        chartToFill.setDrawEntryLabels(false);
+        //chartToFill.setDrawEntryLabels(false);
         chartToFill.getDescription().setEnabled(false);
-        formatPieLegend(chartToFill.getLegend());
+        chartToFill.getLegend().setEnabled(false);
+        //formatPieLegend(chartToFill.getLegend());
         chartToFill.setTransparentCircleColor(mBackgroundColor);
         chartToFill.setHoleColor(mBackgroundColor);
         chartToFill.setCenterText("Type Distribution");
@@ -98,17 +100,20 @@ public class GraphHelper {
 
     /**
      * Formats a given ReliableColorPie for displaying color statistics
-     * @param pieToFill ReliableColorPie to format
+     * @param pieToFill ReliableColorPie to format  d4b8b2
      */
     public void fillColorGraph(ReliableColorPie pieToFill) {
         PieData colorData = createColorData(mStatGenerator.getColorStats());
         pieToFill.setData(colorData);
-        pieToFill.setDrawEntryLabels(false);
+        pieToFill.setEntryLabelColor(Color.parseColor("#d4b8b2"));
+        pieToFill.setEntryLabelTextSize(15);
+        pieToFill.setEntryLabelTypeface(Typeface.DEFAULT_BOLD);
+        //pieToFill.setDrawEntryLabels(false);
         pieToFill.getDescription().setEnabled(false);
         pieToFill.getLegend().setEnabled(false);
         pieToFill.setTransparentCircleColor(mBackgroundColor);
         pieToFill.setHoleColor(mBackgroundColor);
-        pieToFill.setCenterText("Color Distribution");
+        pieToFill.setCenterText("Mana Symbol Distribution");
         pieToFill.setTouchEnabled(false);
     }
 
@@ -148,12 +153,12 @@ public class GraphHelper {
      * @return PieData containing type information
      */
     private PieData createTypeData(Map<String, Float> typeMap) {
-        mTypes = new ArrayList<>();
+        //mTypes = new ArrayList<>();
         List<PieEntry> typeEntries = new ArrayList<>();
         for (String type : typeMap.keySet()) {
             if (typeMap.get(type) != 0) {
                 typeEntries.add(new PieEntry(typeMap.get(type), type));
-                mTypes.add(type);
+                //mTypes.add(type);
             }
         }
         PieDataSet typeSet = new PieDataSet(typeEntries, "");
@@ -173,12 +178,12 @@ public class GraphHelper {
      * @param colorMap Map with color information
      * @return PieData containing color information
      */
-    private PieData createColorData(Map<String, Float> colorMap) {
+    private PieData createColorData(Map<String, Integer> colorMap) {
         List<PieEntry> colorEntries = new ArrayList<>();
         for (String color : colorMap.keySet()) {
             if (colorMap.get(color) != 0) {
                 if (!color.isEmpty()) {
-                    colorEntries.add(new PieEntry(colorMap.get(color), color));
+                    colorEntries.add(new PieEntry(colorMap.get(color), color + ": " + colorMap.get(color).toString()));
                 } else {
                     colorEntries.add(new PieEntry(colorMap.get(color), "Colorless"));
                 }
@@ -192,7 +197,9 @@ public class GraphHelper {
             public String getPieLabel(float value, PieEntry pieEntry) {
                 return "";
             }
+
         });
+
         return colorData;
     }
 
