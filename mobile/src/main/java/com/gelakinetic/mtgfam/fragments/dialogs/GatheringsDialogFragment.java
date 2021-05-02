@@ -69,14 +69,10 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
-
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
 
         if (null == getParentGatheringsFragment()) {
             return DontShowDialog();
@@ -103,7 +99,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
-                Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                Dialog dialog = new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.gathering_enter_name)
                         .customView(textEntryView, false)
                         .positiveText(R.string.dialog_ok)
@@ -144,7 +140,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_GATHERING_EXIST: {
                 /* The user tried to save, and the gathering already exists. Prompt to overwrite */
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.gathering_dialog_overwrite_title)
                         .content(R.string.gathering_dialog_overwrite_text)
                         .positiveText(R.string.dialog_yes)
@@ -158,7 +154,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_DELETE_GATHERING: {
                 /* Show all gatherings, and delete the selected one */
-                if (GatheringsIO.getNumberOfGatherings(Objects.requireNonNull(getActivity()).getFilesDir()) <= 0) {
+                if (GatheringsIO.getNumberOfGatherings(requireActivity().getFilesDir()) <= 0) {
                     SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                             SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
@@ -198,7 +194,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                return new MaterialDialog.Builder(requireActivity())
                         .title(R.string.life_counter_remove_player)
                         .items((CharSequence[]) aNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
@@ -209,7 +205,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_LOAD_GATHERING: {
                 /* Load a gathering, if there is a gathering to load */
-                if (GatheringsIO.getNumberOfGatherings(Objects.requireNonNull(getActivity()).getFilesDir()) <= 0) {
+                if (GatheringsIO.getNumberOfGatherings(requireActivity().getFilesDir()) <= 0) {
                     SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                             SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();

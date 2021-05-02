@@ -117,7 +117,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
             @Override
             public void onPageSelected(int i) {
-                Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+                requireActivity().invalidateOptionsMenu();
             }
 
             @Override

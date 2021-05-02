@@ -95,13 +95,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* We're setting this to false if we return null, so we should reset it every time to be safe */
-        setShowsDialog(true);
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         final int sideForDialog = getArguments().getInt(ID_SIDE);
         final int positionForDialog = getArguments().getInt(ID_POSITION);
 
@@ -310,7 +307,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
                     });
 
-                    return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                    return new MaterialDialog.Builder(this.requireActivity())
                             .title(lSide.get(positionForDialog).getName())
                             .customView(view, false)
                             .positiveText(R.string.dialog_done)
@@ -424,7 +421,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
                         }
                     };
-                    Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                    Dialog dialog = new MaterialDialog.Builder(requireActivity())
                             .title(R.string.card_view_set_dialog_title)
                             .adapter(adapter, null)
                             .build();
@@ -434,7 +431,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_PRICE_SETTING: {
                 /* Build the dialog with some choices */
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.pref_trade_price_title)
                         .items(getResources().getStringArray(R.array.trade_option_entries))
                         .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
@@ -474,7 +471,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_NEW_TRADE: {
                 /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = requireActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -514,7 +511,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_SAVE_TRADE_AS: {
                 /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
-                @SuppressLint("InflateParams") View textEntryView = Objects.requireNonNull(getActivity()).getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = requireActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -557,7 +554,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.trader_load)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) tradeNames)
@@ -585,7 +582,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.trader_delete)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) tradeNames)
@@ -602,7 +599,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_CONFIRMATION: {
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.trader_clear_dialog_title)
                         .content(R.string.trader_clear_dialog_text)
                         .positiveText(R.string.dialog_ok)

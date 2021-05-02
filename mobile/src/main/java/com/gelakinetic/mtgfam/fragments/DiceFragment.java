@@ -38,7 +38,6 @@ import androidx.core.content.ContextCompat;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.NumberButtonOnClickListener;
 
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -84,7 +83,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
         ImageButton dN = myFragmentView.findViewById(R.id.dN);
 
         /* Color the die faces */
-        int color = ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorPrimary_light);
+        int color = ContextCompat.getColor(requireContext(), R.color.colorPrimary_light);
 
         if (d2 != null) {
             d2.setOnClickListener(view -> flipCoin());

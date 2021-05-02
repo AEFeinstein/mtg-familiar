@@ -52,7 +52,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -244,7 +243,7 @@ public class ResultListFragment extends FamiliarFragment {
         } else {
             FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
         }
-        FragmentManager fm = Objects.requireNonNull(getParentFragmentManager());
+        FragmentManager fm = requireFragmentManager();
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
             if (null == mCursor || mCursor.getCount() == 1) {

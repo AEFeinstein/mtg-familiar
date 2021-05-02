@@ -623,7 +623,7 @@ public class WishlistFragment extends FamiliarListFragment {
             /* List all the sets and wishlist values for this card */
             for (IndividualSetInfo isi : info.mInfo) {
                 /* inflate a new row */
-                View setRow = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
+                View setRow = requireActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
                 ExpansionImageHelper.loadExpansionImage(getContext(), isi.mSetCode, isi.mRarity, setRow.findViewById(R.id.wishlistRowSetImage), null, ExpansionImageHelper.ExpansionImageSize.SMALL);
                 /* Write the set name, color it with the rarity */
                 int color;
@@ -655,7 +655,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()), getResourceIdFromAttr(color)));
+                        ContextCompat.getColor(requireContext(), getResourceIdFromAttr(color)));
 
                 /* Show individual prices and number of each card, or message if price does not exist, if desired */
                 TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);

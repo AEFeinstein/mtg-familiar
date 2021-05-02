@@ -31,8 +31,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
-import java.util.Objects;
-
 /**
  * Class that creates dialogs for RoundTimerFragment
  */
@@ -44,14 +42,10 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
-
-        @SuppressLint("InflateParams") final View v = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
+        @SuppressLint("InflateParams") final View v = requireActivity().getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
         final CheckBox chkFifteen = v.findViewById(R.id.timer_pref_fifteen);
         final CheckBox chkTen = v.findViewById(R.id.timer_pref_ten);
         final CheckBox chkFive = v.findViewById(R.id.timer_pref_five);

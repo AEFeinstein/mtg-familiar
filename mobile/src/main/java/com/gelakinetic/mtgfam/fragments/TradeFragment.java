@@ -252,7 +252,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
-            fos = Objects.requireNonNull(this.getActivity()).openFileOutput(tradeName, Context.MODE_PRIVATE);
+            fos = this.requireActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
 
             synchronized (mListLeft) {
                 for (MtgCard cd : mListLeft) {
@@ -294,7 +294,7 @@ public class TradeFragment extends FamiliarListFragment {
 
                     /* Read each card, line by line, load prices along the way */
                     br = new BufferedReader(
-                            new InputStreamReader(Objects.requireNonNull(this.getActivity()).openFileInput(tradeName))
+                            new InputStreamReader(this.requireActivity().openFileInput(tradeName))
                     );
                     String line;
                     while ((line = br.readLine()) != null) {
@@ -533,8 +533,8 @@ public class TradeFragment extends FamiliarListFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                        ContextCompat.getColor(requireContext(), R.color.material_red_500) :
+                        ContextCompat.getColor(requireContext(),
                                 getResourceIdFromAttr(R.attr.color_text));
                 final String leftPriceStr =
                         String.format(Locale.US, PRICE_FORMAT, leftPrice)
@@ -560,8 +560,8 @@ public class TradeFragment extends FamiliarListFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                        ContextCompat.getColor(requireContext(), R.color.material_red_500) :
+                        ContextCompat.getColor(requireContext(),
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
                 final String rightPriceStr =
@@ -574,10 +574,10 @@ public class TradeFragment extends FamiliarListFragment {
             float priceDiff = leftPrice - rightPrice;
             mTradePriceDifference.setText(String.format(Locale.getDefault(), "%c" + PRICE_FORMAT, (priceDiff < 0 ? '-' : '+'), Math.abs(priceDiff)));
             if (priceDiff < 0) {
-                mTradePriceDifference.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                mTradePriceDifference.setTextColor(ContextCompat.getColor(requireContext(),
                         R.color.material_red_500));
             } else {
-                mTradePriceDifference.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                mTradePriceDifference.setTextColor(ContextCompat.getColor(requireContext(),
                         R.color.material_green_500));
             }
         }
@@ -825,15 +825,15 @@ public class TradeFragment extends FamiliarListFragment {
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(String.format(Locale.getDefault(), "%dx %s", item.mNumberOf, item.getPriceString()));
                 if (item.mIsCustomPrice) {
-                    holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(requireContext(),
                             R.color.material_green_500));
                 } else {
-                    holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(requireContext(),
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
                 holder.mCardPrice.setText(String.format(Locale.getDefault(), "%dx %s", item.mNumberOf, item.mMessage));
-                holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                holder.mCardPrice.setTextColor(ContextCompat.getColor(requireContext(),
                         R.color.material_red_500));
             }
         }

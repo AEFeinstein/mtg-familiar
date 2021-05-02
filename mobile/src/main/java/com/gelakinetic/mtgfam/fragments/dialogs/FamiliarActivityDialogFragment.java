@@ -43,8 +43,6 @@ import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
-import java.util.Objects;
-
 /**
  * Class that creates dialogs for FamiliarActivity
  */
@@ -69,17 +67,14 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
 
         assert getActivity().getPackageManager() != null;
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_ABOUT: {
 

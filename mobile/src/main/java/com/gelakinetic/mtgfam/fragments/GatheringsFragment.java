@@ -42,7 +42,6 @@ import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This fragment handles the creation, loading, and saving of Gatherings (default sets of players, lives, and view modes
@@ -155,7 +154,7 @@ public class GatheringsFragment extends FamiliarFragment {
             for (GatheringsPlayerData player : players) {
                 AddPlayerRow(player);
             }
-            Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+            requireActivity().invalidateOptionsMenu();
             mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
         }
     }
@@ -267,7 +266,7 @@ public class GatheringsFragment extends FamiliarFragment {
         }
 
         GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
-                Objects.requireNonNull(getActivity()).getFilesDir());
+                requireActivity().getFilesDir());
         getActivity().invalidateOptionsMenu();
     }
 
@@ -328,7 +327,7 @@ public class GatheringsFragment extends FamiliarFragment {
         ((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
         mLinearLayout.addView(newView);
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -355,7 +354,7 @@ public class GatheringsFragment extends FamiliarFragment {
             removePlayer.setVisible(true);
         }
 
-        if (GatheringsIO.getNumberOfGatherings(Objects.requireNonNull(getActivity()).getFilesDir()) <= 0 ||
+        if (GatheringsIO.getNumberOfGatherings(requireActivity().getFilesDir()) <= 0 ||
                 getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
             deleteGathering.setVisible(false);
             loadGathering.setVisible(false);

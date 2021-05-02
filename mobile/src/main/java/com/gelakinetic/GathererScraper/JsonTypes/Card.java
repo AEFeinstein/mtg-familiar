@@ -40,6 +40,9 @@ public class Card implements Comparable<Card> {
     // The card's mana cost
     protected String mManaCost = "";
 
+    // The card's mana cost with sorted symbols
+    protected String mSortedManaCost = "";
+
     // The card's converted mana cost
     protected int mCmc = 0;
 
@@ -97,6 +100,10 @@ public class Card implements Comparable<Card> {
 
     public String getManaCost() {
         return mManaCost;
+    }
+
+    public String getManaCostSorted() {
+        return mSortedManaCost;
     }
 
     public int getCmc() {

@@ -58,7 +58,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -266,7 +265,7 @@ public class RulesFragment extends FamiliarFragment {
                         if (item instanceof RuleItem) {
                             // Gets a handle to the clipboard service.
                             ClipboardManager clipboard = (ClipboardManager)
-                                    Objects.requireNonNull(getActivity()).getSystemService(Context.CLIPBOARD_SERVICE);
+                                    requireActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                             if (null != clipboard) {
                                 // Creates a new text clip to put on the clipboard
                                 ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
@@ -282,7 +281,7 @@ public class RulesFragment extends FamiliarFragment {
                     /* Cursor had a size of 0, boring */
                     if (!isBanned) {
                         SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
-                        FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+                        FragmentManager fm = requireFragmentManager();
                         if (!fm.isStateSaved()) {
                             fm.popBackStack();
                         }
@@ -291,7 +290,7 @@ public class RulesFragment extends FamiliarFragment {
             } else {
                 if (!isBanned) { /* Cursor is null. weird. */
                     SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
-                    FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+                    FragmentManager fm = requireFragmentManager();
                     if (!fm.isStateSaved()) {
                         fm.popBackStack();
                     }
@@ -371,7 +370,7 @@ public class RulesFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.rules_menu_exit) {
-            FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+            FragmentManager fm = requireFragmentManager();
             if (!fm.isStateSaved()) {
                 for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                     fm.popBackStack();
@@ -418,7 +417,7 @@ public class RulesFragment extends FamiliarFragment {
         if (mKeywordPattern != null) {
             encodedInput = mKeywordPattern.matcher(encodedInput)
                     .replaceAll("\\<font color=\"" +
-                            String.format("0x%06X", 0xFFFFFF & ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorPrimaryDark_light)) +
+                            String.format("0x%06X", 0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark_light)) +
                             "\"\\>$1\\</font\\>");
         }
         encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");
@@ -802,7 +801,7 @@ public class RulesFragment extends FamiliarFragment {
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View v = convertView;
             if (v == null) {
-                LayoutInflater inf = Objects.requireNonNull(getActivity()).getLayoutInflater();
+                LayoutInflater inf = requireActivity().getLayoutInflater();
                 v = inf.inflate(mLayoutResourceId, parent, false);
             }
             assert v != null;
