@@ -51,6 +51,7 @@ public class SampleHandFrag extends FamiliarFragment{
     private final List<MtgCard> mDeck;
     private List<MtgCard> mHand;
     private int numOfMulls = 0;
+    private SampleHandMaker handGen;
     /* UI Elements */
     private ListView mListView;
 
@@ -60,6 +61,7 @@ public class SampleHandFrag extends FamiliarFragment{
      */
     public SampleHandFrag(List<MtgCard> mDeck) {
         this.mDeck = mDeck;
+        handGen = new SampleHandMaker(mDeck);
     }
 
     /**
@@ -79,19 +81,24 @@ public class SampleHandFrag extends FamiliarFragment{
         final View myFragmentView =
                 inflater.inflate(R.layout.samplehand_frag, container, false);
         assert myFragmentView != null;
-        mHand = SampleHandMaker.drawSampleHand(mDeck);
+        mHand = handGen.drawSampleHand();
         mListView = myFragmentView.findViewById(R.id.hand_list);
         fillData();
+        Button drawCardButton = myFragmentView.findViewById(R.id.draw_card);
         Button newHandButton = myFragmentView.findViewById(R.id.new_hand);
         Button mullButton = myFragmentView.findViewById(R.id.mulligan);
+        drawCardButton.setOnClickListener(v -> {
+            mHand.addAll(handGen.drawCard());
+            fillData();
+        });
         newHandButton.setOnClickListener(v -> {
-            mHand = SampleHandMaker.drawSampleHand(mDeck);
+            mHand = handGen.drawSampleHand();
             numOfMulls = 0;
             fillData();
         });
         mullButton.setOnClickListener(v -> {
             numOfMulls++;
-            mHand = SampleHandMaker.drawSampleHand(mDeck, numOfMulls);
+            mHand = handGen.drawSampleHand(numOfMulls);
             fillData();
         });
         return myFragmentView;

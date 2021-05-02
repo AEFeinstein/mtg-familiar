@@ -47,6 +47,16 @@
         android:minHeight="48dp">
 
         <Button
+            android:id="@+id/draw_card"
+            style="?android:attr/buttonBarButtonStyle"
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/draw_card"
+            android:textStyle="bold" />
+
+        <Button
             android:id="@+id/new_hand"
             style="?android:attr/buttonBarButtonStyle"
 

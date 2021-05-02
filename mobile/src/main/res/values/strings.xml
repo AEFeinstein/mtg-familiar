@@ -572,6 +572,7 @@ Good luck, and have fun!
     <string name="sample_hand">Sample Hand</string>
     <string name="new_hand">New Hand</string>
     <string name="mulligan">Mulligan</string>
+    <string name="draw_card">Draw</string>
 
     <string name="search_settype">Set Type</string>
     <string name="card_on_reserved_list">On Reserved List</string>
