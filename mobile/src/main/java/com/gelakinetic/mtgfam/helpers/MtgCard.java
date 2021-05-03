@@ -722,8 +722,8 @@ public class MtgCard extends Card {
      * @throws MalformedURLException If we screw up building the URL
      */
     private URL getScryfallImageUrl(String lang, int attempt) throws MalformedURLException {
-        // Only do one attempt for scryfall
-        if (attempt > 0) {
+        // Attempt scryfall twice
+        if (attempt > 1) {
             return null;
         }
 
@@ -735,7 +735,13 @@ public class MtgCard extends Card {
 
         String code = this.mScryfallSetCode.toLowerCase();
 
-        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
+        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image";
+
+        // On the first attempt, append the version language, otherwise leave it off
+        if(0 == attempt) {
+            urlStr += "&version=normal&lang=" + lang;
+        }
+
         if (this.mNumber.endsWith("b")) {
             urlStr += "&face=back";
         }

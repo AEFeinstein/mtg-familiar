@@ -792,7 +792,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     private Target<Drawable> runGlideRequest(int attempt, String cardLanguage, int width, int height,
                                              boolean onlyCheckCache, Target<Drawable> target) {
-
+        // Log.d("imgurl", mCard.getImageUrlString(attempt, cardLanguage));
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
                 .load(mCard.getImageUrlString(attempt, cardLanguage))
