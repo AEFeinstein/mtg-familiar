@@ -66,7 +66,7 @@ public class DeckListImporter {
         try {
             Matcher match = mCardPattern.matcher(line);
 
-            if(match.find()) {
+            if (match.find()) {
                 String cardName = match.group(3).trim();
                 /* deal with split cards (/ or // in name): only include first half */
                 cardName = cardName.split("\\s/+\\s", 2)[0];
@@ -80,8 +80,7 @@ public class DeckListImporter {
                 final boolean isFoil = false;
 
                 mParsedCards.add(new MtgCard(cardName, cardSet, isFoil, numberOf, currentIsSideBoard));
-            }
-            else{
+            } else {
                 mErrorLines.add(currentIsSideBoard ? "SB: " + line : line);
             }
         } catch (NullPointerException | IllegalStateException e) {

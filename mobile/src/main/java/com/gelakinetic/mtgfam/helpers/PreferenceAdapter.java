@@ -227,7 +227,7 @@ public class PreferenceAdapter {
         edit.putLong(context.getString(R.string.key_lastDIPGUpdate), lastDIPGUpdate);
         edit.apply();
     }
-    
+
     /* TTS show dialog */
     public static synchronized boolean getTtsShowDialog(@Nullable Context context) {
         if (null == context) {

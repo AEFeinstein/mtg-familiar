@@ -37,6 +37,7 @@ public class SampleHandMaker {
 
     /**
      * Draws a sample hand from the provided deck with no mulligans taken
+     *
      * @return The drawn sample hand
      */
     public List<MtgCard> drawSampleHand() {
@@ -59,6 +60,7 @@ public class SampleHandMaker {
 
     /**
      * Draws a sample hand from the provided deck given how many mulligans have been taken
+     *
      * @param numOfMulls The number of mulligans that have been taken
      * @return The drawn sample hand
      */
@@ -76,6 +78,7 @@ public class SampleHandMaker {
 
     /**
      * Expands a deck to include a separate entry for each copy of a card
+     *
      * @param mDeck The deck to expand
      * @return The expanded deck
      */
@@ -93,6 +96,7 @@ public class SampleHandMaker {
 
     /**
      * Returns a new card from the deck. Returning as list makes 0 deck size case easier
+     *
      * @return List with new card or empty list if deck is empty
      */
     public List<MtgCard> drawCard() {
@@ -103,8 +107,7 @@ public class SampleHandMaker {
             toReturn.add(mDeckWithoutHand.get(randCard));
             mDeckWithoutHand.remove(randCard);
             return toReturn;
-        } else
-        {
+        } else {
             return new ArrayList<>();
         }
     }

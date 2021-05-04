@@ -21,9 +21,6 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,6 +34,7 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.view.ReliableColorPie;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

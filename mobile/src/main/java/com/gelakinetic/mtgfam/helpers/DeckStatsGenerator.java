@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DeckStatsGenerator {
-    private List<MtgCard> mDeckToStat;
+    private final List<MtgCard> mDeckToStat;
     private float mDeckSize; //Defined as a Float to avoid integer division
     private Map<String, Float> typeStats;
     private Map<String, Integer> colorStats;
@@ -82,28 +82,22 @@ public class DeckStatsGenerator {
             if (!card.isSideboard()) {
                 Matcher typeMatcher = mTypePattern.matcher(card.getType());
                 //Must have at least 1 type
-                typeMatcher.find();
-                do {
-                    mapAddIfPresent(typeStats, typeMatcher.group(0), card.mNumberOf);
-                    if (Objects.equals(typeMatcher.group(0), "Land")) {
-                        isLand = true;
-                    }
-                } //Can have more than 1 type
-                while (typeMatcher.find());
+                if (typeMatcher.find()) {
+                    do {
+                        mapAddIfPresent(typeStats, typeMatcher.group(0), card.mNumberOf);
+                        if (Objects.equals(typeMatcher.group(0), "Land")) {
+                            isLand = true;
+                        }
+                    } //Can have more than 1 type
+                    while (typeMatcher.find());
+                }
 
                 if (!isLand) {
                     Matcher manaCostMatcher = mColorPattern.matcher(card.getManaCost());
-                    Matcher rulesColorMatcher = mColorPattern.matcher(card.getText());
                     boolean hasColor = true;
 
                     if (manaCostMatcher.find()) {
                         do {
-                         /*   float numColors = (float) 0.0;
-                            for (int i = 1; i <= manaCostMatcher.groupCount(); i++) {
-                                if (colorStats.containsKey(manaCostMatcher.group(i))) {
-                                    numColors++;
-                                }
-                            }*/
                             for (int j = 1; j <= manaCostMatcher.groupCount(); j++) {
                                 mapAddIfPresent(colorStats, manaCostMatcher.group(j), card.mNumberOf /* / numColors*/);
                             }
@@ -111,17 +105,13 @@ public class DeckStatsGenerator {
                     } else {
                         hasColor = false;
                     }
-                    if (rulesColorMatcher.find()) {
-                        do {
-                            for (int i = 1; i <= rulesColorMatcher.groupCount(); i++) {
-                                mapAddIfPresent(colorStats, rulesColorMatcher.group(i), card.mNumberOf);
-                            }
-                        } while (rulesColorMatcher.find());
-                    } else if (!hasColor){
+                    if (!hasColor) {
                         //Catch colorless
                         mapAddIfPresent(colorStats, card.getColor(), card.mNumberOf);
                     }
+
                     mapAddIfPresent(cmcStats, Math.min(card.getCmc(), 7), card.mNumberOf);
+
                     mDeckSize += card.mNumberOf;
                 }
             }
@@ -130,13 +120,11 @@ public class DeckStatsGenerator {
         for (String type : typeStats.keySet()) {
             mapDivideIfPresent(typeStats, type, mDeckSize);
         }
-        //for (String color : colorStats.keySet()) {
-        //    mapDivideIfPresent(colorStats, color, mDeckSize);
-        //}
     }
 
     /**
      * Calls runStats() if no typeStats exist then returns typeStats
+     *
      * @return typeStats
      */
     public Map<String, Float> getTypeStats() {
@@ -148,6 +136,7 @@ public class DeckStatsGenerator {
 
     /**
      * Calls runStats() if no colorStats exist then returns colorStats
+     *
      * @return colorStats
      */
     public Map<String, Integer> getColorStats() {
@@ -159,6 +148,7 @@ public class DeckStatsGenerator {
 
     /**
      * Calls runStats() if no cmcStats exist then returns cmcStats
+     *
      * @return cmcStats
      */
     public Map<Integer, Integer> getCmcStats() {
@@ -170,10 +160,11 @@ public class DeckStatsGenerator {
 
     /**
      * Replace computeIfPresent for division to keep minApi at 21
-     * @param map Map to divide values from
-     * @param key Key for which value to divide
+     *
+     * @param map     Map to divide values from
+     * @param key     Key for which value to divide
      * @param divisor What to divide by
-     * @param <K> Key type
+     * @param <K>     Key type
      */
     private <K> void mapDivideIfPresent(Map<K, Float> map, K key, float divisor) {
         if (map.get(key) != null) {
@@ -185,10 +176,11 @@ public class DeckStatsGenerator {
 
     /**
      * Replace computeIfPresent for addition of Floats to keep minApi at 21
-     * @param map Map to add values from
-     * @param key Key for which value to add
+     *
+     * @param map        Map to add values from
+     * @param key        Key for which value to add
      * @param difference What to add
-     * @param <K> Key type
+     * @param <K>        Key type
      */
     private <K> void mapAddIfPresent(Map<K, Float> map, K key, float difference) {
         if (map.get(key) != null) {
@@ -200,10 +192,11 @@ public class DeckStatsGenerator {
 
     /**
      * Replace computeIfPresent for addition of Integers to keep minApi at 21
-     * @param map Map to add values from
-     * @param key Key for which value to add
+     *
+     * @param map        Map to add values from
+     * @param key        Key for which value to add
      * @param difference What to add
-     * @param <K> Key type
+     * @param <K>        Key type
      */
     private <K> void mapAddIfPresent(Map<K, Integer> map, K key, int difference) {
         if (map.get(key) != null) {

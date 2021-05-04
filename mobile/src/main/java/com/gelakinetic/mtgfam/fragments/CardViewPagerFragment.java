@@ -172,7 +172,8 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * @return The Fragment at that index
          */
         @Override
-        public @NonNull Fragment getItem(int position) {
+        public @NonNull
+        Fragment getItem(int position) {
             CardViewFragment cvf = new CardViewFragment();
             Bundle args = new Bundle();
             args.putLong(CardViewFragment.CARD_ID, mCardIds[position]);

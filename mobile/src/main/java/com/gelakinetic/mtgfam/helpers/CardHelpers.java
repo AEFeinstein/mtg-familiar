@@ -41,7 +41,6 @@ import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;

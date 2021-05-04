@@ -24,9 +24,6 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,20 +44,19 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SampleHandFrag extends FamiliarFragment{
-    private final List<MtgCard> mDeck;
+public class SampleHandFrag extends FamiliarFragment {
     private List<MtgCard> mHand;
     private int numOfMulls = 0;
-    private SampleHandMaker handGen;
+    private final SampleHandMaker handGen;
     /* UI Elements */
     private ListView mListView;
+    private MergeCursor mCursor = null;
+    private FamiliarDbHandle mDbHandle = null;
 
     /**
-     *
      * @param mDeck The deck to make sample hands from
      */
     public SampleHandFrag(List<MtgCard> mDeck) {
-        this.mDeck = mDeck;
         handGen = new SampleHandMaker(mDeck);
     }
 
@@ -105,26 +101,40 @@ public class SampleHandFrag extends FamiliarFragment{
     }
 
     /**
+     * Be clean with the cursor!
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mCursor != null) {
+            mCursor.close();
+        }
+        DatabaseManager.closeDatabase(getActivity(), mDbHandle);
+    }
+
+    /**
      * This function fills mListView with the info in mCursor using a ResultListAdapter
      */
     private void fillData() {
         int handSize = mHand.size();
         if (handSize > 0) {
             long handId;
-            Cursor mCursor = null;
-            FamiliarDbHandle handle = new FamiliarDbHandle();
+            // Clean up if necessary
+            if (null != mDbHandle) {
+                if (mCursor != null) {
+                    mCursor.close();
+                }
+                DatabaseManager.closeDatabase(getActivity(), mDbHandle);
+            }
+            mDbHandle = new FamiliarDbHandle();
             try {
-                SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+                SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
                 Cursor[] handCursors = new Cursor[handSize];
                 for (int i = 0; i < handSize; i++) {
                     handId = CardDbAdapter.fetchIdByName(mHand.get(i).getName(), database);
                     handCursors[i] = CardDbAdapter.fetchCards(new long[]{handId}, null, database);
                 }
                 mCursor = new MergeCursor(handCursors);
-            } catch (FamiliarDbException e) {
-                handleFamiliarDbException(false);
-            }
-            if (mCursor != null) {
                 ArrayList<String> fromList = new ArrayList<>();
                 ArrayList<Integer> toList = new ArrayList<>();
                 // Always get name, set, and rarity. This is for the wishlist quick add
@@ -166,6 +176,8 @@ public class SampleHandFrag extends FamiliarFragment{
 
                 ResultListAdapter rla = new ResultListAdapter(getActivity(), mCursor, from, to);
                 mListView.setAdapter(rla);
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(false);
             }
         } else {
             ResultListAdapter rla = new ResultListAdapter(getActivity(), null, null, null);

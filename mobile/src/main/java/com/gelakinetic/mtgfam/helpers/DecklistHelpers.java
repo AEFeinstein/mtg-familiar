@@ -230,7 +230,7 @@ public class DecklistHelpers {
         /**
          * Constructor.
          *
-         * @param card        The MtgCard which will be the base for this object
+         * @param card The MtgCard which will be the base for this object
          */
         public CompressedDecklistInfo(MtgCard card) {
             super(card);

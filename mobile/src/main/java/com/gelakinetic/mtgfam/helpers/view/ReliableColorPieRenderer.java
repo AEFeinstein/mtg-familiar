@@ -114,7 +114,7 @@ public class ReliableColorPieRenderer extends PieChartRenderer {
                     mRenderPaint.setColor(dataSet.getColor(4));
                     break;
                 case 'C':
-                //case "Colorless":
+                    //case "Colorless":
                     mRenderPaint.setColor(dataSet.getColor(5));
                     break;
                 default:

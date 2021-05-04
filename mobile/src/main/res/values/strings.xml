@@ -574,6 +574,12 @@ Good luck, and have fun!
     <string name="mulligan">Mulligan</string>
     <string name="draw_card">Draw</string>
 
+    <!-- Deck Stats -->
+    <string name="type_distribution">Type Distribution</string>
+    <string name="mana_value_distribution">Mana Symbol Distribution</string>
+    <string name="cmc_graph">CMC Graph</string>
+    <string name="card_colors">Card Colors</string>
+
     <string name="search_settype">Set Type</string>
     <string name="card_on_reserved_list">On Reserved List</string>
     <string name="card_not_on_reserved_list">Not on Reserved List</string>
