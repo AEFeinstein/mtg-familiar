@@ -41,7 +41,6 @@ import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -553,10 +552,10 @@ public class CardHelpers {
      * Comparator based on name.
      */
     public static class CardComparatorName
-            implements Comparator<CompressedDecklistInfo>, Serializable {
+            implements Comparator<MtgCard>, Serializable {
 
         @Override
-        public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
+        public int compare(MtgCard card1, MtgCard card2) {
             return card1.getName().compareTo(card2.getName());
         }
 
@@ -566,10 +565,10 @@ public class CardHelpers {
      * Comparator based on CMC.
      */
     public static class CardComparatorCMC
-            implements Comparator<CompressedDecklistInfo>, Serializable {
+            implements Comparator<MtgCard>, Serializable {
 
         @Override
-        public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
+        public int compare(MtgCard card1, MtgCard card2) {
 
             return Integer.compare(card1.getCmc(), card2.getCmc());
 
@@ -581,7 +580,7 @@ public class CardHelpers {
      * Comparator based on color.
      */
     public static class CardComparatorColor
-            implements Comparator<CompressedDecklistInfo>, Serializable {
+            implements Comparator<MtgCard>, Serializable {
 
         private static final String COLORS = "WUBRG";
 
@@ -609,7 +608,7 @@ public class CardHelpers {
         }
 
         @Override
-        public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
+        public int compare(MtgCard card1, MtgCard card2) {
 
             String cardColors1 = getColors(card1.getColor());
             String cardColors2 = getColors(card2.getColor());
@@ -636,12 +635,12 @@ public class CardHelpers {
      * Comparator based on sideboard.
      */
     public static class CardComparatorSideboard
-            implements Comparator<CompressedDecklistInfo>, Serializable {
+            implements Comparator<MtgCard>, Serializable {
 
         @Override
-        public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
+        public int compare(MtgCard card1, MtgCard card2) {
 
-            return Boolean.compare(card1.mIsSideboard, card2.mIsSideboard);
+            return Boolean.compare(card1.isSideboard(), card2.isSideboard());
 
         }
 
@@ -651,7 +650,7 @@ public class CardHelpers {
      * Comparator based on card supertype, an array of types must be passed in the order to sort.
      */
     public static class CardComparatorSupertype
-            implements Comparator<CompressedDecklistInfo>, Serializable {
+            implements Comparator<MtgCard>, Serializable {
 
         final String[] mTypes;
 
@@ -660,7 +659,7 @@ public class CardHelpers {
         }
 
         @Override
-        public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
+        public int compare(MtgCard card1, MtgCard card2) {
 
             String card1Type = card1.getType();
             String card2Type = card2.getType();

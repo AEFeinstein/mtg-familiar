@@ -130,6 +130,8 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;br&gt;
 &lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
+&lt;a href=https://github.com/PhilJay/MPAndroidChart&gt;MPAndroidChart&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
 &lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; used under the BSD, part MIT, and Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
@@ -535,6 +537,7 @@ Good luck, and have fun!
     <string name="decklist_clear_dialog_text">"Are you sure you want to clear the current deck?"</string>
     <string name="decklist_share">"Share Deck"</string>
     <string name="decklist_share_title">"MTG Familiar Decklist"</string>
+    <string name="decklist_stats">"Deck Stats</string>
     <string name="decklist_instants">"Instants"</string>
     <string name="decklist_sorceries">"Sorceries"</string>
     <string name="decklist_others">"Others"</string>
@@ -559,16 +562,27 @@ Good luck, and have fun!
     <string name="empty_deck_text">"Please enter some cards to import"</string>
     <string name="import_loading">"Importing…"</string>
     <string name="import_parse_error_toast">"Had some trouble parsing these lines."</string>
+    <string name="import_complete_toast">"Deck imported successfully."</string>
     <plurals name="import_card_unknown_toast">
         <item quantity="one">"One card was not recognized and was not imported."</item>
         <item quantity="other">"%1$d cards were not recognized and were not imported."</item>
     </plurals>
-    <string name="import_complete_toast">"Deck imported successfully."</string>
+
+    <!-- Sample Hand -->
+    <string name="sample_hand">Sample Hand</string>
+    <string name="new_hand">New Hand</string>
+    <string name="mulligan">Mulligan</string>
+    <string name="draw_card">Draw</string>
+
+    <!-- Deck Stats -->
+    <string name="type_distribution">Type Distribution</string>
+    <string name="mana_value_distribution">Mana Symbol Distribution</string>
+    <string name="cmc_graph">CMC Graph</string>
+    <string name="card_colors">Card Colors</string>
 
     <string name="search_settype">Set Type</string>
     <string name="card_on_reserved_list">On Reserved List</string>
     <string name="card_not_on_reserved_list">Not on Reserved List</string>
-
     <string name="logging_title">Logging Menu</string>
     <string name="logging_enabled">Logging Enabled</string>
     <string name="logging_share">Share Log</string>

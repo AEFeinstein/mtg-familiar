@@ -79,7 +79,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /* Decklist and adapters */
     public final List<CompressedDecklistInfo> mCompressedDecklist = Collections.synchronizedList(new ArrayList<>());
-    private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
+    private ComparatorChain<MtgCard> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
     public String mCurrentDeck = AUTOSAVE_NAME;
@@ -325,10 +325,10 @@ public class DecklistFragment extends FamiliarListFragment {
         final String numberOf = String.valueOf(getCardNumberInput());
         try {
             final MtgCard card = new MtgCard(getActivity(), name, null,
-                    checkboxFoilIsChecked(), Integer.parseInt(numberOf));
+                    checkboxFoilIsChecked(), Integer.parseInt(numberOf), isSideboard);
 
             final CompressedDecklistInfo decklistInfo =
-                    new CompressedDecklistInfo(card, isSideboard);
+                    new CompressedDecklistInfo(card);
 
             synchronized (mCompressedDecklist) {
                 /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
@@ -350,7 +350,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         firstCard.add(card);
                     }
                 } else {
-                    mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+                    mCompressedDecklist.add(new CompressedDecklistInfo(card));
                 }
 
                 /* The headers shouldn't (and can't) be sorted */
@@ -472,7 +472,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (!card.getName().isEmpty()) {
                         if (changedCardName == null || changedCardName.equals(card.getName())) {
                             CompressedDecklistInfo wrapped =
-                                    new CompressedDecklistInfo(card, card.isSideboard());
+                                    new CompressedDecklistInfo(card);
                             if (mCompressedDecklist.contains(wrapped)) {
                                 mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
                                         .add(card);
@@ -594,6 +594,13 @@ public class DecklistFragment extends FamiliarListFragment {
                         SnackbarWrapper.LENGTH_LONG);
             }
             return true;
+        } else if (item.getItemId() == R.id.deck_menu_stats) {
+            try {
+                startNewFragment(new DeckStatsFragment(DecklistHelpers.ReadDecklist(getActivity(), mCurrentDeck + ".deck", true)), null);
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(false);
+            }
+            return true;
         } else if (item.getItemId() == R.id.deck_menu_legality) {
             getFamiliarActivity().setLoading();
 
@@ -696,7 +703,7 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private boolean insertHeaderAt(final int position, final String headerText) {
         synchronized (mCompressedDecklist) {
-            final CompressedDecklistInfo header = new CompressedDecklistInfo(new MtgCard(), false);
+            final CompressedDecklistInfo header = new CompressedDecklistInfo(new MtgCard());
             header.header = headerText;
             if (!mCompressedDecklist.contains(header)) {
                 mCompressedDecklist.add(position, header);
@@ -720,7 +727,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (!cdi.getName().equals("") /* We only want entries that have a card attached */
                             && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                             && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
-                        if (cdi.mIsSideboard /* it is in the sideboard */
+                        if (cdi.isSideboard() /* it is in the sideboard */
                                 /* The sideboard header isn't already there */
                                 && !insertHeaderAt(i, cardHeaders[0])) {
                             break;
@@ -858,7 +865,7 @@ public class DecklistFragment extends FamiliarListFragment {
             synchronized (mCompressedDecklist) {
                 final CompressedDecklistInfo item = mCompressedDecklist.get(position);
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                        item.getName(), item.mIsSideboard);
+                        item.getName(), item.isSideboard());
             }
         }
     }
@@ -1034,7 +1041,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
 
                 /* If the card is not in the sideboard and we're looking for non-sideboard cards */
-                if (!cdi.mIsSideboard && 0 <= typeIndex) {
+                if (!cdi.isSideboard() && 0 <= typeIndex) {
                     /* If the card matches the type */
                     if (cdi.getType().contains(targetType)) {
                         /* Check if this card was counted as a previous type */
@@ -1052,7 +1059,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         }
                     }
                     /* If the card is in the sideboard and we're looking for sideboard cards */
-                } else if (cdi.mIsSideboard && -1 == typeIndex) {
+                } else if (cdi.isSideboard() && -1 == typeIndex) {
                     totalCards += cdi.getTotalNumber();
                 }
             }
@@ -1084,7 +1091,7 @@ public class DecklistFragment extends FamiliarListFragment {
             counts[0] = 0;
             counts[1] = 0;
             for (int i = 0; i < getItemCount(); i++) {
-                if (Objects.requireNonNull(getItem(i)).mIsSideboard) {
+                if (Objects.requireNonNull(getItem(i)).isSideboard()) {
                     counts[1] += Objects.requireNonNull(getItem(i)).getTotalNumber();
                 } else {
                     counts[0] += Objects.requireNonNull(getItem(i)).getTotalNumber();

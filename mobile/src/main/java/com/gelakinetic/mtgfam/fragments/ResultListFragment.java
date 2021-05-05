@@ -250,7 +250,7 @@ public class ResultListFragment extends FamiliarFragment {
                 /* Jump back past the result list (it wasn't displayed because this card is a singleton)
                  * or maybe the cursor was null for no good reason */
                 if (!requireActivity().isTaskRoot()) {
-                    getActivity().finish();
+                    requireActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
                 }
@@ -259,7 +259,7 @@ public class ResultListFragment extends FamiliarFragment {
             if (mCursor == null || mCursor.getCount() == 0) {
                 SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT);
                 if (!requireActivity().isTaskRoot()) {
-                    getActivity().finish();
+                    requireActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
                 }
@@ -496,7 +496,7 @@ public class ResultListFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         if (dialogId == ResultListDialogFragment.DIALOG_SORT) {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
@@ -504,7 +504,7 @@ public class ResultListFragment extends FamiliarFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getSearchSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             ResultListDialogFragment newFragment = new ResultListDialogFragment();
             Bundle arguments = new Bundle();
@@ -512,7 +512,7 @@ public class ResultListFragment extends FamiliarFragment {
             arguments.putString(ResultListDialogFragment.NAME_KEY, cardName);
             arguments.putString(ResultListDialogFragment.NAME_SET, cardSet);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
     }
 

@@ -1535,6 +1535,20 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
+     * This helper function translates an attribute into a resource ID.
+     *
+     * @param attr The attribute ID
+     * @return the resource ID
+     */
+    public static int getResourceIdFromAttr(Context c, int attr) {
+        assert c.getTheme() != null;
+        TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr});
+        int resId = ta.getResourceId(0, 0);
+        ta.recycle();
+        return resId;
+    }
+
+    /**
      * Checks the networks state.
      *
      * @param activity        the activity to show the Snackbar in
