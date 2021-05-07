@@ -224,7 +224,6 @@ public class DecklistHelpers {
      */
     public static class CompressedDecklistInfo extends CardHelpers.CompressedCardInfo {
 
-        //public final boolean mIsSideboard;
         public String header;
 
         /**
@@ -257,8 +256,8 @@ public class DecklistHelpers {
                 /* Are the headers equal? */
                 return (header != null && !header.isEmpty() &&
                         header.equals(cdi.header)) ||
-                        (mName != null && !mName.isEmpty() &&
-                                mName.equals(cdi.mName) && (cdi.isSideboard() == cdi.isSideboard()));
+                        (this.mName != null && !this.mName.isEmpty() &&
+                                this.mName.equals(cdi.mName) && (this.isSideboard() == cdi.isSideboard()));
             }
             return super.equals(o);
         }
