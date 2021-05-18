@@ -333,14 +333,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
     <string name="rules_copy_tag">"MTG-Regel"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"DCI-Nummer aktualisieren"</string>
-    <string name="profile_remove_dci">"DCI-Nummer entfernen"</string>
-    <string name="profile_update_dci_dialog_title">"Gib deine DCI-Nummer ein."</string>
-    <string name="profile_invalid_dci">"Ungültige DCI-Nummer"</string>
 
     <!-- Maybe on this page you can explain what a DCI number is. -->
-    <string name="profile_no_dci">"Du hast deine DCI-Nummer nicht eingegeben."</string>
-    <string name="profile_planeswalker_points">"Planeswalker-Punkte"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"MoJhoSto-Basic-Regeln"</string>
@@ -583,5 +577,19 @@ Standard ....... Not Legal -->
     <string name="trader_new">"Neuer Trade"</string>
     <string name="trader_save_as">"Trade speichern unter"</string>
     <string name="decklist_new">"Neues Deck"</string>
-    <string name="is_commander">"Is Commander"</string>
+    <string name="is_commander">"Ist Commander"</string>
+    <string name="update_added_dmtr">"neue Regeln für digitale Turniere"</string>
+    <string name="update_added_dipg">"neuer Digital Infraction Procedure Guide"</string>
+    <string name="judges_corner_DMTR">"DMTR"</string>
+    <string name="judges_corner_DIPG">"DIPG"</string>
+    <string name="search_settype">"Editionstyp setzen"</string>
+    <string name="card_on_reserved_list">"Auf der Reserved List"</string>
+    <string name="card_not_on_reserved_list">"Nicht auf der Reserved List"</string>
+    <string name="logging_title">"Protokollierung Menü"</string>
+    <string name="logging_enabled">"Protokollierung eingeschaltet"</string>
+    <string name="logging_share">"Protokoll teilen"</string>
+    <string name="logging_export_db">"Datenbank exportieren"</string>
+    <string name="logging_database_copied_to">"Datenbank kopiert nach "</string>
+    <string name="logging_database_log">"Datenbank Protokoll"</string>
+    <string name="logging_send_database_log">"Datenbank Protokoll senden"</string>
 </resources>

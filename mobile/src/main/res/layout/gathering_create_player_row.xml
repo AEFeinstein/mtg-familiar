@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/search_name"
         android:selectAllOnFocus="true"
-        android:inputType="text" />
+        android:inputType="text"
+        android:importantForAutofill="no" />
 
     <LinearLayout
         style="@style/forty_eight"
@@ -54,7 +55,8 @@
             android:gravity="center"
             android:inputType="number"
             android:selectAllOnFocus="true"
-            android:text="@string/life_counter_twenty" />
+            android:text="@string/life_counter_twenty"
+            android:importantForAutofill="no" />
 
     </LinearLayout>
 

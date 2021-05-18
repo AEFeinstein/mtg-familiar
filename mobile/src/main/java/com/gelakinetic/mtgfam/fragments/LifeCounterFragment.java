@@ -113,7 +113,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mTts = new TextToSpeech(getActivity(), this);
         mTts.setOnUtteranceCompletedListener(this);
 
-        mAudioManager = (AudioManager) Objects.requireNonNull(getActivity()).getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) requireActivity().getSystemService(Context.AUDIO_SERVICE);
 
         m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
         if (m9000Player != null) {
@@ -239,7 +239,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mPlayers.clear();
 
         /* Remove the screen on lock, restore the brightness */
-        Objects.requireNonNull(getActivity()).getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        requireActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         onUserActive();
     }
 
@@ -272,7 +272,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         setStatDisplaying(mStatDisplaying);
 
         if (PreferenceAdapter.getKeepScreenOn(getContext())) {
-            Objects.requireNonNull(getActivity()).getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            requireActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
 
@@ -285,7 +285,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             if (PreferenceAdapter.getKeepScreenOn(getContext()) &&
                     PreferenceAdapter.getDimScreen(getContext())) {
                 float dimLevel = (float) PreferenceAdapter.getDimLevel(getContext()) / (float) 100;
-                WindowManager.LayoutParams layoutParams = Objects.requireNonNull(getActivity()).getWindow().getAttributes();
+                WindowManager.LayoutParams layoutParams = requireActivity().getWindow().getAttributes();
                 layoutParams.screenBrightness = dimLevel;
                 getActivity().getWindow().setAttributes(layoutParams);
             }
@@ -300,7 +300,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public void onUserActive() {
         if (PreferenceAdapter.getKeepScreenOn(getContext())) {
-            WindowManager.LayoutParams layoutParams = Objects.requireNonNull(getActivity()).getWindow().getAttributes();
+            WindowManager.LayoutParams layoutParams = requireActivity().getWindow().getAttributes();
             layoutParams.screenBrightness = -1;
             getActivity().getWindow().setAttributes(layoutParams);
         }
@@ -313,7 +313,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.life_counter_menu, menu);
     }
@@ -324,15 +324,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param menu The menu to show or hide the "announce life totals" button in.
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem menuItem = menu.findItem(R.id.announce_life);
         assert menuItem != null;
-        if (!mTtsInit || getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
-            menuItem.setVisible(false);
-        } else {
-            menuItem.setVisible(true);
-        }
+        menuItem.setVisible(mTtsInit && getFamiliarActivity() != null && getFamiliarActivity().mIsMenuVisible);
     }
 
     /**
@@ -344,36 +340,29 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.add_player:
-                /* Add the player to the ArrayList, set the commander info, and draw the new view */
-                addPlayer();
-                setCommanderInfo(-1);
-                addPlayerView(mPlayers.get(mPlayers.size() - 1));
-                return true;
-            case R.id.remove_player:
-                /* Show a dialog of players to remove */
-                showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
-                return true;
-            case R.id.announce_life:
-                /* Vocalize the current life totals */
-                announceLifeTotals();
-                return true;
-            case R.id.edit_gatherings:
-                /* Start a GatheringsFragment to edit gatherings */
-                GatheringsFragment rlFrag = new GatheringsFragment();
-                startNewFragment(rlFrag, null);
-                return true;
-            case R.id.set_gathering:
-                /* Show a dialog of gatherings a user can set */
-                showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
-                return true;
-            case R.id.display_mode:
-                /* Show a dialog to change the display mode (normal, compact, commander) */
-                showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.add_player) {                /* Add the player to the ArrayList, set the commander info, and draw the new view */
+            addPlayer();
+            setCommanderInfo(-1);
+            addPlayerView(mPlayers.get(mPlayers.size() - 1));
+            return true;
+        } else if (item.getItemId() == R.id.remove_player) {                /* Show a dialog of players to remove */
+            showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
+            return true;
+        } else if (item.getItemId() == R.id.announce_life) {                /* Vocalize the current life totals */
+            announceLifeTotals();
+            return true;
+        } else if (item.getItemId() == R.id.edit_gatherings) {                /* Start a GatheringsFragment to edit gatherings */
+            GatheringsFragment rlFrag = new GatheringsFragment();
+            startNewFragment(rlFrag, null);
+            return true;
+        } else if (item.getItemId() == R.id.set_gathering) {                /* Show a dialog of gatherings a user can set */
+            showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.display_mode) {                /* Show a dialog to change the display mode (normal, compact, commander) */
+            showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -445,7 +434,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         mGridLayout.removeAllViews();
 
-        if (Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             switch (mDisplayMode) {
                 case DISPLAY_NORMAL:
                     mGridLayout.setOrientation(GridLayout.HORIZONTAL);
@@ -551,7 +540,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 mCommanderPlayerView.removeAllViews();
                 mCommanderPlayerView.addView(player.mView);
                 player.setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode,
-                        Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation
+                        requireActivity().getResources().getConfiguration().orientation
                                 == Configuration.ORIENTATION_PORTRAIT, mPlayers.size() == 1
                 );
             });
@@ -574,7 +563,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private void setStatDisplaying(int statMode) {
         mStatDisplaying = statMode;
 
-        int disabledColor = ContextCompat.getColor(Objects.requireNonNull(getContext()),
+        int disabledColor = ContextCompat.getColor(requireContext(),
                 getFamiliarActivity().getResourceIdFromAttr(R.attr.lc_disabled));
         int enabledColor = ContextCompat.getColor(getContext(),
                 getFamiliarActivity().getResourceIdFromAttr(R.attr.lc_enabled));
@@ -813,10 +802,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     mTtsInit = true;
                     if (mIsSearchViewOpen) {
                         /* Search view is open, pend menu refresh */
-                        mAfterSearchClosedRunnable = () -> Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+                        mAfterSearchClosedRunnable = () -> requireActivity().invalidateOptionsMenu();
                     } else {
                         /* Redraw menu */
-                        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+                        requireActivity().invalidateOptionsMenu();
                     }
                 }
             } else if (status == TextToSpeech.ERROR) {
@@ -929,7 +918,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         if (mListSizeHeight != -1) {
             for (LcPlayer player : mPlayers) {
                 player.setSize(mListSizeWidth, mListSizeHeight, mNumRows, mNumCols, mDisplayMode,
-                        Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                        requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
                         mPlayers.size() == 1);
             }
         }

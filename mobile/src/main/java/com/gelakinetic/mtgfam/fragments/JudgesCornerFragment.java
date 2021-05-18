@@ -117,7 +117,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
             @Override
             public void onPageSelected(int i) {
-                Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+                requireActivity().invalidateOptionsMenu();
             }
 
             @Override
@@ -237,7 +237,8 @@ public class JudgesCornerFragment extends FamiliarFragment {
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#createFragment()}.
          */
         @Override
-        public FamiliarFragment getItem(int i) {
+        public @NonNull
+        FamiliarFragment getItem(int i) {
             return mTabs.get(i).createFragment();
         }
 

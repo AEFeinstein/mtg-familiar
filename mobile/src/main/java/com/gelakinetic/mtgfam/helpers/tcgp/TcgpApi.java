@@ -36,7 +36,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class TcgpApi {
 
@@ -168,7 +168,7 @@ public class TcgpApi {
             // Set the body and send the POST
             String payload = "grant_type=client_credentials&client_id=" + publicKey +
                     "&client_secret=" + privateKey;
-            conn.getOutputStream().write(payload.getBytes(Charset.forName("UTF-8")));
+            conn.getOutputStream().write(payload.getBytes(StandardCharsets.UTF_8));
 
             // Get the response stream
             InputStream inStream;
@@ -335,7 +335,7 @@ public class TcgpApi {
             // Add the information to search by
             GetProductInformationOptions options = new GetProductInformationOptions(queryParams);
             conn.getOutputStream().write(new Gson().toJson(options, GetProductInformationOptions.class)
-                    .getBytes(Charset.forName("UTF-8")));
+                    .getBytes(StandardCharsets.UTF_8));
 
             // Get the response stream. This opens the connection
             InputStream inStream;

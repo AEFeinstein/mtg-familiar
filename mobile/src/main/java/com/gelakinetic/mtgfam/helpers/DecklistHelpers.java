@@ -99,7 +99,7 @@ public class DecklistHelpers {
                         cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
                         /* If the card is a sideboard card, add the sideboard marking */
-                        if (cdi.mIsSideboard) {
+                        if (cdi.isSideboard()) {
                             cardString = "SB:" + cardString;
                         }
                         fos.write(cardString.getBytes());
@@ -175,7 +175,7 @@ public class DecklistHelpers {
                 readableDecklist.append(cdi.header).append("\r\n");
             } else {
                 for (IndividualSetInfo isi : cdi.mInfo) {
-                    if (cdi.mIsSideboard) {
+                    if (cdi.isSideboard()) {
                         readableDecklist.append("SB: ");
                     }
                     readableDecklist
@@ -224,18 +224,15 @@ public class DecklistHelpers {
      */
     public static class CompressedDecklistInfo extends CardHelpers.CompressedCardInfo {
 
-        public final boolean mIsSideboard;
         public String header;
 
         /**
          * Constructor.
          *
-         * @param card        The MtgCard which will be the base for this object
-         * @param isSideboard If the card is part of the sideboard or not
+         * @param card The MtgCard which will be the base for this object
          */
-        public CompressedDecklistInfo(MtgCard card, boolean isSideboard) {
+        public CompressedDecklistInfo(MtgCard card) {
             super(card);
-            mIsSideboard = isSideboard;
         }
 
         public CompressedWishlistInfo convertToWishlist() {
@@ -259,8 +256,8 @@ public class DecklistHelpers {
                 /* Are the headers equal? */
                 return (header != null && !header.isEmpty() &&
                         header.equals(cdi.header)) ||
-                        (mName != null && !mName.isEmpty() &&
-                                mName.equals(cdi.mName) && (mIsSideboard == cdi.mIsSideboard));
+                        (this.mName != null && !this.mName.isEmpty() &&
+                                this.mName.equals(cdi.mName) && (this.isSideboard() == cdi.isSideboard()));
             }
             return super.equals(o);
         }
@@ -269,7 +266,7 @@ public class DecklistHelpers {
         public int hashCode() {
             int hash = 23;
             hash = hash * 31 + super.hashCode();
-            return hash * 31 + ((Boolean) mIsSideboard).hashCode();
+            return hash * 31 + ((Boolean) isSideboard()).hashCode();
         }
 
     }

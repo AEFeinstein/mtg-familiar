@@ -319,12 +319,6 @@ Verrà azzerata anche la riserva di mana"</string>
     <string name="rules_copy_tag">"Regola di MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Aggiorna il numero DCI"</string>
-    <string name="profile_remove_dci">"Rimuovi il numero DCI"</string>
-    <string name="profile_update_dci_dialog_title">"Inserisci il tuo numero DCI"</string>
-    <string name="profile_invalid_dci">"Inserito numero DCI non valido"</string>
-    <string name="profile_no_dci">"Non hai inserito il tuo numero DCI"</string>
-    <string name="profile_planeswalker_points">"Punti Planeswalker"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Regole base del MoJhoSto"</string>
@@ -558,4 +552,18 @@ Standard ....... Not Legal -->
     <string name="trader_save_as">"Salva Scambio come"</string>
     <string name="decklist_new">"Nuovo mazzo"</string>
     <string name="is_commander">"È commander"</string>
+    <string name="update_added_dmtr">"Nuove Digital Magic Tournament Rules"</string>
+    <string name="update_added_dipg">"Nuove Digital Infraction Procedure Guide"</string>
+    <string name="judges_corner_DMTR">"DMTR"</string>
+    <string name="judges_corner_DIPG">"DIPG"</string>
+    <string name="search_settype">"Tipo di espansione"</string>
+    <string name="card_on_reserved_list">"In Elenco Riservato"</string>
+    <string name="card_not_on_reserved_list">"Non Nell'elenco Riservato"</string>
+    <string name="logging_title">"Menu di Registrazione"</string>
+    <string name="logging_enabled">"Registrazione Abilitata"</string>
+    <string name="logging_share">"Condividi Registro"</string>
+    <string name="logging_export_db">"Esporta Database"</string>
+    <string name="logging_database_copied_to">"Database copiato in "</string>
+    <string name="logging_database_log">"Registro del Database"</string>
+    <string name="logging_send_database_log">"Invia registro database"</string>
 </resources>

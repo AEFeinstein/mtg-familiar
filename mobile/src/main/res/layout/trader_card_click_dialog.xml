@@ -35,7 +35,8 @@
             android:gravity="center"
             android:inputType="number"
             android:maxLength="2"
-            android:selectAllOnFocus="true" />
+            android:selectAllOnFocus="true"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/traderDialogPrice"
@@ -46,7 +47,8 @@
             android:gravity="center"
             android:inputType="numberDecimal"
             android:selectAllOnFocus="true"
-            android:text="@string/default_price" />
+            android:text="@string/default_price"
+            android:importantForAutofill="no" />
 
 
         <LinearLayout

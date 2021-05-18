@@ -139,7 +139,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
     /**
      * A simple pager adapter that holds CardViewFragments
      */
-    private class CardViewPagerAdapter extends FragmentPagerAdapter {
+    private static class CardViewPagerAdapter extends FragmentPagerAdapter {
         final long[] mCardIds;
         private CardViewFragment mCurrentFragment;
 
@@ -172,7 +172,8 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * @return The Fragment at that index
          */
         @Override
-        public Fragment getItem(int position) {
+        public @NonNull
+        Fragment getItem(int position) {
             CardViewFragment cvf = new CardViewFragment();
             Bundle args = new Bundle();
             args.putLong(CardViewFragment.CARD_ID, mCardIds[position]);
@@ -219,8 +220,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      * Just to be fancy, lets spice up the transformation
      * http://developer.android.com/training/animation/screen-slide.html
      */
-    class DepthPageTransformer implements ViewPager.PageTransformer {
-        private final float MIN_SCALE = 0.75f;
+    static class DepthPageTransformer implements ViewPager.PageTransformer {
 
         /**
          * A custom transformer to get a sweet page effect
@@ -248,6 +248,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
                 view.setTranslationX(pageWidth * -position);
 
                 /* Scale the page down (between MIN_SCALE and 1) */
+                float MIN_SCALE = 0.75f;
                 float scaleFactor = MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position));
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);

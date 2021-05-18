@@ -55,7 +55,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 115;
+    public static final int DATABASE_VERSION = 118;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -76,6 +76,7 @@ public class CardDbAdapter {
     public static final String KEY_ABILITY = "cardtext";
     public static final String KEY_COLOR = "color";
     public static final String KEY_MANACOST = "manacost";
+    public static final String KEY_MANACOSTSORTED = "manacostsorted";
     public static final String KEY_CMC = "cmc";
     public static final String KEY_POWER = "power";
     public static final String KEY_TOUGHNESS = "toughness";
@@ -144,6 +145,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NUMBER,
             DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE,
             DATABASE_TABLE_CARDS + "." + KEY_MANACOST,
+            DATABASE_TABLE_CARDS + "." + KEY_MANACOSTSORTED,
             DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
             DATABASE_TABLE_CARDS + "." + KEY_POWER,
             DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
@@ -235,6 +237,7 @@ public class CardDbAdapter {
                     KEY_SUBTYPE + " text not null, " +
                     KEY_RARITY + " integer, " +
                     KEY_MANACOST + " text, " +
+                    KEY_MANACOSTSORTED + " text, " +
                     KEY_CMC + " integer not null, " +
                     KEY_POWER + " real, " +
                     KEY_TOUGHNESS + " real, " +
@@ -714,8 +717,12 @@ public class CardDbAdapter {
                 } else {
                     sql.append(" OR ");
                 }
-                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE AND ");
-                sql.append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
+                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE");
+                if (sanitizeString(card.getExpansion(), false).length() > 0) {
+                    sql.append(" AND ").append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
+                } else {
+                    sql.append(")");
+                }
             }
             sql.append(" ORDER BY s_").append(KEY_DATE).append(" DESC");
 
@@ -941,7 +948,7 @@ public class CardDbAdapter {
             // Planeswalkers can be commanders
             statement.append(" AND ((").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
             // In brawl, every planeswalker is a commander! Otherwise it needs special text
-            if (!"Brawl".equals(criteria.format)) {
+            if (!("Brawl".equals(criteria.format) || "Historic".equals(criteria.format))) {
                 statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ABILITY).append(" LIKE '%can be your commander%'");
             }
 
@@ -1045,7 +1052,17 @@ public class CardDbAdapter {
         }
 
         if (criteria.collectorsNumber != null) {
-            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " = ").append(sanitizeString(criteria.collectorsNumber, false)).append(")");
+            statement.append(" AND (");
+            boolean first = true;
+            for (String part : criteria.collectorsNumber.split("\\s+")) {
+                if (first) {
+                    first = false;
+                } else {
+                    statement.append(" OR ");
+                }
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " LIKE ").append(sanitizeString(part, false));
+            }
+            statement.append(")");
         }
 
         /*
@@ -1247,12 +1264,9 @@ public class CardDbAdapter {
         }
 
         if (null != criteria.manaCostLogic && null != criteria.manaCost) {
-            StringBuilder manaCost = new StringBuilder();
-            for (String mana : criteria.manaCost) {
-                manaCost.append('{').append(mana).append('}');
-            }
+            Collections.sort(criteria.manaCost);
             statement = criteria.manaCostLogic.appendToSql(statement,
-                    DATABASE_TABLE_CARDS + "." + KEY_MANACOST, manaCost.toString());
+                    DATABASE_TABLE_CARDS + "." + KEY_MANACOSTSORTED, criteria.manaCost);
         }
 
         if (criteria.cmc != -1) {
@@ -1387,18 +1401,123 @@ public class CardDbAdapter {
 
             if (null == orderByStr) {
                 orderByStr = KEY_NAME + " COLLATE UNICODE";
-            } else {
+            } else if (!(criteria.setLogic != MOST_RECENT_PRINTING && criteria.setLogic != ALL_PRINTINGS)) {
                 // When sorting by set, sort by date first, then name
-                orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " asc", CardDbAdapter.KEY_DATE + " asc," + CardDbAdapter.KEY_SET + " asc");
-                orderByStr = orderByStr.replace(CardDbAdapter.KEY_SET + " desc", CardDbAdapter.KEY_DATE + " desc," + CardDbAdapter.KEY_SET + " desc");
+                orderByStr = orderByStr.replace(
+                        CardDbAdapter.KEY_SET + " asc",
+                        CardDbAdapter.KEY_DATE + " asc," + CardDbAdapter.KEY_SET + " asc");
+                orderByStr = orderByStr.replace(
+                        CardDbAdapter.KEY_SET + " desc",
+                        CardDbAdapter.KEY_DATE + " desc," + CardDbAdapter.KEY_SET + " desc");
+
+                // Sort rarity by C, U, R, M, T order, not 'alphabetically'
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_RARITY + " asc",
+                        "CASE " + CardDbAdapter.KEY_RARITY +
+                                " WHEN " + ((int) 'C') + " THEN 0" +
+                                " WHEN " + ((int) 'U') + " THEN 1" +
+                                " WHEN " + ((int) 'R') + " THEN 2" +
+                                " WHEN " + ((int) 'M') + " THEN 3" +
+                                " WHEN " + ((int) 'T') + " THEN 4" +
+                                " ELSE                          5" +
+                                " END");
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_RARITY + " desc",
+                        "CASE " + CardDbAdapter.KEY_RARITY +
+                                " WHEN " + ((int) 'C') + " THEN 4" +
+                                " WHEN " + ((int) 'U') + " THEN 3" +
+                                " WHEN " + ((int) 'R') + " THEN 2" +
+                                " WHEN " + ((int) 'M') + " THEN 1" +
+                                " WHEN " + ((int) 'T') + " THEN 0" +
+                                " ELSE                          5" +
+                                " END");
+
+                // Sort color and color identity by W, U, B, R, G order, not 'alphabetically'
+                String colorAscStrCases = " WHEN 'W'     THEN  0" +
+                        " WHEN 'U'     THEN  1" +
+                        " WHEN 'B'     THEN  2" +
+                        " WHEN 'R'     THEN  3" +
+                        " WHEN 'G'     THEN  4" +
+                        " WHEN 'WU'    THEN  5" +
+                        " WHEN 'UB'    THEN  6" +
+                        " WHEN 'BR'    THEN  7" +
+                        " WHEN 'RG'    THEN  8" +
+                        " WHEN 'WG'    THEN  9" +
+                        " WHEN 'WB'    THEN 10" +
+                        " WHEN 'BG'    THEN 11" +
+                        " WHEN 'UG'    THEN 12" +
+                        " WHEN 'UR'    THEN 13" +
+                        " WHEN 'WR'    THEN 14" +
+                        " WHEN 'WUB'   THEN 15" +
+                        " WHEN 'UBR'   THEN 16" +
+                        " WHEN 'BRG'   THEN 17" +
+                        " WHEN 'WRG'   THEN 18" +
+                        " WHEN 'WUG'   THEN 19" +
+                        " WHEN 'WUR'   THEN 20" +
+                        " WHEN 'UBG'   THEN 21" +
+                        " WHEN 'WBR'   THEN 22" +
+                        " WHEN 'URG'   THEN 23" +
+                        " WHEN 'WBG'   THEN 24" +
+                        " WHEN 'WUBR'  THEN 25" +
+                        " WHEN 'WUBG'  THEN 26" +
+                        " WHEN 'WURG'  THEN 27" +
+                        " WHEN 'WBRG'  THEN 28" +
+                        " WHEN 'UBRG'  THEN 29" +
+                        " WHEN 'WUBRG' THEN 30" +
+                        " ELSE              31" +
+                        " END";
+                String colorDescStrCases = " WHEN 'W'     THEN 31" +
+                        " WHEN 'U'     THEN 30" +
+                        " WHEN 'B'     THEN 29" +
+                        " WHEN 'R'     THEN 28" +
+                        " WHEN 'G'     THEN 27" +
+                        " WHEN 'WU'    THEN 26" +
+                        " WHEN 'UB'    THEN 25" +
+                        " WHEN 'BR'    THEN 24" +
+                        " WHEN 'RG'    THEN 23" +
+                        " WHEN 'WG'    THEN 22" +
+                        " WHEN 'WB'    THEN 21" +
+                        " WHEN 'BG'    THEN 20" +
+                        " WHEN 'UG'    THEN 19" +
+                        " WHEN 'UR'    THEN 18" +
+                        " WHEN 'WR'    THEN 17" +
+                        " WHEN 'WUB'   THEN 16" +
+                        " WHEN 'UBR'   THEN 15" +
+                        " WHEN 'BRG'   THEN 14" +
+                        " WHEN 'WRG'   THEN 13" +
+                        " WHEN 'WUG'   THEN 12" +
+                        " WHEN 'WUR'   THEN 11" +
+                        " WHEN 'UBG'   THEN 10" +
+                        " WHEN 'WBR'   THEN  9" +
+                        " WHEN 'URG'   THEN  8" +
+                        " WHEN 'WBG'   THEN  7" +
+                        " WHEN 'WUBR'  THEN  6" +
+                        " WHEN 'WUBG'  THEN  5" +
+                        " WHEN 'WURG'  THEN  4" +
+                        " WHEN 'WBRG'  THEN  3" +
+                        " WHEN 'UBRG'  THEN  2" +
+                        " WHEN 'WUBRG' THEN  1" +
+                        " ELSE               0" +
+                        " END";
+
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_COLOR + " asc",
+                        "CASE " + CardDbAdapter.KEY_COLOR + colorAscStrCases
+                );
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_COLOR + " desc",
+                        "CASE " + CardDbAdapter.KEY_COLOR + colorDescStrCases
+                );
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_COLOR_IDENTITY + " asc",
+                        "CASE " + CardDbAdapter.KEY_COLOR_IDENTITY + colorAscStrCases
+                );
+                orderByStr = orderByStr.replace(CardDbAdapter.KEY_COLOR_IDENTITY + " desc",
+                        "CASE " + CardDbAdapter.KEY_COLOR_IDENTITY + colorDescStrCases
+                );
             }
 
             if (consolidate) {
-                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, " + KEY_ID + " DESC"
+                sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC, (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " + 0) ASC"
                         + ") GROUP BY " + KEY_NAME + " ORDER BY " + orderByStr;
             } else {
                 sql += " ORDER BY " + orderByStr
-                        + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, " + KEY_ID + " DESC)";
+                        + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC, (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " + 0) ASC)";
             }
             FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor cursor = mDb.rawQuery(sql, null);
@@ -1600,18 +1719,18 @@ public class CardDbAdapter {
 
         // For every returned row
         try (Cursor c = mDb.rawQuery(statement, null)) {
-            String retVal = "";
+            StringBuilder retVal = new StringBuilder();
             c.moveToFirst();
             while (!c.isAfterLast()) {
                 // If we're not starting off, append the delimiter
-                if (!retVal.isEmpty()) {
-                    retVal += " // ";
+                if (retVal.length() > 0) {
+                    retVal.append(" // ");
                 }
                 // Append the card name
-                retVal += c.getString(c.getColumnIndex(KEY_NAME));
+                retVal.append(c.getString(c.getColumnIndex(KEY_NAME)));
                 c.moveToNext();
             }
-            return retVal;
+            return retVal.toString();
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -1686,6 +1805,7 @@ public class CardDbAdapter {
         }
         initialValues.put(KEY_RARITY, (int) card.getRarity());
         initialValues.put(KEY_MANACOST, card.getManaCost());
+        initialValues.put(KEY_MANACOSTSORTED, card.getManaCostSorted());
         initialValues.put(KEY_CMC, card.getCmc());
         initialValues.put(KEY_POWER, card.getPower());
         initialValues.put(KEY_TOUGHNESS, card.getToughness());
@@ -2004,7 +2124,7 @@ public class CardDbAdapter {
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
-            return sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{CardDbAdapter.KEY_CODE, CardDbAdapter.KEY_NAME}, null,
+            return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);

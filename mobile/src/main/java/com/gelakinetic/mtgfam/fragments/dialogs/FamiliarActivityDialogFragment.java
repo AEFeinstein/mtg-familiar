@@ -34,16 +34,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * Class that creates dialogs for FamiliarActivity
@@ -65,21 +63,18 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
      * @return The new dialog instance to be displayed. All dialogs are created with the AlertDialog builder, so
      * onCreateView() does not need to be implemented
      */
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
 
         assert getActivity().getPackageManager() != null;
 
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_ABOUT: {
 
@@ -205,7 +200,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
      * @param dialog A DialogInterface for the dismissed dialog
      */
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         try {
             final FamiliarActivity activity = getFamiliarActivity();

@@ -94,10 +94,14 @@ public class HtmlDocFragment extends FamiliarFragment {
                 if (savedInstanceState != null && savedInstanceState.containsKey(SCROLL_PCT)) {
                     // Delay the scrollTo to make it work
                     view.postDelayed(() -> {
-                        float webViewSize = mWebView.getContentHeight() - mWebView.getTop();
-                        float positionInWV = webViewSize * savedInstanceState.getFloat(SCROLL_PCT);
-                        int positionY = Math.round(mWebView.getTop() + positionInWV);
-                        mWebView.scrollTo(0, positionY);
+                        if (0 != savedInstanceState.getFloat(SCROLL_PCT)) {
+                            float webViewSize = mWebView.getContentHeight() - mWebView.getTop();
+                            float positionInWV = webViewSize * savedInstanceState.getFloat(SCROLL_PCT);
+                            int positionY = Math.round(mWebView.getTop() + positionInWV);
+                            mWebView.scrollTo(0, positionY);
+                            // Remove this to not scroll after clicking links
+                        }
+                        savedInstanceState.remove(SCROLL_PCT);
                     }, 300);
                 }
             }
@@ -111,7 +115,7 @@ public class HtmlDocFragment extends FamiliarFragment {
                 } else {
                     /* Otherwise launch links externally */
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    Objects.requireNonNull(getContext()).startActivity(i);
+                    requireContext().startActivity(i);
                 }
                 return true;
             }
@@ -125,7 +129,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         mName = getArguments().getString(JudgesCornerFragment.PAGE_NAME);
 
         /* Get the document from the bundle, load it */
-        File file = new File(Objects.requireNonNull(getActivity()).getFilesDir(), Objects.requireNonNull(getArguments().getString(JudgesCornerFragment.HTML_DOC)));
+        File file = new File(requireActivity().getFilesDir(), requireArguments().getString(JudgesCornerFragment.HTML_DOC));
         StringBuilder html = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
@@ -263,11 +267,7 @@ public class HtmlDocFragment extends FamiliarFragment {
 
         if (null != mWebView) {
             if (!findAllCalled) {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    mWebView.findAllAsync(searchTerm);
-                } else {
-                    mWebView.findAll(searchTerm);
-                }
+                mWebView.findAllAsync(searchTerm);
                 findAllCalled = true;
                 getFamiliarActivity().invalidateOptionsMenu();
             } else {
@@ -294,7 +294,7 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         if (findAllCalled) {
             inflater.inflate(R.menu.htmldoc_menu, menu);
@@ -308,21 +308,20 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @return true if the button was handled, false otherwise
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         /* Handle item selection */
         if (null != mWebView) {
-            switch (item.getItemId()) {
-                case R.id.arrow_down:
-                    mWebView.findNext(true);
-                    return true;
-                case R.id.arrow_up:
-                    mWebView.findNext(false);
-                    return true;
-                case R.id.cancel:
-                    mWebView.clearMatches();
-                    findAllCalled = false;
-                    getFamiliarActivity().invalidateOptionsMenu();
-                    return true;
+            if (item.getItemId() == R.id.arrow_down) {
+                mWebView.findNext(true);
+                return true;
+            } else if (item.getItemId() == R.id.arrow_up) {
+                mWebView.findNext(false);
+                return true;
+            } else if (item.getItemId() == R.id.cancel) {
+                mWebView.clearMatches();
+                findAllCalled = false;
+                getFamiliarActivity().invalidateOptionsMenu();
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);

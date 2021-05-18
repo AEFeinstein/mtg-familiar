@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -49,7 +48,6 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 /**
  * This fragment starts and stops the round timer. When it is started, it commits the end time as a shared preference,
@@ -130,44 +128,23 @@ public class RoundTimerFragment extends FamiliarFragment {
         am.cancel(easterEggPI);
 
         if (set) {
-            if (Build.VERSION.SDK_INT >= 19) {
-                /* Set all applicable alarms */
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+            /* Set all applicable alarms */
+            am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
 
-                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
-                }
-            } else {
-                /* Set all applicable alarms */
-                am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
-
-                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-                }
-                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-                    am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
-                }
+            if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+            }
+            if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
             }
         }
     }
@@ -231,7 +208,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 /* Commit the endTime as -1 */
                 PreferenceAdapter.setRoundTimerEnd(getContext(), -1);
                 /* Cancel the alarms */
-                setOrCancelAlarms(Objects.requireNonNull(getActivity()), 0, false);
+                setOrCancelAlarms(requireActivity(), 0, false);
                 /* Stop the ActionBar timer display*/
                 getFamiliarActivity().stopUpdatingDisplay();
                 /* Set button text to start again */
@@ -253,7 +230,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 PreferenceAdapter.setRoundTimerEnd(getContext(), endTime);
 
                 /* Set the alarm, and any warning alarms if applicable */
-                setOrCancelAlarms(Objects.requireNonNull(getActivity()), endTime, true);
+                setOrCancelAlarms(requireActivity(), endTime, true);
                 /* Show the notification */
                 showTimerRunningNotification(getActivity(), endTime);
                 /* Start the ActionBar display Timer */
@@ -286,7 +263,7 @@ public class RoundTimerFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.timer_menu, menu);
     }
@@ -301,24 +278,23 @@ public class RoundTimerFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.set_timer_ringtone:
-                Uri soundFile = Uri.parse(PreferenceAdapter.getTimerSound(getContext()));
+        if (item.getItemId() == R.id.set_timer_ringtone) {
+            Uri soundFile = Uri.parse(PreferenceAdapter.getTimerSound(getContext()));
 
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.timer_tone_dialog_title));
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, soundFile);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, Settings.System.DEFAULT_NOTIFICATION_URI);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.timer_tone_dialog_title));
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, soundFile);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, Settings.System.DEFAULT_NOTIFICATION_URI);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 
-                startActivityForResult(intent, RINGTONE_REQUEST_CODE); /* This result is caught in the activity */
-                return true;
-            case R.id.set_timer_warnings:
-                showDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            startActivityForResult(intent, RINGTONE_REQUEST_CODE); /* This result is caught in the activity */
+            return true;
+        } else if (item.getItemId() == R.id.set_timer_warnings) {
+            showDialog();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

@@ -316,14 +316,8 @@ La réserve de mana sera aussi vidée."</string>
     <string name="rules_copy_tag">"Règles de MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Mettre à jour le numéro DCI"</string>
-    <string name="profile_remove_dci">"Effacer le numéro DCI"</string>
 
     <!-- Fuzzy -->
-    <string name="profile_update_dci_dialog_title">"Saisir le numéro DCI"</string>
-    <string name="profile_invalid_dci">"Numéro DCI saisi non valide"</string>
-    <string name="profile_no_dci">"Vous n'avez pas saisi votre numéro DCI"</string>
-    <string name="profile_planeswalker_points">"Points de Planeswalker"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Règles MoJhoSto Basic"</string>
@@ -560,4 +554,18 @@ Standard ....... Not Legal -->
     <string name="trader_save_as">"Enregistrer Échange sous"</string>
     <string name="decklist_new">"Nouveau Deck"</string>
     <string name="is_commander">"Est Commandant"</string>
+    <string name="update_added_dmtr">"nouveaux Règlements pour Tournoi de Magic Numérique"</string>
+    <string name="update_added_dipg">"nouveau Guide de Procédure d'Infraction Numérique"</string>
+    <string name="judges_corner_DMTR">"DMTR"</string>
+    <string name="judges_corner_DIPG">"DIPG"</string>
+    <string name="search_settype">"Type d'Extension"</string>
+    <string name="card_on_reserved_list">"Sur la Liste Réservée"</string>
+    <string name="card_not_on_reserved_list">"Pas Sur la Liste Réservée"</string>
+    <string name="logging_title">"Menu d'Enregistrement"</string>
+    <string name="logging_enabled">"Enregistrement activé"</string>
+    <string name="logging_share">"Partager le Journal"</string>
+    <string name="logging_export_db">"Exporter Base de Données"</string>
+    <string name="logging_database_copied_to">"Base de Données copiée à "</string>
+    <string name="logging_database_log">"Journal de Base de Données"</string>
+    <string name="logging_send_database_log">"Envoyer le Journal de Base de Données"</string>
 </resources>

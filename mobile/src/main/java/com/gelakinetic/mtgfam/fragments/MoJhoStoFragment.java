@@ -146,7 +146,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.mojhosto_menu, menu);
     }
@@ -160,12 +160,11 @@ public class MoJhoStoFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.random_rules:
-                showDialog(MoJhoStoDialogFragment.DIALOG_RULES);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.random_rules) {
+            showDialog(MoJhoStoDialogFragment.DIALOG_RULES);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

@@ -78,12 +78,12 @@ public class MarketPriceFetcher {
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private final Object mSynchronizer = new Object();
-    private final ArrayList<Future> mFutures = new ArrayList<>();
+    private final ArrayList<Future<?>> mFutures = new ArrayList<>();
 
     private static CheckFutureRunnable mCheckFutureRunnable;
     private final Handler mHandler;
 
-    private abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
+    private abstract static class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
     }
 
     /**
@@ -577,7 +577,7 @@ public class MarketPriceFetcher {
         mCompositeDisposable.clear();
         mThreadPool.shutdownNow();
         mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        for (Future future : mFutures) {
+        for (Future<?> future : mFutures) {
             future.cancel(true);
         }
         mFutures.clear();

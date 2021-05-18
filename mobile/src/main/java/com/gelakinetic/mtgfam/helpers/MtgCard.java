@@ -217,6 +217,27 @@ public class MtgCard extends Card {
     }
 
     /**
+     * Construct a MtgCard based on the given parameters.
+     *
+     * @param activity    activity the method is being called from
+     * @param cardName    name of the card to make
+     * @param cardSet     set code of the card to make
+     * @param isFoil      if the card is foil or not
+     * @param numberOf    how many copies of the card are needed
+     * @param isSideboard Whether this card is in the sideboard
+     */
+    public MtgCard(
+            Activity activity,
+            String cardName,
+            String cardSet,
+            boolean isFoil,
+            int numberOf,
+            boolean isSideboard) throws InstantiationException {
+        this(activity, cardName, cardSet, isFoil, numberOf);
+        this.mIsSideboard = isSideboard;
+    }
+
+    /**
      * Initialize all the database variables for this MtgCard from a Cursor
      *
      * @param database   The database the Cursor comes from
@@ -241,6 +262,8 @@ public class MtgCard extends Card {
                 .getColumnIndex(CardDbAdapter.KEY_RARITY));
         this.mManaCost = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_MANACOST));
+        this.mSortedManaCost = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_MANACOSTSORTED));
         this.mPower = cardCursor.getInt(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_POWER));
         this.mToughness = cardCursor.getInt(cardCursor
@@ -399,6 +422,7 @@ public class MtgCard extends Card {
 
             this.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_RARITY));
             this.mManaCost = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MANACOST));
+            this.mSortedManaCost = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MANACOSTSORTED));
             this.mPower = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_POWER));
             this.mToughness = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_TOUGHNESS));
             this.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_LOYALTY));
@@ -699,8 +723,8 @@ public class MtgCard extends Card {
      * @throws MalformedURLException If we screw up building the URL
      */
     private URL getScryfallImageUrl(String lang, int attempt) throws MalformedURLException {
-        // Only do one attempt for scryfall
-        if (attempt > 0) {
+        // Attempt scryfall twice
+        if (attempt > 1) {
             return null;
         }
 
@@ -712,7 +736,13 @@ public class MtgCard extends Card {
 
         String code = this.mScryfallSetCode.toLowerCase();
 
-        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image&version=normal&lang=" + lang;
+        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image";
+
+        // On the first attempt, append the version language, otherwise leave it off
+        if(0 == attempt) {
+            urlStr += "&version=normal&lang=" + lang;
+        }
+
         if (this.mNumber.endsWith("b")) {
             urlStr += "&face=back";
         }

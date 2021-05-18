@@ -31,6 +31,7 @@ import java.util.ArrayList;
  * @author AEFeinstein
  *
  */
+@SuppressWarnings("CanBeFinal")
 public class Card implements Comparable<Card> {
 
     // The card's name
@@ -38,6 +39,9 @@ public class Card implements Comparable<Card> {
 
     // The card's mana cost
     protected String mManaCost = "";
+
+    // The card's mana cost with sorted symbols
+    protected String mSortedManaCost = "";
 
     // The card's converted mana cost
     protected int mCmc = 0;
@@ -96,6 +100,10 @@ public class Card implements Comparable<Card> {
 
     public String getManaCost() {
         return mManaCost;
+    }
+
+    public String getManaCostSorted() {
+        return mSortedManaCost;
     }
 
     public int getCmc() {
@@ -167,10 +175,11 @@ public class Card implements Comparable<Card> {
     }
 
     // Private class for encapsulating foreign printing information
+    @SuppressWarnings("CanBeFinal")
     public static class ForeignPrinting implements Comparable<ForeignPrinting> {
-        private final int mMultiverseId;
-        private final String mName;
-        private final String mLanguageCode;
+        private int mMultiverseId;
+        private String mName;
+        private String mLanguageCode;
 
         public ForeignPrinting(ForeignPrinting fp) {
             if (null != fp) {
@@ -192,7 +201,7 @@ public class Card implements Comparable<Card> {
 
         @Override
         public int compareTo(@NonNull ForeignPrinting o) {
-            return Integer.valueOf(this.mMultiverseId).compareTo(o.mMultiverseId);
+            return Integer.compare(this.mMultiverseId, o.mMultiverseId);
         }
 
         @Override
@@ -247,7 +256,7 @@ public class Card implements Comparable<Card> {
             } else if (this_num < other_num) {
                 return -1;
             } else {
-                return Character.valueOf(this.getNumberChar()).compareTo(other.getNumberChar());
+                return Character.compare(this.getNumberChar(), other.getNumberChar());
             }
         }
 

@@ -42,7 +42,6 @@ import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This fragment handles the creation, loading, and saving of Gatherings (default sets of players, lives, and view modes
@@ -155,7 +154,7 @@ public class GatheringsFragment extends FamiliarFragment {
             for (GatheringsPlayerData player : players) {
                 AddPlayerRow(player);
             }
-            Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+            requireActivity().invalidateOptionsMenu();
             mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
         }
     }
@@ -193,35 +192,34 @@ public class GatheringsFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_gathering:
-                showDialog(GatheringsDialogFragment.DIALOG_DELETE_GATHERING);
-                return true;
-            case R.id.remove_player:
-                showDialog(GatheringsDialogFragment.DIALOG_REMOVE_PLAYER);
-                return true;
-            case R.id.add_player:
-                /* Use the correct default life for commander mode */
-                switch (mDisplayModeSpinner.getSelectedItemPosition()) {
-                    case 1:
-                    case 0: {
-                        AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE));
-                        break;
-                    }
-                    case 2: {
-                        AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE_COMMANDER));
-                        break;
-                    }
+        if (item.getItemId() == R.id.delete_gathering) {
+            showDialog(GatheringsDialogFragment.DIALOG_DELETE_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.remove_player) {
+            showDialog(GatheringsDialogFragment.DIALOG_REMOVE_PLAYER);
+            return true;
+        } else if (item.getItemId() == R.id.add_player) {
+            /* Use the correct default life for commander mode */
+            switch (mDisplayModeSpinner.getSelectedItemPosition()) {
+                case 1:
+                case 0: {
+                    AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE));
+                    break;
                 }
-                return true;
-            case R.id.load_gathering:
-                showDialog(GatheringsDialogFragment.DIALOG_LOAD_GATHERING);
-                return true;
-            case R.id.save_gathering:
-                showDialog(GatheringsDialogFragment.DIALOG_SAVE_GATHERING);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                case 2: {
+                    AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE_COMMANDER));
+                    break;
+                }
+            }
+            return true;
+        } else if (item.getItemId() == R.id.load_gathering) {
+            showDialog(GatheringsDialogFragment.DIALOG_LOAD_GATHERING);
+            return true;
+        } else if (item.getItemId() == R.id.save_gathering) {
+            showDialog(GatheringsDialogFragment.DIALOG_SAVE_GATHERING);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -232,7 +230,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.gathering_menu, menu);
     }
@@ -268,7 +266,7 @@ public class GatheringsFragment extends FamiliarFragment {
         }
 
         GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
-                Objects.requireNonNull(getActivity()).getFilesDir());
+                requireActivity().getFilesDir());
         getActivity().invalidateOptionsMenu();
     }
 
@@ -329,7 +327,7 @@ public class GatheringsFragment extends FamiliarFragment {
         ((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
         mLinearLayout.addView(newView);
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -338,7 +336,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @param menu The menu to show or hide the "announce life totals" button in.
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem removePlayer = menu.findItem(R.id.remove_player);
@@ -349,18 +347,14 @@ public class GatheringsFragment extends FamiliarFragment {
         assert loadGathering != null;
 
         try {
-            if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
-                removePlayer.setVisible(false);
-            } else {
-                removePlayer.setVisible(true);
-            }
+            removePlayer.setVisible(mLinearLayout.getChildCount() != 0 && getFamiliarActivity().mIsMenuVisible);
         } catch (NullPointerException e) {
             /* the if () statement throwing a NullPointerException for some users. I don't know which part was null,
             or why, but this catches it well enough */
             removePlayer.setVisible(true);
         }
 
-        if (GatheringsIO.getNumberOfGatherings(Objects.requireNonNull(getActivity()).getFilesDir()) <= 0 ||
+        if (GatheringsIO.getNumberOfGatherings(requireActivity().getFilesDir()) <= 0 ||
                 getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
             deleteGathering.setVisible(false);
             loadGathering.setVisible(false);

@@ -13,7 +13,7 @@ public class CategoryGroups {
         results = null;
     }
 
-    public class Group {
+    public static class Group {
         public final long groupId;
         public final String name;
         final String abbreviation;

@@ -77,7 +77,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * This fragment lets users configure search parameters, and then search for a card
@@ -489,7 +488,7 @@ public class SearchViewFragment extends FamiliarFragment {
         final Map<String, String> symbolsByAutocomplete = new LinkedHashMap<>();
 
         SetAdapter(SearchViewFragment frag) {
-            super(Objects.requireNonNull(frag.getActivity()), R.layout.list_item_1);
+            super(frag.requireActivity(), R.layout.list_item_1);
             for (int index = 0; index < frag.mSetSymbols.length; index++) {
                 String autocomplete = "[" + frag.mSetSymbols[index] + "] " + frag.mSetNames[index];
                 String set = frag.mSetSymbols[index];
@@ -892,7 +891,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void persistOptions() {
         try {
-            FileOutputStream fileStream = Objects.requireNonNull(this.getActivity())
+            FileOutputStream fileStream = this.requireActivity()
                     .openFileOutput(DEFAULT_CRITERIA_FILE, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fileStream);
             os.writeObject(parseForm());
@@ -907,7 +906,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void fetchPersistedOptions() {
         try {
-            FileInputStream fileInputStream = Objects.requireNonNull(this.getActivity()).openFileInput(DEFAULT_CRITERIA_FILE);
+            FileInputStream fileInputStream = this.requireActivity().openFileInput(DEFAULT_CRITERIA_FILE);
             ObjectInputStream oInputStream = new ObjectInputStream(fileInputStream);
             SearchCriteria criteria = (SearchCriteria) oInputStream.readObject();
             oInputStream.close();
@@ -1125,18 +1124,17 @@ public class SearchViewFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.search_menu_clear:
-                clear();
-                return true;
-            case R.id.search_menu_save_defaults:
-                persistOptions();
-                return true;
-            case R.id.search_menu_load_defaults:
-                fetchPersistedOptions();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.search_menu_clear) {
+            clear();
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_save_defaults) {
+            persistOptions();
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_load_defaults) {
+            fetchPersistedOptions();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -1150,7 +1148,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         /* Set the default color */
-        mFormatButton.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()), getResourceIdFromAttr(R.attr.color_text)));
+        mFormatButton.setTextColor(ContextCompat.getColor(requireContext(), getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
 
         if (mSetCheckedIndices == null || mRarityCheckedIndices == null) {
@@ -1196,7 +1194,7 @@ public class SearchViewFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_menu, menu);
     }

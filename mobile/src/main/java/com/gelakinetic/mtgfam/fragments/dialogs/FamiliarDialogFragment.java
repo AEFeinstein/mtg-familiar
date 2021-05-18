@@ -34,7 +34,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This is a superclass for all dialog fragments. It fixes some bugs and handles rotations nicely
@@ -71,6 +70,7 @@ public class FamiliarDialogFragment extends DialogFragment {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
         ft.commitAllowingStateLoss();
+        setShowsDialog(true);
     }
 
     /**
@@ -102,6 +102,15 @@ public class FamiliarDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // If the dialog shouldn't be shown, dismiss it immediately
+        if (!getShowsDialog()) {
+            this.dismissAllowingStateLoss();
+        }
+    }
+
     /**
      * Fixes a bug on rotation
      * http://stackoverflow.com/questions/8235080/fragments-dialogFragment-and-screen-rotation
@@ -122,7 +131,7 @@ public class FamiliarDialogFragment extends DialogFragment {
     @SuppressWarnings("SameReturnValue")
     Dialog DontShowDialog() {
         setShowsDialog(false);
-        return null;
+        return new Dialog(getContext());
     }
 
     /**
@@ -130,7 +139,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     @Nullable
     private Fragment getDialogParentFragment() {
-        return Objects.requireNonNull(getActivity()).getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 
     /**
@@ -159,7 +168,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return array of string file names, without the extension
      */
     String[] getFiles(String fileExtension) {
-        String[] files = Objects.requireNonNull(this.getActivity()).fileList();
+        String[] files = this.requireActivity().fileList();
         ArrayList<String> validFiles = new ArrayList<>();
         for (String fileName : files) {
             if (fileName.endsWith(fileExtension)) {
@@ -179,7 +188,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     boolean canCreateDialog() {
         return (null != getDialogParentFragment()) &&
-                (!Objects.requireNonNull(getDialogParentFragment().getActivity()).isFinishing());
+                (!getDialogParentFragment().requireActivity().isFinishing());
     }
 
     /**

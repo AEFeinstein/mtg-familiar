@@ -12,9 +12,9 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.gelakinetic.mtgfam.R;
+import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
+import com.gelakinetic.mtgfam.R;
 
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
 
@@ -89,7 +89,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     }
 
     @Override
-    public void onBindView(@NotNull View view) {
+    public void onBindView(@NonNull View view) {
         super.onBindView(view);
 
         try {

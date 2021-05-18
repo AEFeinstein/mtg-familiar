@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,7 +52,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -211,50 +209,48 @@ public class ResultListFragment extends FamiliarFragment {
         /* Open up the database, search for stuff */
         try {
             mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
-            doSearch(Objects.requireNonNull(this.getArguments()), mDatabase);
+            doSearch(this.requireArguments(), mDatabase);
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
             return myFragmentView;
         }
 
         /* Sub-optimal, but KitKat is silly */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mListView.setOnScrollListener(new ListView.OnScrollListener() {
+        mListView.setOnScrollListener(new ListView.OnScrollListener() {
 
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                    switch (scrollState) {
-                        case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                            absListView.setFastScrollAlwaysVisible(false);
-                            break;
-                        case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                            absListView.setFastScrollAlwaysVisible(true);
-                            break;
-                        default:
-                            break;
-                    }
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        absListView.setFastScrollAlwaysVisible(false);
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        absListView.setFastScrollAlwaysVisible(true);
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                @Override
-                public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
 
-                }
-            });
-        }
+            }
+        });
 
-        if(mCursor == null) {
+        if (mCursor == null) {
             FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "onCreateView");
         } else {
             FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "onCreateView");
         }
-        FragmentManager fm = Objects.requireNonNull(getFragmentManager());
+        FragmentManager fm = requireFragmentManager();
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
             if (null == mCursor || mCursor.getCount() == 1) {
                 /* Jump back past the result list (it wasn't displayed because this card is a singleton)
                  * or maybe the cursor was null for no good reason */
-                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
-                    getActivity().finish();
+                if (!requireActivity().isTaskRoot()) {
+                    requireActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
                 }
@@ -262,8 +258,8 @@ public class ResultListFragment extends FamiliarFragment {
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
                 SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT);
-                if (!Objects.requireNonNull(getActivity()).isTaskRoot()) {
-                    getActivity().finish();
+                if (!requireActivity().isTaskRoot()) {
+                    requireActivity().finish();
                 } else if (!fm.isStateSaved()) {
                     fm.popBackStack();
                 }
@@ -334,7 +330,7 @@ public class ResultListFragment extends FamiliarFragment {
 
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
                     PreferenceAdapter.getSearchSortOrder(getContext()), database);
-            if(mCursor == null) {
+            if (mCursor == null) {
                 FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
             } else {
                 FamiliarLogger.appendToLogFile(new StringBuilder("Cursor Count: ").append(mCursor.getCount()), "doSearch");
@@ -459,7 +455,7 @@ public class ResultListFragment extends FamiliarFragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.result_list_menu, menu);
     }
@@ -473,20 +469,18 @@ public class ResultListFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.search_menu_random_search:
-                try {
-                    startCardViewFrag(-1);
-                } catch (SQLiteException | FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-                return true;
-            case R.id.search_menu_sort: {
-                showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
-                return true;
+        if (item.getItemId() == R.id.search_menu_random_search) {
+            try {
+                startCardViewFrag(-1);
+            } catch (SQLiteException | FamiliarDbException e) {
+                handleFamiliarDbException(true);
             }
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
+        } else if (item.getItemId() == R.id.search_menu_sort) {
+            showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -502,7 +496,7 @@ public class ResultListFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         if (dialogId == ResultListDialogFragment.DIALOG_SORT) {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
@@ -510,7 +504,7 @@ public class ResultListFragment extends FamiliarFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getSearchSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             ResultListDialogFragment newFragment = new ResultListDialogFragment();
             Bundle arguments = new Bundle();
@@ -518,7 +512,7 @@ public class ResultListFragment extends FamiliarFragment {
             arguments.putString(ResultListDialogFragment.NAME_KEY, cardName);
             arguments.putString(ResultListDialogFragment.NAME_SET, cardSet);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
     }
 
@@ -535,7 +529,7 @@ public class ResultListFragment extends FamiliarFragment {
             /* Close the old cursor */
             mCursor.close();
             /* Do the search again with the new "order by" options */
-            doSearch(Objects.requireNonNull(getArguments()), mDatabase);
+            doSearch(requireArguments(), mDatabase);
             /* Display the newly sorted data */
             fillData();
         } catch (SQLiteException | FamiliarDbException e) {

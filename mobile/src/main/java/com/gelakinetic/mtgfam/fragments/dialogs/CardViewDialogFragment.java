@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -53,8 +54,6 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,19 +93,15 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
         return null;
     }
 
-    @NotNull
+    @NonNull
     @Override
     @SuppressWarnings("SpellCheckingInspection")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
-
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
 
         if (null == getParentCardViewFragment()) {
             return DontShowDialog();
@@ -221,7 +216,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         getParentCardViewFragment().setInfoFromID(data.getDbId());
                     }
                 };
-                Dialog dialog = new MaterialDialog.Builder(Objects.requireNonNull(getActivity()))
+                Dialog dialog = new MaterialDialog.Builder(requireActivity())
                         .title(R.string.card_view_set_dialog_title)
                         .adapter(adapter, null)
                         .build();
@@ -324,7 +319,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 // Write the decklist back
-                                DecklistHelpers.WriteDecklist(Objects.requireNonNull(getActivity()), decklist, deckFileName);
+                                DecklistHelpers.WriteDecklist(requireActivity(), decklist, deckFileName);
                             } catch (FamiliarDbException e) {
                                 getParentCardViewFragment().handleFamiliarDbException(false);
                             }
@@ -440,7 +435,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 lv.setAdapter(adapter);
                 lv.setOnItemLongClickListener((parent, view, position, id) -> {
                     /* Copy the translated name to the clipboard */
-                    ClipboardManager clipboard = (ClipboardManager) (Objects.requireNonNull(getParentCardViewFragment().getContext()).
+                    ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().requireContext().
                             getSystemService(android.content.Context.CLIPBOARD_SERVICE));
                     if (null != clipboard) {
                         ClipData cd = new ClipData(

@@ -25,6 +25,8 @@ import com.gelakinetic.mtgfam.R;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.List;
+
 public enum Comparison {
     EMPTY(" ", R.string.NoComparison),
     EQ("=", R.string.Equals),
@@ -50,25 +52,50 @@ public enum Comparison {
 
     @NonNull
     @Contract(pure = true)
-    public StringBuilder appendToSql(StringBuilder sqlString, String part1, String part2) {
-        String searchCondition = "";
+    public StringBuilder appendToSql(StringBuilder sqlString, String key, List<String> manaSymbols) { // TODO update logic
+
+        // Start the statement with the db key
+        StringBuilder searchCondition = new StringBuilder(key);
+
+        // Continue with the logic
         switch (this) {
             case EQ:
-                searchCondition = part1 + " = '" + part2 + "'";
+                searchCondition.append(" = '");
                 break;
             case NE:
-                searchCondition = part1 + " <> '" + part2 + "'";
+                searchCondition.append(" <> '");
                 break;
             case CT:
-                searchCondition = part1 + " LIKE '%" + part2 + "%'";
+                searchCondition.append(" LIKE '");
                 break;
             case NC:
-                searchCondition = part1 + " NOT LIKE '%" + part2 + "%'";
+                searchCondition.append(" NOT LIKE '");
                 break;
         }
+
+        // Add the mana symbols
+        for (String sym : manaSymbols) {
+            if ((CT == this || NC == this)) {
+                searchCondition.append("%");
+            }
+            searchCondition.append("{").append(sym).append("}");
+        }
+
+        // Cap the statement
+        switch (this) {
+            case EQ:
+            case NE:
+                searchCondition.append("'");
+                break;
+            case CT:
+            case NC:
+                searchCondition.append("%'");
+                break;
+        }
+
         if (sqlString.length() == 0) {
             return sqlString.append(searchCondition);
-        } else if (searchCondition.isEmpty()) {
+        } else if (searchCondition.length() == 0) {
             return sqlString;
         } else {
             return sqlString.append(" AND ").append(searchCondition);

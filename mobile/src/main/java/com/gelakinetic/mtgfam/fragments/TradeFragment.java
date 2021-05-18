@@ -252,7 +252,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
-            fos = Objects.requireNonNull(this.getActivity()).openFileOutput(tradeName, Context.MODE_PRIVATE);
+            fos = this.requireActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
 
             synchronized (mListLeft) {
                 for (MtgCard cd : mListLeft) {
@@ -294,7 +294,7 @@ public class TradeFragment extends FamiliarListFragment {
 
                     /* Read each card, line by line, load prices along the way */
                     br = new BufferedReader(
-                            new InputStreamReader(Objects.requireNonNull(this.getActivity()).openFileInput(tradeName))
+                            new InputStreamReader(this.requireActivity().openFileInput(tradeName))
                     );
                     String line;
                     while ((line = br.readLine()) != null) {
@@ -359,43 +359,33 @@ public class TradeFragment extends FamiliarListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         /* Handle item selection */
-        switch (item.getItemId()) {
-            case R.id.trader_menu_clear: {
-                showDialog(TradeDialogFragment.DIALOG_CONFIRMATION, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_settings: {
-                showDialog(TradeDialogFragment.DIALOG_PRICE_SETTING, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_save_as: {
-                showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE_AS, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_new: {
-                showDialog(TradeDialogFragment.DIALOG_NEW_TRADE, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_load: {
-                showDialog(TradeDialogFragment.DIALOG_LOAD_TRADE, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_delete: {
-                showDialog(TradeDialogFragment.DIALOG_DELETE_TRADE, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_sort: {
-                /* show a dialog to change the sort criteria the list uses */
-                showDialog(TradeDialogFragment.DIALOG_SORT, 0, 0);
-                return true;
-            }
-            case R.id.trader_menu_share: {
-                shareTrade();
-                return true;
-            }
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
+        if (item.getItemId() == R.id.trader_menu_clear) {
+            showDialog(TradeDialogFragment.DIALOG_CONFIRMATION, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_settings) {
+            showDialog(TradeDialogFragment.DIALOG_PRICE_SETTING, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_save_as) {
+            showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE_AS, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_new) {
+            showDialog(TradeDialogFragment.DIALOG_NEW_TRADE, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_load) {
+            showDialog(TradeDialogFragment.DIALOG_LOAD_TRADE, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_delete) {
+            showDialog(TradeDialogFragment.DIALOG_DELETE_TRADE, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_sort) {
+            /* show a dialog to change the sort criteria the list uses */
+            showDialog(TradeDialogFragment.DIALOG_SORT, 0, 0);
+            return true;
+        } else if (item.getItemId() == R.id.trader_menu_share) {
+            shareTrade();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -443,7 +433,7 @@ public class TradeFragment extends FamiliarListFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.trader_menu, menu);
@@ -543,8 +533,8 @@ public class TradeFragment extends FamiliarListFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                        ContextCompat.getColor(requireContext(), R.color.material_red_500) :
+                        ContextCompat.getColor(requireContext(),
                                 getResourceIdFromAttr(R.attr.color_text));
                 final String leftPriceStr =
                         String.format(Locale.US, PRICE_FORMAT, leftPrice)
@@ -570,8 +560,8 @@ public class TradeFragment extends FamiliarListFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.material_red_500) :
-                        ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                        ContextCompat.getColor(requireContext(), R.color.material_red_500) :
+                        ContextCompat.getColor(requireContext(),
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
                 final String rightPriceStr =
@@ -584,10 +574,10 @@ public class TradeFragment extends FamiliarListFragment {
             float priceDiff = leftPrice - rightPrice;
             mTradePriceDifference.setText(String.format(Locale.getDefault(), "%c" + PRICE_FORMAT, (priceDiff < 0 ? '-' : '+'), Math.abs(priceDiff)));
             if (priceDiff < 0) {
-                mTradePriceDifference.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                mTradePriceDifference.setTextColor(ContextCompat.getColor(requireContext(),
                         R.color.material_red_500));
             } else {
-                mTradePriceDifference.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                mTradePriceDifference.setTextColor(ContextCompat.getColor(requireContext(),
                         R.color.material_green_500));
             }
         }
@@ -835,15 +825,15 @@ public class TradeFragment extends FamiliarListFragment {
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(String.format(Locale.getDefault(), "%dx %s", item.mNumberOf, item.getPriceString()));
                 if (item.mIsCustomPrice) {
-                    holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(requireContext(),
                             R.color.material_green_500));
                 } else {
-                    holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(requireContext(),
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
                 holder.mCardPrice.setText(String.format(Locale.getDefault(), "%dx %s", item.mNumberOf, item.mMessage));
-                holder.mCardPrice.setTextColor(ContextCompat.getColor(Objects.requireNonNull(getContext()),
+                holder.mCardPrice.setTextColor(ContextCompat.getColor(requireContext(),
                         R.color.material_red_500));
             }
         }

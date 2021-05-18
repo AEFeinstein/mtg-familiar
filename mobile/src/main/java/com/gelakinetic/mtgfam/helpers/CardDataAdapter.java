@@ -287,11 +287,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
         view.setSelected(selected);
         view.invalidate();
         synchronized (items) {
-            if (selected) {
-                items.get(position).setSelected(true);
-            } else {
-                items.get(position).setSelected(false);
-            }
+            items.get(position).setSelected(selected);
         }
 
         // Notify of any changes

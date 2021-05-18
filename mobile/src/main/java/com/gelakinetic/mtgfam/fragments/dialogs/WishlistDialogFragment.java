@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -31,8 +32,6 @@ import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -61,16 +60,14 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        setShowsDialog(true);
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         String cardName = getArguments().getString(NAME_KEY);
 
         if (null == getParentWishlistFragment()) {
@@ -89,7 +86,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case DIALOG_PRICE_SETTING: {
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.pref_trade_price_title)
                         .items(getResources().getStringArray(R.array.trade_option_entries))
                         .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
@@ -105,7 +102,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_CONFIRMATION: {
-                return new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()))
+                return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.wishlist_empty_dialog_title)
                         .content(R.string.wishlist_empty_dialog_text)
                         .positiveText(R.string.dialog_ok)

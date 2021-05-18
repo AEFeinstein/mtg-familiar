@@ -86,7 +86,7 @@
     <!--"</string>-->
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
-    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.7.0"&gt;Changelog&lt;/a&gt;"</string>
+    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.7.2"&gt;Changelog&lt;/a&gt;"</string>
     <string name="main_tts_warning_title">"Text-to-Speech"</string>
     <string name="main_tts_warning_text">"This application has text-to-speech capability for some of its features, but you don't seem to have it installed. If you want to install it, use the Install Text-to-Speech link in the settings menu."</string>
     <string name="main_export_data_title">"Save Data to SD"</string>
@@ -129,6 +129,8 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/castorflex/SmoothProgressBar&gt;SmoothProgressBar&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/PhilJay/MPAndroidChart&gt;MPAndroidChart&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; used under the BSD, part MIT, and Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -357,14 +359,6 @@ Mana pool will also be cleared."</string>
     <string name="rules_coppied">"Rule copied to clipboard"</string>
     <string name="rules_copy_tag">"MTG Rule"</string>
 
-    <!-- Profile activity -->
-    <string name="profile_update_dci">"Update DCI Number"</string>
-    <string name="profile_remove_dci">"Remove DCI Number"</string>
-    <string name="profile_update_dci_dialog_title">"Enter your DCI number"</string>
-    <string name="profile_invalid_dci">"Invalid DCI number entered"</string>
-    <string name="profile_no_dci">"You have not entered your DCI number"</string>
-    <string name="profile_planeswalker_points">"Planeswalker Points"</string>
-
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"MoJhoSto Basic Rules"</string>
     <string name="mojhosto_rules_text">"
@@ -437,6 +431,8 @@ Good luck, and have fun!
     <string name="pref_consolidate_summary">"Only show the most recent printing of a card"</string>
     <string name="pref_persist_search_title">"Save Search Options"</string>
     <string name="pref_persist_search_summary">"Save search options when leaving the search page"</string>
+    <string name="pref_hide_online_title">"Hide Online Only Cards"</string>
+    <string name="pref_hide_online_summary">"Don't show online only cards anywhere"</string>
     <string name="pref_show_set_title">"Show Set"</string>
     <string name="pref_show_mana_title">"Show Mana Cost"</string>
     <string name="pref_show_type_title">"Show Type/Subtype"</string>
@@ -533,6 +529,7 @@ Good luck, and have fun!
     <string name="decklist_delete">"Delete Deck"</string>
     <string name="decklist_save">"Save Deck"</string>
     <string name="decklist_load">"Load Deck"</string>
+    <string name="decklist_import">"Import Deck"</string>
     <string name="decklist_clear">"Clear Deck"</string>
     <string name="decklist_toast_no_decks">"You have no saved decks."</string>
     <string name="decklist_select_dialog_title">"Select a Deck"</string>
@@ -540,6 +537,7 @@ Good luck, and have fun!
     <string name="decklist_clear_dialog_text">"Are you sure you want to clear the current deck?"</string>
     <string name="decklist_share">"Share Deck"</string>
     <string name="decklist_share_title">"MTG Familiar Decklist"</string>
+    <string name="decklist_stats">"Deck Stats</string>
     <string name="decklist_instants">"Instants"</string>
     <string name="decklist_sorceries">"Sorceries"</string>
     <string name="decklist_others">"Others"</string>
@@ -556,10 +554,35 @@ Good luck, and have fun!
     <string name="decklist_not_legal">"Not Legal"</string>
     <string name="life_counter_commander_experience_counter">Experience Counters</string>
 
+    <!-- Deck Importer -->
+    <string name="import_start">"Import"</string>
+    <string name="import_deck_name_hint">"Deck name"</string>
+    <string name="import_paste_hint">"paste deck here. Supported formats are TCGplayer export, MTGO, Arena (official set codes only), .dec"</string>
+    <string name="empty_deck_name">"Please enter a name for this deck"</string>
+    <string name="empty_deck_text">"Please enter some cards to import"</string>
+    <string name="import_loading">"Importing…"</string>
+    <string name="import_parse_error_toast">"Had some trouble parsing these lines."</string>
+    <string name="import_complete_toast">"Deck imported successfully."</string>
+    <plurals name="import_card_unknown_toast">
+        <item quantity="one">"One card was not recognized and was not imported."</item>
+        <item quantity="other">"%1$d cards were not recognized and were not imported."</item>
+    </plurals>
+
+    <!-- Sample Hand -->
+    <string name="sample_hand">Sample Hand</string>
+    <string name="new_hand">New Hand</string>
+    <string name="mulligan">Mulligan</string>
+    <string name="draw_card">Draw</string>
+
+    <!-- Deck Stats -->
+    <string name="type_distribution">Type Distribution</string>
+    <string name="mana_value_distribution">Mana Symbol Distribution</string>
+    <string name="cmc_graph">CMC Graph</string>
+    <string name="card_colors">Card Colors</string>
+
     <string name="search_settype">Set Type</string>
     <string name="card_on_reserved_list">On Reserved List</string>
     <string name="card_not_on_reserved_list">Not on Reserved List</string>
-
     <string name="logging_title">Logging Menu</string>
     <string name="logging_enabled">Logging Enabled</string>
     <string name="logging_share">Share Log</string>

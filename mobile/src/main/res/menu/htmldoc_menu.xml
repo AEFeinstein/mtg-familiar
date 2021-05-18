@@ -5,16 +5,16 @@
         android:id="@+id/cancel"
         android:icon="@drawable/ic_menu_close"
         android:title=""
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/arrow_up"
         android:icon="@drawable/ic_menu_arrow_up"
         android:title=""
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/arrow_down"
         android:icon="@drawable/ic_menu_arrow_down"
         android:title=""
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

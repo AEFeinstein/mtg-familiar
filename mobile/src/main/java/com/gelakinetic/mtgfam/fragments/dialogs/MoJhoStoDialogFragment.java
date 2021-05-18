@@ -27,13 +27,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * Class that creates dialogs for MoJhoStoFragment
@@ -46,22 +44,18 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_STONEHEWER = 3;
     public static final int DIALOG_JHOIRA = 4;
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        /* This will be set to false if we are returning a null dialog. It prevents a crash */
-        setShowsDialog(true);
-
-        mDialogId = Objects.requireNonNull(getArguments()).getInt(ID_KEY);
+        mDialogId = requireArguments().getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_RULES: {
                 /* Use a generic AlertDialog to display the rules text */
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(this.getActivity()));
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
                 builder.neutralText(R.string.mojhosto_dialog_play)
                         .content(ImageGetterHelper.formatHtmlString(getString(R.string.mojhosto_rules_text)))
                         .title(R.string.mojhosto_rules_title);
@@ -71,7 +65,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
             case DIALOG_STONEHEWER:
             case DIALOG_JHOIRA: {
                 /* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
-                Dialog dialog = new Dialog(Objects.requireNonNull(this.getActivity()));
+                Dialog dialog = new Dialog(this.requireActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.card_view_image_dialog);
                 ImageView image = dialog.findViewById(R.id.cardimage);

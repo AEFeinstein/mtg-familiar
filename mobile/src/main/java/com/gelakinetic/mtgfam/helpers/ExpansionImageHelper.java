@@ -31,10 +31,10 @@ public class ExpansionImageHelper {
     }
 
     public static class ExpansionImageData {
-        private String mExpansionName;
-        private String mExpansionCode;
-        private char mRarity;
-        private long mDbId;
+        private final String mExpansionName;
+        private final String mExpansionCode;
+        private final char mRarity;
+        private final long mDbId;
 
         public ExpansionImageData(String name, String code, char rarity, long dbID) {
             mExpansionName = name;
@@ -54,8 +54,8 @@ public class ExpansionImageHelper {
 
     private class ChangeSetListViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView setName;
-        private ImageView setImage;
+        private final TextView setName;
+        private final ImageView setImage;
         private ExpansionImageData data;
 
         ChangeSetListViewHolder(@NonNull ViewGroup view, ChangeSetListAdapter changeSetListAdapter) {
@@ -84,7 +84,7 @@ public class ExpansionImageHelper {
         private final Context mContext;
         private final ExpansionImageData[] mExpansions;
         private Dialog dialog;
-        private ExpansionImageSize mImageSize;
+        private final ExpansionImageSize mImageSize;
 
         protected ChangeSetListAdapter(Context context, LinkedHashSet<ExpansionImageData> expansions, ExpansionImageSize size) {
             mContext = context;

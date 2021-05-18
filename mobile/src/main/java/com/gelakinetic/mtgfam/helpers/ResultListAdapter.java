@@ -30,12 +30,11 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
@@ -96,7 +95,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
      * @param cursor  The cursor from which to get the data. The cursor is already moved to the correct position.
      */
     @Override
-    public void bindView(@NotNull View view, Context context, @NotNull Cursor cursor) {
+    public void bindView(@NonNull View view, Context context, @NonNull Cursor cursor) {
 
         boolean hideCost = true;
         boolean hideType = true;
@@ -177,7 +176,8 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     textField.setText(csq);
                     break;
                 }
-                case CardDbAdapter.KEY_POWER: {
+                case CardDbAdapter.KEY_POWER:
+                case CardDbAdapter.KEY_TOUGHNESS: {
                     float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     boolean shouldShowSign =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
@@ -185,17 +185,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     if (p != CardDbAdapter.NO_ONE_CARES) {
                         hidePT = false;
                         textField.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign));
-                    }
-                    break;
-                }
-                case CardDbAdapter.KEY_TOUGHNESS: {
-                    float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                    boolean shouldShowSign =
-                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
-                    if (t != CardDbAdapter.NO_ONE_CARES) {
-                        hidePT = false;
-                        textField.setText(CardDbAdapter.getPrintedPTL(t, shouldShowSign));
                     }
                     break;
                 }

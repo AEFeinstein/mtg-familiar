@@ -38,12 +38,9 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Class that creates dialogs for ResultListFragment
@@ -56,23 +53,20 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
     public static final String KEY_PRICE = "key_price";
     public static final String KEY_ORDER = "key_order";
 
-    @NotNull
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (!canCreateDialog()) {
-            setShowsDialog(false);
             return DontShowDialog();
         }
 
-        setShowsDialog(true);
-
         /* Inflate the view */
-        @SuppressLint("InflateParams") View view = Objects.requireNonNull(getActivity()).getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        @SuppressLint("InflateParams") View view = requireActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
-        String searchSortOrder = Objects.requireNonNull(getArguments()).getString(SAVED_SORT_ORDER);
+        String searchSortOrder = requireArguments().getString(SAVED_SORT_ORDER);
 
         int idx = 0;
 
@@ -202,7 +196,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         return adb.build();
     }
 
-    private class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {
+    private static class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {
 
         /**
          * Constructor. It sets the item list
@@ -268,7 +262,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         /**
          * This is a subclass for each view
          */
-        class sortItemViewHolder extends DragItemAdapter.ViewHolder {
+        static class sortItemViewHolder extends DragItemAdapter.ViewHolder {
 
             final CheckBox mCheckbox;
             final TextView mText;

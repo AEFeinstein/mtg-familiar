@@ -328,12 +328,6 @@ Manapool bude tiež vymazaný."</string>
     <string name="rules_copy_tag">"Pravidlo MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Aktualizovať DCI číslo"</string>
-    <string name="profile_remove_dci">"Odstrániť DCI číslo"</string>
-    <string name="profile_update_dci_dialog_title">"Vložte vaše DCI číslo"</string>
-    <string name="profile_invalid_dci">"Zadali ste neplatné DCI číslo"</string>
-    <string name="profile_no_dci">"Nezadali ste vaše DCI číslo"</string>
-    <string name="profile_planeswalker_points">"PLANESWALKER BODY"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Pravidlá MoJhoSto"</string>
@@ -568,4 +562,18 @@ Standard ....... Not Legal -->
     <string name="trader_save_as">"Uložiť výmenu ako"</string>
     <string name="decklist_new">"Nový balík"</string>
     <string name="is_commander">"Je Commander"</string>
+    <string name="update_added_dmtr">"nové pravidlá turnaja Digital Magic"</string>
+    <string name="update_added_dipg">"nový Sprievodca postupom pri digitálnom porušení"</string>
+    <string name="judges_corner_DMTR">"DMTR"</string>
+    <string name="judges_corner_DIPG">"DIPG"</string>
+    <string name="search_settype">"Typ Edícia"</string>
+    <string name="card_on_reserved_list">"Na zozname vyhradených"</string>
+    <string name="card_not_on_reserved_list">"Nie je na zozname vyhradených"</string>
+    <string name="logging_title">"Ponuka protokolovania"</string>
+    <string name="logging_enabled">"povolené protokolovanie"</string>
+    <string name="logging_share">"Zdieľať denník"</string>
+    <string name="logging_export_db">"Exportovať databázu"</string>
+    <string name="logging_database_copied_to">"Databáza bola skopírovaná do "</string>
+    <string name="logging_database_log">"Denník Databázy"</string>
+    <string name="logging_send_database_log">"Pošlite Denník Databázy"</string>
 </resources>

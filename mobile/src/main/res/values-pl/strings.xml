@@ -323,14 +323,8 @@ Licznik many także ulegnie wyczyszczeniu."</string>
     <string name="rules_copy_tag">"Zasada MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Aktualizuj numer DCI"</string>
-    <string name="profile_remove_dci">"Usuń numer DCI"</string>
 
     <!-- Fuzzy -->
-    <string name="profile_update_dci_dialog_title">"Wprowadź swój numer DCI"</string>
-    <string name="profile_invalid_dci">"Wprowadzono niepoprawny numer DCI"</string>
-    <string name="profile_no_dci">"Nie wprowadziłeś swojego numeru DCI"</string>
-    <string name="profile_planeswalker_points">"Planeswalker Points"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Zasady MoJhoSto Basic"</string>
@@ -576,4 +570,18 @@ Standard ....... Not Legal -->
     <!-- This is slightly unclear, could you explain? -->
     <string name="decklist_new">"Nowa talia"</string>
     <string name="is_commander">"Jest Commanderem"</string>
+    <string name="update_added_dmtr">"nowe Cyfrowy Zasady Turniejowe"</string>
+    <string name="update_added_dipg">"nowy Cyfrowy Przewodnik Naruszeń Procedur"</string>
+    <string name="judges_corner_DMTR">"DMTR"</string>
+    <string name="judges_corner_DIPG">"DIPG"</string>
+    <string name="search_settype">"Typ Edycja"</string>
+    <string name="card_on_reserved_list">"Na liście zastrzeżonej"</string>
+    <string name="card_not_on_reserved_list">"Nie na liście zastrzeżonej"</string>
+    <string name="logging_title">"Rejestrowanie Menu"</string>
+    <string name="logging_enabled">"Rejestrowanie włączone"</string>
+    <string name="logging_share">"Rejestrowanie włączone"</string>
+    <string name="logging_export_db">"eksport bazy danych"</string>
+    <string name="logging_database_copied_to">"baza danych została skopiowana do "</string>
+    <string name="logging_database_log">"Dziennik bazy danych"</string>
+    <string name="logging_send_database_log">"Wyślij dziennik bazy danych"</string>
 </resources>

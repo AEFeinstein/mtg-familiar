@@ -25,6 +25,7 @@ package com.gelakinetic.GathererScraper.JsonTypes;
  * @author AEFeinstein
  *
  */
+@SuppressWarnings("CanBeFinal")
 public class Expansion {
 
     // Name used by Gatherer
