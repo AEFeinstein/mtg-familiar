@@ -569,4 +569,36 @@ Standard ....... Not Legal -->
     <string name="logging_database_copied_to">"Banco de dados copiado para "</string>
     <string name="logging_database_log">"Log de banco de dados"</string>
     <string name="logging_send_database_log">"Enviar log do banco de dados"</string>
+
+    <string name="pref_hide_online_title">"TODO: Hide Online Only Cards"</string>
+    <string name="pref_hide_online_summary">"TODO: Don't show online only cards anywhere"</string>
+
+    <string name="decklist_import">"TODO: Import Deck"</string>
+    <string name="decklist_stats">"TODO: Deck Stats</string>
+
+    <!-- Deck Importer -->
+    <string name="import_start">"TODO: Import"</string>
+    <string name="import_deck_name_hint">"TODO: Deck name"</string>
+    <string name="import_paste_hint">"TODO: paste deck here. Supported formats are TCGplayer export, MTGO, Arena (official set codes only), .dec"</string>
+    <string name="empty_deck_name">"TODO: Please enter a name for this deck"</string>
+    <string name="empty_deck_text">"TODO: Please enter some cards to import"</string>
+    <string name="import_loading">"TODO: Importing…"</string>
+    <string name="import_parse_error_toast">"TODO: Had some trouble parsing these lines."</string>
+    <string name="import_complete_toast">"TODO: Deck imported successfully."</string>
+    <plurals name="import_card_unknown_toast">
+        <item quantity="one">"TODO: One card was not recognized and was not imported."</item>
+        <item quantity="other">"TODO: %1$d cards were not recognized and were not imported."</item>
+    </plurals>
+
+    <!-- Sample Hand -->
+    <string name="sample_hand">"TODO: Sample Hand"</string>
+    <string name="new_hand">"TODO: New Hand"</string>
+    <string name="mulligan">"TODO: Mulligan"</string>
+    <string name="draw_card">"TODO: Draw"</string>
+
+    <!-- Deck Stats -->
+    <string name="type_distribution">"TODO: Type Distribution"</string>
+    <string name="mana_value_distribution">"TODO: Mana Symbol Distribution"</string>
+    <string name="cmc_graph">"TODO: CMC Graph"</string>
+    <string name="card_colors">"TODO: Card Colors"</string>
 </resources>
