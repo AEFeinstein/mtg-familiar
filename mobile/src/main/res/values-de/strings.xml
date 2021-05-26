@@ -602,7 +602,7 @@ Standard ....... Not Legal -->
     <string name="import_paste_hint">"Hier Deck einfügen. Untersützte Formate sind TCGplayer export, MTGO, Arena (nur offizielle Set codes), .dec"</string>
     <string name="empty_deck_name">"Bitte gib einen Namen für das Deck ein"</string>
     <string name="empty_deck_text">"Bitte gib einige Karten zum importieren ein"</string>
-    <string name="import_loading">"Importieren..."</string>
+    <string name="import_loading">"Importieren…"</string>
     <string name="import_parse_error_toast">"Es gab ein paar Probleme beim parsen."</string>
     <string name="import_complete_toast">"Deck erfolgreich importiert."</string>
     <plurals name="import_card_unknown_toast">

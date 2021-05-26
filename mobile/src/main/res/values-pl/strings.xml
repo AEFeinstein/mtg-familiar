@@ -142,6 +142,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
         <item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
         <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
         <item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
+        <item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
     </plurals>
     <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
     <string name="search_toast_cannot_load">"Nie można wczytać opcji wyszukiwania."</string>
@@ -219,11 +220,13 @@ Licznik many także ulegnie wyczyszczeniu."</string>
         <item quantity="one">"%1$s ma %2$d życia."</item>
         <item quantity="few">"%1$s ma %2$d życia."</item>
         <item quantity="other">"%1$s ma %2$d życia."</item>
+        <item quantity="many">"%1$s ma %2$d życia."</item>
     </plurals>
     <plurals name="life_counter_spoken_poison">
         <item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
         <item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
         <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
+        <item quantity="many">"%1$s ma %2$d znaczników trucizny."</item>
     </plurals>
     <string name="life_counter_over_9000">"ponad 9000"</string>
     <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>
@@ -523,6 +526,7 @@ Liście Życzeń"</string>
         <item quantity="one">"%1$d/%2$d karta"</item>
         <item quantity="few">"%1$d/%2$d karty"</item>
         <item quantity="other">"%1$d/%2$d karty"</item>
+        <item quantity="many">"%1$d/%2$d karty"</item>
     </plurals>
 
     <!-- This is shown when a price download fails for an unknown reason -->
@@ -590,13 +594,14 @@ Standard ....... Not Legal -->
     <string name="import_paste_hint">"Wklej talię. Obsługiwane formaty to eksport z TCGplayer, MTGO, Arena (tylko kody oficjalnych dodatków), .dec"</string>
     <string name="empty_deck_name">"Wprowadź nazwę dla talii"</string>
     <string name="empty_deck_text">"Wprowadź karty do zaimportowania"</string>
-    <string name="import_loading">"Importowanie..."</string>
+    <string name="import_loading">"Importowanie…"</string>
     <string name="import_parse_error_toast">"Wystąpił problem przy przetwarzaniu."</string>
     <string name="import_complete_toast">"Talia zaimportowana pomyślnie."</string>
     <plurals name="import_card_unknown_toast">
         <item quantity="one">"Jedna karta nie została rozpoznana i przez to nie została zaimportowana."</item>
         <item quantity="few">"%1$d kart(y) nie zostało rozpoznanych i przez to zaimportowanych."</item>
         <item quantity="other">"%1$d kart(y) nie zostało rozpoznanych i przez to zaimportowanych."</item>
+        <item quantity="many">"%1$d kart(y) nie zostało rozpoznanych i przez to zaimportowanych."</item>
     </plurals>
 
     <!-- Sample Hand -->

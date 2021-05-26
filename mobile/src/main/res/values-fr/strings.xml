@@ -582,7 +582,7 @@ Standard ....... Not Legal -->
     <string name="import_parse_error_toast">"Nous avons eu de la difficulté à analyser ces lignes."</string>
     <string name="import_complete_toast">"Importation du deck complétée"</string>
     <plurals name="import_card_unknown_toast">
-        <item quantity="one">"Une carte n'a pas été reconnue et n'a pas été importée."</item>
+        <item quantity="one">"%1$d carte n'a pas été reconnue et n'a pas été importée."</item>
         <item quantity="other">"%1$d cartes n'ont pas été reconnues et n'ont pas été importées."</item>
     </plurals>
 
