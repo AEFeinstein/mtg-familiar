@@ -119,10 +119,4 @@
         android:layout_weight="1"
         app:srcCompat="@drawable/ic_drawer_mojhosto_light" />
 
-    <ImageButton
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_profile_light" />
 </LinearLayout>
