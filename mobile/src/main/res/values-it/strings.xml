@@ -47,7 +47,6 @@
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
 
-
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
 Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;
@@ -550,6 +549,8 @@ Standard ....... Not Legal -->
     <string name="life_counter_commander_experience_counter">"Segnalini Esperienza"</string>
     <string name="trader_new">"Nuovo Scambio"</string>
     <string name="trader_save_as">"Salva Scambio come"</string>
+    <string name="pref_hide_online_title">"Nascondi le carte solo online"</string>
+    <string name="pref_hide_online_summary">"Non mostrare le carte solo online ovunque"</string>
     <string name="decklist_new">"Nuovo mazzo"</string>
     <string name="is_commander">"È commander"</string>
     <string name="update_added_dmtr">"Nuove Digital Magic Tournament Rules"</string>
@@ -566,4 +567,32 @@ Standard ....... Not Legal -->
     <string name="logging_database_copied_to">"Database copiato in "</string>
     <string name="logging_database_log">"Registro del Database"</string>
     <string name="logging_send_database_log">"Invia registro database"</string>
+    <string name="decklist_import">"Importa mazzo"</string>
+    <string name="decklist_stats">"Statistiche mazzo"</string>
+
+    <!-- Deck Importer -->
+    <string name="import_start">"Importa"</string>
+    <string name="import_deck_name_hint">"Nome del mazzo"</string>
+    <string name="import_paste_hint">"Incolla il mazzo qui. I formati supportati sono esportazioni da TCGplayer, MTGO, Arena (solo codici di espansioni ufficiali), .dec"</string>
+    <string name="empty_deck_name">"Per favore, inserisci un nome per questo mazzo"</string>
+    <string name="empty_deck_text">"Per favore, inserisci qualche carta da importare"</string>
+    <string name="import_loading">"Importazione…"</string>
+    <string name="import_parse_error_toast">"Ci sono stati dei problemi ad analizzare queste righe."</string>
+    <string name="import_complete_toast">"Mazzo importato con successo."</string>
+    <plurals name="import_card_unknown_toast">
+        <item quantity="one">"Ona carta non è stata riconosciuta, e non è stata importata."</item>
+        <item quantity="other">"%1$d carte non sono state riconosciute, e non sono state importate."</item>
+    </plurals>
+
+    <!-- Sample Hand -->
+    <string name="sample_hand">"Mano campione"</string>
+    <string name="new_hand">"Nuova mano"</string>
+    <string name="mulligan">"Mulligan"</string>
+    <string name="draw_card">"Pesca"</string>
+
+    <!-- Deck Stats -->
+    <string name="type_distribution">"Distribuzione dei tipi"</string>
+    <string name="mana_value_distribution">"Distribuzione dei simboli di mana"</string>
+    <string name="cmc_graph">"Grafico del CMC"</string>
+    <string name="card_colors">"Colori delle carte"</string>
 </resources>

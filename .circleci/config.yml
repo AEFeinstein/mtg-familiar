@@ -10,7 +10,7 @@ jobs:
 
     docker:
       # specify a container to build in, should match project API level
-      - image: circleci/android:api-29
+      - image: circleci/android:api-30
 
     environment:
       # Customize the JVM maximum heap limit
