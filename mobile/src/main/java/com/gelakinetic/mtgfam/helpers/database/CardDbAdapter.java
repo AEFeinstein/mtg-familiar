@@ -54,7 +54,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 118;
+    public static final int DATABASE_VERSION = 119;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
