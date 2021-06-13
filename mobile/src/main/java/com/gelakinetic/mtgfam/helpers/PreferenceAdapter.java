@@ -922,10 +922,15 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
             return R.drawable.glyph_w;
         } else {
             symbolResName = symbolResName.substring(symbolResName.lastIndexOf('/') + 1, symbolResName.lastIndexOf('.'));
-            return context.getResources().getIdentifier(
+            int res = context.getResources().getIdentifier(
                     symbolResName,
                     "drawable",
                     context.getPackageName());
+            if (res == R.drawable.glyph_w || res == R.drawable.glyph_w_old) {
+                return res;
+            } else {
+                return R.drawable.glyph_w;
+            }
         }
     }
 
