@@ -8,6 +8,7 @@
     <string name="dialog_both">"Beide"</string>
     <string name="dialog_life">"Leben"</string>
     <string name="dialog_thanks">"Danke!"</string>
+    <string name="dialog_thanks_anyway">"Trotzdem danke!"</string>
     <string name="dialog_enjoy">"Viel Spaß!"</string>
     <string name="update_notification">"Prüfe Datenbank auf Aktualisierungen"</string>
     <string name="update_updating_set">"Füge %s hinzu"</string>
@@ -30,6 +31,8 @@
     <string name="not_deleted">"nicht gelöscht"</string>
     <string name="no_network">"Netzwerk nicht verfügbar"</string>
     <string name="filter_title_view_card">"Karte ansehen"</string>
+    <string name="tutor_cards_notice">"Ermöglicht durch TutorCards"</string>
+    <string name="tutor_cards_fail">"TutorCards ist nicht erreichbar"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"SEITEN"</string>
@@ -47,11 +50,26 @@
     <string name="main_decklist">"Deckbauer"</string>
     <string name="main_force_update_title">"Aktualisierung erzwingen"</string>
     <string name="main_settings_title">"Einstellungen"</string>
+    <string name="main_donate_title">"Spenden"</string>
+    <string name="main_donate_dialog_title">"Spende an die Entwickler"</string>
 
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
+    <string name="main_profile">"Profil"</string>
 
     <!-- Some grammar corrections and changes to the overall tone. What do you mean with "We've got a drafting habit to fuel, OK?" Are you referring to drafting as a playmode Magic? How does this fit into the text? -->
+    <string name="main_donate_text">"Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;
+&lt;br&gt;
+Wenn du das hier liest, weißt du ja bereits, dass wir sie kostenfrei bereit stellen!&lt;br&gt;
+&lt;br&gt;
+Programmieren ist dennoch harte Arbeit und wir Entwickler freuen uns über jeden Cent.&lt;br&gt;
+&lt;br&gt;
+Wir brauchen schließlich auch Geld zum draften:)&lt;br&gt;
+&lt;br&gt;
+Du kannst die Schaltfläche unten drücken, um über Paypal zu spenden. $1 ist gut. $5 sind besser. Und so weiter…&lt;br&gt;
+&lt;br&gt;
+Also, wie großzügig bist du heute?
+"</string>
 
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
@@ -162,6 +180,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
     <string name="search_NOT_any_selected_types">"Keiner der gewählten Typen"</string>
     <string name="search_All_words">"Alle Wörter"</string>
     <string name="search_Any_words">"Beliebige Wörter"</string>
+    <string name="search_Exact_phrase">"Genauer Wortlaut"</string>
     <string name="search_Most_recent_printing">"Neuste Version"</string>
     <string name="search_Original_printing">"Originale Edition"</string>
     <string name="search_All_printings">"Alle Drucke"</string>
@@ -178,6 +197,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
     <string name="search_Rare">"Rare"</string>
     <string name="search_Mythic">"Mythic"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
+    <string name="search_type">"Typ"</string>
     <string name="search_mana_cost">"Manakosten"</string>
     <string name="search_collectors_number">"Sammlernummer"</string>
     <string name="search_color_title">"Farbe"</string>
@@ -208,6 +228,10 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
     <string name="card_view_price_not_found">"Kein Preis gefunden"</string>
     <string name="card_view_image_not_found">"Kein Bild gefunden"</string>
     <string name="card_view_no_external_storage">"Auf den externen Speicher konnte nicht zugegriffen werden. Bitte überprüfe deine SD-Karte."</string>
+    <string name="card_view_no_pictures_folder">"Bilderordner konnte nicht gefunden werden. Bitte versuche es erneut."</string>
+    <string name="card_view_unable_to_create_dir">"Verzeichnis zum Speichern der Bilder konnte nicht erstellt werden. Bitte versuche es erneut."</string>
+    <string name="card_view_unable_to_create_file">"Bilddatei konnte nicht erstellt werden. Bitte versuche es erneut."</string>
+    <string name="card_view_no_image">"Konnte das zu speichernde Bild nicht finden. Bitte versuche es erneut."</string>
     <string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
     <string name="card_view_save_failure">"Bild konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
     <string name="card_view_image_saved">"Bild gespeichert unter"</string>
@@ -261,18 +285,22 @@ Der Manavorrat wird ebenfalls geleert"</string>
     <string name="dice_tails">"Zahl"</string>
 
     <!-- Mana pool activity -->
+    <string name="mana_pool_error_toast">"Manavorrat konnte nicht geladen werden!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Alles löschen"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Karte hinzufügen"</string>
+    <string name="trader_save">"Tausch speichern"</string>
     <string name="trader_load">"Tausch laden"</string>
     <string name="trader_delete">"Tausch löschen"</string>
     <string name="trader_edit_dialog_remove">"Entfernen"</string>
     <string name="trader_edit_dialog_reset_price">"Preis zurücksetzen"</string>
     <string name="trader_clear_dialog_title">"Tausch leeren"</string>
     <string name="trader_clear_dialog_text">"Bist du sicher, dass du den aktuellen Tausch leeren möchtest?"</string>
+    <string name="trader_select_dialog_title">"Tausch auswählen"</string>
+    <string name="trader_delete_dialog_title">"Tausch löschen"</string>
     <string name="trader_edit_dialog_info">"Karteninformation"</string>
     <string name="trader_toast_no_trades">"Du hast keine gespeicherten Tausche."</string>
     <string name="trader_toast_save_error">"Tausch konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
@@ -332,8 +360,14 @@ Der Manavorrat wird ebenfalls geleert"</string>
     <string name="rules_copy_tag">"MTG-Regel"</string>
 
     <!-- Profile activity -->
+    <string name="profile_update_dci">"DCI-Nummer aktualisieren"</string>
+    <string name="profile_remove_dci">"DCI-Nummer entfernen"</string>
+    <string name="profile_update_dci_dialog_title">"Gib deine DCI-Nummer ein."</string>
+    <string name="profile_invalid_dci">"Ungültige DCI-Nummer"</string>
 
     <!-- Maybe on this page you can explain what a DCI number is. -->
+    <string name="profile_no_dci">"Du hast deine DCI-Nummer nicht eingegeben."</string>
+    <string name="profile_planeswalker_points">"Planeswalker-Punkte"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"MoJhoSto-Basic-Regeln"</string>
@@ -369,6 +403,8 @@ Viel Glück und viel Spaß!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Allgemeine Einstellungen"</string>
+    <string name="pref_screen_search">"Suche und Ergebnisse"</string>
+    <string name="pref_screen_trade_wishlist">"Tausch &amp; Wunschliste"</string>
     <string name="pref_cat_default_fragment">"Standardseite"</string>
     <string name="pref_default_fragment_mode_summary">"Das Erste, was du nach dem Öffnen der App siehst."</string>
     <string name="pref_cat_updates">"Datenbankaktualisierungen"</string>
@@ -602,7 +638,7 @@ Standard ....... Not Legal -->
     <string name="import_paste_hint">"Hier Deck einfügen. Untersützte Formate sind TCGplayer export, MTGO, Arena (nur offizielle Set codes), .dec"</string>
     <string name="empty_deck_name">"Bitte gib einen Namen für das Deck ein"</string>
     <string name="empty_deck_text">"Bitte gib einige Karten zum importieren ein"</string>
-    <string name="import_loading">"Importieren…"</string>
+    <string name="import_loading">"Importieren..."</string>
     <string name="import_parse_error_toast">"Es gab ein paar Probleme beim parsen."</string>
     <string name="import_complete_toast">"Deck erfolgreich importiert."</string>
     <plurals name="import_card_unknown_toast">
