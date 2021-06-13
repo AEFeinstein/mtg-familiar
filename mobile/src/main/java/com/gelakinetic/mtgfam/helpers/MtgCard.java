@@ -739,7 +739,7 @@ public class MtgCard extends Card {
         String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image";
 
         // On the first attempt, append the version language, otherwise leave it off
-        if(0 == attempt) {
+        if (0 == attempt) {
             urlStr += "&version=normal&lang=" + lang;
         }
 
