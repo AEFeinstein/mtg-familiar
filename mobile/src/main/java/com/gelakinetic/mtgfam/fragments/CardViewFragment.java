@@ -182,11 +182,11 @@ public class CardViewFragment extends FamiliarFragment {
     };
 
     /**
-     * Kill any AsyncTask if it is still running.
+     * Set a fragment result to skip past the ResultListFragment
      */
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
 
         /* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list
          * of 1 card. If this wasn't launched by a ResultListFragment, it'll get eaten */
