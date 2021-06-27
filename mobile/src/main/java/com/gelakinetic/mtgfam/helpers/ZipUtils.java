@@ -221,11 +221,7 @@ public class ZipUtils {
                 out = new BufferedOutputStream(new FileOutputStream(
                         new File(context.getFilesDir(), entry.getName())));
             }
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = in.read(buffer)) >= 0) {
-                out.write(buffer, 0, len);
-            }
+            IOUtils.copy(in, out);
 
             in.close();
             out.close();

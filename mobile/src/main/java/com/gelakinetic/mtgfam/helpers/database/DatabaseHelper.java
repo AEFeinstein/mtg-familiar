@@ -123,13 +123,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             // If the database doesn't exist anymore, inflate the internal database
             if (!dbFile.exists()) {
 
-                IOUtils.copy(
-                        new GZIPInputStream(context.getResources().openRawResource(R.raw.datagz)),
-                        new FileOutputStream(dbFile));
-
-                PreferenceAdapter.setDatabaseVersion(context, CardDbAdapter.DATABASE_VERSION);
+                try (GZIPInputStream in = new GZIPInputStream(context.getResources().openRawResource(R.raw.datagz));
+                     FileOutputStream out = new FileOutputStream(dbFile)) {
+                    IOUtils.copy(in, out);
+                    PreferenceAdapter.setDatabaseVersion(context, CardDbAdapter.DATABASE_VERSION);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (Resources.NotFoundException | IOException | SQLiteException e) {
+        } catch (Resources.NotFoundException | SQLiteException e) {
             e.printStackTrace();
         }
     }
