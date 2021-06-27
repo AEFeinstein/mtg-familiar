@@ -103,7 +103,11 @@ public class DatabaseManager {
      * @param handle  The handle from openDatabase, used to close this instance
      */
     public static synchronized void closeDatabase(Context context, @NonNull FamiliarDbHandle handle) {
-        getInstance(context, handle.isTransactional()).closeDatabase(handle);
+        try {
+            getInstance(context, handle.isTransactional()).closeDatabase(handle);
+        } catch (NullPointerException e) {
+            // Eat it
+        }
     }
 
     /**
