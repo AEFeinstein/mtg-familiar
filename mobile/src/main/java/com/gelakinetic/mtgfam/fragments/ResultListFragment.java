@@ -76,6 +76,12 @@ public class ResultListFragment extends FamiliarFragment {
     private final FamiliarDbHandle mDbHandle = new FamiliarDbHandle();
 
     /**
+     * Necessary empty constructor
+     */
+    public ResultListFragment() {
+    }
+
+    /**
      * When the fragment is created, open the database and search for whatever.
      * This should likely be done off the UI thread, but it's usually a quick operation,
      * and the user wouldn't be doing anything else anyway

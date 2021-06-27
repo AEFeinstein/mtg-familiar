@@ -68,6 +68,12 @@ public class MoJhoStoFragment extends FamiliarFragment {
     private Random mRandom;
 
     /**
+     * Necessary empty constructor
+     */
+    public MoJhoStoFragment() {
+    }
+
+    /**
      * Create the view, set up the ImageView clicks to see the full Vanguards, set up the buttons to display random
      * cards, save the spinners to figure out CMCs later.
      *

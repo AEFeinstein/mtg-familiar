@@ -126,6 +126,12 @@ public class ManaPoolFragment extends FamiliarFragment {
     private final ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
 
     /**
+     * Necessary empty constructor
+     */
+    public ManaPoolFragment() {
+    }
+
+    /**
      * Create the view and set up the buttons
      *
      * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,

@@ -157,6 +157,12 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mSetSpinner;
 
     /**
+     * Necessary empty constructor
+     */
+    public SearchViewFragment() {
+    }
+
+    /**
      * This will query the database to populate the set and format spinner dialogs.
      * The rarity dialog is pulled from resources
      *

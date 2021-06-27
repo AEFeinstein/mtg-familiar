@@ -63,6 +63,12 @@ public class GatheringsFragment extends FamiliarFragment {
     public Spinner mDisplayModeSpinner;
 
     /**
+     * Necessary empty constructor
+     */
+    public GatheringsFragment() {
+    }
+
+    /**
      * When the fragment is rotated, save the currently displaying Gathering and pass it to the new onCreate()
      *
      * @param outState Bundle in which to place the saved gathering.

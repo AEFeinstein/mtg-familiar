@@ -62,6 +62,12 @@ public class ImportFragment extends FamiliarFragment {
     private AsyncTask<ImportFragment, String[], DeckListImporter> mImportTask;
 
     /**
+     * Necessary empty constructor
+     */
+    public ImportFragment() {
+    }
+
+    /**
      * @return The current text in mDeckName
      */
     Editable getDeckNameInput() {

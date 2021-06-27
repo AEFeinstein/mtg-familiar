@@ -109,7 +109,11 @@ public class SampleHandFrag extends FamiliarFragment {
         if (mCursor != null) {
             mCursor.close();
         }
-        DatabaseManager.closeDatabase(getActivity(), mDbHandle);
+        try {
+            DatabaseManager.closeDatabase(getActivity(), mDbHandle);
+        } catch (NullPointerException e) {
+            // Eat this exception
+        }
     }
 
     /**

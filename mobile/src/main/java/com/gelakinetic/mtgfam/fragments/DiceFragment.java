@@ -50,6 +50,12 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
     private Integer mLastNumber;
 
     /**
+     * Necessary empty constructor
+     */
+    public DiceFragment() {
+    }
+
+    /**
      * Set up the TextSwitcher animations, button handlers
      *
      * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,

@@ -64,6 +64,12 @@ public class HtmlDocFragment extends FamiliarFragment {
     private boolean findAllCalled = false;
 
     /**
+     * Necessary empty constructor
+     */
+    public HtmlDocFragment() {
+    }
+
+    /**
      * Get the document from the bundle. Spin a progress bar while it loads, then hide it when it's done. Set up
      * a button to jump to the top of the document
      *

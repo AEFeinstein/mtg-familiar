@@ -77,6 +77,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     private int mActionMenuResId;
 
     /**
+     * Necessary empty constructor
+     */
+    public FamiliarListFragment() {
+    }
+
+    /**
      * Initializes common members. Must be called in onCreate
      *
      * @param fragmentView    the view of the fragment calling this method

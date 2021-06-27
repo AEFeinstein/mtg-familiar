@@ -58,6 +58,12 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
     private int mDeckCount;
 
     /**
+     * Necessary empty constructor
+     */
+    public DeckCounterFragment() {
+    }
+
+    /**
      * Set all the button actions, and restore any values from a previous state.
      *
      * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,

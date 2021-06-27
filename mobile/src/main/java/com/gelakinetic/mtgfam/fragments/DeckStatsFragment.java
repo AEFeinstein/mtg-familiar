@@ -37,15 +37,18 @@ import com.github.mikephil.charting.charts.PieChart;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeckStatsFragment extends FamiliarFragment {
     private final List<MtgCard> mDeckToStat;
-    /* UI Elements */
-    private PieChart mTypeChart;
-    private ReliableColorPie mColorChart;
-    private BarChart mCmcChart;
-    private GraphHelper mGraphHelper;
+
+    /**
+     * Necessary empty constructor
+     */
+    public DeckStatsFragment() {
+        this.mDeckToStat = new ArrayList<>(0);
+    }
 
     /**
      * @param mDeckToStat The deck to generate stats from
@@ -72,14 +75,15 @@ public class DeckStatsFragment extends FamiliarFragment {
                 inflater.inflate(R.layout.stat_frag, container, false);
         assert myFragmentView != null;
         DeckStatsGenerator mStatGenerator = new DeckStatsGenerator(mDeckToStat);
-        mGraphHelper = new GraphHelper(mStatGenerator, requireContext());
-        mTypeChart = myFragmentView.findViewById(R.id.type_chart);
-        mColorChart = myFragmentView.findViewById(R.id.color_chart);
-        mCmcChart = myFragmentView.findViewById(R.id.cmc_graph);
-        mGraphHelper.fillStatGraphs(mTypeChart, mColorChart, mCmcChart);
-        mTypeChart.invalidate(); //refresh
-        mColorChart.invalidate(); //refresh
-        mCmcChart.invalidate(); //refresh
+        GraphHelper mGraphHelper = new GraphHelper(mStatGenerator, requireContext());
+        /* UI Elements */
+        PieChart typeChart = myFragmentView.findViewById(R.id.type_chart);
+        ReliableColorPie colorChart = myFragmentView.findViewById(R.id.color_chart);
+        BarChart cmcChart = myFragmentView.findViewById(R.id.cmc_graph);
+        mGraphHelper.fillStatGraphs(typeChart, colorChart, cmcChart);
+        typeChart.invalidate(); //refresh
+        colorChart.invalidate(); //refresh
+        cmcChart.invalidate(); //refresh
         Button sampleButton = myFragmentView.findViewById(R.id.sample_button);
         sampleButton.setOnClickListener(v -> startNewFragment(new SampleHandFrag(mDeckToStat), null));
         return myFragmentView;

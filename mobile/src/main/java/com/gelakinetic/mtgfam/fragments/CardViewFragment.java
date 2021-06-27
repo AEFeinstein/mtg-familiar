@@ -182,6 +182,12 @@ public class CardViewFragment extends FamiliarFragment {
     };
 
     /**
+     * Necessary empty constructor
+     */
+    public CardViewFragment() {
+    }
+
+    /**
      * Set a fragment result to skip past the ResultListFragment
      */
     @Override

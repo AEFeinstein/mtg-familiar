@@ -46,6 +46,12 @@ public class CardViewPagerFragment extends FamiliarFragment {
     private ViewPager mViewPager;
 
     /**
+     * Necessary empty constructor
+     */
+    public CardViewPagerFragment() {
+    }
+
+    /**
      * @return The currently viewed CardViewFragment in the CardViewPagerFragment
      */
     public CardViewFragment getCurrentFragment() {

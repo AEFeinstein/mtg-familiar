@@ -80,6 +80,12 @@ public class RoundTimerFragment extends FamiliarFragment {
     private HmsPicker mTimePicker;
 
     /**
+     * Necessary empty constructor
+     */
+    public RoundTimerFragment() {
+    }
+
+    /**
      * This static method is used to either set or cancel PendingIntents with the AlarmManager. It is static so that
      * the FamiliarActivity can restart alarms without instantiating a fragment.
      *

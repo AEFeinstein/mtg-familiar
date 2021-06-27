@@ -102,6 +102,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private MediaPlayer m9000Player;
 
     /**
+     * Necessary empty constructor
+     */
+    public LifeCounterFragment() {
+    }
+
+    /**
      * When the fragment is created, set up the TTS engine, AudioManager, and MediaPlayer for life total vocalization
      *
      * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.

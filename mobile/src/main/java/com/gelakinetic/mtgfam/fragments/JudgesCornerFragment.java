@@ -60,6 +60,12 @@ public class JudgesCornerFragment extends FamiliarFragment {
     private static final String TAG_COUNTER = "COUNTER";
 
     /**
+     * Necessary empty constructor
+     */
+    public JudgesCornerFragment() {
+    }
+
+    /**
      * List of {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem} which represent this sample's tabs.
      */
     private final List<PagerItem> mTabs = new ArrayList<>();
