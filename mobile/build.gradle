@@ -99,8 +99,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 81
-        versionName "3.8.2"
+        versionCode 82
+        versionName "3.8.3"
         vectorDrawables.useSupportLibrary true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
