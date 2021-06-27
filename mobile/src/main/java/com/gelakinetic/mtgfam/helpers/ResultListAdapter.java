@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.database.StaleDataException;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
             return super.getView(position, convertView, parent);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | StaleDataException e) {
             // Something went wrong, try to get a view from somewhere (i.e. not crash)
             View v;
             if (null != convertView) {
