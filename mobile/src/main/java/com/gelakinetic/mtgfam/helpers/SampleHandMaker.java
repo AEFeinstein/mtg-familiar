@@ -19,7 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import org.apache.commons.collections4.comparators.ComparatorChain;
+import com.gelakinetic.mtgfam.helpers.util.ComparatorChain;
 
 import java.util.ArrayList;
 import java.util.Collections;

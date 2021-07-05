@@ -57,8 +57,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-
-import org.apache.commons.collections4.comparators.ComparatorChain;
+import com.gelakinetic.mtgfam.helpers.util.ComparatorChain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
