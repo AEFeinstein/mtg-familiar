@@ -24,8 +24,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.gelakinetic.mtgfam.R;
-
-import org.apache.commons.io.IOUtils;
+import com.gelakinetic.mtgfam.helpers.util.IOUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

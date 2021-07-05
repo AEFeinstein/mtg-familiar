@@ -49,8 +49,6 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -284,18 +282,14 @@ public class TradeFragment extends FamiliarListFragment {
      * @param tradeName The name of the trade to load
      */
     public void loadTrade(String tradeName) {
-        BufferedReader br = null;
-        try {
-            synchronized (mListLeft) {
-                synchronized (mListRight) {
-                    /* Clear the current lists */
-                    mListLeft.clear();
-                    mListRight.clear();
+        synchronized (mListLeft) {
+            synchronized (mListRight) {
+                /* Clear the current lists */
+                mListLeft.clear();
+                mListRight.clear();
 
-                    /* Read each card, line by line, load prices along the way */
-                    br = new BufferedReader(
-                            new InputStreamReader(this.requireActivity().openFileInput(tradeName))
-                    );
+                /* Read each card, line by line, load prices along the way */
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(this.requireActivity().openFileInput(tradeName)))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         try {
@@ -313,16 +307,12 @@ public class TradeFragment extends FamiliarListFragment {
                             // This card line is junk, ignore it
                         }
                     }
+                } catch (FileNotFoundException e) {
+                    /* Do nothing, the autosave doesn't exist */
+                } catch (IOException | IllegalArgumentException e) {
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
+                            SnackbarWrapper.LENGTH_LONG);
                 }
-            }
-        } catch (FileNotFoundException e) {
-            /* Do nothing, the autosave doesn't exist */
-        } catch (IOException | IllegalArgumentException e) {
-            SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
-                    SnackbarWrapper.LENGTH_LONG);
-        } finally {
-            if (br != null) {
-                IOUtils.closeQuietly(br);
             }
         }
 

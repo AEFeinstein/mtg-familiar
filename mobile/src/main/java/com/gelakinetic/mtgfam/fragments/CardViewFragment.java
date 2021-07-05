@@ -88,14 +88,15 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -1293,48 +1294,45 @@ public class CardViewFragment extends FamiliarFragment {
         protected CardViewFragment doInBackground(CardViewFragment... params) {
 
             CardViewFragment frag = params[0];
-            URL url;
-            InputStream is = null;
-
             frag.mRulingsArrayList = new ArrayList<>();
             try {
                 // Gatherer doesn't use HTTPS as of 1/6/2019
-                url = new URL("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
-                is = FamiliarActivity.getHttpInputStream(url, null, frag.getContext());
-                if (is == null) {
-                    throw new IOException("null stream");
-                }
+                URL url = new URL("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
 
-                String gathererPage = IOUtils.toString(is, StandardCharsets.UTF_8);
-                String date;
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(
+                                FamiliarActivity.getHttpInputStream(url, null, frag.getContext()),
+                                StandardCharsets.UTF_8))) {
 
-                Document document = Jsoup.parse(gathererPage);
-                Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
-
-                for (Element ruling : rulingTable) {
-                    date = ruling.children().get(0).text();
-                    Element rulingText = ruling.children().get(1);
-                    Elements imageTags = rulingText.getElementsByTag("img");
-                    /* For each symbol in the rulings text */
-                    for (Element symbol : imageTags) {
-                        /* Build the glyph with {, the text between "name=" and "&" and } */
-                        String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
-                        /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
-                        symbol.html(symbolString);
+                    StringBuilder gpBuilder = new StringBuilder();
+                    String line;
+                    while (null != (line = br.readLine())) {
+                        gpBuilder.append(line);
                     }
-                    Ruling r = new Ruling(date, rulingText.text());
-                    frag.mRulingsArrayList.add(r);
-                }
-            } catch (Exception ioe) {
-                mErrorMessage = ioe.getLocalizedMessage();
-            } finally {
-                try {
-                    if (is != null) {
-                        is.close();
+                    String gathererPage = gpBuilder.toString();
+
+                    Document document = Jsoup.parse(gathererPage);
+                    Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
+
+                    for (Element ruling : rulingTable) {
+                        String date = ruling.children().get(0).text();
+                        Element rulingText = ruling.children().get(1);
+                        Elements imageTags = rulingText.getElementsByTag("img");
+                        /* For each symbol in the rulings text */
+                        for (Element symbol : imageTags) {
+                            /* Build the glyph with {, the text between "name=" and "&" and } */
+                            String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
+                            /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
+                            symbol.html(symbolString);
+                        }
+                        Ruling r = new Ruling(date, rulingText.text());
+                        frag.mRulingsArrayList.add(r);
                     }
                 } catch (IOException ioe) {
                     mErrorMessage = ioe.getLocalizedMessage();
                 }
+            } catch (MalformedURLException e) {
+                mErrorMessage = e.getLocalizedMessage();
             }
 
             return frag;

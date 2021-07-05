@@ -18,8 +18,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
-
-import org.apache.commons.io.FileUtils;
+import com.gelakinetic.mtgfam.helpers.util.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -60,7 +59,7 @@ public class FamiliarLogger {
             File logFile = new File(mExternalFileDirPath, DB_LOG_FILE_NAME);
             if (!logFile.exists()) {
                 try {
-                    FileUtils.touch(logFile);
+                    logFile.createNewFile();
                     logDeviceInfo();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -242,7 +241,7 @@ public class FamiliarLogger {
             File srcFile = new File(database.getPath());
             DatabaseManager.closeDatabase(familiarActivity, handle);
             File dstFile = new File(mExternalFileDirPath, "mtgfam.sqlite");
-            FileUtils.copyFile(srcFile, dstFile);
+            IOUtils.copyFile(srcFile, dstFile);
             SnackbarWrapper.makeAndShowText(familiarActivity, familiarActivity.getString(R.string.logging_database_copied_to) + dstFile,
                     SnackbarWrapper.LENGTH_XLONG);
         } catch (SQLiteException | IOException | FamiliarDbException e) {
