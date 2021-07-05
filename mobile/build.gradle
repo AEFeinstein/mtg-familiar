@@ -140,7 +140,6 @@ dependencies {
 
 // Third-party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'com.github.woxthebox:draglistview:1.7.2'

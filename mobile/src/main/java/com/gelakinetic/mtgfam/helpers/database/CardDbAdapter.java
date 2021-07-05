@@ -35,8 +35,7 @@ import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-
-import org.apache.commons.lang3.StringUtils;
+import com.gelakinetic.mtgfam.helpers.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

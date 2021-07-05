@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers.database;
 import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
+import com.gelakinetic.mtgfam.helpers.util.StringUtils;
 
 /**
  * Extend Exception instead of RuntimeException to force the compiler to whine about lack of try/catch blocks
@@ -46,7 +47,7 @@ public class FamiliarDbException extends Exception {
             } else {
                 sb.append("Exception message was null\n");
             }
-            sb.append(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e)).append('\n');
+            sb.append(StringUtils.getStackTrace(e)).append('\n');
         } else {
             sb.append("Exception was null\n");
         }
