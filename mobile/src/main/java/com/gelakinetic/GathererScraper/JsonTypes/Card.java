@@ -94,6 +94,9 @@ public class Card implements Comparable<Card> {
     // The card's watermark
     protected String mWatermark = "";
 
+    // The card's loyalty. An integer in practice
+    protected long mTcgplayerProductId = -1;
+
     public String getName() {
         return mName;
     }
@@ -172,6 +175,10 @@ public class Card implements Comparable<Card> {
 
     public String getWatermark() {
         return mWatermark;
+    }
+
+    public long getTcgpProductId() {
+        return mTcgplayerProductId;
     }
 
     // Private class for encapsulating foreign printing information

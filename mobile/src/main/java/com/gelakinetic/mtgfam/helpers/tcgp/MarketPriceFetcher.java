@@ -19,8 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Handler;
 
 import androidx.collection.LongSparseArray;
@@ -29,14 +27,9 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategoryGroups;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
@@ -55,7 +48,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -139,160 +131,30 @@ public class MarketPriceFetcher {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                 }
 
-                CardDbAdapter.MultiCardType multiCardType;
-                String tcgSetName;
+                /* If the TCGPlayer product ID exists */
+                if (-1 != params.getTcgpProductId()) {
+                    try {
+                        /* Get the product details and for this card */
+                        long[] productId = new long[]{params.getTcgpProductId()};
+                        ProductDetails details = api.getProductDetails(productId);
+                        ProductMarketPrice price = api.getProductMarketPrice(productId);
 
-                /* then the same for multicard ordering */
-                FamiliarDbHandle cardInfoHandle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, cardInfoHandle);
-
-                    if (CardDbAdapter.isOnlineOnly(params.getExpansion(), database)) {
-                        return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
-                    }
-
-                    // If the number doesn't exist, multiCardType will be MultiCardType.NOPE
-                    multiCardType = CardDbAdapter.isMultiCard(params.getNumber(), params.getExpansion());
-
-                    /* Get the TCGplayer.com set name, why can't everything be consistent? */
-                    tcgSetName = CardDbAdapter.getTcgName(params.getExpansion(), database);
-
-                } catch (SQLiteException | FamiliarDbException e) {
-                    return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
-                } finally {
-                    DatabaseManager.closeDatabase(mActivity, cardInfoHandle);
-                }
-
-                /* If this isn't a multi-card, don't iterate so much */
-                int numMultiCardOptions = 1;
-                if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
-                    numMultiCardOptions = 3;
-                }
-
-                /* Iterate through all possible queries for this card
-                 * First (innermost loop) try the different combination of multi-card names
-                 * Then (middle loop) try with and without accent marks
-                 * Last (outer loop) try without a set name. This works for Schemes & Planes with weird TCGPlayer sets
-                 */
-                for (int setOption = 0; setOption < 2; setOption++) {
-                    for (int accentOption = 0; accentOption < 2; accentOption++) {
-                        for (int multiOption = 0; multiOption < numMultiCardOptions; multiOption++) {
-                            String tcgCardName;
-                            FamiliarDbHandle setOptHandle = new FamiliarDbHandle();
-                            try {
-                                SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, setOptHandle);
-
-                                /* Set up retries for multicard ordering */
-                                if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
-                                    /* Next time try the other order */
-                                    switch (multiOption) {
-                                        case 0:
-                                            /* Try just the a side */
-                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.getExpansion(), params.getNumber().replace("b", "a"), database);
-                                            break;
-                                        case 1:
-                                            /* Try just the b side */
-                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.getExpansion(), params.getNumber().replace("a", "b"), database);
-                                            break;
-                                        case 2:
-                                            /* Try the combined name */
-                                            tcgCardName = CardDbAdapter.getCombinedName(params.getExpansion(), params.getNumber(), database);
-                                            break;
-                                        default:
-                                            /* Something went wrong */
-                                            tcgCardName = params.getName();
-                                            break;
-                                    }
-                                } else {
-                                    /* This isn't a multicard */
-                                    tcgCardName = params.getName();
-                                }
-
-                                /* Retry with accent marks removed */
-                                if (accentOption == 1) {
-                                    tcgCardName = CardDbAdapter.removeAccentMarks(Objects.requireNonNull(tcgCardName));
-                                }
-
-                                /* Try it with no set name */
-                                if (setOption == 1) {
-                                    tcgSetName = null;
-                                }
-
-                            } catch (SQLiteException | FamiliarDbException e) {
-                                tcgCardName = null;
-                                lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
-                            } finally {
-                                DatabaseManager.closeDatabase(mActivity, setOptHandle);
-                            }
-
-                            if (null != tcgCardName) {
-                                try {
-                                    /* Query the API, one step at a time */
-                                    ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
-                                    if (information.results.length > 0) {
-                                        ProductDetails details = api.getProductDetails(information.results);
-                                        if (details.results.length > 0) {
-                                            // Assume the first result is the best result
-                                            long[] bestResult = {details.results[0].productId};
-                                            String bestUrl = "";
-                                            boolean okResultFound = false;
-                                            // Look through all results for a perfect match
-                                            for (ProductDetails.Details searchResult : details.results) {
-                                                String expansion = getExpansionFromGroupId(api, context, searchResult.groupId);
-                                                if (searchResult.name.toLowerCase().equals(tcgCardName.toLowerCase())) {
-                                                    if (null != expansion && null != tcgSetName) {
-                                                        if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
-                                                            // Found a perfect match, including expansion!
-                                                            bestResult[0] = searchResult.productId;
-                                                            bestUrl = searchResult.url;
-                                                            break;
-                                                        }
-                                                    } else {
-                                                        // Found a perfect match, no expansion to match!
-                                                        bestResult[0] = searchResult.productId;
-                                                        bestUrl = searchResult.url;
-                                                        break;
-                                                    }
-                                                } else if (!okResultFound && searchResult.name.toLowerCase().startsWith(tcgCardName.toLowerCase())) {
-                                                    if (null != expansion && null != tcgSetName) {
-                                                        if (expansion.toLowerCase().equals(tcgSetName.toLowerCase())) {
-                                                            // Found a good match, including expansion!
-                                                            // Set it but keep searching for a perfect match
-                                                            bestResult[0] = searchResult.productId;
-                                                            bestUrl = searchResult.url;
-                                                            okResultFound = true;
-                                                        }
-                                                    } else {
-                                                        // Found a good match, no expansion to match!
-                                                        // Set it but keep searching for a perfect match
-                                                        bestResult[0] = searchResult.productId;
-                                                        bestUrl = searchResult.url;
-                                                        okResultFound = true;
-                                                    }
-                                                }
-                                            }
-                                            ProductMarketPrice price = api.getProductMarketPrice(bestResult);
-                                            if (price.results.length > 0) {
-                                                /* Return a new MarketPriceInfo */
-                                                return Single.just(new MarketPriceInfo(price.results, bestUrl));
-                                            } else if (price.errors.length > 0) {
-                                                /* Return the error returned by TCGPlayer */
-                                                return Single.error(new Throwable(price.errors[0]));
-                                            }
-                                        } else if (details.errors.length > 0) {
-                                            /* Return the error returned by TCGPlayer */
-                                            return Single.error(new Throwable(details.errors[0]));
-                                        }
-                                    } else if (information.errors.length > 0) {
-                                        /* Return the error returned by TCGPlayer */
-                                        return Single.error(new Throwable(information.errors[0]));
-                                    }
-                                } catch (IOException e) {
-                                    lastThrownException = new Exception(mActivity.getString(R.string.price_error_network));
-                                }
-                            }
+                        /* If there was a valid result */
+                        if (price.results.length > 0 && details.results.length > 0) {
+                            /* Return a new MarketPriceInfo */
+                            return Single.just(new MarketPriceInfo(price.results, details.results[0].url));
+                        } else if (price.errors.length > 0) {
+                            /* Return the error returned by TCGPlayer */
+                            return Single.error(new Throwable(price.errors[0]));
+                        } else if (details.errors.length > 0) {
+                            /* Return the error returned by TCGPlayer */
+                            return Single.error(new Throwable(details.errors[0]));
                         }
+                    } catch (IOException e) {
+                        return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                     }
+                } else {
+                    return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                 }
                 return Single.error(lastThrownException);
             }

@@ -53,7 +53,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 120;
+    public static final int DATABASE_VERSION = 121;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -133,6 +133,7 @@ public class CardDbAdapter {
     public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
     public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
     public static final String KEY_WATERMARK = "WATERMARK";
+    public static final String KEY_TCGP_PRODUCT_ID = "TCGP_PRODUCT_ID";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final List<String> ALL_CARD_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
@@ -183,7 +184,8 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_SPANISH,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
-            DATABASE_TABLE_CARDS + "." + KEY_WATERMARK
+            DATABASE_TABLE_CARDS + "." + KEY_WATERMARK,
+            DATABASE_TABLE_CARDS + "." + KEY_TCGP_PRODUCT_ID
     ));
 
     /* All the columns in DATABASE_CREATE_SETS */
@@ -250,6 +252,7 @@ public class CardDbAdapter {
                     KEY_RULINGS + " text, " +
                     KEY_NAME_NO_ACCENT + " text not null, " +
                     KEY_WATERMARK + " text, " +
+                    KEY_TCGP_PRODUCT_ID + " integer, " +
                     KEY_NAME_CHINESE_TRADITIONAL + " text, " +
                     KEY_MULTIVERSEID_CHINESE_TRADITIONAL + " integer, " +
                     KEY_NAME_CHINESE_SIMPLIFIED + " text, " +
@@ -1775,6 +1778,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_COLOR_IDENTITY, card.getColorIdentity());
         initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.getName()));
         initialValues.put(KEY_WATERMARK, card.getWatermark());
+        initialValues.put(KEY_TCGP_PRODUCT_ID, card.getTcgpProductId());
 
         for (Card.ForeignPrinting fp : card.getForeignPrintings()) {
             switch (fp.getLanguageCode()) {

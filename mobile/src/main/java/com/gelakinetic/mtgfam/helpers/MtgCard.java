@@ -84,6 +84,7 @@ public class MtgCard extends Card {
         mMultiverseId = 0;
         mColorIdentity = "";
         mWatermark = "";
+        mTcgplayerProductId = 0;
         mForeignPrintings = new ArrayList<>();
 
         // From MtgCard
@@ -121,6 +122,7 @@ public class MtgCard extends Card {
             this.mMultiverseId = card.mMultiverseId;
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
+            this.mTcgplayerProductId = card.mTcgplayerProductId;
             this.mForeignPrintings = new ArrayList<>(card.mForeignPrintings.size());
             for (ForeignPrinting fp : card.mForeignPrintings) {
                 this.mForeignPrintings.add(new ForeignPrinting(fp));
@@ -289,6 +291,9 @@ public class MtgCard extends Card {
         this.mColorIdentity = cardCursor.getString(cardCursor
                 .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
 
+        this.mTcgplayerProductId = cardCursor.getInt(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_TCGP_PRODUCT_ID));
+
         this.mPrice = 0; /* In cents */
         this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
         this.mSide = 0;
@@ -437,6 +442,7 @@ public class MtgCard extends Card {
 
             this.mArtist = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ARTIST));
             this.mWatermark = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_WATERMARK));
+            this.mTcgplayerProductId = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_TCGP_PRODUCT_ID));
             this.mColorIdentity = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR_IDENTITY));
 
             this.mSetName = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_NAME));
