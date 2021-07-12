@@ -84,7 +84,7 @@ public class MtgCard extends Card {
         mMultiverseId = 0;
         mColorIdentity = "";
         mWatermark = "";
-        mTcgplayerProductId = 0;
+        mTcgplayerProductId = -1;
         mForeignPrintings = new ArrayList<>();
 
         // From MtgCard
