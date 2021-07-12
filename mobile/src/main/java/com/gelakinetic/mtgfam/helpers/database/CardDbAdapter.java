@@ -1519,33 +1519,35 @@ public class CardDbAdapter {
         }
     }
 
-    /**
-     * Returns a card name queried by set and collector's number.
-     * <p>
-     * TODO online only pref
-     *
-     * @param set    The set code
-     * @param number The number to look up
-     * @param mDb    The database to query
-     * @return The KEY_NAME value for the found card, or null if the card isn't found
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getNameFromSetAndNumber(String set, String number, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
-                + KEY_SET + " = '" + set + "')";
-        FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS,
-                new String[]{KEY_NAME}, statement, null, null, null,
-                KEY_NAME, null, new Throwable().getStackTrace()[0].getMethodName());
-        try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
-                new String[]{KEY_NAME}, statement, null, null, null,
-                KEY_NAME, null)) {
-            c.moveToFirst();
-            return c.getString(c.getColumnIndex(KEY_NAME));
-        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
+// --Commented out by Inspection START (7/12/2021 9:20 AM):
+//    /**
+//     * Returns a card name queried by set and collector's number.
+//     * <p>
+//     * TODO online only pref
+//     *
+//     * @param set    The set code
+//     * @param number The number to look up
+//     * @param mDb    The database to query
+//     * @return The KEY_NAME value for the found card, or null if the card isn't found
+//     * @throws FamiliarDbException If something goes wrong
+//     */
+//    public static String getNameFromSetAndNumber(String set, String number, SQLiteDatabase mDb)
+//            throws FamiliarDbException {
+//        String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
+//                + KEY_SET + " = '" + set + "')";
+//        FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS,
+//                new String[]{KEY_NAME}, statement, null, null, null,
+//                KEY_NAME, null, new Throwable().getStackTrace()[0].getMethodName());
+//        try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
+//                new String[]{KEY_NAME}, statement, null, null, null,
+//                KEY_NAME, null)) {
+//            c.moveToFirst();
+//            return c.getString(c.getColumnIndex(KEY_NAME));
+//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+//            throw new FamiliarDbException(e);
+//        }
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * Given a card name, find the ID for that card in the database
@@ -1653,47 +1655,49 @@ public class CardDbAdapter {
         }
     }
 
-    /**
-     * Given a collector's number and expansion, return the combined name for a multi-card
-     *
-     * @param expansion The expansion for this card
-     * @param number    The card's number, with a letter suffix
-     * @param mDb       The database to search
-     * @return The whole, combined name for this multi-part card
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getCombinedName(String expansion, String number, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-
-        // Strip the last part of the number, if it is a letter
-        if (Character.isAlphabetic(number.charAt(number.length() - 1))) {
-            number = number.substring(0, number.length() - 1);
-        }
-
-        // Select all rows from the database for cards with this number
-        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
-                " FROM " + DATABASE_TABLE_CARDS +
-                " WHERE " + KEY_SET + " = '" + expansion + "' AND " + KEY_NUMBER + " LIKE '" + number + "%'" +
-                " ORDER BY " + KEY_NUMBER + " ASC";
-
-        // For every returned row
-        try (Cursor c = mDb.rawQuery(statement, null)) {
-            StringBuilder retVal = new StringBuilder();
-            c.moveToFirst();
-            while (!c.isAfterLast()) {
-                // If we're not starting off, append the delimiter
-                if (retVal.length() > 0) {
-                    retVal.append(" // ");
-                }
-                // Append the card name
-                retVal.append(c.getString(c.getColumnIndex(KEY_NAME)));
-                c.moveToNext();
-            }
-            return retVal.toString();
-        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
+// --Commented out by Inspection START (7/12/2021 9:20 AM):
+//    /**
+//     * Given a collector's number and expansion, return the combined name for a multi-card
+//     *
+//     * @param expansion The expansion for this card
+//     * @param number    The card's number, with a letter suffix
+//     * @param mDb       The database to search
+//     * @return The whole, combined name for this multi-part card
+//     * @throws FamiliarDbException If something goes wrong
+//     */
+//    public static String getCombinedName(String expansion, String number, SQLiteDatabase mDb)
+//            throws FamiliarDbException {
+//
+//        // Strip the last part of the number, if it is a letter
+//        if (Character.isAlphabetic(number.charAt(number.length() - 1))) {
+//            number = number.substring(0, number.length() - 1);
+//        }
+//
+//        // Select all rows from the database for cards with this number
+//        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
+//                " FROM " + DATABASE_TABLE_CARDS +
+//                " WHERE " + KEY_SET + " = '" + expansion + "' AND " + KEY_NUMBER + " LIKE '" + number + "%'" +
+//                " ORDER BY " + KEY_NUMBER + " ASC";
+//
+//        // For every returned row
+//        try (Cursor c = mDb.rawQuery(statement, null)) {
+//            StringBuilder retVal = new StringBuilder();
+//            c.moveToFirst();
+//            while (!c.isAfterLast()) {
+//                // If we're not starting off, append the delimiter
+//                if (retVal.length() > 0) {
+//                    retVal.append(" // ");
+//                }
+//                // Append the card name
+//                retVal.append(c.getString(c.getColumnIndex(KEY_NAME)));
+//                c.moveToNext();
+//            }
+//            return retVal.toString();
+//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+//            throw new FamiliarDbException(e);
+//        }
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * For cards without a multiverse ID, find an equivalent for Gatherer lookups
@@ -2091,23 +2095,25 @@ public class CardDbAdapter {
         }
     }
 
-    /**
-     * Given a standard set code, return the Magiccards.info set code.
-     *
-     * @param code The standard set code
-     * @param mDb  The database to query
-     * @return The Magiccards.info set code
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
-        try (Cursor cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
-                KEY_CODE + "=\"" + code + "\"", null, null, null, null)) {
-            cursor.moveToFirst();
-            return cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
-        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
+// --Commented out by Inspection START (7/12/2021 9:20 AM):
+//    /**
+//     * Given a standard set code, return the Magiccards.info set code.
+//     *
+//     * @param code The standard set code
+//     * @param mDb  The database to query
+//     * @return The Magiccards.info set code
+//     * @throws FamiliarDbException If something goes wrong
+//     */
+//    public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
+//        try (Cursor cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
+//                KEY_CODE + "=\"" + code + "\"", null, null, null, null)) {
+//            cursor.moveToFirst();
+//            return cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
+//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+//            throw new FamiliarDbException(e);
+//        }
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * Given a set code, return the full set name.
@@ -2145,36 +2151,38 @@ public class CardDbAdapter {
         String[] columns = new String[]{KEY_ONLINE_ONLY};
         FamiliarLogger.logQuery(true, DATABASE_TABLE_SETS, columns, KEY_CODE
                         + "=\"" + setCode + "\"", null, null, null, null, null,
-                new Throwable().getStackTrace()[0].getMethodName());
-        try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
-                + "=\"" + setCode + "\"", null, null, null, null, null)) {
-
-            if (c != null && c.getCount() > 0) {
-                c.moveToFirst();
-                return (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
-            }
-            return false;
-        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * Given a set code, return a String with the set name that TCGPlayer.com uses.
-     *
-     * @param setCode The set code to search for
-     * @param mDb     The database to query
-     * @return The TCGPlayer.com name string
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getTcgName(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-        Cursor c = null;
-        try {
-            String sql = "SELECT " + KEY_NAME_TCGPLAYER +
-                    " FROM " + DATABASE_TABLE_SETS +
-                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode, false) + ";";
-            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
-            c = mDb.rawQuery(sql, null);
+// --Commented out by Inspection START (7/12/2021 9:20 AM):
+//                new Throwable().getStackTrace()[0].getMethodName());
+//        try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+//                + "=\"" + setCode + "\"", null, null, null, null, null)) {
+//
+//            if (c != null && c.getCount() > 0) {
+//                c.moveToFirst();
+//                return (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
+//            }
+//            return false;
+//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+//            throw new FamiliarDbException(e);
+//        }
+//    }
+//
+//    /**
+//     * Given a set code, return a String with the set name that TCGPlayer.com uses.
+//     *
+//     * @param setCode The set code to search for
+//     * @param mDb     The database to query
+//     * @return The TCGPlayer.com name string
+//     * @throws FamiliarDbException If something goes wrong
+//     */
+//    public static String getTcgName(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
+//        Cursor c = null;
+//        try {
+//            String sql = "SELECT " + KEY_NAME_TCGPLAYER +
+//                    " FROM " + DATABASE_TABLE_SETS +
+//                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode, false) + ";";
+//            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
+//            c = mDb.rawQuery(sql, null);
+// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
             c.moveToFirst();
 
             /* Some users had this cursor come up empty. I couldn't replicate. This is safe */

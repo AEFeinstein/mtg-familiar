@@ -263,43 +263,45 @@ public class MarketPriceFetcher {
                 .open();
     }
 
-    /**
-     * Given a group ID, return the string expansion name. If it doesn't exist, use the API to
-     * download a list of all group IDs and names, then save the map to the disk
-     *
-     * @param api     The TcgpApi to query for group names
-     * @param context The context to access SharedPreferences
-     * @param groupId The group ID to query for
-     * @return The String name of the given group ID, or null
-     */
-    @Nullable
-    private String getExpansionFromGroupId(TcgpApi api, FamiliarActivity context, long groupId) throws IOException {
-        LongSparseArray<String> map = PreferenceAdapter.getGroups(context);
-        String expansionName = map.get(groupId);
-        if (null == expansionName) {
-            // Group is missing, download them all
-            map.clear();
-            int[] offset = {0};
-            while (true) {
-                CategoryGroups groups = api.getCategoryGroups(offset);
-                // If there are errors or no groups left, break the loop
-                if (groups.errors.length > 0 || groups.results.length == 0) {
-                    break;
-                }
-                // Add all groups to the map
-                for (CategoryGroups.Group group : groups.results) {
-                    map.put(group.groupId, group.name);
-                }
-            }
-            // Now that all groups have been downloaded, save them to the disk
-            PreferenceAdapter.setGroups(context, map);
-
-            // Now that the map is downloaded, try again
-            expansionName = map.get(groupId);
-        }
-        // Return the String
-        return expansionName;
-    }
+// --Commented out by Inspection START (7/12/2021 9:20 AM):
+//    /**
+//     * Given a group ID, return the string expansion name. If it doesn't exist, use the API to
+//     * download a list of all group IDs and names, then save the map to the disk
+//     *
+//     * @param api     The TcgpApi to query for group names
+//     * @param context The context to access SharedPreferences
+//     * @param groupId The group ID to query for
+//     * @return The String name of the given group ID, or null
+//     */
+//    @Nullable
+//    private String getExpansionFromGroupId(TcgpApi api, FamiliarActivity context, long groupId) throws IOException {
+//        LongSparseArray<String> map = PreferenceAdapter.getGroups(context);
+//        String expansionName = map.get(groupId);
+//        if (null == expansionName) {
+//            // Group is missing, download them all
+//            map.clear();
+//            int[] offset = {0};
+//            while (true) {
+//                CategoryGroups groups = api.getCategoryGroups(offset);
+//                // If there are errors or no groups left, break the loop
+//                if (groups.errors.length > 0 || groups.results.length == 0) {
+//                    break;
+//                }
+//                // Add all groups to the map
+//                for (CategoryGroups.Group group : groups.results) {
+//                    map.put(group.groupId, group.name);
+//                }
+//            }
+//            // Now that all groups have been downloaded, save them to the disk
+//            PreferenceAdapter.setGroups(context, map);
+//
+//            // Now that the map is downloaded, try again
+//            expansionName = map.get(groupId);
+//        }
+//        // Return the String
+//        return expansionName;
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * This function fetches the price for a given MtgCard and calls the appropriate callbacks.

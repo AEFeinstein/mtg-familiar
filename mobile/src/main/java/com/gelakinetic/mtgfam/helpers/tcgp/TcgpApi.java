@@ -95,9 +95,7 @@ public class TcgpApi {
     // 52 Supply Bundles
     // 53 Munchkin CCG
 
-    private static final int CATEGORY_ID_MAGIC = 1;
-
-    private static final String TCGP_VERSION = "v1.19.0";
+    private static final String TCGP_VERSION = "v1.39.0";
     private String mAccessToken;
 
     public void setToken(String tokenStr) {
@@ -302,66 +300,68 @@ public class TcgpApi {
 //        return null;
 //    }
 
-    /**
-     * Given a list of card names and expansions, request and return the product IDs for each
-     *
-     * @param name      The card name to get product information for
-     * @param expansion The expansion of the card to get product information for
-     * @throws IOException If something goes wrong with the network
-     */
-    public ProductInformation getProductInformation(String name, String expansion)
-            throws IOException {
-        // Make sure we have an access token first
-        if (null != mAccessToken) {
-
-            // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.tcgplayer.com/" +
-                    TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/search")
-                    .openConnection();
-            setDefaultOptions(conn, HttpMethod.POST);
-            addHeaders(conn);
-
-            // Create the params, only adding the set if it isn't null
-            GetProductInformationOptions.NameValuesPair[] queryParams;
-            if (null != expansion) {
-                queryParams = new GetProductInformationOptions.NameValuesPair[]{
-                        new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name}),
-                        new GetProductInformationOptions.NameValuesPair("SetName", new String[]{expansion})};
-            } else {
-                queryParams = new GetProductInformationOptions.NameValuesPair[]{
-                        new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name})};
-            }
-
-            // Add the information to search by
-            GetProductInformationOptions options = new GetProductInformationOptions(queryParams);
-            conn.getOutputStream().write(new Gson().toJson(options, GetProductInformationOptions.class)
-                    .getBytes(StandardCharsets.UTF_8));
-
-            // Get the response stream. This opens the connection
-            InputStream inStream;
-            try {
-                inStream = conn.getInputStream();
-            } catch (FileNotFoundException e) {
-                inStream = conn.getErrorStream();
-                if (null == inStream) {
-                    conn.disconnect();
-                    // Return an empty, not null, object
-                    return new ProductInformation();
-                }
-            }
-
-            // Parse the json out of the response and save it
-            ProductInformation information = (new Gson()).fromJson(new InputStreamReader(inStream),
-                    ProductInformation.class);
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-            return information;
-        }
-        // No access token
-        return null;
-    }
+// --Commented out by Inspection START (7/12/2021 9:20 AM):
+//    /**
+//     * Given a list of card names and expansions, request and return the product IDs for each
+//     *
+//     * @param name      The card name to get product information for
+//     * @param expansion The expansion of the card to get product information for
+//     * @throws IOException If something goes wrong with the network
+//     */
+//    public ProductInformation getProductInformation(String name, String expansion)
+//            throws IOException {
+//        // Make sure we have an access token first
+//        if (null != mAccessToken) {
+//
+//            // Create the connection with default options and headers
+//            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.tcgplayer.com/" +
+//                    TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/search")
+//                    .openConnection();
+//            setDefaultOptions(conn, HttpMethod.POST);
+//            addHeaders(conn);
+//
+//            // Create the params, only adding the set if it isn't null
+//            GetProductInformationOptions.NameValuesPair[] queryParams;
+//            if (null != expansion) {
+//                queryParams = new GetProductInformationOptions.NameValuesPair[]{
+//                        new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name}),
+//                        new GetProductInformationOptions.NameValuesPair("SetName", new String[]{expansion})};
+//            } else {
+//                queryParams = new GetProductInformationOptions.NameValuesPair[]{
+//                        new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name})};
+//            }
+//
+//            // Add the information to search by
+//            GetProductInformationOptions options = new GetProductInformationOptions(queryParams);
+//            conn.getOutputStream().write(new Gson().toJson(options, GetProductInformationOptions.class)
+//                    .getBytes(StandardCharsets.UTF_8));
+//
+//            // Get the response stream. This opens the connection
+//            InputStream inStream;
+//            try {
+//                inStream = conn.getInputStream();
+//            } catch (FileNotFoundException e) {
+//                inStream = conn.getErrorStream();
+//                if (null == inStream) {
+//                    conn.disconnect();
+//                    // Return an empty, not null, object
+//                    return new ProductInformation();
+//                }
+//            }
+//
+//            // Parse the json out of the response and save it
+//            ProductInformation information = (new Gson()).fromJson(new InputStreamReader(inStream),
+//                    ProductInformation.class);
+//
+//            // Clean up
+//            inStream.close();
+//            conn.disconnect();
+//            return information;
+//        }
+//        // No access token
+//        return null;
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * Given a productId, request and return that card's market price data
@@ -470,56 +470,58 @@ public class TcgpApi {
         return null;
     }
 
-    /**
-     * Return a paged list of all CategoryGroups for Magic expansions
-     *
-     * @param offset The offset for this query. The 0th index in this array will be used and updated
-     * @return The CategoryGroups retrieved from the API
-     * @throws IOException If something goes wrong with the network
-     */
-    public CategoryGroups getCategoryGroups(int[] offset) throws IOException {
-        // Make sure we have an access token first
-        if (null != mAccessToken) {
-
-            // Return 100 items at a time
-            int limit = 100;
-
-            // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL(
-                    "https://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/groups" +
-                            "?offset=" + offset[0] + "&limit=" + limit).openConnection();
-            setDefaultOptions(conn, HttpMethod.GET);
-            addHeaders(conn);
-
-            // Get the response stream. This opens the connection
-            InputStream inStream;
-            try {
-                inStream = conn.getInputStream();
-            } catch (FileNotFoundException e) {
-                inStream = conn.getErrorStream();
-                if (null == inStream) {
-                    conn.disconnect();
-                    // Return an empty, not null, object
-                    return new CategoryGroups();
-                }
-            }
-
-            // Parse the json out of the response and save it
-            CategoryGroups groups = new Gson()
-                    .fromJson(new InputStreamReader(inStream), CategoryGroups.class);
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-
-            // Increment the offset for the next call
-            if (null != groups.results) {
-                offset[0] += groups.results.length;
-            }
-
-            return groups;
-        }
-        // No access token
-        return null;
-    }
+// --Commented out by Inspection START (7/12/2021 9:21 AM):
+//    /**
+//     * Return a paged list of all CategoryGroups for Magic expansions
+//     *
+//     * @param offset The offset for this query. The 0th index in this array will be used and updated
+//     * @return The CategoryGroups retrieved from the API
+//     * @throws IOException If something goes wrong with the network
+//     */
+//    public CategoryGroups getCategoryGroups(int[] offset) throws IOException {
+//        // Make sure we have an access token first
+//        if (null != mAccessToken) {
+//
+//            // Return 100 items at a time
+//            int limit = 100;
+//
+//            // Create the connection with default options and headers
+//            HttpURLConnection conn = (HttpURLConnection) new URL(
+//                    "https://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/groups" +
+//                            "?offset=" + offset[0] + "&limit=" + limit).openConnection();
+//            setDefaultOptions(conn, HttpMethod.GET);
+//            addHeaders(conn);
+//
+//            // Get the response stream. This opens the connection
+//            InputStream inStream;
+//            try {
+//                inStream = conn.getInputStream();
+//            } catch (FileNotFoundException e) {
+//                inStream = conn.getErrorStream();
+//                if (null == inStream) {
+//                    conn.disconnect();
+//                    // Return an empty, not null, object
+//                    return new CategoryGroups();
+//                }
+//            }
+//
+//            // Parse the json out of the response and save it
+//            CategoryGroups groups = new Gson()
+//                    .fromJson(new InputStreamReader(inStream), CategoryGroups.class);
+//
+//            // Clean up
+//            inStream.close();
+//            conn.disconnect();
+//
+//            // Increment the offset for the next call
+//            if (null != groups.results) {
+//                offset[0] += groups.results.length;
+//            }
+//
+//            return groups;
+//        }
+//        // No access token
+//        return null;
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:21 AM)
 }
