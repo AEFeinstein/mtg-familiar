@@ -2151,21 +2151,21 @@ public class CardDbAdapter {
         String[] columns = new String[]{KEY_ONLINE_ONLY};
         FamiliarLogger.logQuery(true, DATABASE_TABLE_SETS, columns, KEY_CODE
                         + "=\"" + setCode + "\"", null, null, null, null, null,
-// --Commented out by Inspection START (7/12/2021 9:20 AM):
-//                new Throwable().getStackTrace()[0].getMethodName());
-//        try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
-//                + "=\"" + setCode + "\"", null, null, null, null, null)) {
-//
-//            if (c != null && c.getCount() > 0) {
-//                c.moveToFirst();
-//                return (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
-//            }
-//            return false;
-//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-//            throw new FamiliarDbException(e);
-//        }
-//    }
-//
+                new Throwable().getStackTrace()[0].getMethodName());
+        try (Cursor c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                + "=\"" + setCode + "\"", null, null, null, null, null)) {
+
+            if (c != null && c.getCount() > 0) {
+                c.moveToFirst();
+                return (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
+            }
+            return false;
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+// --Commented out by Inspection START (7/12/2021 9:26 AM):
 //    /**
 //     * Given a set code, return a String with the set name that TCGPlayer.com uses.
 //     *
@@ -2182,22 +2182,22 @@ public class CardDbAdapter {
 //                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode, false) + ";";
 //            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
 //            c = mDb.rawQuery(sql, null);
-// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
-            c.moveToFirst();
-
-            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
-            if (c.getCount() == 0) {
-                return "";
-            }
-            return c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
-        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        } finally {
-            if (null != c) {
-                c.close();
-            }
-        }
-    }
+//            c.moveToFirst();
+//
+//            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
+//            if (c.getCount() == 0) {
+//                return "";
+//            }
+//            return c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
+//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
+//            throw new FamiliarDbException(e);
+//        } finally {
+//            if (null != c) {
+//                c.close();
+//            }
+//        }
+//    }
+// --Commented out by Inspection STOP (7/12/2021 9:26 AM)
 
     /**
      * Helper function to determine what kind of multicard a card is based on set and number.
