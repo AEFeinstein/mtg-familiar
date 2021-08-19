@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -74,13 +75,17 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 /* Change the notification to show that the round ended */
                 NotificationHelper.createChannels(context);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER);
-                Notification notification = builder
+                int pendingIntentFlags = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
+                }
+                @SuppressLint("UnspecifiedImmutableFlag") Notification notification = builder
                         .setSmallIcon(R.drawable.notification_icon)
                         .setWhen(System.currentTimeMillis())
                         .setContentTitle(context.getString(R.string.main_timer))
                         .setContentText(context.getString(R.string.timer_ended))
                         .setContentIntent(PendingIntent.getActivity(context, 7, (new Intent(context,
-                                FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER)), 0))
+                                FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER)), pendingIntentFlags))
                         .build();
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
 

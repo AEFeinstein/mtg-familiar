@@ -18,6 +18,7 @@
  */
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -94,7 +95,11 @@ public class DbUpdaterService extends IntentService {
         mHandler = new Handler();
 
         Intent intent = new Intent(this, FamiliarActivity.class);
-        PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        int pendingIntentFlags = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
+        }
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, pendingIntentFlags);
 
         NotificationHelper.createChannels(this);
         mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), NotificationHelper.NOTIFICATION_CHANNEL_UPDATE);

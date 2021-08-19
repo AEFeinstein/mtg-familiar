@@ -478,9 +478,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /* Set the system bar color programatically, for lollipop+ */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
-        }
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
 
         setContentView(R.layout.activity_main);
 
