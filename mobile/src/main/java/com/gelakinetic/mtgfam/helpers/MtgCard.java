@@ -632,13 +632,16 @@ public class MtgCard extends Card {
      */
     @Override
     public boolean equals(Object o) {
-        return o instanceof MtgCard && this.mName.equals(((MtgCard) o).mName) && this.mExpansion.equals(((MtgCard) o).mExpansion);
+        return (o instanceof MtgCard) &&
+                (this.mName.equals(((MtgCard) o).mName)) &&
+                (this.mExpansion.equals(((MtgCard) o).mExpansion)) &&
+                (this.getTcgpProductId() == ((MtgCard) o).getTcgpProductId());
     }
 
     @Override
     public int hashCode() {
         // xor the name and expansion hash codes, used for equals()
-        return this.mName.hashCode() ^ this.mExpansion.hashCode();
+        return (int) (this.mName.hashCode() ^ this.mExpansion.hashCode() ^ this.getTcgpProductId());
     }
 
     /**

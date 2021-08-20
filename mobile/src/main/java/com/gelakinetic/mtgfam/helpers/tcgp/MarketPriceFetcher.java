@@ -21,14 +21,11 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import android.os.Handler;
 
-import androidx.collection.LongSparseArray;
-
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategoryGroups;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
@@ -53,7 +50,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -172,7 +168,7 @@ public class MarketPriceFetcher {
              * @return A File for this key
              */
             private File getCacheFile(MtgCard cacheKey) {
-                return new File(mActivity.getCacheDir(), (KEY_PREFIX + cacheKey.getName() + "-" + cacheKey.getExpansion()).replaceAll("\\W+", ""));
+                return new File(mActivity.getCacheDir(), (KEY_PREFIX + cacheKey.getTcgpProductId()));
             }
 
             /**
@@ -315,9 +311,7 @@ public class MarketPriceFetcher {
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
                                  final Consumer<Throwable> onError, final Runnable onAllDoneUI) throws InstantiationException {
 
-        if (null == card.getName() || card.getName().isEmpty() ||
-                null == card.getExpansion() || card.getExpansion().isEmpty() ||
-                null == card.getNumber()) {
+        if (0 >= card.getTcgpProductId()) {
             throw new InstantiationException("card must have a name and expansion to fetch price");
         }
 
