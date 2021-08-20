@@ -595,6 +595,11 @@ public class DecklistFragment extends FamiliarListFragment {
             return true;
         } else if (item.getItemId() == R.id.deck_menu_stats) {
             try {
+                if (mCurrentDeck == null || mCurrentDeck.equals("")) {
+                    mCurrentDeck = AUTOSAVE_NAME;
+                    saveCurrentDeck(false);
+                }
+
                 startNewFragment(new DeckStatsFragment(DecklistHelpers.ReadDecklist(getActivity(), mCurrentDeck + ".deck", true)), null);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(false);
