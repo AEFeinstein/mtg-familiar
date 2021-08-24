@@ -120,6 +120,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
             MtgCard toLookup = new MtgCard(activity,
                     cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
                     cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)),
+                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER)),
                     false, 0);
 
             // Start the lookup and log the time

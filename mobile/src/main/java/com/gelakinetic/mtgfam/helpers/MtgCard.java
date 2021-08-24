@@ -146,16 +146,18 @@ public class MtgCard extends Card {
     /**
      * Construct a MtgCard based on the given parameters.
      *
-     * @param activity activity the method is being called from
-     * @param cardName name of the card to make
-     * @param cardSet  set code of the card to make
-     * @param isFoil   if the card is foil or not
-     * @param numberOf how many copies of the card are needed
+     * @param activity   activity the method is being called from
+     * @param cardName   name of the card to make
+     * @param cardSet    set code of the card to make
+     * @param cardNumber the card's number
+     * @param isFoil     if the card is foil or not
+     * @param numberOf   how many copies of the card are needed
      */
     public MtgCard(
             Activity activity,
             String cardName,
             String cardSet,
+            String cardNumber,
             boolean isFoil,
             int numberOf) throws InstantiationException {
 
@@ -192,7 +194,7 @@ public class MtgCard extends Card {
                     }
                 }
             } else {
-                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
+                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, cardNumber, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
             }
 
             /* Make sure at least one card was found */
@@ -224,6 +226,7 @@ public class MtgCard extends Card {
      * @param activity    activity the method is being called from
      * @param cardName    name of the card to make
      * @param cardSet     set code of the card to make
+     * @param cardNumber  the card's number
      * @param isFoil      if the card is foil or not
      * @param numberOf    how many copies of the card are needed
      * @param isSideboard Whether this card is in the sideboard
@@ -232,10 +235,11 @@ public class MtgCard extends Card {
             Activity activity,
             String cardName,
             String cardSet,
+            String cardNumber,
             boolean isFoil,
             int numberOf,
             boolean isSideboard) throws InstantiationException {
-        this(activity, cardName, cardSet, isFoil, numberOf);
+        this(activity, cardName, cardSet, cardNumber, isFoil, numberOf);
         this.mIsSideboard = isSideboard;
     }
 
@@ -307,14 +311,16 @@ public class MtgCard extends Card {
      * Construct a MtgCard based on the given parameters. initFromCursor() really should be called
      * for this MtgCard later
      *
-     * @param cardName name of the card to make
-     * @param cardSet  set code of the card to make
-     * @param isFoil   if the card is foil or not
-     * @param numberOf how many copies of the card are needed
+     * @param cardName   name of the card to make
+     * @param cardSet    set code of the card to make
+     * @param cardNumber the card's number
+     * @param isFoil     if the card is foil or not
+     * @param numberOf   how many copies of the card are needed
      */
     public MtgCard(
             String cardName,
             String cardSet,
+            String cardNumber,
             boolean isFoil,
             int numberOf,
             boolean isSideboard) {
@@ -325,6 +331,7 @@ public class MtgCard extends Card {
         // Then add the parameters
         this.mName = cardName;
         this.mExpansion = cardSet;
+        this.mNumber = cardNumber;
         this.mIsFoil = isFoil;
         this.mNumberOf = numberOf;
         this.mIsSideboard = isSideboard;
@@ -373,10 +380,13 @@ public class MtgCard extends Card {
                 // Get the name and set from the database
                 String name = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
                 String set = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+                String number = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NUMBER));
 
                 // Match that to a card in the initial list
                 for (MtgCard card : cards) {
-                    if (card.getName().equals(name) && card.getExpansion().equals(set)) {
+                    if (card.getName().equals(name) &&
+                            card.getExpansion().equals(set) &&
+                            (card.getNumber().isEmpty() || card.getNumber().equals(number))) {
                         try {
                             // Fill in the initial list with data from the cursor
                             card.initFromCursor(mCtx, cardCursor, database);
@@ -492,7 +502,8 @@ public class MtgCard extends Card {
                 this.mPrice + DELIMITER +
                 this.mIsFoil + DELIMITER +
                 this.mCmc + DELIMITER +
-                this.mColor + '\n';
+                this.mColor + DELIMITER +
+                this.mNumber + '\n';
     }
 
     /**
@@ -522,7 +533,13 @@ public class MtgCard extends Card {
                 }
             }
 
-            MtgCard card = new MtgCard(parts[1], parts[2], false, Integer.parseInt(parts[3]), false);
+            // This may or may not exist
+            String cardNumber = "";
+            if (parts.length > 9) {
+                cardNumber = parts[9];
+            }
+
+            MtgCard card = new MtgCard(parts[1], parts[2], cardNumber, false, Integer.parseInt(parts[3]), false);
             card.mSide = Integer.parseInt(parts[0]);
 
             /* These parts may not exist */
@@ -617,7 +634,7 @@ public class MtgCard extends Card {
                 foil = Boolean.parseBoolean(parts[5]);
             }
 
-            return new MtgCard(parts[0], parts[1], foil, Integer.parseInt(parts[2]), isSideboard);
+            return new MtgCard(parts[0], parts[1], parts[3], foil, Integer.parseInt(parts[2]), isSideboard);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }

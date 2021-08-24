@@ -19,14 +19,14 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import static java.lang.Integer.parseInt;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static java.lang.Integer.parseInt;
 
 public class DeckListImporter {
     private final List<MtgCard> mParsedCards = new ArrayList<>();
@@ -79,7 +79,7 @@ public class DeckListImporter {
 //              String idxInSet = match.group(5);
                 final boolean isFoil = false;
 
-                mParsedCards.add(new MtgCard(cardName, cardSet, isFoil, numberOf, currentIsSideBoard));
+                mParsedCards.add(new MtgCard(cardName, cardSet, "", isFoil, numberOf, currentIsSideBoard));
             } else {
                 mErrorLines.add(currentIsSideBoard ? "SB: " + line : line);
             }

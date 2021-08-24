@@ -323,7 +323,7 @@ public class DecklistFragment extends FamiliarListFragment {
         final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(getCardNumberInput());
         try {
-            final MtgCard card = new MtgCard(getActivity(), name, null,
+            final MtgCard card = new MtgCard(getActivity(), name, null, null,
                     checkboxFoilIsChecked(), Integer.parseInt(numberOf), isSideboard);
 
             final CompressedDecklistInfo decklistInfo =
@@ -595,6 +595,11 @@ public class DecklistFragment extends FamiliarListFragment {
             return true;
         } else if (item.getItemId() == R.id.deck_menu_stats) {
             try {
+                // Make sure the deck is saved before checking stats
+                if (null == mCurrentDeck || mCurrentDeck.isEmpty()) {
+                    mCurrentDeck = AUTOSAVE_NAME;
+                    saveCurrentDeck(false);
+                }
                 startNewFragment(new DeckStatsFragment(DecklistHelpers.ReadDecklist(getActivity(), mCurrentDeck + ".deck", true)), null);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(false);
@@ -786,7 +791,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.header == null && cdi.getName().equals(data.getName())) {
                     /* Find all foil and non foil compressed items with the same set code */
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        if (isi.mSetCode.equals(data.getExpansion())) {
+                        if (isi.mSetCode.equals(data.getExpansion()) &&
+                                isi.mNumber.equals(data.getNumber())) {
                             /* Set the whole price info object */
                             if (result != null) {
                                 isi.mPrice = result;

@@ -586,6 +586,7 @@ public class CardViewFragment extends FamiliarFragment {
                         CardDbAdapter.getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database) + number,
                         cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)),
                         (char) cCardByName.getInt(cCardByName.getColumnIndex(CardDbAdapter.KEY_RARITY)),
+                        cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER)),
                         cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID))));
                 cCardByName.moveToNext();
             }

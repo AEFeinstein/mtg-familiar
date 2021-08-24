@@ -196,28 +196,6 @@ public class DecklistHelpers {
 
     }
 
-    public static Pair<Map<String, String>, Map<String, String>> getTargetNumberOfs(
-            String mCardName,
-            ArrayList<MtgCard> decklist,
-            boolean isSideboard) {
-
-        final Map<String, String> targetCardNumberOfs = new HashMap<>();
-        final Map<String, String> targetFoilNumberOfs = new HashMap<>();
-
-        for (MtgCard card : decklist) {
-            if (card.getName().equals(mCardName) && card.isSideboard() == isSideboard) {
-                if (card.mIsFoil) {
-                    targetFoilNumberOfs.put(card.getExpansion(),
-                            String.valueOf(card.mNumberOf));
-                    continue;
-                }
-                targetCardNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
-            }
-        }
-        return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);
-
-    }
-
     /**
      * This class encapsulates a single MtgCard, an ArrayList of non-duplicated information for
      * different printings of that card, and if the card is part of the sideboard.

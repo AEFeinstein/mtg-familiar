@@ -115,7 +115,7 @@ public class HtmlDocFragment extends FamiliarFragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Uri uri = Uri.parse(url);
-                if (Objects.requireNonNull(uri.getAuthority()).toLowerCase().equals("gatherer.wizards.com")) {
+                if (Objects.requireNonNull(uri.getAuthority()).equalsIgnoreCase("gatherer.wizards.com")) {
                     /* Display card links internally */
                     startCardViewFrag(uri.getQueryParameter("name"));
                 } else {

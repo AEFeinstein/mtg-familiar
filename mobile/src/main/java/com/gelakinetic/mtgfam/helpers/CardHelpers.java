@@ -27,7 +27,6 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -52,7 +51,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 
@@ -89,10 +88,6 @@ public class CardHelpers {
         final LinearLayout linearLayout =
                 customView.findViewById(R.id.linear_layout);
 
-        final Pair<Map<String, String>, Map<String, String>> targetNumberOfs;
-        final Map<String, String> targetCardNumberOfs;
-        final Map<String, String> targetFoilCardNumberOfs;
-
         // The wishlist dialog is shown both in the card view and the wishlist fragments
         final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(activity, WishlistFragment.class);
         final boolean isCardViewDialog = FragmentHelpers.isInstanceOf(activity, CardViewPagerFragment.class);
@@ -101,11 +96,11 @@ public class CardHelpers {
         final String deckName;
         final String dialogText;
 
+        ArrayList<MtgCard> cardList;
         try {
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                 /* Read the wishlist */
-                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
-                targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
+                cardList = WishlistHelpers.ReadWishlist(activity, false);
                 deckName = "";
                 dialogText = Objects.requireNonNull(activity).getString(R.string.wishlist_edit_dialog_title_end);
             } else {
@@ -117,17 +112,13 @@ public class CardHelpers {
                 } else {
                     deckName = ((DecklistFragment) fragment).mCurrentDeck;
                 }
-                ArrayList<MtgCard> decklist =
+                cardList =
                         DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION, false);
-                targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
                 dialogText = Objects.requireNonNull(activity).getString(R.string.decklist_edit_dialog_title_end);
             }
         } catch (FamiliarDbException e) {
             return null;
         }
-        targetCardNumberOfs = targetNumberOfs.first;
-        targetFoilCardNumberOfs = targetNumberOfs.second;
-
 
         /* Get all potential sets and rarities for this card */
         final ArrayList<String> potentialSetCodes = new ArrayList<>();
@@ -144,17 +135,24 @@ public class CardHelpers {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, false, db);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false, false, false, db);
 
             Set<String> foilSets = CardDbAdapter.getFoilSets(db);
 
             /* For each card, add it to the wishlist view */
+            HashMap<Boolean, ArrayList<String>> emptyNumberSetCodes = new HashMap<>();
+            emptyNumberSetCodes.put(true, new ArrayList<>());
+            emptyNumberSetCodes.put(false, new ArrayList<>());
+
             while (!cards.isAfterLast()) {
                 String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
                 String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
                 char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
+                String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
-                if (targetFoilCardNumberOfs.containsKey(setCode) && !foilSets.contains(setCode)) {
+                int[] numberOfCards = getNumberOfCardsInList(cardList, mCardName, setCode, number, isSideboard, emptyNumberSetCodes);
+
+                if (numberOfCards[1] > 0 && !foilSets.contains(setCode)) {
                     // The card is foil, but the set isn't. This happens for foil-only sets like Masterpieces
                     // Add a non-foil row
                     View wishlistRow = createDialogRow(
@@ -162,7 +160,8 @@ public class CardHelpers {
                             setName,
                             setCode,
                             rarity,
-                            targetFoilCardNumberOfs.get(setCode),
+                            number,
+                            Integer.toString(numberOfCards[1]),
                             false,
                             linearLayout);
                     linearLayout.addView(wishlistRow);
@@ -174,7 +173,8 @@ public class CardHelpers {
                             setName,
                             setCode,
                             rarity,
-                            targetCardNumberOfs.get(setCode),
+                            number,
+                            Integer.toString(numberOfCards[0]),
                             false,
                             linearLayout);
                     linearLayout.addView(listDialogRow);
@@ -187,7 +187,8 @@ public class CardHelpers {
                                 setName,
                                 setCode,
                                 rarity,
-                                targetFoilCardNumberOfs.get(setCode),
+                                number,
+                                Integer.toString(numberOfCards[1]),
                                 true,
                                 linearLayout);
                         linearLayout.addView(wishlistRowFoil);
@@ -214,8 +215,7 @@ public class CardHelpers {
             try {
                 if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                     /* Read the wishlist */
-                    ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
-                    list = new ArrayList<>(wishlist);
+                    list = WishlistHelpers.ReadWishlist(activity, false);
                 } else {
                     list = DecklistHelpers.ReadDecklist(
                             activity,
@@ -237,6 +237,14 @@ public class CardHelpers {
                 DatabaseManager.closeDatabase(activity, handle);
             }
 
+            /* Remove all number-less cards with this card name from the list */
+            for (int j = 0; j < list.size(); j++) {
+                if (list.get(j).getName().equals(mCardName) && list.get(j).getNumber().isEmpty()) {
+                    list.remove(j);
+                    j--;
+                }
+            }
+
             /* Add the cards listed in the dialog to the wishlist */
             for (int i = 0; i < linearLayout.getChildCount(); i++) {
                 View view = linearLayout.getChildAt(i);
@@ -252,7 +260,8 @@ public class CardHelpers {
                 } catch (NumberFormatException e) {
                     numberOf = 0;
                 }
-                MtgCard card = new MtgCard(mCardName, potentialSetCodes.get(i), isFoil, numberOf, isSideboard);
+                String cardNumber = ((TextView) view.findViewById(R.id.card_number)).getText().toString();
+                MtgCard card = new MtgCard(mCardName, potentialSetCodes.get(i), cardNumber, isFoil, numberOf, isSideboard);
 
                 /* Look through the wishlist for each card, set the numberOf or remove
                  * it if it exists, or add the card if it doesn't */
@@ -260,7 +269,8 @@ public class CardHelpers {
                 for (int j = 0; j < list.size(); j++) {
                     if (card.getName().equals(list.get(j).getName())
                             && card.isSideboard() == list.get(j).isSideboard()
-                            && card.getExpansion().equals(list.get(j).getExpansion())) {
+                            && card.getExpansion().equals(list.get(j).getExpansion())
+                            && card.getNumber().equals(list.get(j).getNumber())) {
                         if (card.mIsFoil == list.get(j).mIsFoil ||
                                 nonFoilSets.contains(card.getExpansion())) {
                             if (card.mNumberOf == 0) {
@@ -279,10 +289,8 @@ public class CardHelpers {
             }
 
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-                /* Turn it back in to a plain ArrayList */
-                ArrayList<MtgCard> wishlist = new ArrayList<>(list);
                 /* Write the wishlist */
-                WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
+                WishlistHelpers.WriteWishlist(fragment.getActivity(), list);
                 /* notify the fragment of a change in the wishlist */
             } else {
                 DecklistHelpers.WriteDecklist(
@@ -340,10 +348,51 @@ public class CardHelpers {
     }
 
     /**
+     * Get the number of a specific card in a list of cards
+     *
+     * @param cards               The list of cards to check
+     * @param cardName            The name of the card
+     * @param setCode             The set code for the card
+     * @param cardNumber          The card's number (may be empty)
+     * @param isSideboard         Whether or not this card is a sideboard or not
+     * @param emptyNumberSetCodes A list of set codes where a card with an empty number was counted
+     * @return The number of specific cards in the list, non-foil then foil
+     */
+    static int[] getNumberOfCardsInList(ArrayList<MtgCard> cards, String cardName, String setCode,
+                                        String cardNumber, boolean isSideboard,
+                                        HashMap<Boolean, ArrayList<String>> emptyNumberSetCodes) {
+        int[] numberOf = new int[]{0, 0};
+        for (MtgCard card : cards) {
+            if (card.getName().equals(cardName) &&
+                    card.getExpansion().equals(setCode) &&
+                    card.isSideboard() == isSideboard) {
+
+                // If the number matches, or the number is empty and this set's empty number entry hasn't been counted yet
+                if (card.getNumber().equals(cardNumber) ||
+                        (!emptyNumberSetCodes.get(card.mIsFoil).contains(setCode) && card.getNumber().isEmpty())) {
+                    if (card.getNumber().isEmpty()) {
+                        emptyNumberSetCodes.get(card.mIsFoil).add(setCode);
+                    }
+
+                    if (!card.mIsFoil) {
+                        numberOf[0] += card.mNumberOf;
+                    } else {
+                        numberOf[1] += card.mNumberOf;
+                    }
+                }
+            }
+        }
+        return numberOf;
+    }
+
+    /**
      * Creates the row of each card in the edit dialog.
      *
      * @param fragment           the fragment we are from
      * @param setName            the set of the card
+     * @param setCode            The card's set code
+     * @param rarity             The card's rarity
+     * @param number             The card's number
      * @param targetCardNumberOf the number of the card
      * @param isFoil             if the card is foil or not
      * @param viewGroup          the viewGroup to inflate the row into
@@ -354,6 +403,7 @@ public class CardHelpers {
             String setName,
             String setCode,
             char rarity,
+            String number,
             String targetCardNumberOf,
             boolean isFoil,
             ViewGroup viewGroup) {
@@ -362,6 +412,7 @@ public class CardHelpers {
                 .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
+        ((TextView) dialogRow.findViewById(R.id.card_number)).setText(number);
         ExpansionImageHelper.loadExpansionImage(fragment.getContext(), setCode, rarity, dialogRow.findViewById(R.id.cardsetimage), null, ExpansionImageHelper.ExpansionImageSize.LARGE);
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
@@ -390,7 +441,7 @@ public class CardHelpers {
 
         public String mSet;
         public String mSetCode;
-        String mNumber;
+        public String mNumber;
 
         public Boolean mIsFoil;
         public MarketPriceInfo mPrice;

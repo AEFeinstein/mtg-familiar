@@ -111,6 +111,8 @@ android {
             //findbugs
         }
         debug {
+            minifyEnabled false
+            debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
         }
@@ -143,7 +145,7 @@ dependencies {
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'com.github.woxthebox:draglistview:1.7.2'
     implementation 'org.jetbrains:annotations:22.0.0'
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
@@ -181,7 +183,7 @@ dependencies {
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.11.2'
+    testImplementation 'org.mockito:mockito-core:3.12.1'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'

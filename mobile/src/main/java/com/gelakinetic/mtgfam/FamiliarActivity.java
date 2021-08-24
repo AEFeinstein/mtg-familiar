@@ -902,8 +902,8 @@ public class FamiliarActivity extends AppCompatActivity {
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(this, false, deepLinkHandle);
                         boolean screenLaunched = false;
-                        if (Objects.requireNonNull(data.getScheme()).toLowerCase().equals("card") &&
-                                data.getAuthority().toLowerCase().equals("multiverseid")) {
+                        if (Objects.requireNonNull(data.getScheme()).equalsIgnoreCase("card") &&
+                                data.getAuthority().equalsIgnoreCase("multiverseid")) {
                             if (data.getLastPathSegment() == null) {
                                 /* Home screen deep link */
                                 launchHomeScreen();

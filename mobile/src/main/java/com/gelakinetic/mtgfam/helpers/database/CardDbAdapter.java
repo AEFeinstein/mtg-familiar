@@ -527,7 +527,9 @@ public class CardDbAdapter {
                 }
                 sql.append(field);
             }
-            sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name);
+            sql.append(" FROM " + DATABASE_TABLE_CARDS +
+                    " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                    " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name);
             if (offlineOnly) {
                 sql.append(" AND " + KEY_ONLINE_ONLY + " = 0");
             }
@@ -539,6 +541,10 @@ public class CardDbAdapter {
                 sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL + " DESC, " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
             } else {
                 sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
+            }
+
+            if (fields.contains(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER)) {
+                sql.append(", ").append(CardDbAdapter.DATABASE_TABLE_CARDS).append(".").append(CardDbAdapter.KEY_NUMBER).append(" ASC");
             }
 
             FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
@@ -602,7 +608,7 @@ public class CardDbAdapter {
      * @return A Cursor with the requested information
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCardByNameAndSet(String name, String setCode, List<String> fields,
+    public static Cursor fetchCardByNameAndSet(String name, String setCode, String cardNumber, List<String> fields,
                                                SQLiteDatabase mDb)
             throws FamiliarDbException {
         try {
@@ -621,7 +627,15 @@ public class CardDbAdapter {
                 sql.append(field);
             }
 
-            sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name).append(" COLLATE NOCASE").append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = ").append(setCode).append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
+            sql.append(" FROM " + DATABASE_TABLE_CARDS +
+                    " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                    " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name).append(" COLLATE NOCASE")
+                    .append(" AND ")
+                    .append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = ").append(setCode);
+            if (null != cardNumber && !cardNumber.isEmpty()) {
+                sql.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_NUMBER).append(" = ").append(sanitizeString(cardNumber, false));
+            }
+            sql.append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
 
             FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
             Cursor c = mDb.rawQuery(sql.toString(), null);
@@ -678,10 +692,13 @@ public class CardDbAdapter {
                 }
                 sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE");
                 if (sanitizeString(card.getExpansion(), false).length() > 0) {
-                    sql.append(" AND ").append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
-                } else {
-                    sql.append(")");
+                    sql.append(" AND ").append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false));
+
+                    if (sanitizeString(card.getNumber(), false).length() > 0) {
+                        sql.append(" AND ").append("c_").append(KEY_NUMBER).append(" = ").append(sanitizeString(card.getNumber(), false));
+                    }
                 }
+                sql.append(")");
             }
             sql.append(" ORDER BY s_").append(KEY_DATE).append(" DESC");
 

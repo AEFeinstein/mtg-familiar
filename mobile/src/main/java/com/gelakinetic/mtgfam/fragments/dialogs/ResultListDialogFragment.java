@@ -72,7 +72,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.result_list_Add_to_wishlist)
                         .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getActivity(),
                                 new WishlistHelpers.CompressedWishlistInfo(
-                                        new MtgCard(cardName, cardSet, false, 1, false), 0)))
+                                        new MtgCard(cardName, cardSet, "", false, 1, false), 0)))
                         .negativeText(R.string.result_list_Add_to_decklist)
                         .onNegative((dialog, which) -> {
                             // Show the dialog to pick a deck
@@ -120,7 +120,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                                 }
                                 if (!entryIncremented) {
                                     // Add a new card to the deck
-                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
+                                    decklist.add(new MtgCard(cardName, cardSet, "", false, 1, false));
                                 }
 
                                 // Write the decklist back

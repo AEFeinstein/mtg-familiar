@@ -279,8 +279,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
                                 /* Get the card ID, and send it to a new CardViewPagerFragment */
                                 cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).getName(),
-                                        lSide.get(positionForDialog).getExpansion(), Collections.singletonList(
-                                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
+                                        lSide.get(positionForDialog).getExpansion(), lSide.get(positionForDialog).getNumber(),
+                                        Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
                             }
 
                             Bundle args = new Bundle();
@@ -351,13 +351,16 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, false, database);
+                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false, false, false, database);
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
                             sets.add(new ExpansionImageHelper.ExpansionImageData(
                                     cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)),
                                     cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)),
-                                    (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY)), 0));
+                                    (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY)),
+                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER)),
+                                    0));
                             cards.moveToNext();
                         }
                     } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
@@ -386,6 +389,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                                 String name = lSide.get(positionForDialog).getName();
                                 String set = data.getSetCode();
+                                String number = data.getSetNumber();
                                 int numberOf = lSide.get(positionForDialog).mNumberOf;
 
                                 /* See if the new set can be foil */
@@ -403,7 +407,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 try {
-                                    lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
+                                    lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, number, isFoil, numberOf));
 
                                     /* Reload and notify the adapter */
                                     getParentTradeFragment().loadPrice(lSide.get(positionForDialog));

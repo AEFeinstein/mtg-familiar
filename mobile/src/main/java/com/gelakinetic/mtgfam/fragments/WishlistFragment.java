@@ -152,7 +152,7 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         try {
-            MtgCard card = new MtgCard(getActivity(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
+            MtgCard card = new MtgCard(getActivity(), name, null, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
             CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
             /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
@@ -393,7 +393,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (cwi.getName().equals(data.getName())) {
                     /* Find all foil and non foil compressed items with the same set code */
                     for (IndividualSetInfo isi : cwi.mInfo) {
-                        if (isi.mSetCode.equals(data.getExpansion())) {
+                        if (isi.mSetCode.equals(data.getExpansion()) &&
+                                isi.mNumber.equals(data.getNumber())) {
                             /* Set the whole price info object */
                             if (result != null) {
                                 isi.mPrice = result;
@@ -652,7 +653,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         color = R.attr.color_text;
                         break;
                 }
-                String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
+                String setAndRarity = String.format("%s (%s) (%s)", isi.mSet, isi.mNumber, isi.mRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
                         ContextCompat.getColor(requireContext(), getResourceIdFromAttr(color)));
