@@ -76,6 +76,7 @@ public class WishlistFragment extends FamiliarListFragment {
     /* The wishlist and adapter */
     public final List<CompressedWishlistInfo> mCompressedWishlist = Collections.synchronizedList(new ArrayList<>());
     private int mOrderAddedIdx = 0;
+    private boolean mWishlistReadError = false;
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -118,10 +119,12 @@ public class WishlistFragment extends FamiliarListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        /* unsort, then save the wishlist */
-        sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-        synchronized (mCompressedWishlist) {
-            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+        if (!mWishlistReadError) {
+            /* unsort, then save the wishlist */
+            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+            synchronized (mCompressedWishlist) {
+                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            }
         }
     }
 
@@ -263,9 +266,12 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
                 }
             } catch (FamiliarDbException e) {
+                mWishlistReadError = true;
                 handleFamiliarDbException(true);
+                return;
             }
         }
+        mWishlistReadError = false;
     }
 
     /**
@@ -470,6 +476,23 @@ public class WishlistFragment extends FamiliarListFragment {
         }
     }
 
+    /**
+     * Clear the current wishlist
+     */
+    public void clearTrade() {
+        WishlistHelpers.ResetCards(this.requireContext());
+        synchronized (mCompressedWishlist) {
+            mCompressedWishlist.clear();
+        }
+        getCardDataAdapter(0).notifyDataSetChanged();
+        updateTotalPrices(0);
+        /* Clear input too */
+        clearCardNameInput();
+        clearCardNumberInput();
+        uncheckFoilCheckbox();
+        mWishlistReadError = false;
+    }
+
     class WishlistViewHolder extends CardDataViewHolder {
 
         /* Card Information */
@@ -499,13 +522,14 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public void onClickNotSelectMode(View view, int position) {
-            // Make sure the wishlist is written first in the proper order
-            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            synchronized (mCompressedWishlist) {
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            if (!mWishlistReadError) {
+                // Make sure the wishlist is written first in the proper order
+                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+                synchronized (mCompressedWishlist) {
+                    WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+                }
+                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
             }
-            sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
-
             // Then show the dialog
             showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, getCardName());
         }
@@ -539,12 +563,14 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemRemovedFinal() {
-            // Unsort, save, then sort the wishlist
-            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            synchronized (this.items) {
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), this.items);
+            if (!mWishlistReadError) {
+                // Unsort, save, then sort the wishlist
+                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+                synchronized (this.items) {
+                    WishlistHelpers.WriteCompressedWishlist(getActivity(), this.items);
+                }
+                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
             }
-            sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
         }
 
         @Override

@@ -86,6 +86,7 @@ public class TradeFragment extends FamiliarListFragment {
     private int mOrderAddedIdx = 0;
     private TextView mTradeNameView;
     private TextView mTradePriceDifference;
+    private boolean mTradeReadError = false;
 
     /**
      * Initialize the view and set up the button actions.
@@ -243,6 +244,11 @@ public class TradeFragment extends FamiliarListFragment {
      * @param tradeName The name of the trade, to be used as a file name
      */
     public void saveTrade(String tradeName) {
+        // Don't write the trade if there was a problem reading it
+        if (mTradeReadError) {
+            return;
+        }
+
         FileOutputStream fos;
 
         /* Revert to added-order before saving */
@@ -310,8 +316,10 @@ public class TradeFragment extends FamiliarListFragment {
                 } catch (FileNotFoundException e) {
                     /* Do nothing, the autosave doesn't exist */
                 } catch (IOException | IllegalArgumentException e) {
+                    mTradeReadError = true;
                     SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
                             SnackbarWrapper.LENGTH_LONG);
+                    return;
                 }
             }
         }
@@ -336,8 +344,11 @@ public class TradeFragment extends FamiliarListFragment {
                 }
             }
         } catch (FamiliarDbException fde) {
+            mTradeReadError = true;
             handleFamiliarDbException(true);
+            return;
         }
+        mTradeReadError = false;
     }
 
     /**
@@ -635,6 +646,7 @@ public class TradeFragment extends FamiliarListFragment {
         clearCardNameInput();
         clearCardNumberInput();
         uncheckFoilCheckbox();
+        mTradeReadError = false;
     }
 
     private static class TradeComparator implements Comparator<MtgCard>, Serializable {
