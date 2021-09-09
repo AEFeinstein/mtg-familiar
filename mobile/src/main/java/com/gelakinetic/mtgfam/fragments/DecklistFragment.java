@@ -552,14 +552,14 @@ public class DecklistFragment extends FamiliarListFragment {
         if (!this.isVisible()) {
             return;
         }
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
         DecklistDialogFragment newFragment = new DecklistDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         arguments.putString(DecklistDialogFragment.NAME_KEY, cardName);
         arguments.putBoolean(DecklistDialogFragment.SIDE_KEY, isSideboard);
         newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
 
     }
 

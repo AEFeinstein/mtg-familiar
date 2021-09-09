@@ -216,7 +216,7 @@ public class TradeFragment extends FamiliarListFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         if (id == TradeDialogFragment.DIALOG_SORT) {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
@@ -224,7 +224,7 @@ public class TradeFragment extends FamiliarListFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getTradeSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             /* Create and show the dialog. */
             TradeDialogFragment newFragment = new TradeDialogFragment();
@@ -233,7 +233,7 @@ public class TradeFragment extends FamiliarListFragment {
             arguments.putInt(TradeDialogFragment.ID_SIDE, sideForDialog);
             arguments.putInt(TradeDialogFragment.ID_POSITION, positionForDialog);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
 
     }

@@ -386,14 +386,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         LifeCounterDialogFragment newFragment = new LifeCounterDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**

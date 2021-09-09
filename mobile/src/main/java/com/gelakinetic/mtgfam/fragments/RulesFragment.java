@@ -360,11 +360,11 @@ public class RulesFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         RulesDialogFragment newFragment = new RulesDialogFragment();
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**

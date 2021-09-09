@@ -241,11 +241,11 @@ public class HtmlDocFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         HtmlDialogFragment newFragment = new HtmlDialogFragment();
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**

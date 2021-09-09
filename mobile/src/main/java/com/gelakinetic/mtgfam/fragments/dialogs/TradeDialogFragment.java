@@ -177,7 +177,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         }
                         aaSide.notifyDataSetChanged();
                         getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
-                        getParentTradeFragment().removeDialog(getFragmentManager());
+                        getParentTradeFragment().removeDialog(getParentFragmentManager());
                     });
 
                     /* If this has a custom price, show the button to default the price */
@@ -298,7 +298,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
                             DatabaseManager.closeDatabase(getActivity(), infoHandle);
                         }
-                        getParentTradeFragment().removeDialog(getFragmentManager());
+                        getParentTradeFragment().removeDialog(getParentFragmentManager());
                     });
 
                     /* Set up the button to change the set of this card */

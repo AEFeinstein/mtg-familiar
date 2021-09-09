@@ -329,7 +329,7 @@ public class CardHelpers {
                         } finally {
                             DatabaseManager.closeDatabase(fragment.getActivity(), showCardHandle);
                         }
-                        fragment.removeDialog(fragment.getFragmentManager());
+                        fragment.removeDialog(fragment.getParentFragmentManager());
                     });
         } else {
             customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);

@@ -921,14 +921,14 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         CardViewDialogFragment newFragment = new CardViewDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**
@@ -1067,7 +1067,7 @@ public class CardViewFragment extends FamiliarFragment {
                         () -> {
                             if (mPriceInfo == null) {
                                 // This was a failure
-                                CardViewFragment.this.removeDialog(getFragmentManager());
+                                CardViewFragment.this.removeDialog(getParentFragmentManager());
                                 if (null != mErrorMessage) {
                                     SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
                                 }
@@ -1354,7 +1354,7 @@ public class CardViewFragment extends FamiliarFragment {
                     /* eat it */
                 }
             } else {
-                result.removeDialog(result.getFragmentManager());
+                result.removeDialog(result.getParentFragmentManager());
                 SnackbarWrapper.makeAndShowText(result.mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
             }
             result.mActivity.clearLoading();

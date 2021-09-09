@@ -349,7 +349,7 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         if (id == WishlistDialogFragment.DIALOG_SORT) {
@@ -358,14 +358,14 @@ public class WishlistFragment extends FamiliarListFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getWishlistSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             WishlistDialogFragment newFragment = new WishlistDialogFragment();
             Bundle arguments = new Bundle();
             arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
             arguments.putString(WishlistDialogFragment.NAME_KEY, cardName);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
     }
 
