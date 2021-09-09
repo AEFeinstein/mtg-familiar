@@ -21,10 +21,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CatalogData;
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategoryGroups;
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.GetProductInformationOptions;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

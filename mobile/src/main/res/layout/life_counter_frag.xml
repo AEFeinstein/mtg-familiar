@@ -64,7 +64,7 @@
             android:padding="15dp"
             android:scaleType="center"
             app:srcCompat="@drawable/lc_life"
-            android:tint="?attr/lc_enabled" />
+            app:tint="?attr/lc_enabled" />
 
         <ImageView
             android:id="@+id/poison_button"
@@ -75,7 +75,7 @@
             android:padding="15dp"
             android:scaleType="center"
             app:srcCompat="@drawable/lc_poison"
-            android:tint="?attr/lc_enabled" />
+            app:tint="?attr/lc_enabled" />
 
         <ImageView
             android:id="@+id/commander_button"
@@ -86,7 +86,7 @@
             android:padding="15dp"
             android:scaleType="center"
             app:srcCompat="@drawable/lc_commander"
-            android:tint="?attr/lc_enabled" />
+            app:tint="?attr/lc_enabled" />
 
         <ImageView
             android:id="@+id/reset_button"

@@ -8,8 +8,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Switch;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ShareCompat;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -266,8 +266,8 @@ public class FamiliarLogger {
         LayoutInflater inflater = familiarActivity.getLayoutInflater();
         @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_logging, null, false);
         assert dialogLayout != null;
-        ((Switch) dialogLayout.findViewById(R.id.logging_switch)).setChecked(PreferenceAdapter.getLoggingPref(familiarActivity));
-        ((Switch) dialogLayout.findViewById(R.id.logging_switch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+        ((SwitchCompat) dialogLayout.findViewById(R.id.logging_switch)).setChecked(PreferenceAdapter.getLoggingPref(familiarActivity));
+        ((SwitchCompat) dialogLayout.findViewById(R.id.logging_switch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
             /* delete the log if logging is being disabled */
             if (!isChecked) {
                 //noinspection ResultOfMethodCallIgnored
