@@ -145,10 +145,10 @@ public class CardHelpers {
             emptyNumberSetCodes.put(false, new ArrayList<>());
 
             while (!cards.isAfterLast()) {
-                String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
-                String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
-                char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                String setCode = CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_SET);
+                String setName = CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_NAME);
+                char rarity = (char) CardDbAdapter.getIntFromCursor(cards, CardDbAdapter.KEY_RARITY);
+                String number = CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_NUMBER);
 
                 int[] numberOfCards = getNumberOfCardsInList(cardList, mCardName, setCode, number, isSideboard, emptyNumberSetCodes);
 

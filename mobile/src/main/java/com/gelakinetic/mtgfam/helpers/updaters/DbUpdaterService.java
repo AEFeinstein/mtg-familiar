@@ -213,8 +213,8 @@ public class DbUpdaterService extends IntentService {
                     if (setCursor != null) {
                         setCursor.moveToFirst();
                         while (!setCursor.isAfterLast()) {
-                            String code = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
-                            String digest = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_DIGEST));
+                            String code = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                            String digest = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_DIGEST);
                             storedDigests.put(code, digest);
                             currentSetCodes.add(code);
                             setCursor.moveToNext();

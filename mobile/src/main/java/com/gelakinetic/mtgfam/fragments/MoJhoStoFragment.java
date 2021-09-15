@@ -233,7 +233,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
             /* add a fragment */
             Bundle args = new Bundle();
-            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{permanents.getLong(permanents.getColumnIndex(CardDbAdapter.KEY_ID))});
+            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.getLongFromCursor(permanents, CardDbAdapter.KEY_ID)});
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
             startNewFragment(cvpFrag, args);
@@ -281,11 +281,11 @@ public class MoJhoStoFragment extends FamiliarFragment {
             Bundle args = new Bundle();
 
             spells.moveToPosition(pos[0]);
-            args.putLong(ResultListFragment.CARD_ID_0, spells.getLong(spells.getColumnIndex(CardDbAdapter.KEY_ID)));
+            args.putLong(ResultListFragment.CARD_ID_0, CardDbAdapter.getLongFromCursor(spells, CardDbAdapter.KEY_ID));
             spells.moveToPosition(pos[1]);
-            args.putLong(ResultListFragment.CARD_ID_1, spells.getLong(spells.getColumnIndex(CardDbAdapter.KEY_ID)));
+            args.putLong(ResultListFragment.CARD_ID_1, CardDbAdapter.getLongFromCursor(spells, CardDbAdapter.KEY_ID));
             spells.moveToPosition(pos[2]);
-            args.putLong(ResultListFragment.CARD_ID_2, spells.getLong(spells.getColumnIndex(CardDbAdapter.KEY_ID)));
+            args.putLong(ResultListFragment.CARD_ID_2, CardDbAdapter.getLongFromCursor(spells, CardDbAdapter.KEY_ID));
 
             /* add a fragment */
             ResultListFragment rlFrag = new ResultListFragment();

@@ -756,7 +756,6 @@ public class FamiliarActivity extends AppCompatActivity {
                             File[] listFiles = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
-                                    //noinspection ResultOfMethodCallIgnored
                                     cachedFile.delete();
                                 }
                             }
@@ -767,7 +766,6 @@ public class FamiliarActivity extends AppCompatActivity {
                             File[] listFiles = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
-                                    //noinspection ResultOfMethodCallIgnored
                                     cachedFile.delete();
                                 }
                             }
@@ -856,7 +854,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             if (cursor.getCount() != 0) {
                                 isDeepLink = true;
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                                        new long[]{CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             }
                             if (args.size() == 0) {
                                 throw new Exception("Not Found");
@@ -926,7 +924,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         if (cursor != null) {
                             if (cursor.getCount() != 0) {
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                                        new long[]{CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             } else {
                                 /* empty cursor, just return */
                                 SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);

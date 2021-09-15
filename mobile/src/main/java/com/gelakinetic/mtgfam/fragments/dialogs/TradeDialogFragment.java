@@ -284,8 +284,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
 
                             Bundle args = new Bundle();
-                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
-                                    cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.getLongFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
 
                             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
@@ -356,10 +355,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
                             sets.add(new ExpansionImageHelper.ExpansionImageData(
-                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)),
-                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)),
-                                    (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY)),
-                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER)),
+                                    CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_NAME),
+                                    CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_SET),
+                                    (char) CardDbAdapter.getIntFromCursor(cards, CardDbAdapter.KEY_RARITY),
+                                    CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_NUMBER),
                                     0));
                             cards.moveToNext();
                         }

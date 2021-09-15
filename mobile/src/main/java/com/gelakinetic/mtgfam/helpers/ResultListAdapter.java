@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.Locale;
 
@@ -156,89 +157,93 @@ public class ResultListAdapter extends SimpleCursorAdapter {
 
             TextView textField = view.findViewById(mTo[i]);
 
-            switch (mFrom[i]) {
-                case CardDbAdapter.KEY_NAME: {
-                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                    textField.setText(name);
-                    break;
-                }
-                case CardDbAdapter.KEY_MANACOST: {
-                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                    hideCost = false;
-                    CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
-                    textField.setText(csq);
-                    break;
-                }
-                case CardDbAdapter.KEY_SET: {
-                    char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                    textField.setText(name);
-                    switch (rarity) {
-                        case 'c':
-                        case 'C':
-                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_common)));
-                            break;
-                        case 'u':
-                        case 'U':
-                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_uncommon)));
-                            break;
-                        case 'r':
-                        case 'R':
-                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_rare)));
-                            break;
-                        case 'm':
-                        case 'M':
-                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_mythic)));
-                            break;
-                        case 't':
-                        case 'T':
-                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_timeshifted)));
-                            break;
+            try {
+                switch (mFrom[i]) {
+                    case CardDbAdapter.KEY_NAME: {
+                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        textField.setText(name);
+                        break;
                     }
+                    case CardDbAdapter.KEY_MANACOST: {
+                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        hideCost = false;
+                        CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
+                        textField.setText(csq);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_SET: {
+                        char rarity = (char) CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_RARITY);
+                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        textField.setText(name);
+                        switch (rarity) {
+                            case 'c':
+                            case 'C':
+                                textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_common)));
+                                break;
+                            case 'u':
+                            case 'U':
+                                textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_uncommon)));
+                                break;
+                            case 'r':
+                            case 'R':
+                                textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_rare)));
+                                break;
+                            case 'm':
+                            case 'M':
+                                textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_mythic)));
+                                break;
+                            case 't':
+                            case 'T':
+                                textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_timeshifted)));
+                                break;
+                        }
 
-                    if (PreferenceAdapter.getSetPref(context)) {
-                        ExpansionImageHelper.loadExpansionImage(context, name, rarity, view.findViewById(R.id.cardsetimage), view.findViewById(R.id.cardset), ExpansionImageHelper.ExpansionImageSize.LARGE);
+                        if (PreferenceAdapter.getSetPref(context)) {
+                            ExpansionImageHelper.loadExpansionImage(context, name, rarity, view.findViewById(R.id.cardsetimage), view.findViewById(R.id.cardset), ExpansionImageHelper.ExpansionImageSize.LARGE);
+                        }
+                        break;
                     }
-                    break;
-                }
-                case CardDbAdapter.KEY_RARITY: {
-                    char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    textField.setText(String.format(Locale.getDefault(), "(%c)", rarity));
-                    break;
-                }
-                case CardDbAdapter.KEY_SUPERTYPE: {
-                    String name = CardDbAdapter.getTypeLine(cursor);
-                    hideType = false;
-                    textField.setText(name);
-                    break;
-                }
-                case CardDbAdapter.KEY_ABILITY: {
-                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                    hideAbility = false;
-                    CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
-                    textField.setText(csq);
-                    break;
-                }
-                case CardDbAdapter.KEY_POWER:
-                case CardDbAdapter.KEY_TOUGHNESS: {
-                    float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                    boolean shouldShowSign =
-                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
-                    if (p != CardDbAdapter.NO_ONE_CARES) {
-                        hidePT = false;
-                        textField.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign));
+                    case CardDbAdapter.KEY_RARITY: {
+                        char rarity = (char) CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_RARITY);
+                        textField.setText(String.format(Locale.getDefault(), "(%c)", rarity));
+                        break;
                     }
-                    break;
-                }
-                case CardDbAdapter.KEY_LOYALTY: {
-                    float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                    if (l != CardDbAdapter.NO_ONE_CARES) {
-                        hideLoyalty = false;
-                        ((TextView) textField.findViewById(R.id.cardt)).setText(CardDbAdapter.getPrintedPTL(l, false));
+                    case CardDbAdapter.KEY_SUPERTYPE: {
+                        String name = CardDbAdapter.getTypeLine(cursor);
+                        hideType = false;
+                        textField.setText(name);
+                        break;
                     }
-                    break;
+                    case CardDbAdapter.KEY_ABILITY: {
+                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        hideAbility = false;
+                        CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
+                        textField.setText(csq);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_POWER:
+                    case CardDbAdapter.KEY_TOUGHNESS: {
+                        float p = CardDbAdapter.getFloatFromCursor(cursor, mFrom[i]);
+                        boolean shouldShowSign =
+                                CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_SET).equals("UST") &&
+                                        CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_ABILITY).contains("Augment {");
+                        if (p != CardDbAdapter.NO_ONE_CARES) {
+                            hidePT = false;
+                            textField.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign));
+                        }
+                        break;
+                    }
+                    case CardDbAdapter.KEY_LOYALTY: {
+                        float l = CardDbAdapter.getFloatFromCursor(cursor, mFrom[i]);
+                        if (l != CardDbAdapter.NO_ONE_CARES) {
+                            hideLoyalty = false;
+                            ((TextView) textField.findViewById(R.id.cardt)).setText(CardDbAdapter.getPrintedPTL(l, false));
+                        }
+                        break;
+                    }
                 }
+            } catch (FamiliarDbException e) {
+                // Eat it
             }
         }
 

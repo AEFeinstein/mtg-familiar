@@ -270,7 +270,6 @@ public class FamiliarLogger {
         ((SwitchCompat) dialogLayout.findViewById(R.id.logging_switch)).setOnCheckedChangeListener((buttonView, isChecked) -> {
             /* delete the log if logging is being disabled */
             if (!isChecked) {
-                //noinspection ResultOfMethodCallIgnored
                 new File(mExternalFileDirPath, DB_LOG_FILE_NAME).delete();
             }
             /* Save the preference */

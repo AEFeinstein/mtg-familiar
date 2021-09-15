@@ -372,8 +372,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
 
                     for (int i = 0; i < setCursor.getCount(); i++) {
-                        frag.mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
-                        frag.mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        frag.mSetSymbols[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                        frag.mSetNames[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_NAME);
                         setCursor.moveToNext();
                     }
                 }
@@ -386,7 +386,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     frag.mFormatNames = new String[formatCursor.getCount()];
 
                     for (int i = 0; i < formatCursor.getCount(); i++) {
-                        frag.mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        frag.mFormatNames[i] = CardDbAdapter.getStringFromCursor(formatCursor, CardDbAdapter.KEY_NAME);
                         formatCursor.moveToNext();
                     }
                 }

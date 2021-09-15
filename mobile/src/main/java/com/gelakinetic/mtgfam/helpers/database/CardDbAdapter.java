@@ -323,6 +323,42 @@ public class CardDbAdapter {
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
 
+    public static String getStringFromCursor(Cursor cursor, String columnName) throws FamiliarDbException {
+        int colIdx = cursor.getColumnIndex(columnName);
+        if (colIdx >= 0) {
+            return cursor.getString(colIdx);
+        } else {
+            throw new FamiliarDbException(new Exception("Invalid Column " + columnName));
+        }
+    }
+
+    public static int getIntFromCursor(Cursor cursor, String columnName) throws FamiliarDbException {
+        int colIdx = cursor.getColumnIndex(columnName);
+        if (colIdx >= 0) {
+            return cursor.getInt(colIdx);
+        } else {
+            throw new FamiliarDbException(new Exception("Invalid Column " + columnName));
+        }
+    }
+
+    public static long getLongFromCursor(Cursor cursor, String columnName) throws FamiliarDbException {
+        int colIdx = cursor.getColumnIndex(columnName);
+        if (colIdx >= 0) {
+            return cursor.getLong(colIdx);
+        } else {
+            throw new FamiliarDbException(new Exception("Invalid Column " + columnName));
+        }
+    }
+
+    public static float getFloatFromCursor(Cursor cursor, String columnName) throws FamiliarDbException {
+        int colIdx = cursor.getColumnIndex(columnName);
+        if (colIdx >= 0) {
+            return cursor.getFloat(colIdx);
+        } else {
+            throw new FamiliarDbException(new Exception("Invalid Column " + columnName));
+        }
+    }
+
     /* The various types of multi-cards */
     public enum MultiCardType {
         NOPE,
@@ -740,7 +776,7 @@ public class CardDbAdapter {
         try (Cursor cursor = mDb.rawQuery(sql, null)) {
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
-                return cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
+                return CardDbAdapter.getLongFromCursor(cursor, CardDbAdapter.KEY_ID);
             }
             return -1;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
@@ -787,7 +823,7 @@ public class CardDbAdapter {
                 long[] ids = new long[cursor.getCount()];
                 for (int i = 0; i < cursor.getCount(); i++) {
                     cursor.moveToNext();
-                    ids[i] = cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
+                    ids[i] = CardDbAdapter.getLongFromCursor(cursor, CardDbAdapter.KEY_ID);
                 }
                 return ids;
             }
@@ -1528,7 +1564,7 @@ public class CardDbAdapter {
                 new String[]{KEY_ID}, statement, null, null, null,
                 KEY_ID, null)) {
             c.moveToFirst();
-            return c.getInt(c.getColumnIndex(KEY_ID));
+            return CardDbAdapter.getIntFromCursor(c, KEY_ID);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } catch (CursorIndexOutOfBoundsException e) {
@@ -1559,7 +1595,7 @@ public class CardDbAdapter {
 //                new String[]{KEY_NAME}, statement, null, null, null,
 //                KEY_NAME, null)) {
 //            c.moveToFirst();
-//            return c.getString(c.getColumnIndex(KEY_NAME));
+//            return CardDbAdapter.getStringFromCursor(c, KEY_NAME);
 //        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
 //            throw new FamiliarDbException(e);
 //        }
@@ -1583,7 +1619,7 @@ public class CardDbAdapter {
                 new String[]{KEY_ID}, statement, null, null, null,
                 KEY_NAME, null)) {
             c.moveToFirst();
-            return c.getLong(c.getColumnIndex(KEY_ID));
+            return CardDbAdapter.getLongFromCursor(c, KEY_ID);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -1706,7 +1742,7 @@ public class CardDbAdapter {
 //                    retVal.append(" // ");
 //                }
 //                // Append the card name
-//                retVal.append(c.getString(c.getColumnIndex(KEY_NAME)));
+//                CardDbAdapter.getStringFromCursor(retVal.append(c, KEY_NAME));
 //                c.moveToNext();
 //            }
 //            return retVal.toString();
@@ -1735,7 +1771,7 @@ public class CardDbAdapter {
         try (Cursor c = mDb.rawQuery(statement, null)) {
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                int multiverseId = c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
+                int multiverseId = CardDbAdapter.getIntFromCursor(c, KEY_MULTIVERSEID);
                 if (multiverseId > 0) {
                     return multiverseId;
                 }
@@ -1891,7 +1927,7 @@ public class CardDbAdapter {
             cursor = database.rawQuery(sql, null);
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
-                return cursor.getString(cursor.getColumnIndex(KEY_SET));
+                return CardDbAdapter.getStringFromCursor(cursor, KEY_SET);
             } else {
                 return setCode;
             }
@@ -1930,10 +1966,10 @@ public class CardDbAdapter {
      * @param cCardById The cursor pointing to a card
      * @return A String with the full type line
      */
-    public static String getTypeLine(Cursor cCardById) {
+    public static String getTypeLine(Cursor cCardById) throws FamiliarDbException {
         StringBuilder typeLine = new StringBuilder();
-        String supertype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUPERTYPE));
-        String subtype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUBTYPE));
+        String supertype = CardDbAdapter.getStringFromCursor(cCardById, CardDbAdapter.KEY_SUPERTYPE);
+        String subtype = CardDbAdapter.getStringFromCursor(cCardById, CardDbAdapter.KEY_SUBTYPE);
 
         typeLine.append(supertype);
         if (subtype.length() > 0) {
@@ -2054,7 +2090,7 @@ public class CardDbAdapter {
             c = mDb.rawQuery(sql, null);
 
             c.moveToFirst();
-            return c.getInt(c.getColumnIndex(KEY_LEGALITY));
+            return CardDbAdapter.getIntFromCursor(c, KEY_LEGALITY);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
@@ -2125,7 +2161,7 @@ public class CardDbAdapter {
 //        try (Cursor cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
 //                KEY_CODE + "=\"" + code + "\"", null, null, null, null)) {
 //            cursor.moveToFirst();
-//            return cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
+//            return CardDbAdapter.getStringFromCursor(cursor, KEY_CODE_MTGI);
 //        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
 //            throw new FamiliarDbException(e);
 //        }
@@ -2150,7 +2186,7 @@ public class CardDbAdapter {
                 + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null)) {
             if (c != null && c.getCount() > 0) {
                 c.moveToFirst();
-                return c.getString(c.getColumnIndex(KEY_NAME));
+                return CardDbAdapter.getStringFromCursor(c, KEY_NAME);
             } else return "";
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -2174,7 +2210,7 @@ public class CardDbAdapter {
 
             if (c != null && c.getCount() > 0) {
                 c.moveToFirst();
-                return (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
+                return (1 == CardDbAdapter.getIntFromCursor(c, KEY_ONLINE_ONLY));
             }
             return false;
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
@@ -2205,7 +2241,7 @@ public class CardDbAdapter {
 //            if (c.getCount() == 0) {
 //                return "";
 //            }
-//            return c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
+//            return CardDbAdapter.getStringFromCursor(c, KEY_NAME_TCGPLAYER);
 //        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
 //            throw new FamiliarDbException(e);
 //        } finally {
@@ -2309,7 +2345,7 @@ public class CardDbAdapter {
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                nonFoilSets.add(c.getString(c.getColumnIndex(KEY_CODE)));
+                nonFoilSets.add(CardDbAdapter.getStringFromCursor(c, KEY_CODE));
                 c.moveToNext();
             }
 
@@ -2368,7 +2404,7 @@ public class CardDbAdapter {
 
             /* Then check if the set contains foils */
             c.moveToFirst();
-            return 0 != c.getInt(c.getColumnIndex(KEY_CAN_BE_FOIL));
+            return 0 != CardDbAdapter.getIntFromCursor(c, KEY_CAN_BE_FOIL);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } finally {
@@ -2397,7 +2433,7 @@ public class CardDbAdapter {
             c = mDb.rawQuery(sql, null);
             c.moveToFirst();
             while (!c.isAfterLast()) {
-                foilSets.add(c.getString(c.getColumnIndex(KEY_CODE)));
+                foilSets.add(CardDbAdapter.getStringFromCursor(c, KEY_CODE));
                 c.moveToNext();
             }
             return foilSets;
@@ -2657,7 +2693,7 @@ public class CardDbAdapter {
                 c = mDb.rawQuery(sql, null);
                 if (c != null) {
                     c.moveToFirst();
-                    return c.getInt(c.getColumnIndex(KEY_POSITION));
+                    return CardDbAdapter.getIntFromCursor(c, KEY_POSITION);
                 }
             }
             return 0;
@@ -2692,7 +2728,7 @@ public class CardDbAdapter {
             c = mDb.rawQuery(sql, null);
             if (c != null) {
                 c.moveToFirst();
-                return c.getString(c.getColumnIndex(KEY_RULE_TEXT));
+                return CardDbAdapter.getStringFromCursor(c, KEY_RULE_TEXT);
             } else {
                 return "";
             }

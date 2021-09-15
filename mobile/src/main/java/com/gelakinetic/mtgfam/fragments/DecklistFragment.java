@@ -118,7 +118,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     boolean deckIsLegal = true;
                     String deckLegality;
                     String format =
-                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                            CardDbAdapter.getStringFromCursor(cFormats, CardDbAdapter.KEY_NAME);
                     synchronized (parentFrag.mCompressedDecklist) {
                         for (CompressedDecklistInfo info : parentFrag.mCompressedDecklist) {
                             if (!info.getName().isEmpty()) { /* Skip the headers */

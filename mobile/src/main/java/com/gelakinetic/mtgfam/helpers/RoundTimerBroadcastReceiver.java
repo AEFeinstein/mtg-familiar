@@ -247,18 +247,13 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
      * @param ringtone The Ringtone to set to use Alarms volume
      */
     private static void setRingtoneAlarmStream(Ringtone ringtone) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            AudioAttributes aa = ringtone.getAudioAttributes();
-            //noinspection WrongConstant
-            new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(aa.getContentType())
-                    .setFlags(aa.getFlags())
-                    .build();
-            ringtone.setAudioAttributes(aa);
-        } else {
-            ringtone.setStreamType(AudioManager.STREAM_ALARM);
-        }
+        AudioAttributes aa = ringtone.getAudioAttributes();
+        new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(aa.getContentType())
+                .setFlags(aa.getFlags())
+                .build();
+        ringtone.setAudioAttributes(aa);
     }
 
     private static void PlayNotificationSound(final Context context, String soundURI) {
