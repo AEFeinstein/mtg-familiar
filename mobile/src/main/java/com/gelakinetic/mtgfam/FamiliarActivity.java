@@ -786,7 +786,7 @@ public class FamiliarActivity extends AppCompatActivity {
             int updateFrequency = Integer.parseInt(PreferenceAdapter.getUpdateFrequency(this));
             int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
-            if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
+            if (((curTime / 1000) - lastLegalityUpdate) > ((long) updateFrequency * 24 * 60 * 60)) {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(new Intent(this, DbUpdaterService.class));

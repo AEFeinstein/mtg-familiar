@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class CategoryGroups {
     private final boolean success;
     public final String[] errors;

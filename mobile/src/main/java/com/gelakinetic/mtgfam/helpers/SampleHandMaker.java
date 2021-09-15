@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class SampleHandMaker {
 
-    private List<MtgCard> mDeck;
+    private final List<MtgCard> mDeck;
     private List<MtgCard> mDeckWithoutHand;
 
     public SampleHandMaker(List<MtgCard> mDeck) {
@@ -103,7 +103,7 @@ public class SampleHandMaker {
         Random rand = new Random(System.currentTimeMillis());
         if (mDeckWithoutHand.size() > 0) {
             int randCard = rand.nextInt(mDeckWithoutHand.size());
-            List<MtgCard> toReturn = new ArrayList<MtgCard>();
+            List<MtgCard> toReturn = new ArrayList<>();
             toReturn.add(mDeckWithoutHand.get(randCard));
             mDeckWithoutHand.remove(randCard);
             return toReturn;

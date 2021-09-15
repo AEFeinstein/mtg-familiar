@@ -58,7 +58,7 @@ public class ExpansionImageHelper {
         }
     }
 
-    private class ChangeSetListViewHolder extends RecyclerView.ViewHolder {
+    private static class ChangeSetListViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView setName;
         private final TextView setNumber;
@@ -87,7 +87,7 @@ public class ExpansionImageHelper {
         }
     }
 
-    public abstract class ChangeSetListAdapter extends RecyclerView.Adapter<ChangeSetListViewHolder> {
+    public abstract static class ChangeSetListAdapter extends RecyclerView.Adapter<ChangeSetListViewHolder> {
 
         private final Context mContext;
         private final ExpansionImageData[] mExpansions;

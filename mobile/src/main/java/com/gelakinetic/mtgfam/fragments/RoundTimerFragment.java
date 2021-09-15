@@ -237,7 +237,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 int minutes = mTimePicker.getMinutes();
                 int seconds = mTimePicker.getSeconds();
 
-                long timeInMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+                long timeInMillis = ((hours * 3600L) + (minutes * 60L) + seconds) * 1000;
                 if (timeInMillis == 0) {
                     return;
                 }

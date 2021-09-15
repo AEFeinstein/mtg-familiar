@@ -374,8 +374,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     }
 
                     /* Build and return the dialog */
-                    ChangeSetListAdapter adapter = (new ExpansionImageHelper()).
-                            new ChangeSetListAdapter(getContext(), sets, ExpansionImageHelper.ExpansionImageSize.LARGE) {
+                    ChangeSetListAdapter adapter =
+                            new ExpansionImageHelper.ChangeSetListAdapter(getContext(), sets, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                         @Override
                         protected void onClick(ExpansionImageData data) {
                             /* Make sure positionForDialog is in bounds */

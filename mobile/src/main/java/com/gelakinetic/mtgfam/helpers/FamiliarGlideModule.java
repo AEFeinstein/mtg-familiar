@@ -35,6 +35,6 @@ public final class FamiliarGlideModule extends AppGlideModule {
     public void applyOptions(@NonNull Context context, @NonNull GlideBuilder builder) {
         super.applyOptions(context, builder);
         builder.setDiskCache(new InternalCacheDiskCacheFactory(context,
-                PreferenceAdapter.getImageCacheSize(context) * 1024 * 1024));
+                (long) PreferenceAdapter.getImageCacheSize(context) * 1024 * 1024));
     }
 }

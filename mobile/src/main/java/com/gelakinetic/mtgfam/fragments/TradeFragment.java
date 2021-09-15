@@ -723,7 +723,7 @@ public class TradeFragment extends FamiliarListFragment {
                             break;
                         }
                         case CardDbAdapter.KEY_RARITY: {
-                            retVal = Character.compare(card1.getRarity(), card1.getRarity());
+                            retVal = Character.compare(card1.getRarity(), card2.getRarity());
                             break;
                         }
                         default: {
