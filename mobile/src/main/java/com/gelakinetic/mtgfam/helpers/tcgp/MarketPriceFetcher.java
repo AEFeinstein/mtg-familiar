@@ -127,8 +127,10 @@ public class MarketPriceFetcher {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                 }
 
-                /* If the TCGPlayer product ID exists */
-                if (-1 != params.getTcgpProductId()) {
+                /* Make sure the TCGPlayer product ID exists */
+                if (0 >= params.getTcgpProductId()) {
+                    return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
+                } else {
                     try {
                         /* Get the product details and for this card */
                         long[] productId = new long[]{params.getTcgpProductId()};
@@ -149,8 +151,6 @@ public class MarketPriceFetcher {
                     } catch (IOException e) {
                         return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                     }
-                } else {
-                    return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                 }
                 return Single.error(lastThrownException);
             }
@@ -312,7 +312,7 @@ public class MarketPriceFetcher {
                                  final Consumer<Throwable> onError, final Runnable onAllDoneUI) throws InstantiationException {
 
         if (0 >= card.getTcgpProductId()) {
-            throw new InstantiationException("card must have a name and expansion to fetch price");
+            throw new InstantiationException(mActivity.getString(R.string.price_error_online_only));
         }
 
         /* Show the loading animation */
