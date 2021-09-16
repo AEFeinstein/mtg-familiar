@@ -93,12 +93,12 @@ task pmdMain(type: Pmd, group: "verification") {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 83
         versionName "3.9.0"
         vectorDrawables.useSupportLibrary true
@@ -111,6 +111,8 @@ android {
             //findbugs
         }
         debug {
+            minifyEnabled false
+            debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
         }
@@ -132,9 +134,9 @@ android {
 dependencies {
 // AndroidX
     annotationProcessor 'androidx.annotation:annotation:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.fragment:fragment:1.3.5'
+    implementation 'androidx.fragment:fragment:1.3.6'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.material:material:1.4.0'
 
@@ -142,13 +144,13 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'com.github.woxthebox:draglistview:1.7.2'
-    implementation 'org.jetbrains:annotations:21.0.1'
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
     implementation 'com.github.machinarius:preferencefragment:0.1.2'
-    implementation 'org.jsoup:jsoup:1.14.1'
+    implementation 'org.jsoup:jsoup:1.14.2'
     implementation 'com.splitwise:tokenautocomplete:3.0.2'
     implementation 'com.google.code.findbugs:annotations:3.0.1', {
         // Need to exclude these, or build is broken by:
@@ -181,7 +183,7 @@ dependencies {
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.11.2'
+    testImplementation 'org.mockito:mockito-core:3.12.1'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'

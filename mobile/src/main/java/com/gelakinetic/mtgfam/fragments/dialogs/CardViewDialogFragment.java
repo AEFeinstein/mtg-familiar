@@ -209,8 +209,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 }
 
                 /* Build and return the dialog */
-                ExpansionImageHelper.ChangeSetListAdapter adapter = (new ExpansionImageHelper()).
-                        new ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
+                ExpansionImageHelper.ChangeSetListAdapter adapter =
+                        new ExpansionImageHelper.ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                     @Override
                     protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
                         getParentCardViewFragment().setInfoFromID(data.getDbId());
@@ -280,6 +280,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 final String cardName = getParentCardViewFragment().mCard.getName();
                 final String cardSet = getParentCardViewFragment().mCard.getExpansion();
+                final String cardNumber = getParentCardViewFragment().mCard.getNumber();
                 final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
 
                 /* If there are no files, don't show the dialog */
@@ -315,7 +316,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 }
                                 if (!entryIncremented) {
                                     // Add a new card to the deck
-                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
+                                    decklist.add(new MtgCard(cardName, cardSet, cardNumber, false, 1, false));
                                 }
 
                                 // Write the decklist back

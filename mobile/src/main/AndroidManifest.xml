@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Adam Feinstein
   ~
   ~ This file is part of MTG Familiar.
@@ -26,6 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -39,13 +39,14 @@
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/Theme.light"
         android:usesCleartextTraffic="true"
         tools:targetApi="Q">
         <activity
             android:name=".FamiliarActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -106,6 +107,7 @@
 
         <activity
             android:name=".MtgAppWidgetConfigure"
+            android:exported="false"
             android:theme="@style/Theme.transparent">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -118,6 +120,7 @@
         <!-- for the round timer -->
         <receiver
             android:name=".helpers.RoundTimerBroadcastReceiver"
+            android:exported="false"
             android:process=":remote" />
 
         <service android:name=".helpers.RoundTimerBroadcastReceiver$TtsService" />
@@ -135,11 +138,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <!-- For the homescreen widget -->
-        <receiver android:name=".helpers.MTGFamiliarAppWidgetProviderDark">
+        <receiver
+            android:name=".helpers.MTGFamiliarAppWidgetProviderDark"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -148,7 +153,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/mtgfamiliar_appwidget_info_dark" />
         </receiver>
-        <receiver android:name=".helpers.MTGFamiliarAppWidgetProviderLight">
+        <receiver
+            android:name=".helpers.MTGFamiliarAppWidgetProviderLight"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

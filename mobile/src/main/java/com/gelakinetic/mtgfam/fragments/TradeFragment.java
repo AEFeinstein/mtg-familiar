@@ -86,6 +86,7 @@ public class TradeFragment extends FamiliarListFragment {
     private int mOrderAddedIdx = 0;
     private TextView mTradeNameView;
     private TextView mTradePriceDifference;
+    private boolean mTradeReadError = false;
 
     /**
      * Initialize the view and set up the button actions.
@@ -155,7 +156,7 @@ public class TradeFragment extends FamiliarListFragment {
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
         final boolean isFoil = checkboxFoilIsChecked();
         try {
-            final MtgCard card = new MtgCard(getActivity(), cardName, null, isFoil, numberOf);
+            final MtgCard card = new MtgCard(getActivity(), cardName, null, null, isFoil, numberOf);
 
             card.setIndex(mOrderAddedIdx++);
 
@@ -215,7 +216,7 @@ public class TradeFragment extends FamiliarListFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         if (id == TradeDialogFragment.DIALOG_SORT) {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
@@ -223,7 +224,7 @@ public class TradeFragment extends FamiliarListFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getTradeSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             /* Create and show the dialog. */
             TradeDialogFragment newFragment = new TradeDialogFragment();
@@ -232,7 +233,7 @@ public class TradeFragment extends FamiliarListFragment {
             arguments.putInt(TradeDialogFragment.ID_SIDE, sideForDialog);
             arguments.putInt(TradeDialogFragment.ID_POSITION, positionForDialog);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
 
     }
@@ -243,6 +244,11 @@ public class TradeFragment extends FamiliarListFragment {
      * @param tradeName The name of the trade, to be used as a file name
      */
     public void saveTrade(String tradeName) {
+        // Don't write the trade if there was a problem reading it
+        if (mTradeReadError) {
+            return;
+        }
+
         FileOutputStream fos;
 
         /* Revert to added-order before saving */
@@ -310,8 +316,10 @@ public class TradeFragment extends FamiliarListFragment {
                 } catch (FileNotFoundException e) {
                     /* Do nothing, the autosave doesn't exist */
                 } catch (IOException | IllegalArgumentException e) {
+                    mTradeReadError = true;
                     SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
                             SnackbarWrapper.LENGTH_LONG);
+                    return;
                 }
             }
         }
@@ -336,8 +344,11 @@ public class TradeFragment extends FamiliarListFragment {
                 }
             }
         } catch (FamiliarDbException fde) {
+            mTradeReadError = true;
             handleFamiliarDbException(true);
+            return;
         }
+        mTradeReadError = false;
     }
 
     /**
@@ -635,6 +646,7 @@ public class TradeFragment extends FamiliarListFragment {
         clearCardNameInput();
         clearCardNumberInput();
         uncheckFoilCheckbox();
+        mTradeReadError = false;
     }
 
     private static class TradeComparator implements Comparator<MtgCard>, Serializable {
@@ -711,7 +723,7 @@ public class TradeFragment extends FamiliarListFragment {
                             break;
                         }
                         case CardDbAdapter.KEY_RARITY: {
-                            retVal = Character.compare(card1.getRarity(), card1.getRarity());
+                            retVal = Character.compare(card1.getRarity(), card2.getRarity());
                             break;
                         }
                         default: {
@@ -809,7 +821,7 @@ public class TradeFragment extends FamiliarListFragment {
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(Objects.requireNonNull(item).getName());
-            holder.mCardSet.setText(item.getSetName());
+            holder.mCardSet.setText(String.format("%s (%s)", item.getSetName(), item.getNumber()));
             ExpansionImageHelper.loadExpansionImage(getContext(), item.getExpansion(), item.getRarity(), holder.mCardSetImage, null, ExpansionImageHelper.ExpansionImageSize.SMALL);
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {

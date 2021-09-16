@@ -553,8 +553,8 @@ public class CardViewFragment extends FamiliarFragment {
                 // For each foreign printing for that card
                 for (String[] lang : allLanguageKeys) {
                     Card.ForeignPrinting fp = new Card.ForeignPrinting(
-                            cAllCardsWithName.getString(cAllCardsWithName.getColumnIndex(lang[1])), lang[0],
-                            cAllCardsWithName.getInt(cAllCardsWithName.getColumnIndex(lang[2])));
+                            CardDbAdapter.getStringFromCursor(cAllCardsWithName, lang[1]), lang[0],
+                            CardDbAdapter.getIntFromCursor(cAllCardsWithName, lang[2]));
                     if (fp.getName() != null && !fp.getName().isEmpty() && !mCard.getForeignPrintings().contains(fp)) {
                         mCard.getForeignPrintings().add(fp);
                     }
@@ -576,17 +576,18 @@ public class CardViewFragment extends FamiliarFragment {
             mPrintings = new LinkedHashSet<>();
             while (!cCardByName.isAfterLast()) {
                 String number =
-                        cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                        CardDbAdapter.getStringFromCursor(cCardByName, CardDbAdapter.KEY_NUMBER);
                 if (!(number == null || number.length() == 0)) {
                     number = " (" + number + ")";
                 } else {
                     number = "";
                 }
                 mPrintings.add(new ExpansionImageHelper.ExpansionImageData(
-                        CardDbAdapter.getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database) + number,
-                        cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)),
-                        (char) cCardByName.getInt(cCardByName.getColumnIndex(CardDbAdapter.KEY_RARITY)),
-                        cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID))));
+                        CardDbAdapter.getSetNameFromCode(CardDbAdapter.getStringFromCursor(cCardByName, CardDbAdapter.KEY_SET), database) + number,
+                        CardDbAdapter.getStringFromCursor(cCardByName, CardDbAdapter.KEY_SET),
+                        (char) CardDbAdapter.getIntFromCursor(cCardByName, CardDbAdapter.KEY_RARITY),
+                        CardDbAdapter.getStringFromCursor(cCardByName, CardDbAdapter.KEY_NUMBER),
+                        CardDbAdapter.getLongFromCursor(cCardByName, CardDbAdapter.KEY_ID)));
                 cCardByName.moveToNext();
             }
         } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
@@ -748,8 +749,8 @@ public class CardViewFragment extends FamiliarFragment {
             if (mCursor.getCount() > 0) {
                 mCursor.moveToFirst();
                 return new MediaStoreInfo(
-                        mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA)),
-                        mCursor.getLong(mCursor.getColumnIndex(MediaStore.Images.Media._ID)));
+                        CardDbAdapter.getStringFromCursor(mCursor, MediaStore.Images.Media.DATA),
+                        CardDbAdapter.getLongFromCursor(mCursor, MediaStore.Images.Media._ID));
             }
         } catch (Exception e) {
             // eat it
@@ -920,14 +921,14 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         CardViewDialogFragment newFragment = new CardViewDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**
@@ -1066,7 +1067,7 @@ public class CardViewFragment extends FamiliarFragment {
                         () -> {
                             if (mPriceInfo == null) {
                                 // This was a failure
-                                CardViewFragment.this.removeDialog(getFragmentManager());
+                                CardViewFragment.this.removeDialog(getParentFragmentManager());
                                 if (null != mErrorMessage) {
                                     SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
                                 }
@@ -1212,7 +1213,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
-                    frag.mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                    frag.mFormats[i] = CardDbAdapter.getStringFromCursor(cFormats, CardDbAdapter.KEY_NAME);
                     switch (CardDbAdapter.checkLegality(frag.mCard.getName(), frag.mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
                             if ("Reserved List".equals(frag.mFormats[i])) {
@@ -1353,7 +1354,7 @@ public class CardViewFragment extends FamiliarFragment {
                     /* eat it */
                 }
             } else {
-                result.removeDialog(result.getFragmentManager());
+                result.removeDialog(result.getParentFragmentManager());
                 SnackbarWrapper.makeAndShowText(result.mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
             }
             result.mActivity.clearLoading();

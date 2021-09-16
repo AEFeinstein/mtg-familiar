@@ -35,12 +35,14 @@ public class ExpansionImageHelper {
         private final String mExpansionCode;
         private final char mRarity;
         private final long mDbId;
+        private final String mNumber;
 
-        public ExpansionImageData(String name, String code, char rarity, long dbID) {
+        public ExpansionImageData(String name, String code, char rarity, String number, long dbID) {
             mExpansionName = name;
             mExpansionCode = code;
             mRarity = rarity;
             mDbId = dbID;
+            mNumber = number;
         }
 
         public String getSetCode() {
@@ -50,11 +52,16 @@ public class ExpansionImageHelper {
         public long getDbId() {
             return mDbId;
         }
+
+        public String getSetNumber() {
+            return mNumber;
+        }
     }
 
-    private class ChangeSetListViewHolder extends RecyclerView.ViewHolder {
+    private static class ChangeSetListViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView setName;
+        private final TextView setNumber;
         private final ImageView setImage;
         private ExpansionImageData data;
 
@@ -63,6 +70,7 @@ public class ExpansionImageHelper {
             super(LayoutInflater.from(view.getContext()).inflate(R.layout.trader_change_set, view, false));
             setName = itemView.findViewById(R.id.changeSetName);
             setImage = itemView.findViewById(R.id.changeSetImage);
+            setNumber = itemView.findViewById(R.id.changeSetNumber);
             itemView.findViewById(R.id.changeSetCombo).setOnClickListener(v -> {
                 if (null != data) {
                     changeSetListAdapter.onClickDismiss(data);
@@ -79,7 +87,7 @@ public class ExpansionImageHelper {
         }
     }
 
-    public abstract class ChangeSetListAdapter extends RecyclerView.Adapter<ChangeSetListViewHolder> {
+    public abstract static class ChangeSetListAdapter extends RecyclerView.Adapter<ChangeSetListViewHolder> {
 
         private final Context mContext;
         private final ExpansionImageData[] mExpansions;
@@ -102,6 +110,7 @@ public class ExpansionImageHelper {
         public void onBindViewHolder(@NonNull ChangeSetListViewHolder changeSetListViewHolder, int i) {
             changeSetListViewHolder.setData(mExpansions[i]);
             changeSetListViewHolder.setName.setText(mExpansions[i].mExpansionName);
+            changeSetListViewHolder.setNumber.setText(mExpansions[i].getSetNumber());
             ExpansionImageHelper.loadExpansionImage(mContext, mExpansions[i].mExpansionCode, mExpansions[i].mRarity, changeSetListViewHolder.getImageView(), null, mImageSize);
         }
 

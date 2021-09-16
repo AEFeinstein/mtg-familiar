@@ -21,7 +21,6 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
@@ -33,9 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class has helpers for reading, writing, and modifying the decklist from different fragments.
@@ -193,28 +190,6 @@ public class DecklistHelpers {
             }
         }
         return readableDecklist.toString();
-
-    }
-
-    public static Pair<Map<String, String>, Map<String, String>> getTargetNumberOfs(
-            String mCardName,
-            ArrayList<MtgCard> decklist,
-            boolean isSideboard) {
-
-        final Map<String, String> targetCardNumberOfs = new HashMap<>();
-        final Map<String, String> targetFoilNumberOfs = new HashMap<>();
-
-        for (MtgCard card : decklist) {
-            if (card.getName().equals(mCardName) && card.isSideboard() == isSideboard) {
-                if (card.mIsFoil) {
-                    targetFoilNumberOfs.put(card.getExpansion(),
-                            String.valueOf(card.mNumberOf));
-                    continue;
-                }
-                targetCardNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
-            }
-        }
-        return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);
 
     }
 

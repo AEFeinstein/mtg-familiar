@@ -30,7 +30,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.Objects;
@@ -107,16 +106,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .content(R.string.wishlist_empty_dialog_text)
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog, which) -> {
-                            WishlistHelpers.ResetCards(getActivity());
-                            synchronized (getParentWishlistFragment().mCompressedWishlist) {
-                                getParentWishlistFragment().mCompressedWishlist.clear();
-                            }
-                            getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                            getParentWishlistFragment().updateTotalPrices(0);
-                            /* Clear input too */
-                            getParentWishlistFragment().clearCardNameInput();
-                            getParentWishlistFragment().clearCardNumberInput();
-                            getParentWishlistFragment().uncheckFoilCheckbox();
+                            getParentWishlistFragment().clearTrade();
                             dialog.dismiss();
                         })
                         .negativeText(R.string.dialog_cancel)

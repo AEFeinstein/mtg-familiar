@@ -91,6 +91,15 @@ public class DecklistFragment extends FamiliarListFragment {
     public static final String[] LEGALITY_DIAOG_FROM = new String[]{"format", "status"};
     public static final int[] LEGALITY_DIALOG_TO = new int[]{R.id.format, R.id.status};
     public final List<HashMap<String, String>> legalityMap = new ArrayList<>();
+    private boolean mDecklistReadError = false;
+
+    /**
+     * @return true if there was an error reading this decklist
+     *         false if everything is OK
+     */
+    public boolean getDecklistReadError() {
+        return mDecklistReadError;
+    }
 
     static class LegalityCheckerTask extends AsyncTask<DecklistFragment, Void, DecklistFragment> {
 
@@ -109,7 +118,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     boolean deckIsLegal = true;
                     String deckLegality;
                     String format =
-                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                            CardDbAdapter.getStringFromCursor(cFormats, CardDbAdapter.KEY_NAME);
                     synchronized (parentFrag.mCompressedDecklist) {
                         for (CompressedDecklistInfo info : parentFrag.mCompressedDecklist) {
                             if (!info.getName().isEmpty()) { /* Skip the headers */
@@ -290,8 +299,10 @@ public class DecklistFragment extends FamiliarListFragment {
             getFamiliarActivity().clearLoading();
         }
         PreferenceAdapter.setLastLoadedDecklist(getContext(), mCurrentDeck);
-        synchronized (mCompressedDecklist) {
-            DecklistHelpers.WriteCompressedDecklist(this.getActivity(), mCompressedDecklist, getCurrentDeckName());
+        if (!mDecklistReadError) {
+            synchronized (mCompressedDecklist) {
+                DecklistHelpers.WriteCompressedDecklist(this.getActivity(), mCompressedDecklist, getCurrentDeckName());
+            }
         }
     }
 
@@ -323,7 +334,7 @@ public class DecklistFragment extends FamiliarListFragment {
         final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(getCardNumberInput());
         try {
-            final MtgCard card = new MtgCard(getActivity(), name, null,
+            final MtgCard card = new MtgCard(getActivity(), name, null, null,
                     checkboxFoilIsChecked(), Integer.parseInt(numberOf), isSideboard);
 
             final CompressedDecklistInfo decklistInfo =
@@ -363,8 +374,10 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* Sort the decklist */
                 Collections.sort(mCompressedDecklist, mDecklistChain);
 
-                /* Save the decklist */
-                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
+                if (!mDecklistReadError) {
+                    /* Save the decklist */
+                    DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
+                }
             }
 
             /* Clean up for the next add */
@@ -500,7 +513,10 @@ public class DecklistFragment extends FamiliarListFragment {
                 updateDeckCounts(false);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
+                mDecklistReadError = true;
+                return;
             }
+            mDecklistReadError = false;
         }
     }
 
@@ -536,14 +552,14 @@ public class DecklistFragment extends FamiliarListFragment {
         if (!this.isVisible()) {
             return;
         }
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
         DecklistDialogFragment newFragment = new DecklistDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         arguments.putString(DecklistDialogFragment.NAME_KEY, cardName);
         arguments.putBoolean(DecklistDialogFragment.SIDE_KEY, isSideboard);
         newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
 
     }
 
@@ -595,6 +611,11 @@ public class DecklistFragment extends FamiliarListFragment {
             return true;
         } else if (item.getItemId() == R.id.deck_menu_stats) {
             try {
+                // Make sure the deck is saved before checking stats
+                if (null == mCurrentDeck || mCurrentDeck.isEmpty()) {
+                    mCurrentDeck = AUTOSAVE_NAME;
+                    saveCurrentDeck(false);
+                }
                 startNewFragment(new DeckStatsFragment(DecklistHelpers.ReadDecklist(getActivity(), mCurrentDeck + ".deck", true)), null);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(false);
@@ -623,14 +644,17 @@ public class DecklistFragment extends FamiliarListFragment {
      * @param showSnackbar True to show a message that the deck was saved, false to not
      */
     public void saveCurrentDeck(boolean showSnackbar) {
-        String currentDeckName = getCurrentDeckName();
-        synchronized (mCompressedDecklist) {
-            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist,
-                    currentDeckName);
-        }
-        if (showSnackbar) {
-            SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
-                    currentDeckName), SnackbarWrapper.LENGTH_SHORT);
+        // Don't save if there was an error reading
+        if (!mDecklistReadError) {
+            String currentDeckName = getCurrentDeckName();
+            synchronized (mCompressedDecklist) {
+                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist,
+                        currentDeckName);
+            }
+            if (showSnackbar) {
+                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
+                        currentDeckName), SnackbarWrapper.LENGTH_SHORT);
+            }
         }
     }
 
@@ -664,6 +688,7 @@ public class DecklistFragment extends FamiliarListFragment {
         clearCardNameInput();
         clearCardNumberInput();
         uncheckFoilCheckbox();
+        mDecklistReadError = false;
     }
 
     /**
@@ -786,7 +811,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.header == null && cdi.getName().equals(data.getName())) {
                     /* Find all foil and non foil compressed items with the same set code */
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        if (isi.mSetCode.equals(data.getExpansion())) {
+                        if (isi.mSetCode.equals(data.getExpansion()) &&
+                                isi.mNumber.equals(data.getNumber())) {
                             /* Set the whole price info object */
                             if (result != null) {
                                 isi.mPrice = result;
@@ -929,8 +955,10 @@ public class DecklistFragment extends FamiliarListFragment {
         @Override
         protected void onItemRemovedFinal() {
             // After the snackbar times out, write the decklist to the disk
-            synchronized (this.items) {
-                DecklistHelpers.WriteCompressedDecklist(getActivity(), this.items, getCurrentDeckName());
+            if (!mDecklistReadError) {
+                synchronized (this.items) {
+                    DecklistHelpers.WriteCompressedDecklist(getActivity(), this.items, getCurrentDeckName());
+                }
             }
         }
 

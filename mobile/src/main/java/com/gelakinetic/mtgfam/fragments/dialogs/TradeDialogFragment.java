@@ -177,7 +177,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         }
                         aaSide.notifyDataSetChanged();
                         getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
-                        getParentTradeFragment().removeDialog(getFragmentManager());
+                        getParentTradeFragment().removeDialog(getParentFragmentManager());
                     });
 
                     /* If this has a custom price, show the button to default the price */
@@ -279,13 +279,12 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
                                 /* Get the card ID, and send it to a new CardViewPagerFragment */
                                 cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).getName(),
-                                        lSide.get(positionForDialog).getExpansion(), Collections.singletonList(
-                                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
+                                        lSide.get(positionForDialog).getExpansion(), lSide.get(positionForDialog).getNumber(),
+                                        Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
                             }
 
                             Bundle args = new Bundle();
-                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
-                                    cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.getLongFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
 
                             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
@@ -298,7 +297,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
                             DatabaseManager.closeDatabase(getActivity(), infoHandle);
                         }
-                        getParentTradeFragment().removeDialog(getFragmentManager());
+                        getParentTradeFragment().removeDialog(getParentFragmentManager());
                     });
 
                     /* Set up the button to change the set of this card */
@@ -351,13 +350,16 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, false, database);
+                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false, false, false, database);
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
                             sets.add(new ExpansionImageHelper.ExpansionImageData(
-                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)),
-                                    cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)),
-                                    (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY)), 0));
+                                    CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_NAME),
+                                    CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_SET),
+                                    (char) CardDbAdapter.getIntFromCursor(cards, CardDbAdapter.KEY_RARITY),
+                                    CardDbAdapter.getStringFromCursor(cards, CardDbAdapter.KEY_NUMBER),
+                                    0));
                             cards.moveToNext();
                         }
                     } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
@@ -372,8 +374,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     }
 
                     /* Build and return the dialog */
-                    ChangeSetListAdapter adapter = (new ExpansionImageHelper()).
-                            new ChangeSetListAdapter(getContext(), sets, ExpansionImageHelper.ExpansionImageSize.LARGE) {
+                    ChangeSetListAdapter adapter =
+                            new ExpansionImageHelper.ChangeSetListAdapter(getContext(), sets, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                         @Override
                         protected void onClick(ExpansionImageData data) {
                             /* Make sure positionForDialog is in bounds */
@@ -386,6 +388,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                                 String name = lSide.get(positionForDialog).getName();
                                 String set = data.getSetCode();
+                                String number = data.getSetNumber();
                                 int numberOf = lSide.get(positionForDialog).mNumberOf;
 
                                 /* See if the new set can be foil */
@@ -403,7 +406,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 try {
-                                    lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
+                                    lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, number, isFoil, numberOf));
 
                                     /* Reload and notify the adapter */
                                     getParentTradeFragment().loadPrice(lSide.get(positionForDialog));

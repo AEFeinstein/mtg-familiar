@@ -372,8 +372,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
 
                     for (int i = 0; i < setCursor.getCount(); i++) {
-                        frag.mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
-                        frag.mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        frag.mSetSymbols[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                        frag.mSetNames[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_NAME);
                         setCursor.moveToNext();
                     }
                 }
@@ -386,7 +386,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     frag.mFormatNames = new String[formatCursor.getCount()];
 
                     for (int i = 0; i < formatCursor.getCount(); i++) {
-                        frag.mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        frag.mFormatNames[i] = CardDbAdapter.getStringFromCursor(formatCursor, CardDbAdapter.KEY_NAME);
                         formatCursor.moveToNext();
                     }
                 }
@@ -873,7 +873,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         mSelectedFormat = -1;
         mRarityCheckedIndices = new int[0];
-        this.removeDialog(getFragmentManager());
+        this.removeDialog(getParentFragmentManager());
 
         checkDialogButtonColors();
     }
@@ -1183,14 +1183,14 @@ public class SearchViewFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         SearchViewDialogFragment newFragment = new SearchViewDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**

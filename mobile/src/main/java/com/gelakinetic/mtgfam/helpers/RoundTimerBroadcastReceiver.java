@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -74,13 +75,17 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 /* Change the notification to show that the round ended */
                 NotificationHelper.createChannels(context);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER);
-                Notification notification = builder
+                int pendingIntentFlags = 0;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
+                }
+                @SuppressLint("UnspecifiedImmutableFlag") Notification notification = builder
                         .setSmallIcon(R.drawable.notification_icon)
                         .setWhen(System.currentTimeMillis())
                         .setContentTitle(context.getString(R.string.main_timer))
                         .setContentText(context.getString(R.string.timer_ended))
                         .setContentIntent(PendingIntent.getActivity(context, 7, (new Intent(context,
-                                FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER)), 0))
+                                FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER)), pendingIntentFlags))
                         .build();
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
@@ -242,18 +247,13 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
      * @param ringtone The Ringtone to set to use Alarms volume
      */
     private static void setRingtoneAlarmStream(Ringtone ringtone) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            AudioAttributes aa = ringtone.getAudioAttributes();
-            //noinspection WrongConstant
-            new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(aa.getContentType())
-                    .setFlags(aa.getFlags())
-                    .build();
-            ringtone.setAudioAttributes(aa);
-        } else {
-            ringtone.setStreamType(AudioManager.STREAM_ALARM);
-        }
+        AudioAttributes aa = ringtone.getAudioAttributes();
+        new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(aa.getContentType())
+                .setFlags(aa.getFlags())
+                .build();
+        ringtone.setAudioAttributes(aa);
     }
 
     private static void PlayNotificationSound(final Context context, String soundURI) {

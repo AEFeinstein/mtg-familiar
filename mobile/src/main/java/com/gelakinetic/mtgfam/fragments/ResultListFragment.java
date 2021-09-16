@@ -149,8 +149,8 @@ public class ResultListFragment extends FamiliarFragment {
 //        while (!mCursor.isAfterLast()) {
 //            try {
 //                MtgCard toAdd = new MtgCard(
-//                        mCursor.getString(mCursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
-//                        mCursor.getString(mCursor.getColumnIndex(CardDbAdapter.KEY_SET)),
+//                        CardDbAdapter.getStringFromCursor(mCursor, CardDbAdapter.KEY_NAME),
+//                        CardDbAdapter.getStringFromCursor(mCursor, CardDbAdapter.KEY_SET),
 //                        false, 1, false);
 //
 //                WishlistHelpers.addItemToWishlist(getActivity(),
@@ -271,8 +271,8 @@ public class ResultListFragment extends FamiliarFragment {
                 }
             } else if (mCursor.getCount() == 1) {
                 mCursor.moveToFirst();
-                long id = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
                 try {
+                    long id = CardDbAdapter.getLongFromCursor(mCursor, CardDbAdapter.KEY_ID);
                     startCardViewFrag(id);
                 } catch (SQLiteException | FamiliarDbException e) {
                     handleFamiliarDbException(true);
@@ -420,7 +420,7 @@ public class ResultListFragment extends FamiliarFragment {
             long[] cardIds = new long[mCursor.getCount()];
             mCursor.moveToFirst();
             for (int i = 0; i < mCursor.getCount(); i++, mCursor.moveToNext()) {
-                cardIds[i] = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
+                cardIds[i] = CardDbAdapter.getLongFromCursor(mCursor, CardDbAdapter.KEY_ID);
                 if (cardIds[i] == id) {
                     cardPosition = i;
                 }

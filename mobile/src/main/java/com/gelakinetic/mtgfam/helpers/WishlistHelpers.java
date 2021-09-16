@@ -21,7 +21,6 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
@@ -37,10 +36,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -230,21 +227,6 @@ public class WishlistHelpers {
             readableWishlist.append("\r\n");
         }
         return readableWishlist.toString();
-    }
-
-    public static Pair<Map<String, String>, Map<String, String>> getTargetNumberOfs(String cardName, ArrayList<MtgCard> wishlist) {
-        final Map<String, String> targetCardNumberOfs = new HashMap<>();
-        final Map<String, String> targetFoilNumberOfs = new HashMap<>();
-        for (MtgCard card : wishlist) {
-            if (card.getName().equals(cardName)) {
-                if (card.mIsFoil) {
-                    targetFoilNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
-                    continue;
-                }
-                targetCardNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
-            }
-        }
-        return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);
     }
 
     /**

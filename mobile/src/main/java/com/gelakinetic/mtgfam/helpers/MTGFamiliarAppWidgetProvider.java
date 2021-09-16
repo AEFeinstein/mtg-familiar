@@ -19,21 +19,15 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
-
-import androidx.appcompat.content.res.AppCompatResources;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -124,25 +118,16 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
             }
 
             /* Draw the vector image */
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                views.setImageViewResource(entry.buttonResource, vectorResource);
-            } else {
-                Drawable d = AppCompatResources.getDrawable(context, vectorResource);
-                if (d != null) {
-                    Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
-                            d.getIntrinsicHeight(),
-                            Bitmap.Config.ARGB_8888);
-                    Canvas c = new Canvas(b);
-                    d.setBounds(0, 0, c.getWidth(), c.getHeight());
-                    d.draw(c);
-                    views.setImageViewBitmap(entry.buttonResource, b);
-                }
-            }
+            views.setImageViewResource(entry.buttonResource, vectorResource);
 
             /* Set the listener */
             Intent intentQuick = new Intent(context, FamiliarActivity.class);
             intentQuick.setAction(entry.intentAction);
-            PendingIntent pendingIntentQuick = PendingIntent.getActivity(context, 0, intentQuick, 0);
+            int pendingIntentFlags = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
+            }
+            @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntentQuick = PendingIntent.getActivity(context, 0, intentQuick, pendingIntentFlags);
             views.setOnClickPendingIntent(entry.buttonResource, pendingIntentQuick);
         }
     }
@@ -192,7 +177,6 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
      * @param appWidgetId      The appWidgetId of the widget who's size changed.
      * @param newOptions       The new parameters for the widget
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId,
                                           Bundle newOptions) {

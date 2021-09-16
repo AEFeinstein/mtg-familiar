@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/logging_switch"
         style="@style/forty_eight"
         android:layout_width="match_parent"

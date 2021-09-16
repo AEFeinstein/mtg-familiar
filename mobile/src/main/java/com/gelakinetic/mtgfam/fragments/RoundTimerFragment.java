@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -100,29 +101,34 @@ public class RoundTimerFragment extends FamiliarFragment {
             return;
         }
 
+        int pendingIntentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
+        }
+
         PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(context, TIMER_RING_ALARM, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlags
         );
         PendingIntent twoMinPI = PendingIntent.getBroadcast(context, TIMER_2_MIN_WARNING, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_2_MIN_WARNING),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlags
         );
         PendingIntent fiveMinPI = PendingIntent.getBroadcast(context, TIMER_5_MIN_WARNING, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_5_MIN_WARNING),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlags
         );
         PendingIntent tenMinPI = PendingIntent.getBroadcast(context, TIMER_10_MIN_WARNING, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_10_MIN_WARNING),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlags
         );
         PendingIntent fifteenMinPI = PendingIntent.getBroadcast(context, TIMER_15_MIN_WARNING, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_15_MIN_WARNING),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlags
         );
         PendingIntent easterEggPI = PendingIntent.getBroadcast(context, TIMER_EASTER_EGG, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_EASTER_EGG),
-                PendingIntent.FLAG_UPDATE_CURRENT
+                pendingIntentFlags
         );
 
         /* Cancel any pending alarms */
@@ -169,13 +175,17 @@ public class RoundTimerFragment extends FamiliarFragment {
         String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);
 
         NotificationHelper.createChannels(context);
+        int pendingIntentFlags = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
+        }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(context.getString(R.string.main_timer))
                 .setContentText(messageText)
                 .setContentIntent(PendingIntent.getActivity(context, 7, new Intent(context,
-                        FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER), 0))
+                        FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER), pendingIntentFlags))
                 .setOngoing(true);
 
         /* Get an instance of the NotificationManager service */
@@ -227,7 +237,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 int minutes = mTimePicker.getMinutes();
                 int seconds = mTimePicker.getSeconds();
 
-                long timeInMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+                long timeInMillis = ((hours * 3600L) + (minutes * 60L) + seconds) * 1000;
                 if (timeInMillis == 0) {
                     return;
                 }
@@ -316,10 +326,10 @@ public class RoundTimerFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         RoundTimerDialogFragment newFragment = new RoundTimerDialogFragment();
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 }

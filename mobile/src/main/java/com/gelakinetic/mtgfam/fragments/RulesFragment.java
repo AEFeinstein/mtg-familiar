@@ -198,7 +198,7 @@ public class RulesFragment extends FamiliarFragment {
                     mRules.add(new BannedItem(
                             format,
                             SETS,
-                            setsCursor.getString(setsCursor.getColumnIndex(CardDbAdapter.KEY_LEGAL_SETS)), false));
+                            CardDbAdapter.getStringFromCursor(setsCursor, CardDbAdapter.KEY_LEGAL_SETS), false));
                 }
                 if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
                     int listItemResource = R.layout.rules_list_detail_item;
@@ -212,23 +212,23 @@ public class RulesFragment extends FamiliarFragment {
                     while (!cursor.isAfterLast()) {
                         if (isGlossary) {
                             mRules.add(new GlossaryItem(
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION)), false));
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_TERM),
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_DEFINITION), false));
                         } else if (isBanned && format != null) {
                             mRules.add(new BannedItem(
                                     format,
-                                    cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
+                                    CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_LEGALITY),
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_BANNED_LIST), false));
                         } else if (isBanned) {
                             mRules.add(new BannedItem(
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_NAME),
                                     NONE, "", true));
                         } else {
                             mRules.add(new RuleItem(
-                                    cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_CATEGORY)),
-                                    cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_SUBCATEGORY)),
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ENTRY)),
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_RULE_TEXT))));
+                                    CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_CATEGORY),
+                                    CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_SUBCATEGORY),
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_ENTRY),
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_RULE_TEXT)));
                         }
                         cursor.moveToNext();
                     }
@@ -360,11 +360,11 @@ public class RulesFragment extends FamiliarFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         RulesDialogFragment newFragment = new RulesDialogFragment();
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**

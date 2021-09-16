@@ -52,12 +52,10 @@ public class IOUtils {
         return count;
     }
 
-    public static long copyFile(File src, File dst) throws IOException {
+    public static void copyFile(File src, File dst) throws IOException {
         try (FileInputStream fio = new FileInputStream(src);
              FileOutputStream fos = new FileOutputStream(dst)) {
-            return copy(fio, fos);
-        } catch (IOException e) {
-            throw e;
+            copy(fio, fos);
         }
     }
 }

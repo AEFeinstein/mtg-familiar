@@ -245,9 +245,9 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
     }
 
     /**
-     * Throws an exception if the {@link org.apache.commons.collections4.comparators.ComparatorChain} is locked.
+     * Throws an exception if the ComparatorChain is locked.
      *
-     * @throws UnsupportedOperationException if the {@link org.apache.commons.collections4.comparators.ComparatorChain} is locked
+     * @throws UnsupportedOperationException if the ComparatorChain is locked
      */
     private void checkLocked() {
         if (isLocked == true) {
@@ -257,9 +257,9 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
     }
 
     /**
-     * Throws an exception if the {@link org.apache.commons.collections4.comparators.ComparatorChain} is empty.
+     * Throws an exception if the ComparatorChain is empty.
      *
-     * @throws UnsupportedOperationException if the {@link org.apache.commons.collections4.comparators.ComparatorChain} is empty
+     * @throws UnsupportedOperationException if the ComparatorChain is empty
      */
     private void checkChainIntegrity() {
         if (comparatorChain.size() == 0) {

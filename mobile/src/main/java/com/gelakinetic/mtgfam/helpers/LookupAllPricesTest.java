@@ -65,12 +65,10 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
         try {
             File cacheDir = activity.getExternalCacheDir();
             for (File cacheFile : Objects.requireNonNull(Objects.requireNonNull(cacheDir).listFiles())) {
-                //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
             cacheDir = activity.getCacheDir();
             for (File cacheFile : Objects.requireNonNull(Objects.requireNonNull(cacheDir).listFiles())) {
-                //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
         } catch (NullPointerException e) {
@@ -118,8 +116,9 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
         // Make an MtgCard object from the cursor row
         try {
             MtgCard toLookup = new MtgCard(activity,
-                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
-                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)),
+                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_NAME),
+                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_SET),
+                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_NUMBER),
                     false, 0);
 
             // Start the lookup and log the time
@@ -157,11 +156,15 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
                     },
                     () -> {
                     });
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | FamiliarDbException e) {
 
             // Debug print
-            Log.d(DAPT_TAG, "Failure [" + cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)) + "] " +
-                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)) + ", " + e.getMessage());
+            try {
+                Log.d(DAPT_TAG, "Failure [" + CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_SET) + "] " +
+                        CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_NAME) + ", " + e.getMessage());
+            } catch (FamiliarDbException familiarDbException) {
+                familiarDbException.printStackTrace();
+            }
 
             // Move to the next
             fetchNext(fetcher, cursor, activity);

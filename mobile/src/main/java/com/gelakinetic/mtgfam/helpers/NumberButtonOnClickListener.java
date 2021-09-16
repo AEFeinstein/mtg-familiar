@@ -42,7 +42,7 @@ public abstract class NumberButtonOnClickListener implements View.OnClickListene
         NumberPickerBuilder npb = new NumberPickerBuilder()
                 .addNumberPickerDialogHandler(this)
                 .setDecimalVisibility(View.GONE)
-                .setFragmentManager(fragment.getFragmentManager())
+                .setFragmentManager(fragment.getParentFragmentManager())
                 .setLabelText(this.getLabelText())
                 .setMaxNumber(BigDecimal.valueOf(this.getMaxNumber()))
                 .setMinNumber(BigDecimal.valueOf(this.getMinNumber()))

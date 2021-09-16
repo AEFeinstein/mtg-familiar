@@ -76,6 +76,7 @@ public class WishlistFragment extends FamiliarListFragment {
     /* The wishlist and adapter */
     public final List<CompressedWishlistInfo> mCompressedWishlist = Collections.synchronizedList(new ArrayList<>());
     private int mOrderAddedIdx = 0;
+    private boolean mWishlistReadError = false;
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -118,10 +119,12 @@ public class WishlistFragment extends FamiliarListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        /* unsort, then save the wishlist */
-        sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-        synchronized (mCompressedWishlist) {
-            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+        if (!mWishlistReadError) {
+            /* unsort, then save the wishlist */
+            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+            synchronized (mCompressedWishlist) {
+                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            }
         }
     }
 
@@ -152,7 +155,7 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         try {
-            MtgCard card = new MtgCard(getActivity(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
+            MtgCard card = new MtgCard(getActivity(), name, null, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
             CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
             /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
@@ -263,9 +266,12 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
                 }
             } catch (FamiliarDbException e) {
+                mWishlistReadError = true;
                 handleFamiliarDbException(true);
+                return;
             }
         }
+        mWishlistReadError = false;
     }
 
     /**
@@ -343,7 +349,7 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        removeDialog(getFragmentManager());
+        removeDialog(getParentFragmentManager());
 
         /* Create and show the dialog. */
         if (id == WishlistDialogFragment.DIALOG_SORT) {
@@ -352,14 +358,14 @@ public class WishlistFragment extends FamiliarListFragment {
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     PreferenceAdapter.getWishlistSortOrder(getContext()));
             newFragment.setArguments(args);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
             WishlistDialogFragment newFragment = new WishlistDialogFragment();
             Bundle arguments = new Bundle();
             arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
             arguments.putString(WishlistDialogFragment.NAME_KEY, cardName);
             newFragment.setArguments(arguments);
-            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+            newFragment.show(getParentFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }
     }
 
@@ -393,7 +399,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (cwi.getName().equals(data.getName())) {
                     /* Find all foil and non foil compressed items with the same set code */
                     for (IndividualSetInfo isi : cwi.mInfo) {
-                        if (isi.mSetCode.equals(data.getExpansion())) {
+                        if (isi.mSetCode.equals(data.getExpansion()) &&
+                                isi.mNumber.equals(data.getNumber())) {
                             /* Set the whole price info object */
                             if (result != null) {
                                 isi.mPrice = result;
@@ -469,6 +476,23 @@ public class WishlistFragment extends FamiliarListFragment {
         }
     }
 
+    /**
+     * Clear the current wishlist
+     */
+    public void clearTrade() {
+        WishlistHelpers.ResetCards(this.requireContext());
+        synchronized (mCompressedWishlist) {
+            mCompressedWishlist.clear();
+        }
+        getCardDataAdapter(0).notifyDataSetChanged();
+        updateTotalPrices(0);
+        /* Clear input too */
+        clearCardNameInput();
+        clearCardNumberInput();
+        uncheckFoilCheckbox();
+        mWishlistReadError = false;
+    }
+
     class WishlistViewHolder extends CardDataViewHolder {
 
         /* Card Information */
@@ -498,13 +522,14 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public void onClickNotSelectMode(View view, int position) {
-            // Make sure the wishlist is written first in the proper order
-            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            synchronized (mCompressedWishlist) {
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            if (!mWishlistReadError) {
+                // Make sure the wishlist is written first in the proper order
+                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+                synchronized (mCompressedWishlist) {
+                    WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+                }
+                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
             }
-            sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
-
             // Then show the dialog
             showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, getCardName());
         }
@@ -538,12 +563,14 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemRemovedFinal() {
-            // Unsort, save, then sort the wishlist
-            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-            synchronized (this.items) {
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), this.items);
+            if (!mWishlistReadError) {
+                // Unsort, save, then sort the wishlist
+                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+                synchronized (this.items) {
+                    WishlistHelpers.WriteCompressedWishlist(getActivity(), this.items);
+                }
+                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
             }
-            sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
         }
 
         @Override
@@ -652,7 +679,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         color = R.attr.color_text;
                         break;
                 }
-                String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
+                String setAndRarity = String.format("%s (%s) (%s)", isi.mSet, isi.mNumber, isi.mRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
                         ContextCompat.getColor(requireContext(), getResourceIdFromAttr(color)));

@@ -478,9 +478,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /* Set the system bar color programatically, for lollipop+ */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
-        }
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
 
         setContentView(R.layout.activity_main);
 
@@ -758,7 +756,6 @@ public class FamiliarActivity extends AppCompatActivity {
                             File[] listFiles = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
-                                    //noinspection ResultOfMethodCallIgnored
                                     cachedFile.delete();
                                 }
                             }
@@ -769,7 +766,6 @@ public class FamiliarActivity extends AppCompatActivity {
                             File[] listFiles = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
-                                    //noinspection ResultOfMethodCallIgnored
                                     cachedFile.delete();
                                 }
                             }
@@ -790,7 +786,7 @@ public class FamiliarActivity extends AppCompatActivity {
             int updateFrequency = Integer.parseInt(PreferenceAdapter.getUpdateFrequency(this));
             int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
-            if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
+            if (((curTime / 1000) - lastLegalityUpdate) > ((long) updateFrequency * 24 * 60 * 60)) {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(new Intent(this, DbUpdaterService.class));
@@ -858,7 +854,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             if (cursor.getCount() != 0) {
                                 isDeepLink = true;
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                                        new long[]{CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             }
                             if (args.size() == 0) {
                                 throw new Exception("Not Found");
@@ -904,8 +900,8 @@ public class FamiliarActivity extends AppCompatActivity {
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(this, false, deepLinkHandle);
                         boolean screenLaunched = false;
-                        if (Objects.requireNonNull(data.getScheme()).toLowerCase().equals("card") &&
-                                data.getAuthority().toLowerCase().equals("multiverseid")) {
+                        if (Objects.requireNonNull(data.getScheme()).equalsIgnoreCase("card") &&
+                                data.getAuthority().equalsIgnoreCase("multiverseid")) {
                             if (data.getLastPathSegment() == null) {
                                 /* Home screen deep link */
                                 launchHomeScreen();
@@ -928,7 +924,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         if (cursor != null) {
                             if (cursor.getCount() != 0) {
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                                        new long[]{CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             } else {
                                 /* empty cursor, just return */
                                 SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
