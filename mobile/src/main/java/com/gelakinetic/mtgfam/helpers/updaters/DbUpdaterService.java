@@ -19,12 +19,15 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
 import android.annotation.SuppressLint;
+import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 
@@ -111,7 +114,25 @@ public class DbUpdaterService extends IntentService {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true);
 
-        startForeground(FOREGROUND_SERVICE_ID, mBuilder.build());
+        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
+    }
+
+    /**
+     * Wrapper for {@link android.app.Service#startForeground(int, Notification)} with exception handling
+     *
+     * @param id           The identifier for this notification as per NotificationManager.notify(int, Notification); must not be 0.
+     * @param notification The Notification to be displayed.
+     */
+    private void startForegroundSafe(int id, Notification notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                startForeground(id, notification);
+            } catch (ForegroundServiceStartNotAllowedException e) {
+                // Eat it
+            }
+        } else {
+            startForeground(id, notification);
+        }
     }
 
     /**
@@ -454,7 +475,7 @@ public class DbUpdaterService extends IntentService {
      * Show the notification in the status bar
      */
     private void showStatusNotification() {
-        startForeground(FOREGROUND_SERVICE_ID, mBuilder.build());
+        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
     }
 
     /**
@@ -473,7 +494,7 @@ public class DbUpdaterService extends IntentService {
                 .setContentText(getString(R.string.update_notification))
                 .setProgress(0, 0, false);
 
-        startForeground(FOREGROUND_SERVICE_ID, mBuilder.build());
+        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
     }
 
     /**
@@ -484,12 +505,12 @@ public class DbUpdaterService extends IntentService {
     private void switchToUpdating(String title) {
 
         mBuilder.setContentTitle(title);
-        startForeground(FOREGROUND_SERVICE_ID, mBuilder.build());
+        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
 
         /* Periodically update the progress bar */
         mProgressUpdater = () -> {
             mBuilder.setProgress(100, mProgress, false);
-            startForeground(FOREGROUND_SERVICE_ID, mBuilder.build());
+            startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
             if (mProgress != 100) {
                 mHandler.postDelayed(mProgressUpdater, 200);
             }

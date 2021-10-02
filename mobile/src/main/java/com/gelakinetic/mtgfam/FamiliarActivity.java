@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -560,11 +561,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
                         PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
                         PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        } else {
-                            startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        }
+                        startServiceSafe(DbUpdaterService.class);
                     } catch (SQLiteException | FamiliarDbException | IllegalStateException e) {
                         e.printStackTrace();
                     } finally {
@@ -788,11 +785,7 @@ public class FamiliarActivity extends AppCompatActivity {
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > ((long) updateFrequency * 24 * 60 * 60)) {
                 try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(new Intent(this, DbUpdaterService.class));
-                    } else {
-                        startService(new Intent(this, DbUpdaterService.class));
-                    }
+                    startServiceSafe(DbUpdaterService.class);
                 } catch (IllegalStateException e) {
                     // Ignore it
                 }
@@ -801,6 +794,27 @@ public class FamiliarActivity extends AppCompatActivity {
 
         // Uncomment this to run a test to lookup all prices for all cards
         // (new LookupAllPricesTest()).execute(this);
+    }
+
+    /**
+     * Wrapper for {@link android.content.ContextWrapper#startForegroundService(Intent)} with exception handling
+     *
+     * @param service Identifies the service to be started. The Intent must be fully explicit
+     *                (supplying a component name). Additional values may be included in the
+     *                Intent extras to supply arguments along with this specific start call.
+     */
+    private void startServiceSafe(Class<?> service) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                startForegroundService(new Intent(this, service));
+            } catch (ForegroundServiceStartNotAllowedException e) {
+                // Eat it
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, service));
+        } else {
+            startService(new Intent(this, service));
+        }
     }
 
     private boolean processIntent(@NonNull Intent intent) {
