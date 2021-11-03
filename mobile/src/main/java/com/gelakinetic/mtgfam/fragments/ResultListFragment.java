@@ -53,6 +53,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * This fragment displays a list of cards. It can be from a search result, some MoJhoSto basic, or whatever
@@ -334,8 +335,9 @@ public class ResultListFragment extends FamiliarFragment {
             boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
                     criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
 
+            Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(getContext());
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
-                    PreferenceAdapter.getSearchSortOrder(getContext()), database);
+                    PreferenceAdapter.getSearchSortOrder(getContext()), database, searchLanguages);
             if (mCursor == null) {
                 FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
             } else {

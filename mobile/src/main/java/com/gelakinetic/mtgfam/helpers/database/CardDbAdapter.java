@@ -42,8 +42,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -833,6 +835,11 @@ public class CardDbAdapter {
         }
     }
 
+    public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
+                                boolean consolidate, String orderByStr, SQLiteDatabase mDb) throws FamiliarDbException {
+        Set<String> langs = new HashSet<>(Arrays.asList(new String[]{"en"}));
+        return Search(criteria, backface, returnTypes, consolidate, orderByStr, mDb, langs);
+    }
     /**
      * This function will query the database with the information in criteria and return a cursor
      * with the requested data.
@@ -845,20 +852,61 @@ public class CardDbAdapter {
      * @param consolidate true to not include multiple printings of the same card, false otherwise
      * @param orderByStr  A string used to order the results
      * @param mDb         The database to query
+     * @param languages   languages to search card names in
      * @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
-                                boolean consolidate, String orderByStr, SQLiteDatabase mDb)
+                                boolean consolidate, String orderByStr, SQLiteDatabase mDb, Set<String> languages)
             throws FamiliarDbException {
         FamiliarLogger.appendToLogFile(new StringBuilder(criteria.toJson()), new Throwable().getStackTrace()[0].getMethodName());
 
         StringBuilder statement = new StringBuilder(" WHERE 1=1");
 
         if (criteria.name != null) {
+            /* get search languages */
+            Set<String> key_name_languages = new HashSet();;
+            for (String lang: languages) {
+                if (Objects.equals(lang, "fr")) {
+                    key_name_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
+                } else if (Objects.equals(lang, "it")) {
+                    key_name_languages.add(KEY_NAME_NO_ACCENT_ITALIAN);
+                } else if (Objects.equals(lang, "es")) {
+                    key_name_languages.add(KEY_NAME_NO_ACCENT_SPANISH);
+                } else if (Objects.equals(lang, "jp")) {
+                    key_name_languages.add(KEY_NAME_JAPANESE);
+                } else if (Objects.equals(lang, "ru")) {
+                    key_name_languages.add(KEY_NAME_RUSSIAN);
+                } else if (Objects.equals(lang, "de")) {
+                    key_name_languages.add(KEY_NAME_NO_ACCENT_GERMAN);
+                } else if (Objects.equals(lang, "pt")) {
+                    key_name_languages.add(KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL);
+                } else if (Objects.equals(lang, "cn")) {
+                    key_name_languages.add(KEY_NAME_CHINESE_SIMPLIFIED);
+                } else if (Objects.equals(lang, "tw")) {
+                    key_name_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
+                } else if (Objects.equals(lang, "ko")) {
+                    key_name_languages.add(KEY_NAME_KOREAN);
+                } else {
+                    key_name_languages.add(KEY_NAME_NO_ACCENT);
+                }
+            }
+
             String[] nameParts = criteria.name.split(" ");
             for (String s : nameParts) {
-                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE ").append(sanitizeString("%" + s + "%", true)).append(")");
+                // begin
+                statement.append(" AND (");
+                // first language
+                Iterator iter = key_name_languages.iterator();
+                String key_name_language = (String) iter.next();
+                statement.append(DATABASE_TABLE_CARDS + "." + key_name_language + " LIKE ").append(sanitizeString("%" + s + "%", true));
+                // additional languages
+                while (iter.hasNext()) {
+                    key_name_language = (String) iter.next();
+                    statement.append(" OR " + DATABASE_TABLE_CARDS + "." + key_name_language + " LIKE ").append(sanitizeString("%" + s + "%", true));
+                }
+                // end
+                statement.append(")");
             }
         }
 
@@ -1678,29 +1726,84 @@ public class CardDbAdapter {
      * @return Cursor over all words that match, or null if none found.
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb) throws FamiliarDbException {
+    public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb, Set<String> languages) throws FamiliarDbException {
         try {
             query = sanitizeString(query + "%", true);
 
-            if (query.length() < 2) {
+            if (query.length() < 6) { // because query of 'xx%' is length 5
                 return null;
             }
 
-            String sql =
-                    "SELECT * FROM (" +
-                            "SELECT " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME + " AS " + KEY_NAME + ", " +
-                            DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + KEY_ID + ", " +
-                            DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID +
-                            " FROM " + DATABASE_TABLE_CARDS +
-                            " JOIN " + DATABASE_TABLE_SETS +
-                            " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                            " WHERE " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + query +
-                            " ORDER BY " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE, " +
-                            DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC" +
-                            " ) GROUP BY " + KEY_NAME;
+            /* get search languages */
+            List<String> key_name_languages = new ArrayList<String>();
+            List<String> key_name_no_accent_languages = new ArrayList<String>();
+            for (String lang: languages) {
+                if (Objects.equals(lang, "fr")) {
+                    key_name_languages.add(KEY_NAME_FRENCH);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
+                } else if (Objects.equals(lang, "it")) {
+                    key_name_languages.add(KEY_NAME_ITALIAN);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_ITALIAN);
+                } else if (Objects.equals(lang, "es")) {
+                    key_name_languages.add(KEY_NAME_SPANISH);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_SPANISH);
+                } else if (Objects.equals(lang, "jp")) {
+                    key_name_languages.add(KEY_NAME_JAPANESE);
+                    key_name_no_accent_languages.add(KEY_NAME_JAPANESE);
+                } else if (Objects.equals(lang, "ru")) {
+                    key_name_languages.add(KEY_NAME_RUSSIAN);
+                    key_name_no_accent_languages.add(KEY_NAME_RUSSIAN);
+                } else if (Objects.equals(lang, "de")) {
+                    key_name_languages.add(KEY_NAME_GERMAN);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_GERMAN);
+                } else if (Objects.equals(lang, "pt")) {
+                    key_name_languages.add(KEY_NAME_PORTUGUESE_BRAZIL);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL);
+                } else if (Objects.equals(lang, "cn")) {
+                    key_name_languages.add(KEY_NAME_CHINESE_SIMPLIFIED);
+                    key_name_no_accent_languages.add(KEY_NAME_CHINESE_SIMPLIFIED);
+                } else if (Objects.equals(lang, "tw")) {
+                    key_name_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
+                    key_name_no_accent_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
+                } else if (Objects.equals(lang, "ko")) {
+                    key_name_languages.add(KEY_NAME_KOREAN);
+                    key_name_no_accent_languages.add(KEY_NAME_KOREAN);
+                } else {
+                    key_name_languages.add(KEY_NAME);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT);
+                }
+            }
+
+            String key_name_language = key_name_languages.get(0);
+            String key_name_no_accent_language = key_name_no_accent_languages.get(0);
+            String sql = "SELECT * FROM (";
+            sql += "SELECT " +
+                    DATABASE_TABLE_CARDS + "." + key_name_language + " AS " + KEY_NAME + ", " +
+                    DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + KEY_ID + ", " +
+                    DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID +
+                    " FROM " + DATABASE_TABLE_CARDS +
+                    " JOIN " + DATABASE_TABLE_SETS +
+                    " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                    " WHERE " +
+                    DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
+
+            for (int i=1; i < key_name_languages.size(); i++) {
+                key_name_language = key_name_languages.get(i);
+                key_name_no_accent_language = key_name_no_accent_languages.get(i);
+                sql += " UNION " +
+                        "SELECT " +
+                        DATABASE_TABLE_CARDS + "." + key_name_language + " AS " + KEY_NAME + ", " +
+                        DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + KEY_ID + ", " +
+                        DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID +
+                        " FROM " + DATABASE_TABLE_CARDS +
+                        " JOIN " + DATABASE_TABLE_SETS +
+                        " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                        " WHERE " +
+                        DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
+            }
+            sql += " ) GROUP BY " + KEY_NAME +
+                    " ORDER BY " + KEY_NAME + " COLLATE UNICODE";
+
             FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {

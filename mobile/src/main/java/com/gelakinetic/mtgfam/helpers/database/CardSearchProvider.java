@@ -33,6 +33,9 @@ import android.provider.BaseColumns;
 import androidx.annotation.NonNull;
 
 import com.gelakinetic.mtgfam.BuildConfig;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+
+import java.util.Set;
 
 /**
  * Provides access to the card database. Used for the search widget
@@ -106,7 +109,8 @@ public class CardSearchProvider extends ContentProvider {
                     }
                     query = selectionArgs[0].toLowerCase();
 
-                    return CardDbAdapter.getCardsByNamePrefix(query, mDatabase);
+                    Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(getContext());
+                    return CardDbAdapter.getCardsByNamePrefix(query, mDatabase, searchLanguages);
                 }
                 case REFRESH_SHORTCUT: {
                     String rowId1 = uri.getLastPathSegment();

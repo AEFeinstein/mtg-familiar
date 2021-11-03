@@ -39,6 +39,7 @@
     <string name="key_consolidateSearch" translatable="false">consolidateSearch</string>
     <string name="key_persistSearch" translatable="false">persistSearch</string>
     <string name="key_hideOnlineCards" translatable="false">hideOnlineOnly</string>
+    <string name="key_searchLanguages" translatable="false">searchLanguages</string>
     <string name="key_picFirst" translatable="false">picFirst</string>
     <string name="key_wakelock" translatable="false">wakelock</string>
     <string name="key_dimlock" translatable="false">dimlock</string>
