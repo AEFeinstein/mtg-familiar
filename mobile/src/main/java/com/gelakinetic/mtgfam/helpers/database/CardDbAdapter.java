@@ -535,6 +535,12 @@ public class CardDbAdapter {
         }
     }
 
+    public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
+                                         boolean offlineOnly, boolean preferOptionalFoil, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        Set<String> languages = new HashSet<>(Arrays.asList(new String[]{"en"}));
+        return fetchCardByName(name, fields, shouldGroup, offlineOnly, preferOptionalFoil, mDb, languages);
+    }
     /**
      * Given a card's name, return a cursor with all of that card's requested information.
      * <p>
@@ -550,7 +556,8 @@ public class CardDbAdapter {
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
-                                         boolean offlineOnly, boolean preferOptionalFoil, SQLiteDatabase mDb)
+                                         boolean offlineOnly, boolean preferOptionalFoil,
+                                         SQLiteDatabase mDb, Set<String> languages)
             throws FamiliarDbException {
         try {
             /* Sanitize the string and remove accent marks */
@@ -565,9 +572,17 @@ public class CardDbAdapter {
                 }
                 sql.append(field);
             }
-            sql.append(" FROM " + DATABASE_TABLE_CARDS +
-                    " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                    " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name);
+            /* get keys of search languages */
+            Set<String> key_name_languages = getKeyNameLanguages(languages);
+            sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE ");
+            sql.append("(");
+            Iterator iter = key_name_languages.iterator();
+            sql.append(DATABASE_TABLE_CARDS + "." + (String) iter.next() + " = ").append(name);
+            while (iter.hasNext()) {
+                sql.append(" OR ");
+                sql.append(DATABASE_TABLE_CARDS + "." + (String) iter.next() + " = ").append(name);
+            }
+            sql.append(")");
             if (offlineOnly) {
                 sql.append(" AND " + KEY_ONLINE_ONLY + " = 0");
             }
@@ -837,8 +852,8 @@ public class CardDbAdapter {
 
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
                                 boolean consolidate, String orderByStr, SQLiteDatabase mDb) throws FamiliarDbException {
-        Set<String> langs = new HashSet<>(Arrays.asList(new String[]{"en"}));
-        return Search(criteria, backface, returnTypes, consolidate, orderByStr, mDb, langs);
+        Set<String> languages = new HashSet<>(Arrays.asList(new String[]{"en"}));
+        return Search(criteria, backface, returnTypes, consolidate, orderByStr, mDb, languages);
     }
     /**
      * This function will query the database with the information in criteria and return a cursor
@@ -864,33 +879,8 @@ public class CardDbAdapter {
         StringBuilder statement = new StringBuilder(" WHERE 1=1");
 
         if (criteria.name != null) {
-            /* get search languages */
-            Set<String> key_name_languages = new HashSet();;
-            for (String lang: languages) {
-                if (Objects.equals(lang, "fr")) {
-                    key_name_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
-                } else if (Objects.equals(lang, "it")) {
-                    key_name_languages.add(KEY_NAME_NO_ACCENT_ITALIAN);
-                } else if (Objects.equals(lang, "es")) {
-                    key_name_languages.add(KEY_NAME_NO_ACCENT_SPANISH);
-                } else if (Objects.equals(lang, "jp")) {
-                    key_name_languages.add(KEY_NAME_JAPANESE);
-                } else if (Objects.equals(lang, "ru")) {
-                    key_name_languages.add(KEY_NAME_RUSSIAN);
-                } else if (Objects.equals(lang, "de")) {
-                    key_name_languages.add(KEY_NAME_NO_ACCENT_GERMAN);
-                } else if (Objects.equals(lang, "pt")) {
-                    key_name_languages.add(KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL);
-                } else if (Objects.equals(lang, "cn")) {
-                    key_name_languages.add(KEY_NAME_CHINESE_SIMPLIFIED);
-                } else if (Objects.equals(lang, "tw")) {
-                    key_name_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
-                } else if (Objects.equals(lang, "ko")) {
-                    key_name_languages.add(KEY_NAME_KOREAN);
-                } else {
-                    key_name_languages.add(KEY_NAME_NO_ACCENT);
-                }
-            }
+            /* get keys of search languages */
+            Set<String> key_name_languages = getKeyNameLanguages(languages);
 
             String[] nameParts = criteria.name.split(" ");
             for (String s : nameParts) {
@@ -2968,5 +2958,41 @@ public class CardDbAdapter {
     public static String removeAccentMarks(String str) {
         return StringUtils.stripAccents(str);
 
+    }
+
+    /**
+     * Helper function to get all keys of the requested languages.
+     *
+     * @param languages requested languages
+     * @return keys of names in requested languages
+     */
+    public static Set<String> getKeyNameLanguages(Set<String> languages) {
+        Set<String> key_name_languages = new HashSet();;
+        for (String lang: languages) {
+            if (Objects.equals(lang, "fr")) {
+                key_name_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
+            } else if (Objects.equals(lang, "it")) {
+                key_name_languages.add(KEY_NAME_NO_ACCENT_ITALIAN);
+            } else if (Objects.equals(lang, "es")) {
+                key_name_languages.add(KEY_NAME_NO_ACCENT_SPANISH);
+            } else if (Objects.equals(lang, "jp")) {
+                key_name_languages.add(KEY_NAME_JAPANESE);
+            } else if (Objects.equals(lang, "ru")) {
+                key_name_languages.add(KEY_NAME_RUSSIAN);
+            } else if (Objects.equals(lang, "de")) {
+                key_name_languages.add(KEY_NAME_NO_ACCENT_GERMAN);
+            } else if (Objects.equals(lang, "pt")) {
+                key_name_languages.add(KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL);
+            } else if (Objects.equals(lang, "cn")) {
+                key_name_languages.add(KEY_NAME_CHINESE_SIMPLIFIED);
+            } else if (Objects.equals(lang, "tw")) {
+                key_name_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
+            } else if (Objects.equals(lang, "ko")) {
+                key_name_languages.add(KEY_NAME_KOREAN);
+            } else {
+                key_name_languages.add(KEY_NAME_NO_ACCENT);
+            }
+        }
+        return key_name_languages;
     }
 }

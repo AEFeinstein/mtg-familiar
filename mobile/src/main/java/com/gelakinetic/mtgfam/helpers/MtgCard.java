@@ -39,6 +39,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -172,7 +173,9 @@ public class MtgCard extends Card {
             this.mMessage = activity.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
             if (cardSet == null) {
-                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, true, database);
+                Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(activity.getApplicationContext());
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS,
+                        true, true, true, database, searchLanguages);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {
