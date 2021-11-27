@@ -544,12 +544,6 @@ public class CardDbAdapter {
         }
     }
 
-    public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
-                                         boolean offlineOnly, boolean preferOptionalFoil, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        Set<String> languages = new HashSet<>(Arrays.asList(new String[]{"en"}));
-        return fetchCardByName(name, fields, shouldGroup, offlineOnly, preferOptionalFoil, mDb, languages);
-    }
     /**
      * Given a card's name, return a cursor with all of that card's requested information.
      * <p>
@@ -561,6 +555,7 @@ public class CardDbAdapter {
      * @param offlineOnly        true if the query should exclude online only cards, false otherwise
      * @param preferOptionalFoil true if the query should order cards that may or may not be foil first
      * @param mDb                The database to query
+     * @param languages          The languages to search card names in
      * @return A cursor with the requested information about the card
      * @throws FamiliarDbException If something goes wrong
      */
@@ -859,11 +854,6 @@ public class CardDbAdapter {
         }
     }
 
-    public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
-                                boolean consolidate, String orderByStr, SQLiteDatabase mDb) throws FamiliarDbException {
-        Set<String> languages = new HashSet<>(Arrays.asList(new String[]{"en"}));
-        return Search(criteria, backface, returnTypes, consolidate, orderByStr, mDb, languages);
-    }
     /**
      * This function will query the database with the information in criteria and return a cursor
      * with the requested data.
@@ -876,7 +866,7 @@ public class CardDbAdapter {
      * @param consolidate true to not include multiple printings of the same card, false otherwise
      * @param orderByStr  A string used to order the results
      * @param mDb         The database to query
-     * @param languages   languages to search card names in
+     * @param languages   The languages to search card names in
      * @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
@@ -1720,8 +1710,9 @@ public class CardDbAdapter {
      * <p>
      * TODO online only pref
      *
-     * @param query The string to search for
-     * @param mDb   The database to query
+     * @param query     The string to search for
+     * @param mDb       The database to query
+     * @param languages The languages to search card names in
      * @return Cursor over all words that match, or null if none found.
      * @throws FamiliarDbException If something goes wrong
      */

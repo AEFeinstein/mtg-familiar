@@ -54,10 +54,12 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Class that creates dialogs for TradeFragment
@@ -346,12 +348,13 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, fetchCardHandle);
                         /* Query the database for all versions of this card */
+                        Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
                         cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false, false, false, database);
+                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false, false, false, database, searchLanguages);
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
                             sets.add(new ExpansionImageHelper.ExpansionImageData(

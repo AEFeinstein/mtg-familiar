@@ -45,8 +45,11 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * This fragment helps user play Momir Stonehewer Jhoira basic, a variant format usually found online. It contains
@@ -219,7 +222,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             criteria.cmc = cmc;
             criteria.moJhoStoFilter = true;
-            permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
+            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database, searchLanguages);
 
             if (permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
@@ -261,7 +265,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = Collections.singletonList(type);
-            spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
+            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database, searchLanguages);
 
             if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));
