@@ -55,7 +55,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 124;
+    public static final int DATABASE_VERSION = 125;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -123,16 +123,19 @@ public class CardDbAdapter {
     public static final String KEY_NAME_NO_ACCENT_ITALIAN = "NAME_NO_ACCENT_ITALIAN";
     public static final String KEY_MULTIVERSEID_ITALIAN = "MULTIVERSEID_ITALIAN";
     public static final String KEY_NAME_JAPANESE = "NAME_JAPANESE";
+    public static final String KEY_NAME_NO_ACCENT_JAPANESE = "NAME_NO_ACCENT_JAPANESE";
     public static final String KEY_MULTIVERSEID_JAPANESE = "MULTIVERSEID_JAPANESE";
     public static final String KEY_NAME_PORTUGUESE_BRAZIL = "NAME_PORTUGUESE_BRAZIL";
     public static final String KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL = "NAME_NO_ACCENT_PORTUGUESE_BRAZIL";
     public static final String KEY_MULTIVERSEID_PORTUGUESE_BRAZIL = "MULTIVERSEID_PORTUGUESE_BRAZIL";
     public static final String KEY_NAME_RUSSIAN = "NAME_RUSSIAN";
+    public static final String KEY_NAME_NO_ACCENT_RUSSIAN = "NAME_NO_ACCENT_RUSSIAN";
     public static final String KEY_MULTIVERSEID_RUSSIAN = "MULTIVERSEID_RUSSIAN";
     public static final String KEY_NAME_SPANISH = "NAME_SPANISH";
     public static final String KEY_NAME_NO_ACCENT_SPANISH = "NAME_NO_ACCENT_SPANISH";
     public static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
     public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
+    public static final String KEY_NAME_NO_ACCENT_KOREAN = "NAME_NO_ACCENT_KOREAN";
     public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
     public static final String KEY_WATERMARK = "WATERMARK";
     public static final String KEY_TCGP_PRODUCT_ID = "TCGP_PRODUCT_ID";
@@ -175,16 +178,19 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_ITALIAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_ITALIAN,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_JAPANESE,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_JAPANESE,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_PORTUGUESE_BRAZIL,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_PORTUGUESE_BRAZIL,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_RUSSIAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_RUSSIAN,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_SPANISH,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_SPANISH,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_SPANISH,
             DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_WATERMARK,
             DATABASE_TABLE_CARDS + "." + KEY_TCGP_PRODUCT_ID
@@ -269,16 +275,19 @@ public class CardDbAdapter {
                     KEY_NAME_NO_ACCENT_ITALIAN + " text, " +
                     KEY_MULTIVERSEID_ITALIAN + " integer, " +
                     KEY_NAME_JAPANESE + " text, " +
+                    KEY_NAME_NO_ACCENT_JAPANESE + " text, " +
                     KEY_MULTIVERSEID_JAPANESE + " integer, " +
                     KEY_NAME_PORTUGUESE_BRAZIL + " text, " +
                     KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL + " text, " +
                     KEY_MULTIVERSEID_PORTUGUESE_BRAZIL + " integer, " +
                     KEY_NAME_RUSSIAN + " text, " +
+                    KEY_NAME_NO_ACCENT_RUSSIAN + " text, " +
                     KEY_MULTIVERSEID_RUSSIAN + " integer, " +
                     KEY_NAME_SPANISH + " text, " +
                     KEY_NAME_NO_ACCENT_SPANISH + " text, " +
                     KEY_MULTIVERSEID_SPANISH + " integer, " +
                     KEY_NAME_KOREAN + " text, " +
+                    KEY_NAME_NO_ACCENT_KOREAN + " text, " +
                     KEY_MULTIVERSEID_KOREAN + " integer);";
 
     static final String DATABASE_CREATE_SETS =
@@ -828,11 +837,11 @@ public class CardDbAdapter {
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_FRENCH + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_GERMAN + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_ITALIAN + "," +
-                DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_JAPANESE + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_PORTUGUESE_BRAZIL + "," +
-                DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN + "," +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_RUSSIAN + "," +
                 DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_SPANISH + "," +
-                DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN +
+                DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_KOREAN +
                 ") ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
         try (Cursor cursor = mDb.rawQuery(sql, null)) {
@@ -1739,10 +1748,10 @@ public class CardDbAdapter {
                     key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_SPANISH);
                 } else if (Objects.equals(lang, "jp")) {
                     key_name_languages.add(KEY_NAME_JAPANESE);
-                    key_name_no_accent_languages.add(KEY_NAME_JAPANESE);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_JAPANESE);
                 } else if (Objects.equals(lang, "ru")) {
                     key_name_languages.add(KEY_NAME_RUSSIAN);
-                    key_name_no_accent_languages.add(KEY_NAME_RUSSIAN);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_RUSSIAN);
                 } else if (Objects.equals(lang, "de")) {
                     key_name_languages.add(KEY_NAME_GERMAN);
                     key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_GERMAN);
@@ -1757,7 +1766,7 @@ public class CardDbAdapter {
                     key_name_no_accent_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
                 } else if (Objects.equals(lang, "ko")) {
                     key_name_languages.add(KEY_NAME_KOREAN);
-                    key_name_no_accent_languages.add(KEY_NAME_KOREAN);
+                    key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_KOREAN);
                 } else {
                     key_name_languages.add(KEY_NAME);
                     key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT);
@@ -1962,6 +1971,7 @@ public class CardDbAdapter {
                 }
                 case Language.Japanese: {
                     initialValues.put(KEY_NAME_JAPANESE, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_JAPANESE, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_JAPANESE, fp.getMultiverseId());
                     break;
                 }
@@ -1973,6 +1983,7 @@ public class CardDbAdapter {
                 }
                 case Language.Russian: {
                     initialValues.put(KEY_NAME_RUSSIAN, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_RUSSIAN, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_RUSSIAN, fp.getMultiverseId());
                     break;
                 }
@@ -1984,6 +1995,7 @@ public class CardDbAdapter {
                 }
                 case Language.Korean: {
                     initialValues.put(KEY_NAME_KOREAN, fp.getName());
+                    initialValues.put(KEY_NAME_NO_ACCENT_KOREAN, removeAccentMarks(fp.getName()));
                     initialValues.put(KEY_MULTIVERSEID_KOREAN, fp.getMultiverseId());
                     break;
                 }
@@ -2976,9 +2988,9 @@ public class CardDbAdapter {
             } else if (Objects.equals(lang, "es")) {
                 key_name_languages.add(KEY_NAME_NO_ACCENT_SPANISH);
             } else if (Objects.equals(lang, "jp")) {
-                key_name_languages.add(KEY_NAME_JAPANESE);
+                key_name_languages.add(KEY_NAME_NO_ACCENT_JAPANESE);
             } else if (Objects.equals(lang, "ru")) {
-                key_name_languages.add(KEY_NAME_RUSSIAN);
+                key_name_languages.add(KEY_NAME_NO_ACCENT_RUSSIAN);
             } else if (Objects.equals(lang, "de")) {
                 key_name_languages.add(KEY_NAME_NO_ACCENT_GERMAN);
             } else if (Objects.equals(lang, "pt")) {
@@ -2988,7 +3000,7 @@ public class CardDbAdapter {
             } else if (Objects.equals(lang, "tw")) {
                 key_name_languages.add(KEY_NAME_CHINESE_TRADITIONAL);
             } else if (Objects.equals(lang, "ko")) {
-                key_name_languages.add(KEY_NAME_KOREAN);
+                key_name_languages.add(KEY_NAME_NO_ACCENT_KOREAN);
             } else {
                 key_name_languages.add(KEY_NAME_NO_ACCENT);
             }
