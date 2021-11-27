@@ -216,6 +216,9 @@
         <item>tw</item>
         <item>ko</item>
     </string-array>
+    <string-array name="default_search_languages">
+        <item>en</item>
+    </string-array>
     <string-array name="pref_language">
         <item>@string/pref_English</item>
         <item>@string/pref_German</item>

@@ -135,6 +135,7 @@
             <!--android:title="@string/pref_hide_online_title" />-->
 
             <MultiSelectListPreference
+                android:defaultValue="@array/default_search_languages"
                 android:dialogTitle="@string/pref_search_languages_title"
                 android:entries="@array/card_language"
                 android:entryValues="@array/card_language_values"

@@ -1132,7 +1132,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
 
     /* Search languages */
     public static synchronized Set<String> getSearchLanguages(@Nullable Context context) {
-        Set<String> defaultlangs = new HashSet<>(Arrays.asList(new String[]{"en"}));
+        Set<String> defaultlangs = new HashSet<>(Arrays.asList("en"));
         if (null == context) {
             return defaultlangs;
         }

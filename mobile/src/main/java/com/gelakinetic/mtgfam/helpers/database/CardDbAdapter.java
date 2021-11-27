@@ -580,11 +580,11 @@ public class CardDbAdapter {
             Set<String> key_name_languages = getKeyNameLanguages(languages);
             sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE ");
             sql.append("(");
-            Iterator iter = key_name_languages.iterator();
-            sql.append(DATABASE_TABLE_CARDS + "." + (String) iter.next() + " = ").append(name);
+            Iterator<String> iter = key_name_languages.iterator();
+            sql.append(DATABASE_TABLE_CARDS + "." + iter.next() + " = ").append(name);
             while (iter.hasNext()) {
                 sql.append(" OR ");
-                sql.append(DATABASE_TABLE_CARDS + "." + (String) iter.next() + " = ").append(name);
+                sql.append(DATABASE_TABLE_CARDS + "." + iter.next() + " = ").append(name);
             }
             sql.append(")");
             if (offlineOnly) {
@@ -886,12 +886,12 @@ public class CardDbAdapter {
                 // begin
                 statement.append(" AND (");
                 // first language
-                Iterator iter = key_name_languages.iterator();
-                String key_name_language = (String) iter.next();
+                Iterator<String> iter = key_name_languages.iterator();
+                String key_name_language = iter.next();
                 statement.append(DATABASE_TABLE_CARDS + "." + key_name_language + " LIKE ").append(sanitizeString("%" + s + "%", true));
                 // additional languages
                 while (iter.hasNext()) {
-                    key_name_language = (String) iter.next();
+                    key_name_language = iter.next();
                     statement.append(" OR " + DATABASE_TABLE_CARDS + "." + key_name_language + " LIKE ").append(sanitizeString("%" + s + "%", true));
                 }
                 // end
@@ -1725,8 +1725,8 @@ public class CardDbAdapter {
             }
 
             /* get search languages */
-            List<String> key_name_languages = new ArrayList<String>();
-            List<String> key_name_no_accent_languages = new ArrayList<String>();
+            List<String> key_name_languages = new ArrayList<>();
+            List<String> key_name_no_accent_languages = new ArrayList<>();
             for (String lang: languages) {
                 if (Objects.equals(lang, "fr")) {
                     key_name_languages.add(KEY_NAME_FRENCH);
@@ -2970,7 +2970,7 @@ public class CardDbAdapter {
      * @return keys of names in requested languages
      */
     public static Set<String> getKeyNameLanguages(Set<String> languages) {
-        Set<String> key_name_languages = new HashSet();;
+        Set<String> key_name_languages = new HashSet<>();
         for (String lang: languages) {
             if (Objects.equals(lang, "fr")) {
                 key_name_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
