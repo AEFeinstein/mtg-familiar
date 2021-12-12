@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
@@ -156,6 +155,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTextSpinner;
     private Spinner mTypeSpinner;
     private Spinner mSetSpinner;
+    private AsyncTask<SearchViewFragment, Void, SearchViewFragment> mBuildAutocompleteTask;
 
     /**
      * Necessary empty constructor
@@ -319,7 +319,9 @@ public class SearchViewFragment extends FamiliarFragment {
         mManaCostTextView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         /* Get a bunch of database info in a background task */
-        new BuildAutocompleteTask().execute(this);
+        if ((null == mBuildAutocompleteTask) || (mBuildAutocompleteTask.getStatus() == AsyncTask.Status.FINISHED)) {
+            mBuildAutocompleteTask = new BuildAutocompleteTask().execute(this);
+        }
 
         /* set the search button! */
         searchButton.setOnClickListener(v -> doSearch());
@@ -359,63 +361,50 @@ public class SearchViewFragment extends FamiliarFragment {
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
                 SQLiteDatabase database = DatabaseManager.openDatabase(frag.getActivity(), false, handle);
-                if (frag.mSetNames == null) {
-                    /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                    setCursor = CardDbAdapter.fetchAllSets(database, PreferenceAdapter.getHideOnlineOnly(frag.getContext()),
-                            PreferenceAdapter.getHideFunnyCards(frag.getContext()));
-                    setCursor.moveToFirst();
 
-                    frag.mSetNames = new String[setCursor.getCount()];
-                    frag.mSetSymbols = new String[setCursor.getCount()];
+                /* Query the database for all sets and fill the arrays to populate the list of choices with */
+                setCursor = CardDbAdapter.fetchAllSets(database, PreferenceAdapter.getHideOnlineOnly(frag.getContext()),
+                        PreferenceAdapter.getHideFunnyCards(frag.getContext()));
+                setCursor.moveToFirst();
 
-                    /* If this wasn't persisted, create it new */
-                    if (frag.mSetCheckedIndices == null) {
-                        frag.mSetCheckedIndices = new int[0];
-                    }
+                frag.mSetNames = new String[setCursor.getCount()];
+                frag.mSetSymbols = new String[setCursor.getCount()];
 
-                    for (int i = 0; i < setCursor.getCount(); i++) {
-                        frag.mSetSymbols[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
-                        frag.mSetNames[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_NAME);
-                        setCursor.moveToNext();
-                    }
+                /* If this wasn't persisted, create it new */
+                if (frag.mSetCheckedIndices == null) {
+                    frag.mSetCheckedIndices = new int[0];
                 }
 
-                if (frag.mFormatNames == null) {
-                    /* Query the database for all formats and fill the arrays to populate the list of choices with */
-                    formatCursor = CardDbAdapter.fetchAllFormats(database);
-                    formatCursor.moveToFirst();
-
-                    frag.mFormatNames = new String[formatCursor.getCount()];
-
-                    for (int i = 0; i < formatCursor.getCount(); i++) {
-                        frag.mFormatNames[i] = CardDbAdapter.getStringFromCursor(formatCursor, CardDbAdapter.KEY_NAME);
-                        formatCursor.moveToNext();
-                    }
+                for (int i = 0; i < setCursor.getCount(); i++) {
+                    frag.mSetSymbols[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                    frag.mSetNames[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_NAME);
+                    setCursor.moveToNext();
                 }
 
-                boolean offlineOnly = PreferenceAdapter.getHideOnlineOnly(frag.getContext());
+                /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                formatCursor = CardDbAdapter.fetchAllFormats(database);
+                formatCursor.moveToFirst();
+
+                frag.mFormatNames = new String[formatCursor.getCount()];
+
+                for (int i = 0; i < formatCursor.getCount(); i++) {
+                    frag.mFormatNames[i] = CardDbAdapter.getStringFromCursor(formatCursor, CardDbAdapter.KEY_NAME);
+                    formatCursor.moveToNext();
+                }
+
+                boolean hideOnline = PreferenceAdapter.getHideOnlineOnly(frag.getContext());
                 boolean hideFunny = PreferenceAdapter.getHideFunnyCards(frag.getContext());
-                if (frag.mSupertypes == null) {
-                    String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUPERTYPE, true, database, offlineOnly, hideFunny);
-                    frag.mSupertypes = tokenStringsFromTypes(supertypes);
-                }
+                String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUPERTYPE, true, database, hideOnline, hideFunny);
+                frag.mSupertypes = tokenStringsFromTypes(supertypes);
 
-                if (frag.mSubtypes == null) {
-                    String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUBTYPE, true, database, offlineOnly, hideFunny);
-                    frag.mSubtypes = tokenStringsFromTypes(subtypes);
-                }
+                String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUBTYPE, true, database, hideOnline, hideFunny);
+                frag.mSubtypes = tokenStringsFromTypes(subtypes);
 
-                if (frag.mArtists == null) {
-                    frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_ARTIST, false, database, offlineOnly, hideFunny);
-                }
+                frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_ARTIST, false, database, hideOnline, hideFunny);
 
-                if (frag.mWatermarks == null) {
-                    frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_WATERMARK, false, database, offlineOnly, hideFunny);
-                }
+                frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_WATERMARK, false, database, hideOnline, hideFunny);
 
-                if (frag.mSetTypes == null) {
-                    frag.mSetTypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_SETS, CardDbAdapter.KEY_SET_TYPE, false, database, offlineOnly, hideFunny);
-                }
+                frag.mSetTypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_SETS, CardDbAdapter.KEY_SET_TYPE, false, database, hideOnline, hideFunny);
             } catch (SQLiteException | FamiliarDbException e) {
                 frag.handleFamiliarDbException(false);
             } finally {
@@ -1210,27 +1199,13 @@ public class SearchViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Whenever the online only or hide funny preferences changes
-     * reload the autocomplete fields
-     *
-     * @param sharedPreferences The shared preferences
-     * @param s                 The string name of the preference that changed
-     */
-    @Override
-    public void onSharedPreferenceChange(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(getString(R.string.key_hideOnlineCards)) ||
-                s.equals(getString(R.string.key_hideFunnyCards))) {
-            /* Get a bunch of database info in a background task */
-            new BuildAutocompleteTask().execute(this);
-        }
-    }
-
-    /**
      * Whenever the database updates, reload the autocomplete fiends
      */
     @Override
     public void notifyDatabaseUpdated() {
         /* Get a bunch of database info in a background task */
-        new BuildAutocompleteTask().execute(this);
+        if ((null == mBuildAutocompleteTask) || (mBuildAutocompleteTask.getStatus() == AsyncTask.Status.FINISHED)) {
+            mBuildAutocompleteTask = new BuildAutocompleteTask().execute(this);
+        }
     }
 }

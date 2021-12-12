@@ -209,13 +209,8 @@ public class FamiliarActivity extends AppCompatActivity {
             FamiliarActivity.this.finish();
             startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
         }
-
-        // Notify the fragment of any preference changes
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-        if (fragment instanceof FamiliarFragment) {
-            ((FamiliarFragment) fragment).onSharedPreferenceChange(sharedPreferences, s);
-        }
     };
+
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
     private SmoothProgressBar mSmoothProgressBar;
@@ -297,9 +292,10 @@ public class FamiliarActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(DbUpdaterService.DATABASE_UPDATE_INTENT)) {
                 // Notify the fragment
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-                if (fragment instanceof FamiliarFragment) {
-                    ((FamiliarFragment) fragment).notifyDatabaseUpdated();
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    if (fragment instanceof FamiliarFragment) {
+                        ((FamiliarFragment) fragment).notifyDatabaseUpdated();
+                    }
                 }
             }
         }
@@ -631,8 +627,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 selectItem(mPageEntries[i].mNameResource, null, true, false);
             } else if (mPageEntries[i].mNameResource == R.string.main_settings_title) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.addToBackStack(null);
                 ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
+                ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 shouldCloseDrawer = true;
             } else if (mPageEntries[i].mNameResource == R.string.main_force_update_title) {
