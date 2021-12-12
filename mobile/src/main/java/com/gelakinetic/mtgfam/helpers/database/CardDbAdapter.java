@@ -1742,7 +1742,7 @@ public class CardDbAdapter {
                     DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
 
             if (offlineOnly) {
-                sql += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_ONLINE_ONLY + " = 0)";
+                sql += " AND (" + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0)";
             }
 
             for (int i = 1; i < key_name_languages.size(); i++) {
