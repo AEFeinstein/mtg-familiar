@@ -504,6 +504,7 @@ Good luck, and have fun!
     <string name="pref_cat_list_general">General Lists</string>
     <string name="pref_undo_timeout_seconds_summary">The number of seconds an item will stay in the undo state before it is deleted</string>
     <string name="pref_undo_timeout_seconds_title">Undo Timeout</string>
+    <string name="pref_cat_hidden">Hidden Cards</string>
 
     <!-- Judge's Corner -->
     <string name="judges_corner_MTR">"MTR"</string>
