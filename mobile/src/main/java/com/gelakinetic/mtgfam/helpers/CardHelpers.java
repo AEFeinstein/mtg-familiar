@@ -138,7 +138,8 @@ public class CardHelpers {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false,
-                    PreferenceAdapter.getHideOnlineOnly(fragment.getContext()), false, db, searchLanguages);
+                    PreferenceAdapter.getHideOnlineOnly(fragment.getContext()),
+                    PreferenceAdapter.getHideFunnyCards(fragment.getContext()), false, db, searchLanguages);
 
             Set<String> foilSets = CardDbAdapter.getFoilSets(db);
 

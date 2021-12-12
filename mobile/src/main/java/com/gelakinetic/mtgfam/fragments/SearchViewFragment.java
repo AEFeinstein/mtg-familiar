@@ -360,7 +360,8 @@ public class SearchViewFragment extends FamiliarFragment {
                 SQLiteDatabase database = DatabaseManager.openDatabase(frag.getActivity(), false, handle);
                 if (frag.mSetNames == null) {
                     /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                    setCursor = CardDbAdapter.fetchAllSets(database, PreferenceAdapter.getHideOnlineOnly(frag.getContext()));
+                    setCursor = CardDbAdapter.fetchAllSets(database, PreferenceAdapter.getHideOnlineOnly(frag.getContext()),
+                            PreferenceAdapter.getHideFunnyCards(frag.getContext()));
                     setCursor.moveToFirst();
 
                     frag.mSetNames = new String[setCursor.getCount()];
@@ -392,26 +393,27 @@ public class SearchViewFragment extends FamiliarFragment {
                 }
 
                 boolean offlineOnly = PreferenceAdapter.getHideOnlineOnly(frag.getContext());
+                boolean hideFunny = PreferenceAdapter.getHideFunnyCards(frag.getContext());
                 if (frag.mSupertypes == null) {
-                    String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUPERTYPE, true, database, offlineOnly);
+                    String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUPERTYPE, true, database, offlineOnly, hideFunny);
                     frag.mSupertypes = tokenStringsFromTypes(supertypes);
                 }
 
                 if (frag.mSubtypes == null) {
-                    String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUBTYPE, true, database, offlineOnly);
+                    String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUBTYPE, true, database, offlineOnly, hideFunny);
                     frag.mSubtypes = tokenStringsFromTypes(subtypes);
                 }
 
                 if (frag.mArtists == null) {
-                    frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_ARTIST, false, database, offlineOnly);
+                    frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_ARTIST, false, database, offlineOnly, hideFunny);
                 }
 
                 if (frag.mWatermarks == null) {
-                    frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_WATERMARK, false, database, offlineOnly);
+                    frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_WATERMARK, false, database, offlineOnly, hideFunny);
                 }
 
                 if (frag.mSetTypes == null) {
-                    frag.mSetTypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_SETS, CardDbAdapter.KEY_SET_TYPE, false, database, offlineOnly);
+                    frag.mSetTypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_SETS, CardDbAdapter.KEY_SET_TYPE, false, database, offlineOnly, hideFunny);
                 }
             } catch (SQLiteException | FamiliarDbException e) {
                 frag.handleFamiliarDbException(false);

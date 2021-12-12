@@ -93,7 +93,9 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
             String orderByStr = CardDbAdapter.KEY_SET + " ASC, " + CardDbAdapter.KEY_NUMBER + " ASC";
             Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
             Cursor allCards = CardDbAdapter.Search(criteria, false, returnTypes, false,
-                    orderByStr, database, searchLanguages, PreferenceAdapter.getHideOnlineOnly(activity));
+                    orderByStr, database, searchLanguages,
+                    PreferenceAdapter.getHideOnlineOnly(activity),
+                    PreferenceAdapter.getHideFunnyCards(activity));
 
             if (null != allCards) {
                 // Log how many cards there are to lookup

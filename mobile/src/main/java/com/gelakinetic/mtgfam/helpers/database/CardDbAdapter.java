@@ -453,21 +453,26 @@ public class CardDbAdapter {
      *                    unique, or whether the full String should be considered unique
      * @param database    The database to query
      * @param offlineOnly true to only show offline cards, false to show all cards
+     * @param hideFunny   true to hide funny (i.e. un-, silver bordered) cards, false to show all cards
      * @return A String array of unique values from the given column
      * @throws FamiliarDbException If something goes wrong
      */
     public static String[] getUniqueColumnArray(String table, String colKey, boolean shouldSplit,
-                                                SQLiteDatabase database, boolean offlineOnly) throws FamiliarDbException {
+                                                SQLiteDatabase database, boolean offlineOnly, boolean hideFunny) throws FamiliarDbException {
         Cursor cursor = null;
         try {
             String tableJoin = table;
-            String where = "";
+            String where = " WHERE (1=1)";
+
+            if ((offlineOnly || hideFunny) && CardDbAdapter.DATABASE_TABLE_CARDS.equals(table)) {
+                tableJoin = DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
+                        DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET;
+            }
             if (offlineOnly) {
-                if (CardDbAdapter.DATABASE_TABLE_CARDS.equals(table)) {
-                    tableJoin = DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
-                            DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET;
-                }
-                where = " WHERE " + KEY_ONLINE_ONLY + " = 0";
+                where += " AND " + KEY_ONLINE_ONLY + " = 0";
+            }
+            if (hideFunny) {
+                where += " AND " + KEY_BORDER_COLOR + " != 'Silver'";
             }
 
             String query =
@@ -561,6 +566,7 @@ public class CardDbAdapter {
      * @param fields             The requested information about the card
      * @param shouldGroup        true if the query should group by KEY_CODE, false otherwise
      * @param offlineOnly        true if the query should exclude online only cards, false otherwise
+     * @param hideFunny          true to hide funny (i.e. un-, silver bordered) cards, false to show all cards
      * @param preferOptionalFoil true if the query should order cards that may or may not be foil first
      * @param mDb                The database to query
      * @param languages          The languages to search card names in
@@ -568,7 +574,7 @@ public class CardDbAdapter {
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
-                                         boolean offlineOnly, boolean preferOptionalFoil,
+                                         boolean offlineOnly, boolean hideFunny, boolean preferOptionalFoil,
                                          SQLiteDatabase mDb, Set<String> languages)
             throws FamiliarDbException {
         try {
@@ -597,6 +603,9 @@ public class CardDbAdapter {
             sql.append(")");
             if (offlineOnly) {
                 sql.append(" AND " + KEY_ONLINE_ONLY + " = 0");
+            }
+            if (hideFunny) {
+                sql.append(" AND " + KEY_BORDER_COLOR + " != 'Silver'");
             }
             sql.append(" COLLATE NOCASE");
             if (shouldGroup) {
@@ -864,11 +873,12 @@ public class CardDbAdapter {
      * @param mDb         The database to query
      * @param languages   The languages to search card names in
      * @param offlineOnly true to only show offline cards, false to show all cards
+     * @param hideFunny   true to hide funny (i.e. un-, silver bordered) cards, false to show all cards
      * @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
-                                boolean consolidate, String orderByStr, SQLiteDatabase mDb, Set<String> languages, boolean offlineOnly)
+                                boolean consolidate, String orderByStr, SQLiteDatabase mDb, Set<String> languages, boolean offlineOnly, boolean hideFunny)
             throws FamiliarDbException {
         FamiliarLogger.appendToLogFile(new StringBuilder(criteria.toJson()), new Throwable().getStackTrace()[0].getMethodName());
 
@@ -876,6 +886,10 @@ public class CardDbAdapter {
 
         if (offlineOnly) {
             statement.append(" AND (").append(DATABASE_TABLE_SETS).append(".").append(KEY_ONLINE_ONLY).append(" = 0)");
+        }
+
+        if (hideFunny) {
+            statement.append(" AND (").append(DATABASE_TABLE_SETS).append(".").append(KEY_BORDER_COLOR).append("!= 'Silver')");
         }
 
         if (criteria.name != null) {
@@ -1677,10 +1691,11 @@ public class CardDbAdapter {
      * @param mDb         The database to query
      * @param languages   The languages to search card names in
      * @param offlineOnly true to only show offline cards, false to show all cards
+     * @param hideFunny   true to hide funny (i.e. un-, silver bordered) cards, false to show all cards
      * @return Cursor over all words that match, or null if none found.
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb, Set<String> languages, boolean offlineOnly) throws FamiliarDbException {
+    public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb, Set<String> languages, boolean offlineOnly, boolean hideFunny) throws FamiliarDbException {
         try {
             query = sanitizeString(query + "%", true);
 
@@ -1743,6 +1758,10 @@ public class CardDbAdapter {
 
             if (offlineOnly) {
                 sql += " AND (" + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0)";
+            }
+
+            if (hideFunny) {
+                sql += " AND (" + DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR + " != 'Silver')";
             }
 
             for (int i = 1; i < key_name_languages.size(); i++) {
@@ -2149,17 +2168,21 @@ public class CardDbAdapter {
      * Returns a cursor with all the information about all of the sets.
      *
      * @param sqLiteDatabase The database to query
+     * @param hideFunny      true to hide funny (i.e. un-, silver bordered) cards, false to show all cards
      * @return a Cursor with all of the information about all of the sets
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase, boolean offlineOnly) throws FamiliarDbException {
+    public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase, boolean offlineOnly, boolean hideFunny) throws FamiliarDbException {
 
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
-            String selection = null;
+            String selection = "(1=1)";
             if (offlineOnly) {
-                selection = KEY_ONLINE_ONLY + " = 0";
+                selection += " AND " + KEY_ONLINE_ONLY + " = 0";
+            }
+            if (hideFunny) {
+                selection += " AND " + KEY_BORDER_COLOR + " != 'Silver'";
             }
             return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, selection,
                     null, null, null, KEY_DATE + " DESC");

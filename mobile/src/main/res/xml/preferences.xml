@@ -134,6 +134,12 @@
                 android:summary="@string/pref_hide_online_summary"
                 android:title="@string/pref_hide_online_title" />
 
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_hideFunnyCards"
+                android:summary="@string/pref_hide_funny_summary"
+                android:title="@string/pref_hide_funny_title" />
+
             <MultiSelectListPreference
                 android:defaultValue="@array/default_search_languages"
                 android:dialogTitle="@string/pref_search_languages_title"

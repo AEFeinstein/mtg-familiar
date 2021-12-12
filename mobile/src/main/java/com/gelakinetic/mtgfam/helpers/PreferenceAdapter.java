@@ -1130,6 +1130,13 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_hideOnlineCards), false);
     }
 
+    public static synchronized boolean getHideFunnyCards(@Nullable Context context) {
+        if (null == context) {
+            return true;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_hideFunnyCards), false);
+    }
+
     /* Search languages */
     public static synchronized Set<String> getSearchLanguages(@Nullable Context context) {
         Set<String> defaultlangs = new HashSet<>(Arrays.asList("en"));

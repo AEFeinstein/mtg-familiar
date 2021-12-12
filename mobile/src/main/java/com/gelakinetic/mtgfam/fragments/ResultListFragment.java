@@ -338,7 +338,8 @@ public class ResultListFragment extends FamiliarFragment {
             Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(getContext());
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
                     PreferenceAdapter.getSearchSortOrder(getContext()), database, searchLanguages,
-                    PreferenceAdapter.getHideOnlineOnly(this.getContext()));
+                    PreferenceAdapter.getHideOnlineOnly(this.getContext()),
+                    PreferenceAdapter.getHideFunnyCards(this.getContext()));
             if (mCursor == null) {
                 FamiliarLogger.appendToLogFile(new StringBuilder("Null cursor"), "doSearch");
             } else {

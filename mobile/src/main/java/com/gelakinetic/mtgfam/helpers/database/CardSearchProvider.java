@@ -111,7 +111,8 @@ public class CardSearchProvider extends ContentProvider {
 
                     Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(getContext());
                     return CardDbAdapter.getCardsByNamePrefix(query, mDatabase, searchLanguages,
-                            PreferenceAdapter.getHideOnlineOnly(getContext()));
+                            PreferenceAdapter.getHideOnlineOnly(getContext()),
+                            PreferenceAdapter.getHideFunnyCards(getContext()));
                 }
                 case REFRESH_SHORTCUT: {
                     String rowId1 = uri.getLastPathSegment();
