@@ -719,7 +719,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a list of cards, fetch all the database info about them in a single query
+     * Given a list of cards, fetch all the database info about them in a single query.
      *
      * @param cards A list of cards to fetch info for
      * @param mDb   The database to query
@@ -1623,7 +1623,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card name, find the ID for that card in the database
+     * Given a card name, find the ID for that card in the database.
      *
      * @param name The name of the card to search for
      * @return The ID in the database
@@ -1789,7 +1789,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * For cards without a multiverse ID, find an equivalent for Gatherer lookups
+     * For cards without a multiverse ID, find an equivalent for Gatherer lookups.
      *
      * @param mName The name of this card
      * @param mDb   The database to query for another multiverse ID
@@ -2168,6 +2168,7 @@ public class CardDbAdapter {
      * Returns a cursor with all the information about all of the sets.
      *
      * @param sqLiteDatabase The database to query
+     * @param hideOnline     true if the query should exclude online only cards, false otherwise
      * @param hideFunny      true to hide funny (i.e. un-, silver bordered) cards, false to show all cards
      * @return a Cursor with all of the information about all of the sets
      * @throws FamiliarDbException If something goes wrong
@@ -2217,7 +2218,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Returns whether or not a set is online only
+     * Returns whether or not a set is online only.
      *
      * @param setCode  The set code to look up
      * @param database The database to query
@@ -2271,7 +2272,7 @@ public class CardDbAdapter {
 
 
     /**
-     * Return the text representation of numeric or non-numeric powers and toughnesses
+     * Return the text representation of numeric or non-numeric powers and toughnesses.
      *
      * @param stat        The numeric representation of a power or toughness
      * @param displaySign True to display the sign, false otherwise
@@ -2312,6 +2313,8 @@ public class CardDbAdapter {
     }
 
     /**
+     * Get a list of non-foil sets.
+     *
      * @param database The database to query with
      * @return A list of all the sets which do not have foils (or are only foil)
      * @throws FamiliarDbException If something goes terribly wrong
