@@ -95,7 +95,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * @return true if there was an error reading this decklist
-     *         false if everything is OK
+     * false if everything is OK
      */
     public boolean getDecklistReadError() {
         return mDecklistReadError;

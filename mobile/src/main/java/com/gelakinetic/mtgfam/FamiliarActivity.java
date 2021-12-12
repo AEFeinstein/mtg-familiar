@@ -24,9 +24,11 @@ import android.app.Activity;
 import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -206,8 +208,12 @@ public class FamiliarActivity extends AppCompatActivity {
             /* Restart the activity for theme & language changes */
             FamiliarActivity.this.finish();
             startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
-        } else if (s.equals(getString(R.string.key_hideOnlineCards)) || s.equals(getString(R.string.key_hideFunnyCards))) {
-            // TODO reload autocomplete lists
+        }
+
+        // Notify the fragment of any preference changes
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        if (fragment instanceof FamiliarFragment) {
+            ((FamiliarFragment) fragment).onSharedPreferenceChange(sharedPreferences, s);
         }
     };
     private ActionBarDrawerToggle mDrawerToggle;
@@ -279,6 +285,27 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
+
+    private class DatabaseUpdateReceiver extends BroadcastReceiver {
+        /**
+         * Receive a DATABASE_UPDATE_INTENT from a DbUpdaterService when the database update
+         *
+         * @param context Unused
+         * @param intent  The intent for this notification
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(DbUpdaterService.DATABASE_UPDATE_INTENT)) {
+                // Notify the fragment
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+                if (fragment instanceof FamiliarFragment) {
+                    ((FamiliarFragment) fragment).notifyDatabaseUpdated();
+                }
+            }
+        }
+    }
+
+    private DatabaseUpdateReceiver dataUpdateReceiver;
 
     /**
      * Open an inputStream to the HTML content at the given URL.
@@ -1076,6 +1103,24 @@ public class FamiliarActivity extends AppCompatActivity {
         }
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
         mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
+
+        // Register a receiver to be notified when the database updates
+        if (dataUpdateReceiver == null) {
+            dataUpdateReceiver = new DatabaseUpdateReceiver();
+        }
+        IntentFilter intentFilter = new IntentFilter(DbUpdaterService.DATABASE_UPDATE_INTENT);
+        registerReceiver(dataUpdateReceiver, intentFilter);
+    }
+
+    /**
+     * Unregister the receiver when the activity pauses
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dataUpdateReceiver != null) {
+            unregisterReceiver(dataUpdateReceiver);
+        }
     }
 
     /**

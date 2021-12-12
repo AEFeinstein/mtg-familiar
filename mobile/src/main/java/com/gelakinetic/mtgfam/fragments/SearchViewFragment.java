@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
@@ -1208,4 +1209,28 @@ public class SearchViewFragment extends FamiliarFragment {
         inflater.inflate(R.menu.search_menu, menu);
     }
 
+    /**
+     * Whenever the online only or hide funny preferences changes
+     * reload the autocomplete fields
+     *
+     * @param sharedPreferences The shared preferences
+     * @param s                 The string name of the preference that changed
+     */
+    @Override
+    public void onSharedPreferenceChange(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(getString(R.string.key_hideOnlineCards)) ||
+                s.equals(getString(R.string.key_hideFunnyCards))) {
+            /* Get a bunch of database info in a background task */
+            new BuildAutocompleteTask().execute(this);
+        }
+    }
+
+    /**
+     * Whenever the database updates, reload the autocomplete fiends
+     */
+    @Override
+    public void notifyDatabaseUpdated() {
+        /* Get a bunch of database info in a background task */
+        new BuildAutocompleteTask().execute(this);
+    }
 }

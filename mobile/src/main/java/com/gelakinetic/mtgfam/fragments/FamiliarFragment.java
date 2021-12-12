@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -356,5 +357,20 @@ public abstract class FamiliarFragment extends Fragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         FamiliarActivity.logBundleSize("SA " + this.getClass().getName(), args);
+    }
+
+    /**
+     * Override this to be notified when shared preferences change
+     *
+     * @param sharedPreferences The shared preferences
+     * @param s                 The string name of the preference that changed
+     */
+    public void onSharedPreferenceChange(SharedPreferences sharedPreferences, String s) {
+    }
+
+    /**
+     * Override this to be notified when the database updates
+     */
+    public void notifyDatabaseUpdated() {
     }
 }

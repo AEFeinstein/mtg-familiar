@@ -67,6 +67,8 @@ import java.util.zip.GZIPInputStream;
  */
 public class DbUpdaterService extends IntentService {
 
+    public static final String DATABASE_UPDATE_INTENT = "DATABASE_UPDATE_INTENT";
+
     /* Status Codes */
     private static final int STATUS_NOTIFICATION = 31;
 
@@ -453,6 +455,9 @@ public class DbUpdaterService extends IntentService {
 
                 if (updatedStuff.size() > 0) {
                     showUpdatedNotification(updatedStuff);
+
+                    /* Notify the activity of changes */
+                    sendBroadcast(new Intent(this.DATABASE_UPDATE_INTENT));
                 }
             }
         } catch (Exception e) {
