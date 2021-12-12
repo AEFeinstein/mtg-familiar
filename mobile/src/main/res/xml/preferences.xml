@@ -128,11 +128,11 @@
                 android:summary="@string/pref_persist_search_summary"
                 android:title="@string/pref_persist_search_title" />
 
-            <!--<CheckBoxPreference-->
-            <!--android:defaultValue="false"-->
-            <!--android:key="@string/key_hideOnlineCards"-->
-            <!--android:summary="@string/pref_hide_online_summary"-->
-            <!--android:title="@string/pref_hide_online_title" />-->
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_hideOnlineCards"
+                android:summary="@string/pref_hide_online_summary"
+                android:title="@string/pref_hide_online_title" />
 
             <MultiSelectListPreference
                 android:defaultValue="@array/default_search_languages"

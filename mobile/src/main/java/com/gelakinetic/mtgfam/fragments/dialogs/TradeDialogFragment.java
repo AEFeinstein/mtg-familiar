@@ -354,7 +354,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false, false, false, database, searchLanguages);
+                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false,
+                                PreferenceAdapter.getHideOnlineOnly(this.getContext()), false, database, searchLanguages);
                         /* Build set names and set codes */
                         while (!cards.isAfterLast()) {
                             sets.add(new ExpansionImageHelper.ExpansionImageData(
@@ -379,54 +380,54 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* Build and return the dialog */
                     ChangeSetListAdapter adapter =
                             new ExpansionImageHelper.ChangeSetListAdapter(getContext(), sets, ExpansionImageHelper.ExpansionImageSize.LARGE) {
-                        @Override
-                        protected void onClick(ExpansionImageData data) {
-                            /* Make sure positionForDialog is in bounds */
-                            synchronized (lSide) {
-                                int max1 = lSide.size();
+                                @Override
+                                protected void onClick(ExpansionImageData data) {
+                                    /* Make sure positionForDialog is in bounds */
+                                    synchronized (lSide) {
+                                        int max1 = lSide.size();
 
-                                if (positionForDialog >= max1) {
-                                    return;
-                                }
+                                        if (positionForDialog >= max1) {
+                                            return;
+                                        }
 
-                                String name = lSide.get(positionForDialog).getName();
-                                String set = data.getSetCode();
-                                String number = data.getSetNumber();
-                                int numberOf = lSide.get(positionForDialog).mNumberOf;
+                                        String name = lSide.get(positionForDialog).getName();
+                                        String set = data.getSetCode();
+                                        String number = data.getSetNumber();
+                                        int numberOf = lSide.get(positionForDialog).mNumberOf;
 
-                                /* See if the new set can be foil */
-                                FamiliarDbHandle foilHandle = new FamiliarDbHandle();
-                                boolean isFoil = lSide.get(positionForDialog).mIsFoil;
-                                try {
-                                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
-                                    if (!CardDbAdapter.canBeFoil(set, database)) {
-                                        isFoil = false;
+                                        /* See if the new set can be foil */
+                                        FamiliarDbHandle foilHandle = new FamiliarDbHandle();
+                                        boolean isFoil = lSide.get(positionForDialog).mIsFoil;
+                                        try {
+                                            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
+                                            if (!CardDbAdapter.canBeFoil(set, database)) {
+                                                isFoil = false;
+                                            }
+                                        } catch (SQLiteException | FamiliarDbException e) {
+                                            isFoil = false;
+                                        } finally {
+                                            DatabaseManager.closeDatabase(getActivity(), foilHandle);
+                                        }
+
+                                        try {
+                                            lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, number, isFoil, numberOf));
+
+                                            /* Reload and notify the adapter */
+                                            getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
+                                            /* Figure out what we're updating */
+                                            TradeFragment.TradeDataAdapter adapter;
+                                            if (sideForDialog == TradeFragment.LEFT) {
+                                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
+                                            } else {
+                                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        } catch (java.lang.InstantiationException e) {
+                                            /* Eat it */
+                                        }
                                     }
-                                } catch (SQLiteException | FamiliarDbException e) {
-                                    isFoil = false;
-                                } finally {
-                                    DatabaseManager.closeDatabase(getActivity(), foilHandle);
                                 }
-
-                                try {
-                                    lSide.set(positionForDialog, new MtgCard(getActivity(), name, set, number, isFoil, numberOf));
-
-                                    /* Reload and notify the adapter */
-                                    getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
-                                    /* Figure out what we're updating */
-                                    TradeFragment.TradeDataAdapter adapter;
-                                    if (sideForDialog == TradeFragment.LEFT) {
-                                        adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
-                                    } else {
-                                        adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
-                                    }
-                                    adapter.notifyDataSetChanged();
-                                } catch (java.lang.InstantiationException e) {
-                                    /* Eat it */
-                                }
-                            }
-                        }
-                    };
+                            };
                     Dialog dialog = new MaterialDialog.Builder(requireActivity())
                             .title(R.string.card_view_set_dialog_title)
                             .adapter(adapter, null)

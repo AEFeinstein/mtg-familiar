@@ -452,16 +452,28 @@ public class CardDbAdapter {
      * @param shouldSplit Whether or not each individual word from the column should be considered
      *                    unique, or whether the full String should be considered unique
      * @param database    The database to query
+     * @param offlineOnly true to only show offline cards, false to show all cards
      * @return A String array of unique values from the given column
      * @throws FamiliarDbException If something goes wrong
      */
     public static String[] getUniqueColumnArray(String table, String colKey, boolean shouldSplit,
-                                                SQLiteDatabase database) throws FamiliarDbException {
+                                                SQLiteDatabase database, boolean offlineOnly) throws FamiliarDbException {
         Cursor cursor = null;
         try {
+            String tableJoin = table;
+            String where = "";
+            if (offlineOnly) {
+                if (CardDbAdapter.DATABASE_TABLE_CARDS.equals(table)) {
+                    tableJoin = DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
+                            DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET;
+                }
+                where = " WHERE " + KEY_ONLINE_ONLY + " = 0";
+            }
+
             String query =
-                    "SELECT " + KEY_ID + ", " + colKey +
-                            " FROM " + table +
+                    "SELECT " + table + "." + KEY_ID + ", " + table + "." + colKey +
+                            " FROM " + tableJoin +
+                            where +
                             " GROUP BY " + colKey +
                             " ORDER BY " + colKey;
             FamiliarLogger.logRawQuery(query, null, new Throwable().getStackTrace()[0].getMethodName());
@@ -506,8 +518,6 @@ public class CardDbAdapter {
 
     /**
      * Given a list of KEY_ID values, return a cursor with all of a cards' information.
-     * <p>
-     * TODO online only pref
      *
      * @param ids        A list of ids for cards to fetch
      * @param orderByStr A string of keys and directions to order this query by
@@ -546,8 +556,6 @@ public class CardDbAdapter {
 
     /**
      * Given a card's name, return a cursor with all of that card's requested information.
-     * <p>
-     * TODO online only pref
      *
      * @param name               The name of the card to query
      * @param fields             The requested information about the card
@@ -617,10 +625,8 @@ public class CardDbAdapter {
 
     /**
      * Given a multiverse ID, return a cursor with all of that card's requested information.
-     * <p>
-     * TODO online only pref
      *
-     * @param multiverseId The card's multivers ID
+     * @param multiverseId The card's multiverse ID
      * @param fields       The requested information about the card
      * @param database     The database to query
      * @return A cursor with the requested information about the card
@@ -655,8 +661,6 @@ public class CardDbAdapter {
 
     /**
      * Given a card name and set code, return a cursor with that card's requested data.
-     * <p>
-     * TODO online only pref
      *
      * @param name    The card's name
      * @param setCode The card's set code
@@ -707,8 +711,6 @@ public class CardDbAdapter {
 
     /**
      * Given a list of cards, fetch all the database info about them in a single query
-     * <p>
-     * TODO online only pref
      *
      * @param cards A list of cards to fetch info for
      * @param mDb   The database to query
@@ -772,8 +774,6 @@ public class CardDbAdapter {
 
     /**
      * Given a card name, return the KEY_ID for that card.
-     * <p>
-     * TODO online only pref
      *
      * @param name The name of the card
      * @param mDb  The database to query
@@ -807,8 +807,6 @@ public class CardDbAdapter {
 
     /**
      * Given a card name, return the KEY_ID of matching cards, searching every language.
-     * <p>
-     * TODO online only pref
      *
      * @param name The name of the card
      * @param mDb  The database to query
@@ -857,8 +855,6 @@ public class CardDbAdapter {
     /**
      * This function will query the database with the information in criteria and return a cursor
      * with the requested data.
-     * <p>
-     * TODO online only pref
      *
      * @param criteria    The criteria used to build the query
      * @param backface    Whether or not the results should include the 'b' side of multicards
@@ -867,15 +863,20 @@ public class CardDbAdapter {
      * @param orderByStr  A string used to order the results
      * @param mDb         The database to query
      * @param languages   The languages to search card names in
+     * @param offlineOnly true to only show offline cards, false to show all cards
      * @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
-                                boolean consolidate, String orderByStr, SQLiteDatabase mDb, Set<String> languages)
+                                boolean consolidate, String orderByStr, SQLiteDatabase mDb, Set<String> languages, boolean offlineOnly)
             throws FamiliarDbException {
         FamiliarLogger.appendToLogFile(new StringBuilder(criteria.toJson()), new Throwable().getStackTrace()[0].getMethodName());
 
         StringBuilder statement = new StringBuilder(" WHERE 1=1");
+
+        if (offlineOnly) {
+            statement.append(" AND (").append(DATABASE_TABLE_SETS).append(".").append(KEY_ONLINE_ONLY).append(" = 0)");
+        }
 
         if (criteria.name != null) {
             /* get keys of search languages */
@@ -1581,8 +1582,6 @@ public class CardDbAdapter {
 
     /**
      * Given a set and a card number, return the KEY_ID for that card.
-     * <p>
-     * TODO online only pref
      *
      * @param set    The set code
      * @param number The number to look up
@@ -1609,40 +1608,8 @@ public class CardDbAdapter {
         }
     }
 
-// --Commented out by Inspection START (7/12/2021 9:20 AM):
-//    /**
-//     * Returns a card name queried by set and collector's number.
-//     * <p>
-//     * TODO online only pref
-//     *
-//     * @param set    The set code
-//     * @param number The number to look up
-//     * @param mDb    The database to query
-//     * @return The KEY_NAME value for the found card, or null if the card isn't found
-//     * @throws FamiliarDbException If something goes wrong
-//     */
-//    public static String getNameFromSetAndNumber(String set, String number, SQLiteDatabase mDb)
-//            throws FamiliarDbException {
-//        String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
-//                + KEY_SET + " = '" + set + "')";
-//        FamiliarLogger.logQuery(true, DATABASE_TABLE_CARDS,
-//                new String[]{KEY_NAME}, statement, null, null, null,
-//                KEY_NAME, null, new Throwable().getStackTrace()[0].getMethodName());
-//        try (Cursor c = mDb.query(true, DATABASE_TABLE_CARDS,
-//                new String[]{KEY_NAME}, statement, null, null, null,
-//                KEY_NAME, null)) {
-//            c.moveToFirst();
-//            return CardDbAdapter.getStringFromCursor(c, KEY_NAME);
-//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-//            throw new FamiliarDbException(e);
-//        }
-//    }
-// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
-
     /**
      * Given a card name, find the ID for that card in the database
-     * <p>
-     * TODO online only pref
      *
      * @param name The name of the card to search for
      * @return The ID in the database
@@ -1664,8 +1631,6 @@ public class CardDbAdapter {
 
     /**
      * Returns a Cursor positioned at the word specified by rowId.
-     * <p>
-     * TODO online only pref
      *
      * @param rowId   id of word to retrieve
      * @param columns The columns to include, if null then all are included
@@ -1707,16 +1672,15 @@ public class CardDbAdapter {
 
     /**
      * Returns a Cursor over all words that match the given query.
-     * <p>
-     * TODO online only pref
      *
-     * @param query     The string to search for
-     * @param mDb       The database to query
-     * @param languages The languages to search card names in
+     * @param query       The string to search for
+     * @param mDb         The database to query
+     * @param languages   The languages to search card names in
+     * @param offlineOnly true to only show offline cards, false to show all cards
      * @return Cursor over all words that match, or null if none found.
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb, Set<String> languages) throws FamiliarDbException {
+    public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb, Set<String> languages, boolean offlineOnly) throws FamiliarDbException {
         try {
             query = sanitizeString(query + "%", true);
 
@@ -1727,7 +1691,7 @@ public class CardDbAdapter {
             /* get search languages */
             List<String> key_name_languages = new ArrayList<>();
             List<String> key_name_no_accent_languages = new ArrayList<>();
-            for (String lang: languages) {
+            for (String lang : languages) {
                 if (Objects.equals(lang, "fr")) {
                     key_name_languages.add(KEY_NAME_FRENCH);
                     key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
@@ -1777,7 +1741,11 @@ public class CardDbAdapter {
                     " WHERE " +
                     DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
 
-            for (int i=1; i < key_name_languages.size(); i++) {
+            if (offlineOnly) {
+                sql += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_ONLINE_ONLY + " = 0)";
+            }
+
+            for (int i = 1; i < key_name_languages.size(); i++) {
                 key_name_language = key_name_languages.get(i);
                 key_name_no_accent_language = key_name_no_accent_languages.get(i);
                 sql += " UNION " +
@@ -1800,50 +1768,6 @@ public class CardDbAdapter {
             throw new FamiliarDbException(e);
         }
     }
-
-// --Commented out by Inspection START (7/12/2021 9:20 AM):
-//    /**
-//     * Given a collector's number and expansion, return the combined name for a multi-card
-//     *
-//     * @param expansion The expansion for this card
-//     * @param number    The card's number, with a letter suffix
-//     * @param mDb       The database to search
-//     * @return The whole, combined name for this multi-part card
-//     * @throws FamiliarDbException If something goes wrong
-//     */
-//    public static String getCombinedName(String expansion, String number, SQLiteDatabase mDb)
-//            throws FamiliarDbException {
-//
-//        // Strip the last part of the number, if it is a letter
-//        if (Character.isAlphabetic(number.charAt(number.length() - 1))) {
-//            number = number.substring(0, number.length() - 1);
-//        }
-//
-//        // Select all rows from the database for cards with this number
-//        String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER +
-//                " FROM " + DATABASE_TABLE_CARDS +
-//                " WHERE " + KEY_SET + " = '" + expansion + "' AND " + KEY_NUMBER + " LIKE '" + number + "%'" +
-//                " ORDER BY " + KEY_NUMBER + " ASC";
-//
-//        // For every returned row
-//        try (Cursor c = mDb.rawQuery(statement, null)) {
-//            StringBuilder retVal = new StringBuilder();
-//            c.moveToFirst();
-//            while (!c.isAfterLast()) {
-//                // If we're not starting off, append the delimiter
-//                if (retVal.length() > 0) {
-//                    retVal.append(" // ");
-//                }
-//                // Append the card name
-//                CardDbAdapter.getStringFromCursor(retVal.append(c, KEY_NAME));
-//                c.moveToNext();
-//            }
-//            return retVal.toString();
-//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-//            throw new FamiliarDbException(e);
-//        }
-//    }
-// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * For cards without a multiverse ID, find an equivalent for Gatherer lookups
@@ -1999,8 +1923,6 @@ public class CardDbAdapter {
     /**
      * I messed up with Duel Deck Anthologies. Each deck should have had its own set code, rather
      * than grouping them all together. This function fixes any saved cards when loaded.
-     * <p>
-     * TODO online only pref
      *
      * @param name     The name of the card to get the correct set code for
      * @param setCode  The incorrect set code (i.e. DD3)
@@ -2056,8 +1978,6 @@ public class CardDbAdapter {
 
     /**
      * Given a Cursor pointed at a card, return the full type line (sub - super) for that card.
-     * <p>
-     * TODO online only pref
      *
      * @param cCardById The cursor pointing to a card
      * @return A String with the full type line
@@ -2232,37 +2152,21 @@ public class CardDbAdapter {
      * @return a Cursor with all of the information about all of the sets
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase) throws FamiliarDbException {
+    public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase, boolean offlineOnly) throws FamiliarDbException {
 
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
             ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
-            return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
+            String selection = null;
+            if (offlineOnly) {
+                selection = KEY_ONLINE_ONLY + " = 0";
+            }
+            return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, selection,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);
         }
     }
-
-// --Commented out by Inspection START (7/12/2021 9:20 AM):
-//    /**
-//     * Given a standard set code, return the Magiccards.info set code.
-//     *
-//     * @param code The standard set code
-//     * @param mDb  The database to query
-//     * @return The Magiccards.info set code
-//     * @throws FamiliarDbException If something goes wrong
-//     */
-//    public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
-//        try (Cursor cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
-//                KEY_CODE + "=\"" + code + "\"", null, null, null, null)) {
-//            cursor.moveToFirst();
-//            return CardDbAdapter.getStringFromCursor(cursor, KEY_CODE_MTGI);
-//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-//            throw new FamiliarDbException(e);
-//        }
-//    }
-// --Commented out by Inspection STOP (7/12/2021 9:20 AM)
 
     /**
      * Given a set code, return the full set name.
@@ -2313,40 +2217,6 @@ public class CardDbAdapter {
             throw new FamiliarDbException(e);
         }
     }
-
-// --Commented out by Inspection START (7/12/2021 9:26 AM):
-//    /**
-//     * Given a set code, return a String with the set name that TCGPlayer.com uses.
-//     *
-//     * @param setCode The set code to search for
-//     * @param mDb     The database to query
-//     * @return The TCGPlayer.com name string
-//     * @throws FamiliarDbException If something goes wrong
-//     */
-//    public static String getTcgName(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-//        Cursor c = null;
-//        try {
-//            String sql = "SELECT " + KEY_NAME_TCGPLAYER +
-//                    " FROM " + DATABASE_TABLE_SETS +
-//                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode, false) + ";";
-//            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
-//            c = mDb.rawQuery(sql, null);
-//            c.moveToFirst();
-//
-//            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
-//            if (c.getCount() == 0) {
-//                return "";
-//            }
-//            return CardDbAdapter.getStringFromCursor(c, KEY_NAME_TCGPLAYER);
-//        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-//            throw new FamiliarDbException(e);
-//        } finally {
-//            if (null != c) {
-//                c.close();
-//            }
-//        }
-//    }
-// --Commented out by Inspection STOP (7/12/2021 9:26 AM)
 
     /**
      * Helper function to determine what kind of multicard a card is based on set and number.
@@ -2971,7 +2841,7 @@ public class CardDbAdapter {
      */
     public static Set<String> getKeyNameLanguages(Set<String> languages) {
         Set<String> key_name_languages = new HashSet<>();
-        for (String lang: languages) {
+        for (String lang : languages) {
             if (Objects.equals(lang, "fr")) {
                 key_name_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
             } else if (Objects.equals(lang, "it")) {

@@ -206,6 +206,8 @@ public class FamiliarActivity extends AppCompatActivity {
             /* Restart the activity for theme & language changes */
             FamiliarActivity.this.finish();
             startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
+        } else if (s.equals(getString(R.string.key_hideOnlineCards))) {
+            // TODO reload autocomplete lists
         }
     };
     private ActionBarDrawerToggle mDrawerToggle;

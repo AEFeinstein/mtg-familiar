@@ -175,7 +175,7 @@ public class MtgCard extends Card {
             if (cardSet == null) {
                 Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(activity.getApplicationContext());
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS,
-                        true, true, true, database, searchLanguages);
+                        true, PreferenceAdapter.getHideOnlineOnly(activity), true, database, searchLanguages);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {

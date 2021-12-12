@@ -230,7 +230,7 @@ public class DbUpdaterService extends IntentService {
                 try {
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), false, setsHandle);
-                    setCursor = CardDbAdapter.fetchAllSets(database);
+                    setCursor = CardDbAdapter.fetchAllSets(database, false);
                     if (setCursor != null) {
                         setCursor.moveToFirst();
                         while (!setCursor.isAfterLast()) {

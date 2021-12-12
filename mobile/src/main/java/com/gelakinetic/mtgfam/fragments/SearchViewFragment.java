@@ -360,7 +360,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 SQLiteDatabase database = DatabaseManager.openDatabase(frag.getActivity(), false, handle);
                 if (frag.mSetNames == null) {
                     /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                    setCursor = CardDbAdapter.fetchAllSets(database);
+                    setCursor = CardDbAdapter.fetchAllSets(database, PreferenceAdapter.getHideOnlineOnly(frag.getContext()));
                     setCursor.moveToFirst();
 
                     frag.mSetNames = new String[setCursor.getCount()];
@@ -391,26 +391,27 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 }
 
+                boolean offlineOnly = PreferenceAdapter.getHideOnlineOnly(frag.getContext());
                 if (frag.mSupertypes == null) {
-                    String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUPERTYPE, true, database);
+                    String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUPERTYPE, true, database, offlineOnly);
                     frag.mSupertypes = tokenStringsFromTypes(supertypes);
                 }
 
                 if (frag.mSubtypes == null) {
-                    String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUBTYPE, true, database);
+                    String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_SUBTYPE, true, database, offlineOnly);
                     frag.mSubtypes = tokenStringsFromTypes(subtypes);
                 }
 
                 if (frag.mArtists == null) {
-                    frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_ARTIST, false, database);
+                    frag.mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_ARTIST, false, database, offlineOnly);
                 }
 
                 if (frag.mWatermarks == null) {
-                    frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_WATERMARK, false, database);
+                    frag.mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_CARDS, CardDbAdapter.KEY_WATERMARK, false, database, offlineOnly);
                 }
 
                 if (frag.mSetTypes == null) {
-                    frag.mSetTypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_SETS, CardDbAdapter.KEY_SET_TYPE, false, database);
+                    frag.mSetTypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.DATABASE_TABLE_SETS, CardDbAdapter.KEY_SET_TYPE, false, database, offlineOnly);
                 }
             } catch (SQLiteException | FamiliarDbException e) {
                 frag.handleFamiliarDbException(false);

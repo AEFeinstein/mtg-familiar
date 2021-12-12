@@ -550,7 +550,8 @@ public class CardViewFragment extends FamiliarFragment {
 
             // For each card with this name in the database
             Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
-            cAllCardsWithName = CardDbAdapter.fetchCardByName(mCard.getName(), CardDbAdapter.ALL_CARD_DATA_KEYS, false, false, false, database, searchLanguages);
+            cAllCardsWithName = CardDbAdapter.fetchCardByName(mCard.getName(), CardDbAdapter.ALL_CARD_DATA_KEYS, false,
+                    PreferenceAdapter.getHideOnlineOnly(this.getContext()), false, database, searchLanguages);
             cAllCardsWithName.moveToFirst();
             while (!cAllCardsWithName.isAfterLast()) {
                 // For each foreign printing for that card
@@ -574,7 +575,8 @@ public class CardViewFragment extends FamiliarFragment {
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, false, false, database, searchLanguages
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false,
+                    PreferenceAdapter.getHideOnlineOnly(this.getContext()), false, database, searchLanguages
             );
             mPrintings = new LinkedHashSet<>();
             while (!cCardByName.isAfterLast()) {
