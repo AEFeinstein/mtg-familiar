@@ -357,4 +357,10 @@ public abstract class FamiliarFragment extends Fragment {
         super.setArguments(args);
         FamiliarActivity.logBundleSize("SA " + this.getClass().getName(), args);
     }
+
+    /**
+     * Override this to be notified when the database updates
+     */
+    public void notifyDatabaseUpdated() {
+    }
 }

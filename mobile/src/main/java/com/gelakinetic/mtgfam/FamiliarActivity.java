@@ -24,9 +24,11 @@ import android.app.Activity;
 import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -208,6 +210,7 @@ public class FamiliarActivity extends AppCompatActivity {
             startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
         }
     };
+
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
     private SmoothProgressBar mSmoothProgressBar;
@@ -277,6 +280,28 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
+
+    private class DatabaseUpdateReceiver extends BroadcastReceiver {
+        /**
+         * Receive a DATABASE_UPDATE_INTENT from a DbUpdaterService when the database update
+         *
+         * @param context Unused
+         * @param intent  The intent for this notification
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(DbUpdaterService.DATABASE_UPDATE_INTENT)) {
+                // Notify the fragment
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    if (fragment instanceof FamiliarFragment) {
+                        ((FamiliarFragment) fragment).notifyDatabaseUpdated();
+                    }
+                }
+            }
+        }
+    }
+
+    private DatabaseUpdateReceiver dataUpdateReceiver;
 
     /**
      * Open an inputStream to the HTML content at the given URL.
@@ -602,8 +627,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 selectItem(mPageEntries[i].mNameResource, null, true, false);
             } else if (mPageEntries[i].mNameResource == R.string.main_settings_title) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.addToBackStack(null);
                 ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
+                ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 shouldCloseDrawer = true;
             } else if (mPageEntries[i].mNameResource == R.string.main_force_update_title) {
@@ -1074,6 +1099,24 @@ public class FamiliarActivity extends AppCompatActivity {
         }
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
         mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
+
+        // Register a receiver to be notified when the database updates
+        if (dataUpdateReceiver == null) {
+            dataUpdateReceiver = new DatabaseUpdateReceiver();
+        }
+        IntentFilter intentFilter = new IntentFilter(DbUpdaterService.DATABASE_UPDATE_INTENT);
+        registerReceiver(dataUpdateReceiver, intentFilter);
+    }
+
+    /**
+     * Unregister the receiver when the activity pauses
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dataUpdateReceiver != null) {
+            unregisterReceiver(dataUpdateReceiver);
+        }
     }
 
     /**

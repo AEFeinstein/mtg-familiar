@@ -211,11 +211,11 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 /* Build and return the dialog */
                 ExpansionImageHelper.ChangeSetListAdapter adapter =
                         new ExpansionImageHelper.ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
-                    @Override
-                    protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
-                        getParentCardViewFragment().setInfoFromID(data.getDbId());
-                    }
-                };
+                            @Override
+                            protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
+                                getParentCardViewFragment().setInfoFromID(data.getDbId());
+                            }
+                        };
                 Dialog dialog = new MaterialDialog.Builder(requireActivity())
                         .title(R.string.card_view_set_dialog_title)
                         .adapter(adapter, null)

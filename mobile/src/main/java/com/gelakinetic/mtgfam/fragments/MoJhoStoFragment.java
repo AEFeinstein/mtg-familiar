@@ -223,7 +223,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
             criteria.cmc = cmc;
             criteria.moJhoStoFilter = true;
             Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
-            permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database, searchLanguages);
+            permanents = CardDbAdapter.Search(criteria, false, returnTypes, true,
+                    null, database, searchLanguages,
+                    PreferenceAdapter.getHideOnlineOnly(this.getContext()),
+                    PreferenceAdapter.getHideFunnyCards(this.getContext()));
 
             if (permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
@@ -266,7 +269,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = Collections.singletonList(type);
             Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
-            spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database, searchLanguages);
+            spells = CardDbAdapter.Search(criteria, false, returnTypes, true,
+                    null, database, searchLanguages,
+                    PreferenceAdapter.getHideOnlineOnly(this.getContext()),
+                    PreferenceAdapter.getHideFunnyCards(this.getContext()));
 
             if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));

@@ -27,7 +27,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-
 import com.gelakinetic.mtgfam.helpers.util.IOUtils;
 
 import java.io.File;

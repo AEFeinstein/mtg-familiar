@@ -110,7 +110,9 @@ public class CardSearchProvider extends ContentProvider {
                     query = selectionArgs[0].toLowerCase();
 
                     Set<String> searchLanguages = PreferenceAdapter.getSearchLanguages(getContext());
-                    return CardDbAdapter.getCardsByNamePrefix(query, mDatabase, searchLanguages);
+                    return CardDbAdapter.getCardsByNamePrefix(query, mDatabase, searchLanguages,
+                            PreferenceAdapter.getHideOnlineOnly(getContext()),
+                            PreferenceAdapter.getHideFunnyCards(getContext()));
                 }
                 case REFRESH_SHORTCUT: {
                     String rowId1 = uri.getLastPathSegment();

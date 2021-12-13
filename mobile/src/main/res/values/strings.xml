@@ -436,6 +436,8 @@ Good luck, and have fun!
 	<string name="pref_search_languages_summary">"Languages used for card searches (default: English)"</string>
     <string name="pref_hide_online_title">"Hide Online Only Cards"</string>
     <string name="pref_hide_online_summary">"Don't show online only cards anywhere"</string>
+    <string name="pref_hide_funny_title">"Hide Funny Cards"</string>
+    <string name="pref_hide_funny_summary">"Don't show funny cards anywhere"</string>
     <string name="pref_show_set_title">"Show Set"</string>
     <string name="pref_show_mana_title">"Show Mana Cost"</string>
     <string name="pref_show_type_title">"Show Type/Subtype"</string>
@@ -510,6 +512,7 @@ Good luck, and have fun!
     <string name="pref_cat_list_general">General Lists</string>
     <string name="pref_undo_timeout_seconds_summary">The number of seconds an item will stay in the undo state before it is deleted</string>
     <string name="pref_undo_timeout_seconds_title">Undo Timeout</string>
+    <string name="pref_cat_hidden">Hidden Cards</string>
 
     <!-- Judge's Corner -->
     <string name="judges_corner_MTR">"MTR"</string>
