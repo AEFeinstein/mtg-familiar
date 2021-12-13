@@ -50,6 +50,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.RulesDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -139,6 +140,14 @@ public class RulesFragment extends FamiliarFragment {
         }
 
         ListView list = myFragmentView.findViewById(R.id.result_list);
+
+        /* Set which side the fast scroll is shown on */
+        if (getString(R.string.pref_right).equals(PreferenceAdapter.getFastScrollSidePref(getContext()))) {
+            list.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_RIGHT);
+        } else {
+            list.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
+
         mRules = new ArrayList<>();
         boolean isClickable;
 

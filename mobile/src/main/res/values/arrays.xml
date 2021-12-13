@@ -303,6 +303,11 @@
         <item>@string/pref_white_symbol_old</item>
     </string-array>
 
+    <string-array name="left_right" >
+        <item>@string/pref_right</item>
+        <item>@string/pref_left</item>
+    </string-array>
+
     <integer-array name="pref_white_mana_symbols_drawable">
         <item>@drawable/glyph_w</item>
         <item>@drawable/glyph_w_old</item>

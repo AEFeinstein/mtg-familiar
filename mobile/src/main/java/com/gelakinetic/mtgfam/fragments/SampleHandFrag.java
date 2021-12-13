@@ -79,6 +79,14 @@ public class SampleHandFrag extends FamiliarFragment {
         assert myFragmentView != null;
         mHand = handGen.drawSampleHand();
         mListView = myFragmentView.findViewById(R.id.hand_list);
+
+        /* Set which side the fast scroll is shown on */
+        if (getString(R.string.pref_right).equals(PreferenceAdapter.getFastScrollSidePref(getContext()))) {
+            mListView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_RIGHT);
+        } else {
+            mListView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
+
         fillData();
         Button drawCardButton = myFragmentView.findViewById(R.id.draw_card);
         Button newHandButton = myFragmentView.findViewById(R.id.new_hand);

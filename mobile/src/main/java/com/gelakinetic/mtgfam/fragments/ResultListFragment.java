@@ -213,6 +213,13 @@ public class ResultListFragment extends FamiliarFragment {
         assert myFragmentView != null; /* Because Android Studio */
         mListView = myFragmentView.findViewById(R.id.result_list);
 
+        /* Set which side the fast scroll is shown on */
+        if (getString(R.string.pref_right).equals(PreferenceAdapter.getFastScrollSidePref(getContext()))) {
+            mListView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_RIGHT);
+        } else {
+            mListView.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
+        }
+
         /* Open up the database, search for stuff */
         try {
             mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);

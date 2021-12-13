@@ -83,6 +83,15 @@
                 android:title="@string/pref_theme_title" />
 
             <ListPreference
+                android:defaultValue="@string/pref_right"
+                android:dialogTitle="@string/pref_fast_scroll_side"
+                android:entries="@array/left_right"
+                android:entryValues="@array/left_right"
+                android:key="@string/key_fast_scroll_side"
+                android:summary="@string/pref_fast_scroll_side_summary"
+                android:title="@string/pref_fast_scroll_side_title" />
+
+            <ListPreference
                 android:defaultValue="@drawable/glyph_tap"
                 android:dialogTitle="@string/pref_tap_symbol_title"
                 android:entries="@array/pref_tap_symbols"

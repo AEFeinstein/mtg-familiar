@@ -470,6 +470,11 @@ Good luck, and have fun!
     <string name="pref_white_symbol_summary">"Which white mana symbol to use in display"</string>
     <string name="pref_white_symbol_modern">"Ice Age"</string>
     <string name="pref_white_symbol_old">"Limited Edition Alpha"</string>
+    <string name="pref_right">"Right"</string>
+    <string name="pref_left">"Left"</string>
+    <string name="pref_fast_scroll_side">"Fast Scroll Side"</string>
+    <string name="pref_fast_scroll_side_summary">"Which side to display the fast scroll bar on"</string>
+    <string name="pref_fast_scroll_side_title">"Fast Scroll Side"</string>
 
     <!-- Only used for app translation, not card names -->
     <string name="pref_1_day">"1 day"</string>
