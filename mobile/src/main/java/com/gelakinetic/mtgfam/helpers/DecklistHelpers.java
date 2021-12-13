@@ -163,13 +163,15 @@ public class DecklistHelpers {
 
     public static String getSharableDecklist(
             List<CompressedDecklistInfo> compressedDecklist,
-            Context ctx) {
+            boolean extraInformation, Context ctx) {
 
         StringBuilder readableDecklist = new StringBuilder();
 
         for (CompressedDecklistInfo cdi : compressedDecklist) {
             if (null != cdi.header) {
-                readableDecklist.append(cdi.header).append("\r\n");
+                if (extraInformation) {
+                    readableDecklist.append(cdi.header).append("\r\n");
+                }
             } else {
                 for (IndividualSetInfo isi : cdi.mInfo) {
                     if (cdi.isSideboard()) {
@@ -179,13 +181,16 @@ public class DecklistHelpers {
                             .append(isi.mNumberOf)
                             .append(' ')
                             .append(cdi.getName());
-                    if (isi.mIsFoil) {
+                    if (isi.mIsFoil && extraInformation) {
                         readableDecklist
                                 .append(" (")
                                 .append(ctx.getString(R.string.wishlist_foil))
                                 .append(")");
                     }
-                    readableDecklist.append(" ").append(isi.mSetCode).append("\r\n");
+                    if (extraInformation) {
+                        readableDecklist.append(" ").append(isi.mSetCode);
+                    }
+                    readableDecklist.append("\r\n");
                 }
             }
         }

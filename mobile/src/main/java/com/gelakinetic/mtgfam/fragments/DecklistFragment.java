@@ -95,7 +95,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * @return true if there was an error reading this decklist
-     *         false if everything is OK
+     * false if everything is OK
      */
     public boolean getDecklistReadError() {
         return mDecklistReadError;
@@ -592,22 +592,7 @@ public class DecklistFragment extends FamiliarListFragment {
             startNewFragment(new ImportFragment(), null);
             return true;
         } else if (item.getItemId() == R.id.deck_menu_share) {
-            /* Share plaintext decklist */
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.decklist_share_title);
-            synchronized (mCompressedDecklist) {
-                sendIntent.putExtra(Intent.EXTRA_TEXT, DecklistHelpers
-                        .getSharableDecklist(mCompressedDecklist, getActivity()));
-            }
-            sendIntent.setType("text/plain");
-            try {
-                startActivity(Intent.createChooser(sendIntent,
-                        getString(R.string.decklist_share)));
-            } catch (ActivityNotFoundException anfe) {
-                SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
-                        SnackbarWrapper.LENGTH_LONG);
-            }
+            showDialog(DecklistDialogFragment.DIALOG_SHARE_DECK, null, false);
             return true;
         } else if (item.getItemId() == R.id.deck_menu_stats) {
             try {
@@ -635,6 +620,30 @@ public class DecklistFragment extends FamiliarListFragment {
             return true;
         } else {
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Share the current deck
+     *
+     * @param extraInformation true to share with extra information, false to just share card names
+     */
+    public void shareDecklist(boolean extraInformation) {
+        /* Share plaintext decklist */
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.decklist_share_title);
+        synchronized (mCompressedDecklist) {
+            sendIntent.putExtra(Intent.EXTRA_TEXT, DecklistHelpers
+                    .getSharableDecklist(mCompressedDecklist, extraInformation, getActivity()));
+        }
+        sendIntent.setType("text/plain");
+        try {
+            startActivity(Intent.createChooser(sendIntent,
+                    getString(R.string.decklist_share)));
+        } catch (ActivityNotFoundException anfe) {
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
+                    SnackbarWrapper.LENGTH_LONG);
         }
     }
 

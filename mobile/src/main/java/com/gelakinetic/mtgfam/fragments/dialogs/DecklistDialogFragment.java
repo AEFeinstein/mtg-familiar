@@ -57,6 +57,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_GET_LEGALITY = 6;
     public static final int DIALOG_NEW_DECK = 7;
     public static final int DIALOG_PRICE_SETTING = 8;
+    public static final int DIALOG_SHARE_DECK = 9;
 
     public static final String NAME_KEY = "name";
     public static final String SIDE_KEY = "side";
@@ -296,6 +297,15 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                             return true;
                         })
                         .build();
+            }
+            case DIALOG_SHARE_DECK: {
+                return new MaterialDialog.Builder(this.requireActivity())
+                        .title(R.string.decklist_share)
+                        .content(R.string.decklist_share_body)
+                        .positiveText(R.string.decklist_more_info)
+                        .onPositive((dialog, which) -> getParentDecklistFragment().shareDecklist(true))
+                        .negativeText(R.string.decklist_just_names)
+                        .onNegative((dialog, which) -> getParentDecklistFragment().shareDecklist(false)).build();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);
