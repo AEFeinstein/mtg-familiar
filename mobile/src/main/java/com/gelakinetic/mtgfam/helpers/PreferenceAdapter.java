@@ -1168,4 +1168,11 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         }
         return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_fast_scroll_side), context.getString(R.string.pref_right));
     }
+
+    public static boolean getShowExpansionImages(Context context) {
+        if (null == context) {
+            return true;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showExpansionImagePref), true);
+    }
 }

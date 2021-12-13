@@ -91,6 +91,12 @@
                 android:summary="@string/pref_fast_scroll_side_summary"
                 android:title="@string/pref_fast_scroll_side_title" />
 
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/key_showExpansionImagePref"
+                android:summary="@string/pref_show_expansion_image_summary"
+                android:title="@string/pref_show_expansion_image_title" />
+
             <ListPreference
                 android:defaultValue="@drawable/glyph_tap"
                 android:dialogTitle="@string/pref_tap_symbol_title"
