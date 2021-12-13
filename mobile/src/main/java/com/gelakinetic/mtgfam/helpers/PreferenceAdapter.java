@@ -1168,4 +1168,18 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.putBoolean(context.getString(R.string.key_loggingPref), loggingPref);
         edit.apply();
     }
+
+    public static synchronized String getFastScrollSidePref(@Nullable Context context) {
+        if (null == context) {
+            return "Right";
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_fast_scroll_side), context.getString(R.string.pref_right));
+    }
+
+    public static boolean getShowExpansionImages(Context context) {
+        if (null == context) {
+            return true;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showExpansionImagePref), true);
+    }
 }

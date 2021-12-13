@@ -268,6 +268,7 @@ Mana pool will also be cleared."</string>
     <string name="life_counter_edh_dialog_title">"Damage from %1$s's Commander"</string>
     <string name="life_counter_edit_life_dialog_title">"Enter Life"</string>
     <string name="life_counter_edit_poison_dialog_title">"Enter Poison"</string>
+    <string name="life_counter_commander_experience_counter">Experience Counters</string>
 
     <!-- Default gathering activity -->
     <string name="gathering_starting_life">"Starting life:"</string>
@@ -472,6 +473,13 @@ Good luck, and have fun!
     <string name="pref_white_symbol_summary">"Which white mana symbol to use in display"</string>
     <string name="pref_white_symbol_modern">"Ice Age"</string>
     <string name="pref_white_symbol_old">"Limited Edition Alpha"</string>
+    <string name="pref_right">"Right"</string>
+    <string name="pref_left">"Left"</string>
+    <string name="pref_fast_scroll_side">"Fast Scroll Side"</string>
+    <string name="pref_fast_scroll_side_summary">"Which side to display the fast scroll bar on"</string>
+    <string name="pref_fast_scroll_side_title">"Fast Scroll Side"</string>
+    <string name="pref_show_expansion_image_title">Show Expansion Image</string>
+    <string name="pref_show_expansion_image_summary">Show the expansion image instead of the text code</string>
 
     <!-- Only used for app translation, not card names -->
     <string name="pref_1_day">"1 day"</string>
@@ -557,7 +565,9 @@ Good luck, and have fun!
     </plurals>
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
-    <string name="life_counter_commander_experience_counter">Experience Counters</string>
+    <string name="decklist_more_info">More Info</string>
+    <string name="decklist_just_names">Just Names</string>
+    <string name="decklist_share_body">Share the deck with just the card names, or also set names</string>
 
     <!-- Deck Importer -->
     <string name="import_start">"Import"</string>

@@ -689,7 +689,7 @@ public class CardViewFragment extends FamiliarFragment {
                             String url = MediaStore.Images.Media.insertImage(
                                     getContext().getContentResolver(),
                                     ((BitmapDrawable) resource).getBitmap(),
-                                    getSavedFileName(), mCard.getName() + " - " + mCard.getSetName());
+                                    getSavedFileName(), mCard.getName() + " - " + mCard.getSetName() + " - " + mCard.getNumber());
 
                             // Couldn't save the image for some reason
                             if (null == url) {
@@ -910,7 +910,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     private String getSavedFileName() {
-        return mCard.getName() + "_" + mCard.getExpansion() + ".jpg";
+        return mCard.getName() + "_" + mCard.getExpansion() + "_" + mCard.getNumber() + ".jpg";
     }
 
     /**

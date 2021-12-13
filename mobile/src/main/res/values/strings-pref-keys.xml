@@ -102,5 +102,6 @@
     <string name="key_SearchCriteriaPerm" translatable="false">search_criteria_permanent</string>
     <string name="key_tcgpGroups" translatable="false">tcgp_groups</string>
     <string name="key_loggingPref" translatable="false">logging_enabled</string>
-
+    <string name="key_fast_scroll_side">fast_scroll_side</string>
+    <string name="key_showExpansionImagePref">show_expansion_image</string>
 </resources>

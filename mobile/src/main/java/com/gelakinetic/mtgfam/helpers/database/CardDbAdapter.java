@@ -1398,9 +1398,14 @@ public class CardDbAdapter {
 
                 /* And make sure the name isn't in the list of banned cads */
                 statement.append(" AND ")
-                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME)
-                        .append(" NOT IN (SELECT ")
-                        .append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_NAME)
+                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME);
+                /* Invert logic for Reserved List */
+                if (criteria.format.equals("Reserved List")) {
+                    statement.append(" IN (SELECT ");
+                } else {
+                    statement.append(" NOT IN (SELECT ");
+                }
+                statement.append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_NAME)
                         .append(" FROM ")
                         .append(DATABASE_TABLE_BANNED_CARDS)
                         .append(" WHERE ")
