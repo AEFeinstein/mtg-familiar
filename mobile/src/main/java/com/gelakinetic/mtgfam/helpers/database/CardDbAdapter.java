@@ -1383,9 +1383,14 @@ public class CardDbAdapter {
 
                 /* And make sure the name isn't in the list of banned cads */
                 statement.append(" AND ")
-                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME)
-                        .append(" NOT IN (SELECT ")
-                        .append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_NAME)
+                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME);
+                /* Invert logic for Reserved List */
+                if (criteria.format.equals("Reserved List")) {
+                    statement.append(" IN (SELECT ");
+                } else {
+                    statement.append(" NOT IN (SELECT ");
+                }
+                statement.append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_NAME)
                         .append(" FROM ")
                         .append(DATABASE_TABLE_BANNED_CARDS)
                         .append(" WHERE ")
@@ -1727,7 +1732,7 @@ public class CardDbAdapter {
             /* get search languages */
             List<String> key_name_languages = new ArrayList<>();
             List<String> key_name_no_accent_languages = new ArrayList<>();
-            for (String lang: languages) {
+            for (String lang : languages) {
                 if (Objects.equals(lang, "fr")) {
                     key_name_languages.add(KEY_NAME_FRENCH);
                     key_name_no_accent_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
@@ -1777,7 +1782,7 @@ public class CardDbAdapter {
                     " WHERE " +
                     DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
 
-            for (int i=1; i < key_name_languages.size(); i++) {
+            for (int i = 1; i < key_name_languages.size(); i++) {
                 key_name_language = key_name_languages.get(i);
                 key_name_no_accent_language = key_name_no_accent_languages.get(i);
                 sql += " UNION " +
@@ -2971,7 +2976,7 @@ public class CardDbAdapter {
      */
     public static Set<String> getKeyNameLanguages(Set<String> languages) {
         Set<String> key_name_languages = new HashSet<>();
-        for (String lang: languages) {
+        for (String lang : languages) {
             if (Objects.equals(lang, "fr")) {
                 key_name_languages.add(KEY_NAME_NO_ACCENT_FRENCH);
             } else if (Objects.equals(lang, "it")) {

@@ -82,12 +82,18 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                 case FORMAT_LIST: {
                     getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.requireActivity())
                             .title(R.string.search_formats)
-                            .items((CharSequence[]) getParentSearchViewFragment().mFormatNames)
+                            .items(getParentSearchViewFragment().mFormatNames)
                             .itemsCallbackSingleChoice(getParentSearchViewFragment().mSelectedFormat, (dialog, itemView, which, text) -> {
                                 getParentSearchViewFragment().mSelectedFormat = which;
                                 return true;
                             })
                             .positiveText(R.string.dialog_ok)
+                            .negativeText(R.string.mana_pool_clear_all)
+                            .onNegative((dialog, which) -> {
+                                getParentSearchViewFragment().mSelectedFormat = -1;
+                                getParentSearchViewFragment().removeDialog(getParentFragmentManager());
+                                getParentSearchViewFragment().checkDialogButtonColors();
+                            })
                             .build();
                     if (null != getParentSearchViewFragment()) {
                         return getParentSearchViewFragment().mFormatDialog;
@@ -98,7 +104,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                     getParentSearchViewFragment().mRarityDialog = new MaterialDialog.Builder(this.requireActivity())
                             .title(R.string.search_rarities)
                             .positiveText(R.string.dialog_ok)
-                            .items((CharSequence[]) getParentSearchViewFragment().mRarityNames)
+                            .items(getParentSearchViewFragment().mRarityNames)
                             .alwaysCallMultiChoiceCallback()
                             .itemsCallbackMultiChoice(toIntegerArray(getParentSearchViewFragment().mRarityCheckedIndices), (dialog, which, text) -> {
                                 getParentSearchViewFragment().mRarityCheckedIndices = toIntArray(which);
