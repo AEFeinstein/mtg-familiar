@@ -731,34 +731,55 @@ public class MtgCard extends Card {
      * Easily gets the URL for the Scryfall image for a card by multiverseid.
      *
      * @param lang    The requested language for this card
-     * @param attempt
+     * @param attempt The number attempt for this lookup. Different options are tried on different attempts
      * @return URL of the card image
      * @throws MalformedURLException If we screw up building the URL
      */
     private URL getScryfallImageUrl(String lang, int attempt) throws MalformedURLException {
-        // Attempt scryfall twice
-        if (attempt > 1) {
+        /* Attempt scryfall four times:
+         *  - Native language, number as-is
+         *  - Native language, number with letters removed
+         *  - English, number as-is
+         *  - English, number with letters removed
+         */
+        if (attempt > 3) {
             return null;
         }
 
-        // Strip the last part of the number, if it is a letter
-        String numberNoLetter = this.mNumber;
-        if (Character.isAlphabetic(numberNoLetter.charAt(numberNoLetter.length() - 1))) {
-            numberNoLetter = numberNoLetter.substring(0, numberNoLetter.length() - 1);
+        // Parts of the URL
+        String numberToUse = this.mNumber;
+        String urlOpts = "?format=image";
+
+        // First try with just the number, then try with the letter stripped
+        switch (attempt % 2) {
+            case 0: {
+                // First try with the number as-is
+                numberToUse = this.mNumber;
+                break;
+            }
+            case 1: {
+                // Then try with the number with non-numerals stripped
+                numberToUse = this.mNumber.replaceAll("[^\\d]", "");
+
+                // And also add the backface suffix for 'b' variants
+                if (this.mNumber.endsWith("b")) {
+                    urlOpts += "&face=back";
+                }
+                break;
+            }
         }
 
-        String code = this.mScryfallSetCode.toLowerCase();
-
-        String urlStr = "https://api.scryfall.com/cards/" + code + "/" + numberNoLetter + "?format=image";
-
-        // On the first attempt, append the version language, otherwise leave it off
-        if (0 == attempt) {
-            urlStr += "&version=normal&lang=" + lang;
+        // First try in the native language, then English
+        if ((attempt / 2) < 1) {
+            urlOpts += "&lang=" + lang;
         }
 
-        if (this.mNumber.endsWith("b")) {
-            urlStr += "&face=back";
-        }
+        // Build the URL
+        String urlStr = "https://api.scryfall.com/cards/" +
+                this.mScryfallSetCode.toLowerCase() + "/" +
+                numberToUse +
+                urlOpts;
+
         return new URL(urlStr);
     }
 
