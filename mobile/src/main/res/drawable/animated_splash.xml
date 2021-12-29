@@ -2,6 +2,15 @@
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawable="@drawable/ic_mtgfam_icon_material_flat">
     <target
-        android:name="wedges"
-        android:animation="@animator/rotation" />
+        android:name="wedge_g"
+        android:animation="@animator/rotation_wedge_g" />
+    <target
+        android:name="wedge_r"
+        android:animation="@animator/rotation_wedge_r" />
+    <target
+        android:name="wedge_b"
+        android:animation="@animator/rotation_wedge_b" />
+    <target
+        android:name="wedge_u"
+        android:animation="@animator/rotation_wedge_u" />
 </animated-vector>
