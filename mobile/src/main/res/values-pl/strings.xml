@@ -8,6 +8,7 @@
     <string name="dialog_both">"Wyczyść oba"</string>
     <string name="dialog_life">"Życie"</string>
     <string name="dialog_thanks">"Dzięki!"</string>
+    <string name="dialog_thanks_anyway">"Tak czy inaczej, dzięki!"</string>
     <string name="dialog_enjoy">"Miłej zabawy!"</string>
     <string name="update_notification">"Sprawdzanie aktualizacji"</string>
     <string name="update_updating_set">"Dodawanie %s"</string>
@@ -24,6 +25,8 @@
     <string name="not_deleted">"nie usunięty"</string>
     <string name="no_network">"Sieć jest niedostępna"</string>
     <string name="filter_title_view_card">"Pokaż kartę"</string>
+    <string name="tutor_cards_notice">"Uzyskane przy pomocy TutorCards"</string>
+    <string name="tutor_cards_fail">"TutorCards są nieosiągalne"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"ZAKŁADKI"</string>
@@ -41,9 +44,24 @@
     <string name="main_decklist">"Kreator talii"</string>
     <string name="main_force_update_title">"Wymuś aktualizację"</string>
     <string name="main_settings_title">"Ustawienia"</string>
+    <string name="main_donate_title">"Wspomóż nas"</string>
+    <string name="main_donate_dialog_title">"Wspomóż Programistów"</string>
 
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
+    <string name="main_profile">"Profil"</string>
+    <string name="main_donate_text">"Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
+&lt;br&gt;
+Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;
+&lt;br&gt;
+Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;
+&lt;br&gt;
+Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;
+&lt;br&gt;
+Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku. $5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;
+&lt;br&gt;
+Więc, na jak dużą hojność stać cię dzisiaj?
+"</string>
 
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
@@ -150,6 +168,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="search_NOT_any_selected_types">"ŻADEN z wybranego typu (typów)"</string>
     <string name="search_All_words">"Wszystkie słowa"</string>
     <string name="search_Any_words">"Dowolne słowo (słowa)"</string>
+    <string name="search_Exact_phrase">"Dokładna fraza"</string>
     <string name="search_Most_recent_printing">"Najnowsze wydanie"</string>
     <string name="search_Original_printing">"Oryginalne wydanie"</string>
     <string name="search_All_printings">"Wszystkie wydania"</string>
@@ -166,6 +185,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="search_Rare">"Rare"</string>
     <string name="search_Mythic">"Mythic"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
+    <string name="search_type">"Typ"</string>
     <string name="search_mana_cost">"Koszt Many"</string>
     <string name="search_collectors_number">"Collector's Number"</string>
     <string name="search_color_title">"Kolor"</string>
@@ -194,6 +214,10 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="card_view_price_not_found">"Nie znaleziono ceny."</string>
     <string name="card_view_image_not_found">"Nie znaleziono obrazka"</string>
     <string name="card_view_no_external_storage">"Nie można skorzystać z zewnętrznej pamięci, proszę sprawdzić kartę SD."</string>
+    <string name="card_view_no_pictures_folder">"Nie można znaleźć folderu z obrazkiami, proszę spróbować jeszcze raz."</string>
+    <string name="card_view_unable_to_create_dir">"Nie można stworzyć folderu dla obrazków, proszę spróbować jeszcze raz"</string>
+    <string name="card_view_unable_to_create_file">"Nie można utworzyć pliku obrazka, proszę spróbować jeszcze raz."</string>
+    <string name="card_view_no_image">"Nie można znaleźć obrazka do zapisania, proszę spróbować jeszcze raz."</string>
     <string name="card_view_unable_to_save_image">"Nie można zapisać obrazka, proszę spróbować jeszcze raz."</string>
     <string name="card_view_save_failure">"Nie udało się zapisać obrazka, proszę spróbować jeszcze raz."</string>
     <string name="card_view_image_saved">"Obrazek zapisano w"</string>
@@ -248,18 +272,22 @@ Licznik many także ulegnie wyczyszczeniu."</string>
     <string name="dice_tails">"Reszka"</string>
 
     <!-- Mana pool activity -->
+    <string name="mana_pool_error_toast">"Nie udało się wczytać licznika many!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Wyczyść wszystko"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Dodaj kartę"</string>
+    <string name="trader_save">"Zapisz Wymianę"</string>
     <string name="trader_load">"Wczytaj Wymianę"</string>
     <string name="trader_delete">"Usuń Wymianę"</string>
     <string name="trader_edit_dialog_remove">"Usuń"</string>
     <string name="trader_edit_dialog_reset_price">"Zeruj Cenę"</string>
     <string name="trader_clear_dialog_title">"Wyczyść Wymianę"</string>
     <string name="trader_clear_dialog_text">"Czy na pewno chcesz wyczyścić obecną wymianę?"</string>
+    <string name="trader_select_dialog_title">"Wybierz Wymianę"</string>
+    <string name="trader_delete_dialog_title">"Usuń Wymianę"</string>
     <string name="trader_edit_dialog_info">"Informacja o karcie"</string>
     <string name="trader_toast_no_trades">"Nie masz zapisanych wymian."</string>
     <string name="trader_toast_save_error">"Nie można zapisać wymiany, spróbuj ponownie."</string>
@@ -319,8 +347,14 @@ Licznik many także ulegnie wyczyszczeniu."</string>
     <string name="rules_copy_tag">"Zasada MTG"</string>
 
     <!-- Profile activity -->
+    <string name="profile_update_dci">"Aktualizuj numer DCI"</string>
+    <string name="profile_remove_dci">"Usuń numer DCI"</string>
 
     <!-- Fuzzy -->
+    <string name="profile_update_dci_dialog_title">"Wprowadź swój numer DCI"</string>
+    <string name="profile_invalid_dci">"Wprowadzono niepoprawny numer DCI"</string>
+    <string name="profile_no_dci">"Nie wprowadziłeś swojego numeru DCI"</string>
+    <string name="profile_planeswalker_points">"Planeswalker Points"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Zasady MoJhoSto Basic"</string>
@@ -359,6 +393,8 @@ Powodzenia i miłej zabawy!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Ustawienia ogólne"</string>
+    <string name="pref_screen_search">"Wyszukiwanie i Rezultaty"</string>
+    <string name="pref_screen_trade_wishlist">"Wymiana i Lista Życzeń"</string>
     <string name="pref_cat_default_fragment">"Domyślna zakładka"</string>
     <string name="pref_default_fragment_mode_summary">"Zakładka wyświetlana po uruchomieniu aplikacji"</string>
     <string name="pref_cat_updates">"Aktualizacje"</string>
@@ -610,4 +646,19 @@ Standard ....... Not Legal -->
     <string name="mana_value_distribution">"Podział symboli many"</string>
     <string name="cmc_graph">"Sumaryczny koszt many"</string>
     <string name="card_colors">"Kolory karty"</string>
+    <string name="pref_search_languages_title">"Szukaj języków"</string>
+    <string name="pref_search_languages_summary">"Języki sprawdzane przy wyszukiwaniu kart (docelowo: angielski)"</string>
+    <string name="pref_hide_funny_title">"Ukryj karty humorystyczne"</string>
+    <string name="pref_hide_funny_summary">"Nie pokazuj kart humorystycznych nigdzie"</string>
+    <string name="pref_right">"Prawo"</string>
+    <string name="pref_left">"Lewo"</string>
+    <string name="pref_fast_scroll_side">"Strona szybkiego przewijania"</string>
+    <string name="pref_fast_scroll_side_summary">"Po której stronie wyświetlić pasek szybkiego przewijania"</string>
+    <string name="pref_fast_scroll_side_title">"Strona szybkiego przewijania"</string>
+    <string name="pref_show_expansion_image_title">"Pokaż symbol dodatku"</string>
+    <string name="pref_show_expansion_image_summary">"Pokaż symbol dodatku zamiast tekstu"</string>
+    <string name="pref_cat_hidden">"Ukryte karty"</string>
+    <string name="decklist_more_info">"Więcej informacji"</string>
+    <string name="decklist_just_names">"Tylko nazwy"</string>
+    <string name="decklist_share_body">"Udostępnij talię tylko z nazwami kart, lub również z nazwami dodatków"</string>
 </resources>
