@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="splash_anim_ms">1000</integer>
+    <integer name="splash_anim_ms">750</integer>
+    <integer name="splash_wait_ms">250</integer>
 </resources>

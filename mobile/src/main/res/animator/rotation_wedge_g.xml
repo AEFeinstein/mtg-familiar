@@ -6,4 +6,5 @@
         android:propertyName="rotation"
         android:valueFrom="72"
         android:valueTo="360" />
+    <animator android:duration="@integer/splash_wait_ms" />
 </set>
