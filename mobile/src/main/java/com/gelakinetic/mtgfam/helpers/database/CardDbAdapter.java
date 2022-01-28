@@ -55,7 +55,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 126;
+    public static final int DATABASE_VERSION = 127;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -139,6 +139,9 @@ public class CardDbAdapter {
     public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
     public static final String KEY_WATERMARK = "WATERMARK";
     public static final String KEY_TCGP_PRODUCT_ID = "TCGP_PRODUCT_ID";
+    public static final String KEY_IS_FUNNY = "IS_FUNNY";
+    public static final String KEY_IS_REBALANCED = "IS_REBALANCED";
+    public static final String KEY_SECURITY_STAMP = "SECURITY_STAMP";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final List<String> ALL_CARD_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
@@ -193,7 +196,10 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_WATERMARK,
-            DATABASE_TABLE_CARDS + "." + KEY_TCGP_PRODUCT_ID
+            DATABASE_TABLE_CARDS + "." + KEY_TCGP_PRODUCT_ID,
+            DATABASE_TABLE_CARDS + "." + KEY_IS_FUNNY,
+            DATABASE_TABLE_CARDS + "." + KEY_IS_REBALANCED,
+            DATABASE_TABLE_CARDS + "." + KEY_SECURITY_STAMP
     ));
 
     /* All the columns in DATABASE_CREATE_SETS */
@@ -261,6 +267,9 @@ public class CardDbAdapter {
                     KEY_NAME_NO_ACCENT + " text not null, " +
                     KEY_WATERMARK + " text, " +
                     KEY_TCGP_PRODUCT_ID + " integer, " +
+                    KEY_IS_FUNNY + " integer, " +
+                    KEY_IS_REBALANCED + " integer, " +
+                    KEY_SECURITY_STAMP + " text, " +
                     KEY_NAME_CHINESE_TRADITIONAL + " text, " +
                     KEY_MULTIVERSEID_CHINESE_TRADITIONAL + " integer, " +
                     KEY_NAME_CHINESE_SIMPLIFIED + " text, " +
@@ -1877,6 +1886,9 @@ public class CardDbAdapter {
         initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.getName()));
         initialValues.put(KEY_WATERMARK, card.getWatermark());
         initialValues.put(KEY_TCGP_PRODUCT_ID, card.getTcgpProductId());
+        initialValues.put(KEY_IS_FUNNY, card.getIsFunny() ? 1 : 0);
+        initialValues.put(KEY_IS_REBALANCED, card.getIsRebalanced() ? 1 : 0);
+        initialValues.put(KEY_SECURITY_STAMP, card.getSecurityStamp());
 
         for (Card.ForeignPrinting fp : card.getForeignPrintings()) {
             switch (fp.getLanguageCode()) {

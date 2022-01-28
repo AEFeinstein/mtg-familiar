@@ -97,6 +97,15 @@ public class Card implements Comparable<Card> {
     // The card's loyalty. An integer in practice
     protected long mTcgplayerProductId = -1;
 
+    // If this card is funny or not
+    public boolean mIsFunny;
+
+    // If this card was rebalanced on Arena
+    public boolean mIsRebalanced;
+
+    // This card's security stamp type
+    public String mSecurityStamp;
+
     public String getName() {
         return mName;
     }
@@ -179,6 +188,18 @@ public class Card implements Comparable<Card> {
 
     public long getTcgpProductId() {
         return mTcgplayerProductId;
+    }
+
+    public boolean getIsFunny() {
+        return mIsFunny;
+    }
+
+    public boolean getIsRebalanced() {
+        return mIsRebalanced;
+    }
+
+    public String getSecurityStamp() {
+        return mSecurityStamp;
     }
 
     // Private class for encapsulating foreign printing information
