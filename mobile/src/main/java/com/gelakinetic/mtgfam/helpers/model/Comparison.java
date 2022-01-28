@@ -60,6 +60,7 @@ public enum Comparison {
         // Continue with the logic
         switch (this) {
             case EQ:
+            case EMPTY:
                 searchCondition.append(" = '");
                 break;
             case NE:
@@ -85,6 +86,7 @@ public enum Comparison {
         switch (this) {
             case EQ:
             case NE:
+            case EMPTY:
                 searchCondition.append("'");
                 break;
             case CT:
