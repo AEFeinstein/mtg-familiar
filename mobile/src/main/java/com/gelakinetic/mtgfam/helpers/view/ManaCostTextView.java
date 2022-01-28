@@ -94,6 +94,16 @@ public class ManaCostTextView extends ATokenTextView {
         MANA_SYMBOLS.put("RP", R.drawable.glyph_pr);
         MANA_SYMBOLS.put("GP", R.drawable.glyph_pg);
         MANA_SYMBOLS.put("HW", R.drawable.glyph_hw);
+        MANA_SYMBOLS.put("BGP", R.drawable.glyph_bgp);
+        MANA_SYMBOLS.put("BRP", R.drawable.glyph_brp);
+        MANA_SYMBOLS.put("GUP", R.drawable.glyph_gup);
+        MANA_SYMBOLS.put("GWP", R.drawable.glyph_gwp);
+        MANA_SYMBOLS.put("RGP", R.drawable.glyph_rgp);
+        MANA_SYMBOLS.put("RWP", R.drawable.glyph_rwp);
+        MANA_SYMBOLS.put("UBP", R.drawable.glyph_ubp);
+        MANA_SYMBOLS.put("URP", R.drawable.glyph_urp);
+        MANA_SYMBOLS.put("WBP", R.drawable.glyph_wbp);
+        MANA_SYMBOLS.put("WUP", R.drawable.glyph_wup);
     }
 
     public ManaCostTextView(Context context, AttributeSet attrs) {
