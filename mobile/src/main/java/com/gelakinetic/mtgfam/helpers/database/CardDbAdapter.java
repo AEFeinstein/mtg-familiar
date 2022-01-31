@@ -626,9 +626,14 @@ public class CardDbAdapter {
                 sql.append(" GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE);
             }
             if (preferOptionalFoil) {
-                sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL + " DESC, " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
+                sql.append(" ORDER BY " +
+                        DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " ASC," +
+                        DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL + " DESC, " +
+                        DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
             } else {
-                sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
+                sql.append(" ORDER BY " +
+                        DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " ASC," +
+                        DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
             }
 
             if (fields.contains(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER)) {
