@@ -47,6 +47,7 @@
     <!-- used for life, poison, here and there -->
     <color name="material_red_500">#F44336</color>
     <color name="material_green_500">#4CAF50</color>
+    <color name="material_green_800">#2e7d32</color>
 
     <!-- life counter colors -->
     <color name="lc_enabled_light">#99343434</color>
