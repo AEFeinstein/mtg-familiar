@@ -87,6 +87,9 @@ public class MtgCard extends Card {
         mWatermark = "";
         mTcgplayerProductId = -1;
         mForeignPrintings = new ArrayList<>();
+        mIsFunny = false;
+        mIsRebalanced = false;
+        mSecurityStamp = "";
 
         // From MtgCard
         this.mSetName = "";
@@ -128,6 +131,9 @@ public class MtgCard extends Card {
             for (ForeignPrinting fp : card.mForeignPrintings) {
                 this.mForeignPrintings.add(new ForeignPrinting(fp));
             }
+            this.mIsFunny = card.mIsFunny;
+            this.mIsRebalanced = card.mIsRebalanced;
+            this.mSecurityStamp = card.mSecurityStamp;
 
             // From MtgCard
             this.mSetName = card.mSetName;
@@ -284,6 +290,9 @@ public class MtgCard extends Card {
         this.mColorIdentity = CardDbAdapter.getStringFromCursor(cardCursor, CardDbAdapter.KEY_COLOR_IDENTITY);
 
         this.mTcgplayerProductId = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_TCGP_PRODUCT_ID);
+        this.mIsFunny = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_FUNNY) != 0;
+        this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_REBALANCED) != 0;
+        this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, CardDbAdapter.KEY_SECURITY_STAMP);
 
         this.mPrice = 0; /* In cents */
         this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
@@ -441,6 +450,9 @@ public class MtgCard extends Card {
             this.mWatermark = CardDbAdapter.getStringFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_WATERMARK);
             this.mTcgplayerProductId = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_TCGP_PRODUCT_ID);
             this.mColorIdentity = CardDbAdapter.getStringFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_COLOR_IDENTITY);
+            this.mIsFunny = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_FUNNY) != 0;
+            this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_REBALANCED) != 0;
+            this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_SECURITY_STAMP);
 
             this.mSetName = CardDbAdapter.getStringFromCursor(cardCursor, "s_" + CardDbAdapter.KEY_NAME);
 
