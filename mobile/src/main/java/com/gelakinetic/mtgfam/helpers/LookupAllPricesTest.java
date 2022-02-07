@@ -36,7 +36,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
@@ -91,7 +91,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
                     CardDbAdapter.KEY_SUPERTYPE,
                     CardDbAdapter.KEY_NUMBER};
             String orderByStr = CardDbAdapter.KEY_SET + " ASC, " + CardDbAdapter.KEY_NUMBER + " ASC";
-            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
             Cursor allCards = CardDbAdapter.Search(criteria, false, returnTypes, false,
                     orderByStr, database, searchLanguages,
                     PreferenceAdapter.getHideOnlineOnly(activity),

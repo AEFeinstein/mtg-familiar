@@ -238,7 +238,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         StringBuilder playerData = new StringBuilder();
         for (LcPlayer player : mPlayers) {
             player.onPause();
-            playerData.append(player.toString());
+            playerData.append(player);
         }
         PreferenceAdapter.setPlayerData(getContext(), playerData.toString());
         mGridLayout.removeAllViews();

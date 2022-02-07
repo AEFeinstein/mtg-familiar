@@ -609,10 +609,10 @@ public class CardDbAdapter {
             sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE ");
             sql.append("(");
             Iterator<String> iter = key_name_languages.iterator();
-            sql.append(DATABASE_TABLE_CARDS + "." + iter.next() + " = ").append(name);
+            sql.append(DATABASE_TABLE_CARDS + ".").append(iter.next()).append(" = ").append(name);
             while (iter.hasNext()) {
                 sql.append(" OR ");
-                sql.append(DATABASE_TABLE_CARDS + "." + iter.next() + " = ").append(name);
+                sql.append(DATABASE_TABLE_CARDS + ".").append(iter.next()).append(" = ").append(name);
             }
             sql.append(")");
             if (hideOnline) {
@@ -922,11 +922,11 @@ public class CardDbAdapter {
                 // first language
                 Iterator<String> iter = key_name_languages.iterator();
                 String key_name_language = iter.next();
-                statement.append(DATABASE_TABLE_CARDS + "." + key_name_language + " LIKE ").append(sanitizeString("%" + s + "%", true));
+                statement.append(DATABASE_TABLE_CARDS + ".").append(key_name_language).append(" LIKE ").append(sanitizeString("%" + s + "%", true));
                 // additional languages
                 while (iter.hasNext()) {
                     key_name_language = iter.next();
-                    statement.append(" OR " + DATABASE_TABLE_CARDS + "." + key_name_language + " LIKE ").append(sanitizeString("%" + s + "%", true));
+                    statement.append(" OR " + DATABASE_TABLE_CARDS + ".").append(key_name_language).append(" LIKE ").append(sanitizeString("%" + s + "%", true));
                 }
                 // end
                 statement.append(")");
@@ -1769,44 +1769,43 @@ public class CardDbAdapter {
 
             String key_name_language = key_name_languages.get(0);
             String key_name_no_accent_language = key_name_no_accent_languages.get(0);
-            String sql = "SELECT * FROM (";
-            sql += "SELECT " +
-                    DATABASE_TABLE_CARDS + "." + key_name_language + " AS " + KEY_NAME + ", " +
-                    DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + KEY_ID + ", " +
-                    DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID +
-                    " FROM " + DATABASE_TABLE_CARDS +
-                    " JOIN " + DATABASE_TABLE_SETS +
-                    " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                    " WHERE " +
-                    DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
+            StringBuilder sql = new StringBuilder()
+                    .append("SELECT * FROM (SELECT ")
+                    .append(DATABASE_TABLE_CARDS).append(".").append(key_name_language).append(" AS ").append(KEY_NAME).append(", ")
+                    .append(DATABASE_TABLE_CARDS).append(".").append(KEY_ID).append(" AS ").append(KEY_ID).append(", ")
+                    .append(DATABASE_TABLE_CARDS).append(".").append(KEY_ID).append(" AS ").append(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID)
+                    .append(" FROM ")
+                    .append(DATABASE_TABLE_CARDS).append(" JOIN ").append(DATABASE_TABLE_SETS).append(" ON ")
+                    .append(DATABASE_TABLE_SETS).append(".").append(KEY_CODE).append(" = ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET)
+                    .append(" WHERE ")
+                    .append(DATABASE_TABLE_CARDS).append(".").append(key_name_no_accent_language).append(" LIKE ").append(query);
 
             if (hideOnline) {
-                sql += " AND (" + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0)";
+                sql.append(" AND (" + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0)");
             }
 
             if (hideFunny) {
-                sql += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_IS_FUNNY + " = 0)";
+                sql.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_IS_FUNNY + " = 0)");
             }
 
             for (int i = 1; i < key_name_languages.size(); i++) {
                 key_name_language = key_name_languages.get(i);
                 key_name_no_accent_language = key_name_no_accent_languages.get(i);
-                sql += " UNION " +
-                        "SELECT " +
-                        DATABASE_TABLE_CARDS + "." + key_name_language + " AS " + KEY_NAME + ", " +
-                        DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + KEY_ID + ", " +
-                        DATABASE_TABLE_CARDS + "." + KEY_ID + " AS " + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID +
-                        " FROM " + DATABASE_TABLE_CARDS +
-                        " JOIN " + DATABASE_TABLE_SETS +
-                        " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                        " WHERE " +
-                        DATABASE_TABLE_CARDS + "." + key_name_no_accent_language + " LIKE " + query;
+                sql.append(" UNION " + "SELECT " + DATABASE_TABLE_CARDS + ".")
+                        .append(key_name_language).append(" AS ").append(KEY_NAME).append(", ")
+                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_ID).append(" AS ").append(KEY_ID).append(", ")
+                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_ID).append(" AS ").append(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID)
+                        .append(" FROM ")
+                        .append(DATABASE_TABLE_CARDS).append(" JOIN ").append(DATABASE_TABLE_SETS).append(" ON ")
+                        .append(DATABASE_TABLE_SETS).append(".").append(KEY_CODE).append(" = ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET)
+                        .append(" WHERE ")
+                        .append(DATABASE_TABLE_CARDS).append(".").append(key_name_no_accent_language).append(" LIKE ").append(query);
             }
-            sql += " ) GROUP BY " + KEY_NAME +
-                    " ORDER BY " + KEY_NAME + " COLLATE UNICODE";
+            sql.append(" ) GROUP BY " + KEY_NAME +
+                    " ORDER BY " + KEY_NAME + " COLLATE UNICODE");
 
-            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
-            return mDb.rawQuery(sql, null);
+            FamiliarLogger.logRawQuery(sql.toString(), null, new Throwable().getStackTrace()[0].getMethodName());
+            return mDb.rawQuery(sql.toString(), null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }

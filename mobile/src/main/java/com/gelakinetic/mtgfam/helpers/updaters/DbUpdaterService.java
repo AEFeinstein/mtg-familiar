@@ -457,7 +457,7 @@ public class DbUpdaterService extends IntentService {
                     showUpdatedNotification(updatedStuff);
 
                     /* Notify the activity of changes */
-                    sendBroadcast(new Intent(this.DATABASE_UPDATE_INTENT));
+                    sendBroadcast(new Intent(DATABASE_UPDATE_INTENT));
                 }
             }
         } catch (Exception e) {

@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder;
 
 import java.net.URL;
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class CatalogData {
     private final boolean success;
     private final String[] errors;

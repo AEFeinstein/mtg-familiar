@@ -50,6 +50,7 @@ import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -131,7 +132,7 @@ public class CardHelpers {
             SQLiteDatabase db = DatabaseManager.openDatabase(fragment.getActivity(), false, fetchCardHandle);
 
             /* Get all the cards with relevant info from the database */
-            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
             cards = CardDbAdapter.fetchCardByName(mCardName, Arrays.asList(
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,

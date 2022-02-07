@@ -69,7 +69,7 @@ public class FamiliarLogger {
             /* Open the log, append to it */
             try (FileWriter logWriter = new FileWriter(logFile, true)) {
                 /* Datestamp it */
-                logWriter.write("Date : " + (new Date()).toString() + '\n');
+                logWriter.write("Date : " + (new Date()) + '\n');
                 logWriter.write("From : " + methodName + '\n');
                 logWriter.write(sb.toString() + "\n\n");
             } catch (IOException e) {

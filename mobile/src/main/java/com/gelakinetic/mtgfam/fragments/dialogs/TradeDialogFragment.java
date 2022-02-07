@@ -348,7 +348,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, fetchCardHandle);
                         /* Query the database for all versions of this card */
-                        Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+                        Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
                         cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                 CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,

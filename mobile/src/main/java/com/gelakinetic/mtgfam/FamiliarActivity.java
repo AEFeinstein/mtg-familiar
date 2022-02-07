@@ -372,7 +372,7 @@ public class FamiliarActivity extends AppCompatActivity {
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             /* Log the URL and response code */
             if (logWriter != null) {
-                logWriter.write("URL : " + url.toString() + '\n');
+                logWriter.write("URL : " + url + '\n');
                 logWriter.write("RESP: " + connection.getResponseCode() + '\n');
             }
 

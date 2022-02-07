@@ -222,7 +222,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             criteria.cmc = cmc;
             criteria.moJhoStoFilter = true;
-            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
             permanents = CardDbAdapter.Search(criteria, false, returnTypes, true,
                     null, database, searchLanguages,
                     PreferenceAdapter.getHideOnlineOnly(this.getContext()),
@@ -268,7 +268,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = Collections.singletonList(type);
-            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
             spells = CardDbAdapter.Search(criteria, false, returnTypes, true,
                     null, database, searchLanguages,
                     PreferenceAdapter.getHideOnlineOnly(this.getContext()),

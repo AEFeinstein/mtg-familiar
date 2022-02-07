@@ -549,7 +549,7 @@ public class CardViewFragment extends FamiliarFragment {
             mCard.getForeignPrintings().add(englishPrinting);
 
             // For each card with this name in the database
-            Set<String> searchLanguages = new HashSet<>(Arrays.asList("en"));
+            Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
             cAllCardsWithName = CardDbAdapter.fetchCardByName(mCard.getName(), CardDbAdapter.ALL_CARD_DATA_KEYS, false,
                     PreferenceAdapter.getHideOnlineOnly(this.getContext()),
                     PreferenceAdapter.getHideFunnyCards(this.getContext()), false, database, searchLanguages);

@@ -38,6 +38,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -733,6 +734,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
+    @SuppressWarnings("unused")
     public static synchronized String getDCINumber(@Nullable Context context) {
         if (null == context) {
             return "";
@@ -740,6 +742,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_dci_number), "");
     }
 
+    @SuppressWarnings("unused")
     public static synchronized void setDCINumber(@Nullable Context context, String dciNumber) {
         if (null == context) {
             return;
@@ -1092,6 +1095,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
                 SearchCriteria.class);
     }
 
+    @SuppressWarnings("unused")
     public static void setGroups(@Nullable Context context, LongSparseArray<String> groups) {
         if (null == context) {
             return;
@@ -1102,6 +1106,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
+    @SuppressWarnings("unused")
     public static LongSparseArray<String> getGroups(@Nullable Context context) {
         if (null == context) {
             return new LongSparseArray<>();
@@ -1139,7 +1144,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
 
     /* Search languages */
     public static synchronized Set<String> getSearchLanguages(@Nullable Context context) {
-        Set<String> defaultlangs = new HashSet<>(Arrays.asList("en"));
+        Set<String> defaultlangs = new HashSet<>(Collections.singletonList("en"));
         if (null == context) {
             return defaultlangs;
         }
