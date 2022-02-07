@@ -666,4 +666,6 @@ Standard ....... Not Legal -->
     <string name="decklist_more_info">"Más información"</string>
     <string name="decklist_just_names">"Solo los nombres"</string>
     <string name="decklist_share_body">"¿Compartir el mazo solo con los nombres de carta, o también con nombres de expansión?"</string>
+    <string name="up">Arriba</string>
+    <string name="down">Abajo</string>
 </resources>

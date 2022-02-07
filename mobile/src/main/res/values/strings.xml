@@ -605,4 +605,7 @@ Good luck, and have fun!
     <string name="logging_database_copied_to">"Database copied to "</string>
     <string name="logging_database_log">Database Log</string>
     <string name="logging_send_database_log">Send Database Log</string>
+
+    <string name="down">Down</string>
+    <string name="up">Up</string>
 </resources>

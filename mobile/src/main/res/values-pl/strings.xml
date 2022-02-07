@@ -661,4 +661,6 @@ Standard ....... Not Legal -->
     <string name="decklist_more_info">"Więcej informacji"</string>
     <string name="decklist_just_names">"Tylko nazwy"</string>
     <string name="decklist_share_body">"Udostępnij talię tylko z nazwami kart, lub również z nazwami dodatków"</string>
+    <string name="up">W górę</string>
+    <string name="down">W dół</string>
 </resources>

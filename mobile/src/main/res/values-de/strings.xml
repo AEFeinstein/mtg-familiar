@@ -672,4 +672,6 @@ Standard ....... Not Legal -->
     <string name="decklist_more_info">"Mehr Info"</string>
     <string name="decklist_just_names">"Nur Namen"</string>
     <string name="decklist_share_body">"Teilen Sie das Deck nur mit den Kartennamen oder legen Sie auch Namen fest"</string>
+    <string name="up">Hoch</string>
+    <string name="down">Runter</string>
 </resources>

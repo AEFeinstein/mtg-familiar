@@ -648,4 +648,6 @@ Standard ....... Not Legal -->
 
     <!-- can we have a brief description of what this is used for? -->
     <string name="decklist_share_body">"Condividi il grimorio con solo i nomi delle carte, o anche con i nomi delle espansioni"</string>
+    <string name="up">Su</string>
+    <string name="down">Giù</string>
 </resources>

@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AppCompatResource">
     <item
         android:id="@+id/cancel"
         android:icon="@drawable/ic_menu_close"
-        android:title=""
-        app:showAsAction="ifRoom" />
+        android:showAsAction="always"
+        android:title="@string/dialog_cancel"
+        app:showAsAction="always" />
     <item
         android:id="@+id/arrow_up"
         android:icon="@drawable/ic_menu_arrow_up"
-        android:title=""
-        app:showAsAction="ifRoom" />
+        android:showAsAction="always"
+        android:title="@string/up"
+        app:showAsAction="always" />
     <item
         android:id="@+id/arrow_down"
         android:icon="@drawable/ic_menu_arrow_down"
-        android:title=""
-        app:showAsAction="ifRoom" />
-
+        android:showAsAction="always"
+        android:title="@string/down"
+        app:showAsAction="always" />
 </menu>

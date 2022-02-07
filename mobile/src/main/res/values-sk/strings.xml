@@ -661,4 +661,6 @@ Standard ....... Not Legal -->
     <string name="decklist_more_info">"Viac informácií"</string>
     <string name="decklist_just_names">"Len mená"</string>
     <string name="decklist_share_body">"Zdieľajte balíček iba s názvami kariet alebo aj s menami súborov"</string>
+    <string name="up">Hore</string>
+    <string name="down">Dole</string>
 </resources>
