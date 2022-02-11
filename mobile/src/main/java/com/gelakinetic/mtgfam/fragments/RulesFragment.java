@@ -330,7 +330,7 @@ public class RulesFragment extends FamiliarFragment {
         /* Explanations for these regular expressions are available upon request. - Alex */
         mUnderscorePattern = Pattern.compile("_(.+?)_");
         mExamplePattern = Pattern.compile("(Example:.+)$");
-        mGlyphPattern = Pattern.compile("\\{([a-zA-Z0-9/]{1,3})\\}");
+        mGlyphPattern = Pattern.compile("\\{([a-zA-Z0-9/]{1,5})\\}");
         if (keyword != null && !keyword.contains("{") && !keyword.contains("}")) {
             mKeywordPattern = Pattern.compile("(" + Pattern.quote(keyword) + ")", Pattern.CASE_INSENSITIVE);
         } else {
