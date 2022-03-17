@@ -150,7 +150,7 @@ dependencies {
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'com.github.woxthebox:draglistview:1.7.2'
     implementation 'org.jetbrains:annotations:23.0.0'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
@@ -164,8 +164,8 @@ dependencies {
         exclude module: 'jcip-annotations'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.1'
 
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'com.nytimes.android:cache3:3.1.1', {
@@ -188,7 +188,7 @@ dependencies {
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:4.3.1'
+    testImplementation 'org.mockito:mockito-core:4.4.0'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'

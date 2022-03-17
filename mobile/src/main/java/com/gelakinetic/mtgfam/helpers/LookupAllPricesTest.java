@@ -705,8 +705,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
                 public void run() {
                     if (cubeCardIdx < cubeCards.size()) {
                         lookupCard(activity.mMarketPriceStore, cubeCards.get(cubeCardIdx), activity, this);
-                    }
-                    else {
+                    } else {
                         Log.d(DAPT_TAG, String.format("All done, %.02f", totalCubePrice));
                     }
                     cubeCardIdx++;
@@ -771,7 +770,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
                     fetchNext(fetcher, cursor, activity);
                 }
             });
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | FamiliarDbException e) {
 
             // Debug print
             Log.d(DAPT_TAG, "Failure [" + cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)) + "] " +
@@ -827,15 +826,11 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
                     },
                     () -> {
                     });
-        } catch (InstantiationException | FamiliarDbException e) {
+        } catch (InstantiationException e) {
 
             // Debug print
-            try {
-                Log.d(DAPT_TAG, "Failure [" + CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_SET) + "] " +
-                        CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_NAME) + ", " + e.getMessage());
-            } catch (FamiliarDbException familiarDbException) {
-                familiarDbException.printStackTrace();
-            }
+            Log.d(DAPT_TAG, "Failure [" + toLookup.getScryfallSetCode() + "] " +
+                    toLookup.getName() + ", " + e.getMessage());
 
             // Move to the next
             runWhenDone.run();
