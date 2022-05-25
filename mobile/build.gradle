@@ -134,6 +134,7 @@ android {
         abortOnError false
         disable 'MissingTranslation'
     }
+    namespace 'com.gelakinetic.mtgfam'
 }
 
 dependencies {
