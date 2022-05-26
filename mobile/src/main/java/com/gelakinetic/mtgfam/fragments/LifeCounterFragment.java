@@ -440,37 +440,36 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         mGridLayout.removeAllViews();
 
-        if (requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            switch (mDisplayMode) {
-                case DISPLAY_NORMAL:
+        boolean isPortrait = requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        switch (mDisplayMode) {
+            case DISPLAY_NORMAL:
+                if (isPortrait) {
                     mGridLayout.setOrientation(GridLayout.HORIZONTAL);
                     mGridLayout.setColumnCount(1);
                     mGridLayout.setRowCount(GridLayout.UNDEFINED);
-                    break;
-                case DISPLAY_COMPACT:
-                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-                    mGridLayout.setColumnCount(mNumCols);
-                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
-                    break;
-                case DISPLAY_COMMANDER:
-                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-                    mGridLayout.setColumnCount(2);
-                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
-                    break;
-            }
-        } else {
-            switch (mDisplayMode) {
-                case DISPLAY_NORMAL:
+                } else {
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     mGridLayout.setRowCount(1);
-                    break;
-                case DISPLAY_COMPACT:
+                }
+                break;
+            case DISPLAY_COMPACT:
+                if (isPortrait) {
+                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+                    mGridLayout.setColumnCount(mNumCols);
+                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
+                } else {
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     mGridLayout.setRowCount(mNumRows);
-                    break;
-                case DISPLAY_COMMANDER:
+                }
+                break;
+            case DISPLAY_COMMANDER:
+                if (isPortrait) {
+                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+                    mGridLayout.setColumnCount(2);
+                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
+                } else {
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     if (mListSizeHeight != -1) {
@@ -480,8 +479,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     } else {
                         mGridLayout.setRowCount(GridLayout.UNDEFINED);
                     }
-                    break;
-            }
+                }
+                break;
         }
 
         boolean areLivesDefault = true;
