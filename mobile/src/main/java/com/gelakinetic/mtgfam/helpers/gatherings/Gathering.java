@@ -19,6 +19,8 @@
 
 package com.gelakinetic.mtgfam.helpers.gatherings;
 
+import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,14 +29,14 @@ import java.util.ArrayList;
  */
 public class Gathering implements Serializable {
     public final ArrayList<GatheringsPlayerData> mPlayerList;
-    public int mDisplayMode;
+    public LifeCounterFragment.DisplayType mDisplayMode;
 
     /**
      * Default constructor, make a new mPlayerList and set the display mode to normal (0)
      */
     public Gathering() {
         mPlayerList = new ArrayList<>();
-        mDisplayMode = 0;
+        mDisplayMode = LifeCounterFragment.DisplayType.DISPLAY_NORMAL;
     }
 
     /**
@@ -43,7 +45,7 @@ public class Gathering implements Serializable {
      * @param _playerList  A list of GatheringsPlayerData
      * @param _displayMode The default display mode
      */
-    public Gathering(ArrayList<GatheringsPlayerData> _playerList, int _displayMode) {
+    public Gathering(ArrayList<GatheringsPlayerData> _playerList, LifeCounterFragment.DisplayType _displayMode) {
         mPlayerList = _playerList;
         mDisplayMode = _displayMode;
     }

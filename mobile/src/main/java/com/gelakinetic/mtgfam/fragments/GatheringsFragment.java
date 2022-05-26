@@ -77,7 +77,7 @@ public class GatheringsFragment extends FamiliarFragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         Gathering savedGathering = new Gathering();
 
-        savedGathering.mDisplayMode = mDisplayModeSpinner.getSelectedItemPosition();
+        savedGathering.mDisplayMode = LifeCounterFragment.DisplayType.values()[mDisplayModeSpinner.getSelectedItemPosition()];
 
         /* Pull all the information about players from the linear layout's children */
         for (int idx = 0; idx < mLinearLayout.getChildCount(); idx++) {
@@ -152,10 +152,7 @@ public class GatheringsFragment extends FamiliarFragment {
             Gathering gathering = (Gathering) savedInstanceState.getSerializable(SAVED_GATHERING_KEY);
 
             assert gathering != null;
-            if (gathering.mDisplayMode >= mDisplayModeSpinner.getAdapter().getCount()) {
-                gathering.mDisplayMode = 0;
-            }
-            mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
+            mDisplayModeSpinner.setSelection(gathering.mDisplayMode.ordinal());
             ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
             for (GatheringsPlayerData player : players) {
                 AddPlayerRow(player);
