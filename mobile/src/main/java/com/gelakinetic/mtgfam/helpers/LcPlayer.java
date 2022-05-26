@@ -19,8 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import static com.gelakinetic.mtgfam.fragments.LifeCounterFragment.DisplayType.DISPLAY_EFFICIENT;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
