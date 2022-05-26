@@ -50,6 +50,7 @@ import java.util.Set;
  * 2. Add getter/setter methods to this class for the new preference, if they are necessary
  * 3. Channel all accesses to the preference through the new getter/setter methods
  * 4. ???
+ * 4.5. Edit preferences.xml to set the option in the UI
  * 5. Profit (or at least sanity)!
  */
 @SuppressWarnings("SimplifiableIfStatement")
@@ -293,6 +294,14 @@ public class PreferenceAdapter {
             return 1;
         }
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_dimlevel), 1);
+    }
+
+    /* Type Equations in Life Counter */
+    public static synchronized boolean getLifeCounterMath(@Nullable Context context) {
+        if (null == context) {
+            return false;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_lifecounter_math), false);
     }
 
     /* Set pref */

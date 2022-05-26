@@ -36,6 +36,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
+import com.gelakinetic.mtgfam.helpers.util.EvaluateMathExpression;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -168,7 +169,9 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView2 != null;
                 final EditText lifeInput = textEntryView2.findViewById(R.id.text_entry);
-                lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                if (false) {
+                    lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                }
                 if (mLcPlayer.mReadoutTextView.getText() != null) {
                     lifeInput.append(mLcPlayer.mReadoutTextView.getText());
                 }
@@ -189,13 +192,13 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                             assert lifeInput.getText() != null;
                             try {
                                 /* make sure the life is valid, not empty */
-                                int newLife = Integer.parseInt(lifeInput.getText().toString());
+                                int newLife = EvaluateMathExpression.eval(lifeInput.getText().toString());
                                 if (mLcPlayer.mMode == LifeCounterFragment.STAT_POISON) {
                                     mLcPlayer.changeValue(newLife - mLcPlayer.mPoison, true);
                                 } else {
                                     mLcPlayer.changeValue(newLife - mLcPlayer.mLife, true);
                                 }
-                            } catch (NumberFormatException e) {
+                            } catch (RuntimeException e) {
                                 /* eat it */
                             }
                         })

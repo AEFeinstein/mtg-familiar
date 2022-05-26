@@ -45,6 +45,7 @@
     <string name="key_wakelock" translatable="false">wakelock</string>
     <string name="key_dimlock" translatable="false">dimlock</string>
     <string name="key_dimlevel" translatable="false">dimlevel</string>
+    <string name="key_lifecounter_math" translatable="false">lifecounter_math</string>
     <string name="key_setPref" translatable="false">setPref</string>
     <string name="key_manacostPref" translatable="false">manacostPref</string>
     <string name="key_typePref" translatable="false">typePref</string>
