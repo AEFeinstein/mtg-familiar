@@ -19,8 +19,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,36 +35,39 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:elevation="-2dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/player_minus1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/player_plus5"
             style="?android:attr/buttonBarButtonStyle"
 
-            android:layout_width="0dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:elevation="2dp"
             android:text="@string/life_counter_plus_five"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/player_plus1"
-            app:layout_constraintTop_toTopOf="@+id/player_plus1" />
+            android:translationY="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/player_plus1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/player_plus1" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="150dp"
             android:gravity="center|center_vertical"
             android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/player_name"
@@ -96,16 +100,16 @@
             android:id="@+id/player_minus5"
             style="?android:attr/buttonBarButtonStyle"
 
-            android:layout_width="0dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginStart="20dp"
             android:layout_weight="1"
             android:elevation="2dp"
             android:text="@string/life_counter_minus_five"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/player_minus1"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:translationY="-24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
         <Button
             android:id="@+id/player_minus1"
@@ -114,13 +118,13 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:elevation="-2dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/player_plus1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
