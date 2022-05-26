@@ -36,7 +36,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:elevation="-2dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/player_minus1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,9 +52,9 @@
             android:text="@string/life_counter_plus_five"
             android:textStyle="bold"
             android:translationY="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/player_plus1"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/player_plus1" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -65,7 +64,6 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -119,10 +117,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:elevation="-2dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/player_plus1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
