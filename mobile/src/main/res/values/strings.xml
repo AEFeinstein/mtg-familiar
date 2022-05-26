@@ -415,6 +415,8 @@ Good luck, and have fun!
     <string name="pref_dim_lock_title">"Enable Screen Dim"</string>
     <string name="pref_dim_lock_level_summary">"Set the level of brightness after the screen dims"</string>
     <string name="pref_dim_lock_level_title">"Screen Brightness"</string>
+    <string name="pref_lifecounter_math_summary">"Allow typing arbitrary equations in the life counter when setting the number directly"</string>
+    <string name="pref_lifecounter_math_title">"Life Counter Math"</string>
     <string name="pref_display_mode_title">"Display Mode"</string>
     <string name="pref_display_mode_summary">"Choose how to display the Life Counter"</string>
     <string name="pref_ringtone_title">"Timer Ringtone"</string>

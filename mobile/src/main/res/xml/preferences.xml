@@ -287,6 +287,13 @@
                 robobunny:min="1"
                 robobunny:unitsRight="%" />
 
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:dependency="@string/key_wakelock"
+                android:key="@string/key_lifecounter_math"
+                android:summary="@string/pref_lifecounter_math_summary"
+                android:title="@string/pref_lifecounter_math_title" />
+
         </PreferenceCategory>
 
     </PreferenceScreen>

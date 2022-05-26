@@ -36,6 +36,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.util.EvaluateMathExpression;
 
 import java.util.Locale;
@@ -169,7 +170,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView2 != null;
                 final EditText lifeInput = textEntryView2.findViewById(R.id.text_entry);
-                if (false) {
+                if (!PreferenceAdapter.getLifeCounterMath(getContext())) {
                     lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
                 }
                 if (mLcPlayer.mReadoutTextView.getText() != null) {
