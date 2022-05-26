@@ -19,6 +19,8 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import static com.gelakinetic.mtgfam.fragments.LifeCounterFragment.DisplayType.DISPLAY_EFFICIENT;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -294,7 +296,7 @@ public class LcPlayer {
      * Inflate the necessary views for this player, set the onClickListeners, and return the view to be added to the
      * GridView
      *
-     * @param displayMode         The display mode, either DISPLAY_COMMANDER, DISPLAY_COMPACT or DISPLAY_NORMAL
+     * @param displayMode         The display mode
      * @param statType            The stat type being displayed, either STAT_POISON, STAT_LIFE, or STAT_COMMANDER
      * @param playersView         The GridLayout to inflate all players into
      * @param commanderPlayerView The LinearLayout to inflate commander players into
@@ -346,7 +348,7 @@ public class LcPlayer {
 
                 break;
             }
-            case DISPLAY_COMPACT: {
+            case DISPLAY_COMPACT:
                 /* inflate the compact view */
                 mView = LayoutInflater
                         .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, playersView, false);
@@ -356,7 +358,17 @@ public class LcPlayer {
                 mHistoryPoisonAdapter = null;
                 mCommanderDamageAdapter = null;
                 break;
-            }
+            case DISPLAY_EFFICIENT:
+                mView = LayoutInflater
+                        .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_efficient, playersView, false);
+                /* Make new adapters */
+                mHistoryList = mView.findViewById(R.id.player_history);
+                mHistoryLifeAdapter = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_LIFE);
+                mHistoryPoisonAdapter
+                        = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_POISON);
+                /* Don't bother with commander stuff */
+                mCommanderDamageAdapter = null;
+                break;
         }
         assert mView != null;
 

@@ -447,6 +447,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         boolean isPortrait = requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         switch (mDisplayMode) {
             case DISPLAY_NORMAL:
+            case DISPLAY_EFFICIENT:
                 if (isPortrait) {
                     mGridLayout.setOrientation(GridLayout.HORIZONTAL);
                     mGridLayout.setColumnCount(1);
