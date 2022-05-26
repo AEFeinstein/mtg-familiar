@@ -51,6 +51,7 @@ import java.util.Set;
  * 3. Channel all accesses to the preference through the new getter/setter methods
  * 4. ???
  * 4.5. Edit preferences.xml to set the option in the UI
+ * 4.75. Edit strings.xml to give translation keys for the UI
  * 5. Profit (or at least sanity)!
  */
 @SuppressWarnings("SimplifiableIfStatement")
