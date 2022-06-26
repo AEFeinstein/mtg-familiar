@@ -71,7 +71,8 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
                             android:gravity="right"
-                            android:text="6GG" />
+                            android:text="6GG"
+                            android:minEms="2"/>
                     </LinearLayout>
 
                     <LinearLayout
