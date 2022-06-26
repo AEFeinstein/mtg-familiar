@@ -143,6 +143,20 @@ public class CardViewPagerFragment extends FamiliarFragment {
     }
 
     /**
+     * Scroll the view pager one to the left, if possible
+     */
+    public void scrollLeft() {
+        mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, true);
+    }
+
+    /**
+     * Scroll the view pager one to the right, if possible
+     */
+    public void scrollRight() {
+        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+    }
+
+    /**
      * A simple pager adapter that holds CardViewFragments
      */
     private static class CardViewPagerAdapter extends FragmentPagerAdapter {

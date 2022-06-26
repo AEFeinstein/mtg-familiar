@@ -266,6 +266,17 @@ public class CardViewFragment extends FamiliarFragment {
         mColorIndicatorLayout =
                 myFragmentView.findViewById(R.id.color_indicator_view);
 
+        // If the parent is a pager
+        if (getParentFragment() instanceof CardViewPagerFragment) {
+            // Set up invisible edge buttons to scroll left and right
+            myFragmentView.findViewById(R.id.left_click_scroll).setOnClickListener(v -> ((CardViewPagerFragment) getParentFragment()).scrollLeft());
+            myFragmentView.findViewById(R.id.right_click_scroll).setOnClickListener(v -> ((CardViewPagerFragment) getParentFragment()).scrollRight());
+        } else {
+            // Otherwise, hide those already invisible buttons
+            myFragmentView.findViewById(R.id.left_click_scroll).setVisibility(View.GONE);
+            myFragmentView.findViewById(R.id.right_click_scroll).setVisibility(View.GONE);
+        }
+
         registerForContextMenu(mNameTextView);
         registerForContextMenu(mCostTextView);
         registerForContextMenu(mTypeTextView);
