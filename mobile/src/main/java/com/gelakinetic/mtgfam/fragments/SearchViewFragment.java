@@ -367,8 +367,8 @@ public class SearchViewFragment extends FamiliarFragment {
                         PreferenceAdapter.getHideFunnyCards(frag.getContext()));
                 setCursor.moveToFirst();
 
-                frag.mSetNames = new String[setCursor.getCount()];
-                frag.mSetSymbols = new String[setCursor.getCount()];
+                frag.mSetNames = new String[setCursor.getCount() * 2];
+                frag.mSetSymbols = new String[setCursor.getCount() * 2];
 
                 /* If this wasn't persisted, create it new */
                 if (frag.mSetCheckedIndices == null) {
@@ -376,8 +376,13 @@ public class SearchViewFragment extends FamiliarFragment {
                 }
 
                 for (int i = 0; i < setCursor.getCount(); i++) {
+                    // Add the sets
                     frag.mSetSymbols[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
                     frag.mSetNames[i] = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_NAME);
+                    // Add 'not' the sets
+                    frag.mSetSymbols[i + setCursor.getCount()] = CardDbAdapter.EXCLUDE_TOKEN + CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                    frag.mSetNames[i + setCursor.getCount()] = CardDbAdapter.EXCLUDE_TOKEN + CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_NAME);
+                    // Move to the next
                     setCursor.moveToNext();
                 }
 

@@ -1295,7 +1295,11 @@ public class CardDbAdapter {
                 } else {
                     statement.append(" OR ");
                 }
-                statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(set).append("'");
+                if (set.contains(EXCLUDE_TOKEN)) {
+                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " != '").append(set.substring(EXCLUDE_TOKEN_START)).append("'");
+                } else {
+                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(set).append("'");
+                }
             }
 
             statement.append(")");
