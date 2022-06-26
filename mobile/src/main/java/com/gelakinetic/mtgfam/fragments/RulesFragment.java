@@ -68,6 +68,7 @@ public class RulesFragment extends FamiliarFragment {
     public static final String CATEGORY_KEY = "category";
     public static final String SUBCATEGORY_KEY = "subcategory";
     private static final String POSITION_KEY = "position";
+    private static final String ENTRY_KEY = "entry";
     public static final String KEYWORD_KEY = "keyword";
     private static final String GLOSSARY_KEY = "glossary";
     private static final String BANNED_KEY = "banned";
@@ -121,6 +122,7 @@ public class RulesFragment extends FamiliarFragment {
         int position;
         boolean isGlossary;
         final boolean isBanned;
+        String entryToScrollTo = null;
         if (extras == null) {
             mCategory = -1;
             mSubcategory = -1;
@@ -137,6 +139,7 @@ public class RulesFragment extends FamiliarFragment {
             format = extras.getString(FORMAT_KEY);
             isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
             isBanned = extras.getBoolean(BANNED_KEY, false);
+            entryToScrollTo = extras.getString(ENTRY_KEY, null);
         }
 
         ListView list = myFragmentView.findViewById(R.id.result_list);
@@ -149,7 +152,9 @@ public class RulesFragment extends FamiliarFragment {
         }
 
         mRules = new ArrayList<>();
-        boolean isClickable;
+        final boolean isClickable;
+        final boolean isSearchResult;
+        int positionToScrollTo = -1;
 
         /* Sub-optimal, but KitKat is silly */
         list.setOnScrollListener(new ListView.OnScrollListener() {
@@ -185,19 +190,24 @@ public class RulesFragment extends FamiliarFragment {
             if (isGlossary) {
                 cursor = CardDbAdapter.getGlossaryTerms(database);
                 isClickable = false;
+                isSearchResult = false;
             } else if (isBanned && format != null) {
                 cursor = CardDbAdapter.getBannedCards(database, format);
                 setsCursor = CardDbAdapter.getLegalSets(database, format);
                 isClickable = false;
+                isSearchResult = false;
             } else if (isBanned) {
                 cursor = CardDbAdapter.fetchAllFormats(database);
                 isClickable = true;
+                isSearchResult = false;
             } else if (keyword == null) {
                 cursor = CardDbAdapter.getRules(mCategory, mSubcategory, database);
                 isClickable = mSubcategory == -1;
+                isSearchResult = false;
             } else {
                 cursor = CardDbAdapter.getRulesByKeyword(keyword, mCategory, mSubcategory, database);
                 isClickable = false;
+                isSearchResult = true;
             }
 
             /* Add DisplayItems to mRules */
@@ -211,7 +221,7 @@ public class RulesFragment extends FamiliarFragment {
                 }
                 if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
                     int listItemResource = R.layout.rules_list_detail_item;
-                    RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
+                    RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules, isSearchResult);
                     list.setAdapter(adapter);
                 }
             }
@@ -239,6 +249,12 @@ public class RulesFragment extends FamiliarFragment {
                                     CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_ENTRY),
                                     CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_RULE_TEXT)));
                         }
+
+                        // If there is an rule to scroll to by entry, find it and note the position
+                        if ((null != entryToScrollTo) && (mRules.get(mRules.size() - 1).getEntry().equals(entryToScrollTo))) {
+                            positionToScrollTo = cursor.getPosition();
+                        }
+
                         cursor.moveToNext();
                     }
                     if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
@@ -252,12 +268,12 @@ public class RulesFragment extends FamiliarFragment {
                     if (isGlossary || isBanned || mSubcategory >= 0 || keyword != null) {
                         listItemResource = R.layout.rules_list_detail_item;
                     }
-                    RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
+                    RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules, isSearchResult);
                     list.setAdapter(adapter);
 
-                    if (isClickable) {
-                        /* This only happens for rule mItems with no subcategory, so the cast, should be safe */
-                        list.setOnItemClickListener((parent, view, position12, id) -> {
+                    list.setOnItemClickListener((parent, view, position12, id) -> {
+                        if (isClickable) {
+                            /* This only happens for rule mItems with no subcategory, so the cast, should be safe */
                             DisplayItem item = mRules.get(position12);
                             Bundle args = new Bundle();
                             if (item instanceof RuleItem) {
@@ -273,8 +289,19 @@ public class RulesFragment extends FamiliarFragment {
                             }
                             RulesFragment frag = new RulesFragment();
                             startNewFragment(frag, args);
-                        });
-                    }
+                        } else if (isSearchResult) {
+                            // If this is a search, tapping the rule jumps to the rule in context
+                            DisplayItem item = mRules.get(position12);
+                            if (item instanceof RuleItem) {
+                                Bundle args = new Bundle();
+                                args.putInt(CATEGORY_KEY, ((RuleItem) item).mCategory);
+                                args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mSubcategory);
+                                args.putString(ENTRY_KEY, ((RuleItem) item).mEntry);
+                                RulesFragment frag = new RulesFragment();
+                                startNewFragment(frag, args);
+                            }
+                        }
+                    });
                     list.setOnItemLongClickListener((parent, view, position1, id) -> {
                         DisplayItem item = mRules.get(position1);
                         if (item instanceof RuleItem) {
@@ -325,7 +352,12 @@ public class RulesFragment extends FamiliarFragment {
             DatabaseManager.closeDatabase(getActivity(), handle);
         }
 
-        list.setSelection(position);
+        // Set the position appropriately
+        if (-1 != positionToScrollTo) {
+            list.setSelection(positionToScrollTo);
+        } else {
+            list.setSelection(position);
+        }
 
         /* Explanations for these regular expressions are available upon request. - Alex */
         mUnderscorePattern = Pattern.compile("_(.+?)_");
@@ -546,6 +578,11 @@ public class RulesFragment extends FamiliarFragment {
          * @return True if clicking this entry opens a sub-fragment, false otherwise
          */
         protected abstract boolean isClickable();
+
+        /**
+         * @return The string entry associated with this entry
+         */
+        public abstract String getEntry();
     }
 
     /**
@@ -579,6 +616,13 @@ public class RulesFragment extends FamiliarFragment {
          */
         public String getText() {
             return this.mRulesText;
+        }
+
+        /**
+         * @return The entry without the category or subcategory
+         */
+        public String getEntry() {
+            return this.mEntry;
         }
 
         /**
@@ -648,6 +692,14 @@ public class RulesFragment extends FamiliarFragment {
          */
         public boolean isClickable() {
             return this.mClickable;
+        }
+
+        /**
+         * @return The header, same as the entry
+         */
+        @Override
+        public String getEntry() {
+            return getHeader();
         }
     }
 
@@ -741,6 +793,14 @@ public class RulesFragment extends FamiliarFragment {
         }
 
         /**
+         * @return The header, same as the entry
+         */
+        @Override
+        public String getEntry() {
+            return getHeader();
+        }
+
+        /**
          * @return whether this entry is a list of cards
          */
         boolean isListOfCards() {
@@ -754,6 +814,7 @@ public class RulesFragment extends FamiliarFragment {
     private class RulesListAdapter extends ArrayAdapter<DisplayItem> implements SectionIndexer {
         private final int mLayoutResourceId;
         private final ArrayList<DisplayItem> mItems;
+        private final boolean mIsSearchResult;
 
         private Integer[] mIndices;
         private String[] mAlphabet;
@@ -766,11 +827,12 @@ public class RulesFragment extends FamiliarFragment {
          *                           R.layout.rules_list_item
          * @param items              The DisplayItems to show
          */
-        RulesListAdapter(Context context, int textViewResourceId, ArrayList<DisplayItem> items) {
+        RulesListAdapter(Context context, int textViewResourceId, ArrayList<DisplayItem> items, boolean isSearchResult) {
             super(context, textViewResourceId, items);
 
             this.mLayoutResourceId = textViewResourceId;
             this.mItems = items;
+            this.mIsSearchResult = isSearchResult;
 
             boolean isGlossary = true;
             for (DisplayItem item : items) {
@@ -841,7 +903,9 @@ public class RulesFragment extends FamiliarFragment {
                     rulesText.setVisibility(View.VISIBLE);
                     rulesText.setText(formatText(text, shouldLink, hasCards), BufferType.SPANNABLE);
                 }
-                if (!data.isClickable()) {
+
+                // Set this entry as not clickable, which means links in text can be clicked
+                if (!data.isClickable() && !this.mIsSearchResult) {
                     rulesText.setMovementMethod(LinkMovementMethod.getInstance());
                     rulesText.setClickable(false);
                 }
