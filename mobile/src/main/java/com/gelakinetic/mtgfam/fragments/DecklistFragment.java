@@ -239,7 +239,8 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSupertype(
-                getResources().getStringArray(R.array.card_types_extra)
+                getResources().getStringArray(R.array.card_types_extra),
+                getResources().getString(R.string.card_type_land)
         ));
         mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
@@ -757,22 +758,24 @@ public class DecklistFragment extends FamiliarListFragment {
             for (int i = 0; i < mCompressedDecklist.size(); i++) {
                 for (int j = 0; j < cardTypes.length; j++) {
                     final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
-                    if (!cdi.getName().equals("") /* We only want entries that have a card attached */
+                    /* We only want entries that have a card attached and there's a non-zero number
+                     * of the header type
+                     */
+                    if (!cdi.getName().equals("")
                             && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                             && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
-                        if (cdi.isSideboard() /* it is in the sideboard */
-                                /* The sideboard header isn't already there */
-                                && !insertHeaderAt(i, cardHeaders[0])) {
-                            break;
-                        } else if (j < cardHeaders.length - 1 /* if j is in range */
-                                /* the current card has the selected card type */
-                                && cdi.getType().contains(cardTypes[j])
-                                /* There isn't already a header */
-                                && !insertHeaderAt(i, cardHeaders[j + 1])) {
-                            break;
-                        } else if (j >= cardHeaders.length - 1
-                                && !insertHeaderAt(i, cardHeaders[cardHeaders.length - 1])) {
-                            break;
+                        if (cdi.isSideboard()) {
+                            /* If it's in the sideboard, insert the sideboard header
+                             * The header won't be added if it already exists.
+                             */
+                            insertHeaderAt(i, cardHeaders[0]);
+                        } else if (j < cardHeaders.length - 1 && cdi.getType().contains(cardTypes[j])) {
+                            /* if j is in range and the current card has the selected card type,
+                             * try to insert a header. The header won't be added if it already exists.
+                             */
+                            insertHeaderAt(i, cardHeaders[j + 1]);
+                        } else if (j >= cardHeaders.length - 1) {
+                            insertHeaderAt(i, cardHeaders[cardHeaders.length - 1]);
                         }
                     }
                 }
@@ -1055,6 +1058,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /* default */
             int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
+            String landType = getResources().getString(R.string.card_type_land);
 
             /* Make sure the index is in-bounds, or a request for the sideboard */
             String targetType;
@@ -1080,18 +1084,33 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (!cdi.isSideboard() && 0 <= typeIndex) {
                     /* If the card matches the type */
                     if (cdi.getType().contains(targetType)) {
-                        /* Check if this card was counted as a previous type */
-                        boolean alreadyCounted = false;
-                        for (int acIdx = 0; acIdx < typeIndex; acIdx++) {
-                            if (cdi.getType().contains(types[acIdx])) {
-                                /* The card was already counted, so don't count it again */
-                                alreadyCounted = true;
+
+                        /* The target type is non-land */
+                        if (!targetType.equals(landType)) {
+                            /* but the card is a land */
+                            if (cdi.getType().contains(landType)) {
+                                /* Don't count this until we're counting lands */
                                 break;
+                            } else {
+                                /* Check if this card was counted as a previous type */
+                                boolean alreadyCounted = false;
+                                for (int acIdx = 0; acIdx < typeIndex; acIdx++) {
+                                    if (cdi.getType().contains(types[acIdx])) {
+                                        /* The card was already counted, so don't count it again */
+                                        alreadyCounted = true;
+                                        break;
+                                    }
+                                }
+                                /* The card was not already counted, so add it to this count */
+                                if (!alreadyCounted) {
+                                    totalCards += cdi.getTotalNumber();
+                                }
                             }
-                        }
-                        /* The card was not already counted, so add it to this count */
-                        if (!alreadyCounted) {
-                            totalCards += cdi.getTotalNumber();
+                        } else {
+                            /* Looking for lands and the target type is land, count it */
+                            if (cdi.getType().contains(landType)) {
+                                totalCards += cdi.getTotalNumber();
+                            }
                         }
                     }
                     /* If the card is in the sideboard and we're looking for sideboard cards */

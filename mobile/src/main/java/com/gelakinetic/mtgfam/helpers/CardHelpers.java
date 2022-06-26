@@ -134,11 +134,11 @@ public class CardHelpers {
             /* Get all the cards with relevant info from the database */
             Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
             cards = CardDbAdapter.fetchCardByName(mCardName, Arrays.asList(
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                            CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false,
                     PreferenceAdapter.getHideOnlineOnly(fragment.getContext()),
                     PreferenceAdapter.getHideFunnyCards(fragment.getContext()), false, db, searchLanguages);
 
@@ -708,17 +708,33 @@ public class CardHelpers {
     public static class CardComparatorSupertype
             implements Comparator<MtgCard>, Serializable {
 
-        final String[] mTypes;
+        private final String[] mTypes;
+        private final String mLandType;
 
-        public CardComparatorSupertype(String[] superTypes) {
+        public CardComparatorSupertype(String[] superTypes, String landType) {
             mTypes = superTypes.clone();
+            mLandType = landType;
         }
 
         @Override
         public int compare(MtgCard card1, MtgCard card2) {
 
+            // Make sure that lands always come after non-lands
+            boolean card1IsLand = card1.getType().contains(mLandType);
+            boolean card2IsLand = card2.getType().contains(mLandType);
+            if (card1IsLand && !card2IsLand) {
+                return 1;
+            } else if (!card1IsLand && card2IsLand) {
+                return -1;
+            } else if (card1IsLand && card2IsLand) {
+                /* Both lands, sort by name */
+                return card1.getName().compareTo(card2.getName());
+            }
+
+            // If neither are lands, sort by type
             String card1Type = card1.getType();
             String card2Type = card2.getType();
+
             for (String type : mTypes) {
                 if (card1Type.contains(type) && card2Type.contains(type)) {
                     return 0;
@@ -729,8 +745,6 @@ public class CardHelpers {
                 }
             }
             return 0;
-
         }
-
     }
 }
