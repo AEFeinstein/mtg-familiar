@@ -213,6 +213,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         new ExpansionImageHelper.ChangeSetListAdapter(getContext(), getParentCardViewFragment().mPrintings, ExpansionImageHelper.ExpansionImageSize.LARGE) {
                             @Override
                             protected void onClick(ExpansionImageHelper.ExpansionImageData data) {
+                                getParentCardViewFragment().invalidatePriceInfo();
                                 getParentCardViewFragment().setInfoFromID(data.getDbId());
                             }
                         };

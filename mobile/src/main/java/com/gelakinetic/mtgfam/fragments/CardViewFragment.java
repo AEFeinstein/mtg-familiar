@@ -841,6 +841,21 @@ public class CardViewFragment extends FamiliarFragment {
         }
     }
 
+    /**
+     * This invalidates price info
+     */
+    public void invalidatePriceInfo() {
+        mPriceInfo = null;
+        mPriceLowTextView.setText(R.string.wishlist_loading);
+        mPriceAvgTextView.setText(R.string.wishlist_loading);
+        mPriceHighTextView.setText(R.string.wishlist_loading);
+        mPriceMarketTextView.setText(R.string.wishlist_loading);
+        mPriceLowFoilTextView.setText(R.string.wishlist_loading);
+        mPriceAvgFoilTextView.setText(R.string.wishlist_loading);
+        mPriceHighFoilTextView.setText(R.string.wishlist_loading);
+        mPriceMarketFoilTextView.setText(R.string.wishlist_loading);
+    }
+
     private static class MediaStoreInfo {
         private final String filePath;
         private final long mediaStoreId;
