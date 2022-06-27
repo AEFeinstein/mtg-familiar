@@ -90,6 +90,7 @@ public class MtgCard extends Card {
         mIsFunny = false;
         mIsRebalanced = false;
         mSecurityStamp = "";
+        mIsToken = false;
 
         // From MtgCard
         this.mSetName = "";
@@ -134,6 +135,7 @@ public class MtgCard extends Card {
             this.mIsFunny = card.mIsFunny;
             this.mIsRebalanced = card.mIsRebalanced;
             this.mSecurityStamp = card.mSecurityStamp;
+            this.mIsToken = card.mIsToken;
 
             // From MtgCard
             this.mSetName = card.mSetName;
@@ -293,6 +295,7 @@ public class MtgCard extends Card {
         this.mIsFunny = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_FUNNY) != 0;
         this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_REBALANCED) != 0;
         this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, CardDbAdapter.KEY_SECURITY_STAMP);
+        this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_TOKEN) != 0;
 
         this.mPrice = 0; /* In cents */
         this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
@@ -453,6 +456,7 @@ public class MtgCard extends Card {
             this.mIsFunny = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_FUNNY) != 0;
             this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_REBALANCED) != 0;
             this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_SECURITY_STAMP);
+            this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_TOKEN) != 0;
 
             this.mSetName = CardDbAdapter.getStringFromCursor(cardCursor, "s_" + CardDbAdapter.KEY_NAME);
 
@@ -758,6 +762,11 @@ public class MtgCard extends Card {
             return null;
         }
 
+        String scryfallSetCode = this.mScryfallSetCode.toLowerCase();
+        if (this.getIsToken()) {
+            scryfallSetCode = "t" + scryfallSetCode;
+        }
+
         // Parts of the URL
         String numberToUse = this.mNumber;
         String urlOpts = "?format=image";
@@ -786,9 +795,14 @@ public class MtgCard extends Card {
             urlOpts += "&lang=" + lang;
         }
 
+        // Hack for "The Initiative // Undercity" since the fun part is on the back
+        if ("tclb".equals(scryfallSetCode) && "20".equals(mNumber)) {
+            urlOpts += "&face=back";
+        }
+
         // Build the URL
         String urlStr = "https://api.scryfall.com/cards/" +
-                this.mScryfallSetCode.toLowerCase() + "/" +
+                scryfallSetCode + "/" +
                 numberToUse +
                 urlOpts;
 

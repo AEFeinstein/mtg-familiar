@@ -106,6 +106,9 @@ public class Card implements Comparable<Card> {
     // This card's security stamp type
     public String mSecurityStamp;
 
+    // If this card is a token or not
+    public boolean mIsToken;
+
     public String getName() {
         return mName;
     }
@@ -200,6 +203,10 @@ public class Card implements Comparable<Card> {
 
     public String getSecurityStamp() {
         return mSecurityStamp;
+    }
+
+    public boolean getIsToken() {
+        return mIsToken;
     }
 
     // Private class for encapsulating foreign printing information
