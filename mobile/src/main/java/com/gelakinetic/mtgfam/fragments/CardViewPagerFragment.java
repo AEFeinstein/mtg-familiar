@@ -231,6 +231,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
         public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             if (getCurrentFragment() != object) {
                 mCurrentFragment = ((CardViewFragment) object);
+                mCurrentFragment.notifySelected();
             }
             super.setPrimaryItem(container, position, object);
         }

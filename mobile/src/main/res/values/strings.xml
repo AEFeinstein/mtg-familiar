@@ -405,6 +405,8 @@ Good luck, and have fun!
     <string name="pref_cat_card_view">"Card View"</string>
     <string name="pref_show_art_title">"Always Show Art"</string>
     <string name="pref_show_art_summary">"When viewing a card, load official card image instead of rules text"</string>
+    <string name="pref_show_price_on_card_view_title">Show Price On Card View</string>
+    <string name="pref_show_price_on_card_view_summary">When viewing a card, immediately load the price to the page</string>
     <string name="pref_card_language_title">"Card image language"</string>
     <string name="pref_card_language_summary">"Choose the language used to retrieve the card image"</string>
     <string name="pref_cat_life_screen">"Display Settings"</string>

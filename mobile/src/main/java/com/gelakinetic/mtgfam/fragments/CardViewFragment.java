@@ -104,6 +104,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -139,6 +140,20 @@ public class CardViewFragment extends FamiliarFragment {
     private LinearLayout mCardTextLinearLayout;
     private LinearLayout mColorIndicatorLayout;
 
+    private View mPriceLayout;
+    private View mNonFoilPricesLayout;
+    private View mFoilPricesLayout;
+    private View mPriceFoilDivider;
+    private View mPriceDivider;
+    private TextView mPriceLowTextView;
+    private TextView mPriceAvgTextView;
+    private TextView mPriceHighTextView;
+    private TextView mPriceMarketTextView;
+    private TextView mPriceLowFoilTextView;
+    private TextView mPriceAvgFoilTextView;
+    private TextView mPriceHighFoilTextView;
+    private TextView mPriceMarketFoilTextView;
+
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
     private AsyncTask mAsyncTask;
     public String[] mLegalities;
@@ -170,6 +185,7 @@ public class CardViewFragment extends FamiliarFragment {
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
     private boolean mIsOnlineOnly = false;
+    private boolean mShowPriceOnFrag = false;
     private final View.OnClickListener showEntireSet = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -265,6 +281,20 @@ public class CardViewFragment extends FamiliarFragment {
         mCardImageView = myFragmentView.findViewById(R.id.cardpic);
         mColorIndicatorLayout =
                 myFragmentView.findViewById(R.id.color_indicator_view);
+
+        mPriceLayout = myFragmentView.findViewById(R.id.prices);
+        mNonFoilPricesLayout = myFragmentView.findViewById(R.id.nonfoil_prices);
+        mFoilPricesLayout = myFragmentView.findViewById(R.id.foil_prices);
+        mPriceDivider = myFragmentView.findViewById(R.id.price_divider);
+        mPriceFoilDivider = myFragmentView.findViewById(R.id.price_foil_divider);
+        mPriceLowTextView = myFragmentView.findViewById(R.id.price_low);
+        mPriceAvgTextView = myFragmentView.findViewById(R.id.price_average);
+        mPriceHighTextView = myFragmentView.findViewById(R.id.price_high);
+        mPriceMarketTextView = myFragmentView.findViewById(R.id.price_market);
+        mPriceLowFoilTextView = myFragmentView.findViewById(R.id.price_low_foil);
+        mPriceAvgFoilTextView = myFragmentView.findViewById(R.id.price_average_foil);
+        mPriceHighFoilTextView = myFragmentView.findViewById(R.id.price_high_foil);
+        mPriceMarketFoilTextView = myFragmentView.findViewById(R.id.price_market_foil);
 
         // If the parent is a pager
         if (getParentFragment() instanceof CardViewPagerFragment) {
@@ -622,7 +652,76 @@ public class CardViewFragment extends FamiliarFragment {
             }
             DatabaseManager.closeDatabase(mActivity, handle);
         }
+
+        mShowPriceOnFrag = PreferenceAdapter.loadPriceToFrag(getContext());
+        if (mShowPriceOnFrag) {
+            if (null == mPriceInfo) {
+                try {
+                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard, marketPriceInfo -> {
+                        // Price received
+                        if (marketPriceInfo != null) {
+                            mPriceInfo = marketPriceInfo;
+                        } else {
+                            mPriceInfo = null;
+                            mErrorMessage = getString(R.string.card_view_price_not_found);
+                        }
+                    }, throwable -> {
+                        // Price not received
+                        mPriceInfo = null;
+                        mErrorMessage = getString(R.string.card_view_price_not_found);
+                    }, () -> {
+                        setPricesOnFragment();
+                    });
+                } catch (java.lang.InstantiationException e) {
+                    // Failure, meh
+                }
+            } else {
+                setPricesOnFragment();
+            }
+        }
         mActivity.invalidateOptionsMenu();
+    }
+
+    /**
+     * Set the UI to show prices directly in the fragment
+     * This will show or hide appropriate fields
+     */
+    private void setPricesOnFragment() {
+        // Run on UI thread afterwards
+        mPriceLayout.setVisibility(View.GONE);
+        mPriceDivider.setVisibility(View.GONE);
+
+        if (null != mPriceInfo) {
+            if (mPriceInfo.hasNormalPrice()) {
+                mPriceLowTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.LOW).price));
+                mPriceAvgTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MID).price));
+                mPriceHighTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.HIGH).price));
+                mPriceMarketTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MARKET).price));
+                mPriceLayout.setVisibility(View.VISIBLE);
+                mPriceDivider.setVisibility(View.VISIBLE);
+                mNonFoilPricesLayout.setVisibility(View.VISIBLE);
+            } else {
+                mNonFoilPricesLayout.setVisibility(View.GONE);
+            }
+
+            if (mPriceInfo.hasFoilPrice()) {
+                mPriceLowFoilTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(true, MarketPriceInfo.PriceType.LOW).price));
+                mPriceAvgFoilTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MID).price));
+                mPriceHighFoilTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(true, MarketPriceInfo.PriceType.HIGH).price));
+                mPriceMarketFoilTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET).price));
+                mPriceLayout.setVisibility(View.VISIBLE);
+                mPriceDivider.setVisibility(View.VISIBLE);
+                mFoilPricesLayout.setVisibility(View.VISIBLE);
+            } else {
+                mFoilPricesLayout.setVisibility(View.GONE);
+            }
+
+            if (mPriceInfo.hasNormalPrice() && mPriceInfo.hasFoilPrice()) {
+                mPriceFoilDivider.setVisibility(View.VISIBLE);
+            } else {
+                mPriceFoilDivider.setVisibility(View.GONE);
+            }
+        }
     }
 
     /**
@@ -730,6 +829,15 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 }
             }), 0, 0);
+        }
+    }
+
+    /**
+     * This callback is called when the fragment is selected by the ViewPager
+     */
+    public void notifySelected() {
+        if (null != mPriceInfo) {
+            setPricesOnFragment();
         }
     }
 
@@ -1172,8 +1280,13 @@ public class CardViewFragment extends FamiliarFragment {
             // eh, couldn't find the menu item. Image _should_ be there
         }
 
-        /* If this is an online-only card, hide the price lookup button */
-        menu.findItem(R.id.price).setVisible(!mIsOnlineOnly);
+        if (mIsOnlineOnly || mShowPriceOnFrag) {
+            /* If this is an online-only card, hide the price lookup button */
+            menu.findItem(R.id.price).setVisible(false);
+        } else {
+            menu.findItem(R.id.price).setVisible(true);
+        }
+
         /* This code removes the "change set" button if there is only one set.
          * Turns out some users use it to view the full set name when there is only one set/
          * I'm leaving it here, but commented, for posterity */

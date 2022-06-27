@@ -271,6 +271,13 @@ public class PreferenceAdapter {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_picFirst), false);
     }
 
+    public static synchronized boolean loadPriceToFrag(@Nullable Context context) {
+        if (null == context) {
+            return false;
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_priceOnFrag), false);
+    }
+
     /* Keep Screen On */
     public static synchronized boolean getKeepScreenOn(@Nullable Context context) {
         if (null == context) {
