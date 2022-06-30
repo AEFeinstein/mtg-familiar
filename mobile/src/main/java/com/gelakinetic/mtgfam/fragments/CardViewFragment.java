@@ -681,7 +681,7 @@ public class CardViewFragment extends FamiliarFragment {
                 // Price already exists, just show it
                 setPricesOnFragment();
             }
-        } else if (mIsOnlineOnly) {
+        } else {
             // Don't bother showing prices for online-only cards
             mPriceLayout.setVisibility(View.GONE);
         }
@@ -1305,7 +1305,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         if (mIsOnlineOnly || mShowPriceOnFrag) {
-            /* If this is an online-only card, hide the price lookup button */
+            /* If this is an online-only card, or it's show on the page, hide the price lookup button */
             menu.findItem(R.id.price).setVisible(false);
         } else {
             menu.findItem(R.id.price).setVisible(true);
