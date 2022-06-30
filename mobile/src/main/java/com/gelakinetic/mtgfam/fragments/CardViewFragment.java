@@ -144,7 +144,6 @@ public class CardViewFragment extends FamiliarFragment {
     private View mNonFoilPricesLayout;
     private View mFoilPricesLayout;
     private View mPriceFoilDivider;
-    private View mPriceDivider;
     private TextView mPriceLowTextView;
     private TextView mPriceAvgTextView;
     private TextView mPriceHighTextView;
@@ -153,6 +152,7 @@ public class CardViewFragment extends FamiliarFragment {
     private TextView mPriceAvgFoilTextView;
     private TextView mPriceHighFoilTextView;
     private TextView mPriceMarketFoilTextView;
+    private TextView mPriceLinkTextView;
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
     private AsyncTask mAsyncTask;
@@ -285,7 +285,6 @@ public class CardViewFragment extends FamiliarFragment {
         mPriceLayout = myFragmentView.findViewById(R.id.prices);
         mNonFoilPricesLayout = myFragmentView.findViewById(R.id.nonfoil_prices);
         mFoilPricesLayout = myFragmentView.findViewById(R.id.foil_prices);
-        mPriceDivider = myFragmentView.findViewById(R.id.price_divider);
         mPriceFoilDivider = myFragmentView.findViewById(R.id.price_foil_divider);
         mPriceLowTextView = myFragmentView.findViewById(R.id.price_low);
         mPriceAvgTextView = myFragmentView.findViewById(R.id.price_average);
@@ -295,6 +294,7 @@ public class CardViewFragment extends FamiliarFragment {
         mPriceAvgFoilTextView = myFragmentView.findViewById(R.id.price_average_foil);
         mPriceHighFoilTextView = myFragmentView.findViewById(R.id.price_high_foil);
         mPriceMarketFoilTextView = myFragmentView.findViewById(R.id.price_market_foil);
+        mPriceLinkTextView = myFragmentView.findViewById(R.id.price_link_text);
 
         // If the parent is a pager
         if (getParentFragment() instanceof CardViewPagerFragment) {
@@ -654,9 +654,13 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         mShowPriceOnFrag = PreferenceAdapter.loadPriceToFrag(getContext());
-        if (mShowPriceOnFrag) {
+        if (mShowPriceOnFrag && !mIsOnlineOnly) {
+            // Make the layout visible while loading
+            mPriceLayout.setVisibility(View.VISIBLE);
+            // If the price doesn't already exist
             if (null == mPriceInfo) {
                 try {
+                    // Look it up
                     mActivity.mMarketPriceStore.fetchMarketPrice(mCard, marketPriceInfo -> {
                         // Price received
                         if (marketPriceInfo != null) {
@@ -669,15 +673,17 @@ public class CardViewFragment extends FamiliarFragment {
                         // Price not received
                         mPriceInfo = null;
                         mErrorMessage = getString(R.string.card_view_price_not_found);
-                    }, () -> {
-                        setPricesOnFragment();
-                    });
+                    }, () -> setPricesOnFragment());
                 } catch (java.lang.InstantiationException e) {
                     // Failure, meh
                 }
             } else {
+                // Price already exists, just show it
                 setPricesOnFragment();
             }
+        } else if (mIsOnlineOnly) {
+            // Don't bother showing prices for online-only cards
+            mPriceLayout.setVisibility(View.GONE);
         }
         mActivity.invalidateOptionsMenu();
     }
@@ -689,16 +695,19 @@ public class CardViewFragment extends FamiliarFragment {
     private void setPricesOnFragment() {
         // Run on UI thread afterwards
         mPriceLayout.setVisibility(View.GONE);
-        mPriceDivider.setVisibility(View.GONE);
 
         if (null != mPriceInfo) {
+
+            mPriceLinkTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            mPriceLinkTextView.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + mPriceInfo.getUrl() + "\">" +
+                    getString(R.string.card_view_price_dialog_link) + "</a>"));
+
             if (mPriceInfo.hasNormalPrice()) {
                 mPriceLowTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.LOW).price));
                 mPriceAvgTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MID).price));
                 mPriceHighTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.HIGH).price));
                 mPriceMarketTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MARKET).price));
                 mPriceLayout.setVisibility(View.VISIBLE);
-                mPriceDivider.setVisibility(View.VISIBLE);
                 mNonFoilPricesLayout.setVisibility(View.VISIBLE);
             } else {
                 mNonFoilPricesLayout.setVisibility(View.GONE);
@@ -710,7 +719,6 @@ public class CardViewFragment extends FamiliarFragment {
                 mPriceHighFoilTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(true, MarketPriceInfo.PriceType.HIGH).price));
                 mPriceMarketFoilTextView.setText(String.format(Locale.US, FamiliarListFragment.PRICE_FORMAT, mPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET).price));
                 mPriceLayout.setVisibility(View.VISIBLE);
-                mPriceDivider.setVisibility(View.VISIBLE);
                 mFoilPricesLayout.setVisibility(View.VISIBLE);
             } else {
                 mFoilPricesLayout.setVisibility(View.GONE);
@@ -854,6 +862,7 @@ public class CardViewFragment extends FamiliarFragment {
         mPriceAvgFoilTextView.setText(R.string.wishlist_loading);
         mPriceHighFoilTextView.setText(R.string.wishlist_loading);
         mPriceMarketFoilTextView.setText(R.string.wishlist_loading);
+        mPriceLinkTextView.setText(R.string.card_view_price_dialog_link);
     }
 
     private static class MediaStoreInfo {
