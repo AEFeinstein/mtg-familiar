@@ -2,7 +2,7 @@
 <network-security-config>
     <base-config>
         <trust-anchors>
-            <certificates src="@raw/wizards_of_the_coast" />
+            <certificates src="@raw/cacerts_extra__digicert_tls_rsa_sha256_2020_ca1" />
             <certificates src="system" />
         </trust-anchors>
     </base-config>
