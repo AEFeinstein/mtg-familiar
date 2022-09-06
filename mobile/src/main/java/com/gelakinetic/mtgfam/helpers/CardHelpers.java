@@ -623,8 +623,26 @@ public class CardHelpers {
     public static class CardComparatorCMC
             implements Comparator<MtgCard>, Serializable {
 
+        private final boolean skipLands;
+        private final String mLandType;
+
+        public CardComparatorCMC() {
+            this.skipLands = false;
+            this.mLandType = null;
+        }
+
+        public CardComparatorCMC(String landType, boolean skipLands) {
+            this.skipLands = skipLands;
+            this.mLandType = landType;
+        }
+
         @Override
         public int compare(MtgCard card1, MtgCard card2) {
+
+            if (this.skipLands && null != this.mLandType
+                    && (card1.getType().contains(this.mLandType) || card2.getType().contains(this.mLandType))) {
+                return 0;
+            }
 
             return Integer.compare(card1.getCmc(), card2.getCmc());
 
@@ -638,7 +656,20 @@ public class CardHelpers {
     public static class CardComparatorColor
             implements Comparator<MtgCard>, Serializable {
 
+        private final boolean skipLands;
+        private final String mLandType;
+
         private static final String COLORS = "WUBRG";
+
+        public CardComparatorColor() {
+            this.skipLands = false;
+            this.mLandType = null;
+        }
+
+        public CardComparatorColor(String landType, boolean skipLands) {
+            this.skipLands = skipLands;
+            this.mLandType = landType;
+        }
 
         /**
          * Gets what COLORS are in the given string.
@@ -665,6 +696,11 @@ public class CardHelpers {
 
         @Override
         public int compare(MtgCard card1, MtgCard card2) {
+
+            if (this.skipLands && null != this.mLandType
+                    && (card1.getType().contains(this.mLandType) || card2.getType().contains(this.mLandType))) {
+                return 0;
+            }
 
             String cardColors1 = getColors(card1.getColor());
             String cardColors2 = getColors(card2.getColor());
@@ -728,7 +764,7 @@ public class CardHelpers {
                 return -1;
             } else if (card1IsLand && card2IsLand) {
                 /* Both lands, sort by name */
-                return card1.getName().compareTo(card2.getName());
+                return 0;
             }
 
             // If neither are lands, sort by type
