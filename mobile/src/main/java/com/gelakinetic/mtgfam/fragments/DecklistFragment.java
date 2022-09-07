@@ -759,7 +759,7 @@ public class DecklistFragment extends FamiliarListFragment {
         final String[] cardTypes = getResources().getStringArray(R.array.card_types_extra);
         final String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
         synchronized (mCompressedDecklist) {
-            for (int i = 0; i < mCompressedDecklist.size(); i++) {
+            for (int i = 0, j = 0; i < mCompressedDecklist.size(); i++) {
                 final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (cdi.getName().equals("") || (i > 0 && mCompressedDecklist.get(i - 1).header != null))
                     continue;
@@ -770,7 +770,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (insertHeaderAt(i, cardHeaders[0])) i++;
                     continue;
                 }
-                for (int j = 0; j < cardTypes.length; j++) {
+                for (; j < cardTypes.length; j++) {
                     /* We only want entries that have a card attached and there's a non-zero number
                      * of the header type
                      */
