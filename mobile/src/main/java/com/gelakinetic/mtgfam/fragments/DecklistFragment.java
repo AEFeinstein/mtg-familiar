@@ -242,8 +242,12 @@ public class DecklistFragment extends FamiliarListFragment {
                 getResources().getStringArray(R.array.card_types_extra),
                 getResources().getString(R.string.card_type_land)
         ));
-        mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
-        mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC(
+                getResources().getString(R.string.card_type_land), true
+        ));
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorColor(
+                getResources().getString(R.string.card_type_land), true
+        ));
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
 
@@ -754,29 +758,33 @@ public class DecklistFragment extends FamiliarListFragment {
 
         final String[] cardTypes = getResources().getStringArray(R.array.card_types_extra);
         final String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
+        final String landType = getResources().getString(R.string.card_type_land);
+        boolean landTypeProcessed = false;
         synchronized (mCompressedDecklist) {
-            for (int i = 0; i < mCompressedDecklist.size(); i++) {
-                for (int j = 0; j < cardTypes.length; j++) {
-                    final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
-                    /* We only want entries that have a card attached and there's a non-zero number
-                     * of the header type
+            for (int i = 0, j = 0; i < mCompressedDecklist.size(); i++) {
+                final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
+                if (cdi.getName().equals("") || (i > 0 && mCompressedDecklist.get(i - 1).header != null))
+                    continue;
+                if (cdi.isSideboard()) {
+                    /* If it's in the sideboard, insert the sideboard header
+                     * The header won't be added if it already exists.
                      */
-                    if (!cdi.getName().equals("")
-                            && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
-                            && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
-                        if (cdi.isSideboard()) {
-                            /* If it's in the sideboard, insert the sideboard header
-                             * The header won't be added if it already exists.
-                             */
-                            insertHeaderAt(i, cardHeaders[0]);
-                        } else if (j < cardHeaders.length - 1 && cdi.getType().contains(cardTypes[j])) {
-                            /* if j is in range and the current card has the selected card type,
-                             * try to insert a header. The header won't be added if it already exists.
-                             */
-                            insertHeaderAt(i, cardHeaders[j + 1]);
-                        } else if (j >= cardHeaders.length - 1) {
-                            insertHeaderAt(i, cardHeaders[cardHeaders.length - 1]);
-                        }
+                    if (insertHeaderAt(i, cardHeaders[0])) i++;
+                    continue;
+                }
+                for (; j < cardTypes.length; j++) {
+                    if (cdi.getType().contains(landType) && !landTypeProcessed && !landType.equals(cardTypes[j]))
+                        continue; // Advance the loop to the land type position
+                    if (j < cardHeaders.length - 1 && cdi.getType().contains(cardTypes[j])) {
+                        /* if j is in range and the current card has the selected card type,
+                         * try to insert a header. The header won't be added if it already exists.
+                         */
+                        if (insertHeaderAt(i, cardHeaders[j + 1])) i++;
+                        if (cardTypes[j].equals(landType)) landTypeProcessed = true;
+                        break;
+                    } else if (j >= cardHeaders.length - 1) {
+                        if (insertHeaderAt(i, cardHeaders[cardHeaders.length - 1])) i++;
+                        break;
                     }
                 }
             }
