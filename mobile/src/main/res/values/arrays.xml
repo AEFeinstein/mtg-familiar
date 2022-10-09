@@ -163,6 +163,7 @@
         <item>@string/life_counter_Normal</item>
         <item>@string/life_counter_Compact</item>
         <item>@string/life_counter_Commander</item>
+        <item>@string/life_counter_Efficient</item>
     </string-array>
     <string-array name="display_array_values">
         <item>0</item>

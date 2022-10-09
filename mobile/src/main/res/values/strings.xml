@@ -254,6 +254,7 @@ Mana pool will also be cleared."</string>
     <string name="life_counter_Commander">"Commander"</string>
     <string name="life_counter_Compact">"Compact"</string>
     <string name="life_counter_Normal">"Normal"</string>
+    <string name="life_counter_Efficient">"Efficient"</string>
     <string name="life_counter_commander_cast">"Commander Casting"</string>
     <string name="life_counter_default_name">"Player"</string>
     <plurals name="life_counter_spoken_life">

@@ -27,6 +27,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,9 +63,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnUtteranceCompletedListener {
 
     /* constants for display mode */
-    public static final int DISPLAY_NORMAL = 0;
-    public static final int DISPLAY_COMPACT = 1;
-    public static final int DISPLAY_COMMANDER = 2;
+    public enum DisplayType {
+        DISPLAY_NORMAL,
+        DISPLAY_COMPACT,
+        DISPLAY_COMMANDER,
+        DISPLAY_EFFICIENT;
+    }
     /* constants for stat displaying */
     public final static int STAT_LIFE = 0;
     public final static int STAT_POISON = 1;
@@ -81,7 +85,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     /* Keeping track of players, display state */
     public final ArrayList<LcPlayer> mPlayers = new ArrayList<>();
     private final LinkedList<String> mVocalizations = new LinkedList<>();
-    public int mDisplayMode = DISPLAY_NORMAL;
+    public DisplayType mDisplayMode = DisplayType.DISPLAY_NORMAL;
     private int mStatDisplaying = STAT_LIFE;
     /* UI Elements, measurement */
     public GridLayout mGridLayout;
@@ -165,7 +169,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         assert myFragmentView != null;
         mGridLayout = myFragmentView.findViewById(R.id.playerList);
 
-        mDisplayMode = Integer.parseInt(PreferenceAdapter.getDisplayMode(getContext()));
+        mDisplayMode = DisplayType.values()[Integer.parseInt(PreferenceAdapter.getDisplayMode(getContext()))];
 
         mCommanderPlayerView = myFragmentView.findViewById(R.id.commander_player);
 
@@ -436,41 +440,41 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     public void changeDisplayMode(boolean shouldDefaultLives) {
         /* update the preference */
-        PreferenceAdapter.setDisplayMode(getContext(), String.valueOf(mDisplayMode));
+        PreferenceAdapter.setDisplayMode(getContext(), String.valueOf(mDisplayMode.ordinal()));
 
         mGridLayout.removeAllViews();
 
-        if (requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            switch (mDisplayMode) {
-                case DISPLAY_NORMAL:
+        boolean isPortrait = requireActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        switch (mDisplayMode) {
+            case DISPLAY_NORMAL:
+            case DISPLAY_EFFICIENT:
+                if (isPortrait) {
                     mGridLayout.setOrientation(GridLayout.HORIZONTAL);
                     mGridLayout.setColumnCount(1);
                     mGridLayout.setRowCount(GridLayout.UNDEFINED);
-                    break;
-                case DISPLAY_COMPACT:
-                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-                    mGridLayout.setColumnCount(mNumCols);
-                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
-                    break;
-                case DISPLAY_COMMANDER:
-                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-                    mGridLayout.setColumnCount(2);
-                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
-                    break;
-            }
-        } else {
-            switch (mDisplayMode) {
-                case DISPLAY_NORMAL:
+                } else {
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     mGridLayout.setRowCount(1);
-                    break;
-                case DISPLAY_COMPACT:
+                }
+                break;
+            case DISPLAY_COMPACT:
+                if (isPortrait) {
+                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+                    mGridLayout.setColumnCount(mNumCols);
+                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
+                } else {
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     mGridLayout.setRowCount(mNumRows);
-                    break;
-                case DISPLAY_COMMANDER:
+                }
+                break;
+            case DISPLAY_COMMANDER:
+                if (isPortrait) {
+                    mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+                    mGridLayout.setColumnCount(2);
+                    mGridLayout.setRowCount(GridLayout.UNDEFINED);
+                } else {
                     mGridLayout.setOrientation(GridLayout.VERTICAL);
                     mGridLayout.setColumnCount(GridLayout.UNDEFINED);
                     if (mListSizeHeight != -1) {
@@ -480,8 +484,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     } else {
                         mGridLayout.setRowCount(GridLayout.UNDEFINED);
                     }
-                    break;
-            }
+                }
+                break;
         }
 
         boolean areLivesDefault = true;
@@ -508,7 +512,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             addPlayerView(player);
         }
 
-        if (mDisplayMode == DISPLAY_COMMANDER) {
+        if (mDisplayMode == DisplayType.DISPLAY_COMMANDER) {
             mCommanderButton.setVisibility(View.VISIBLE);
             mCommanderPlayerView.setVisibility(View.VISIBLE);
             mCommanderPlayerView.removeAllViews();
@@ -540,7 +544,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         } catch (IllegalArgumentException e) {
             return;
         }
-        if (mDisplayMode == DISPLAY_COMMANDER) {
+        if (mDisplayMode == DisplayType.DISPLAY_COMMANDER) {
             player.mCommanderRowView.setOnClickListener(view -> {
                 /* Show this player's info in mCommanderPlayerView */
                 mCommanderPlayerView.removeAllViews();
@@ -777,7 +781,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @return 40 life in commander mode, 20 life otherwise
      */
     private int getDefaultLife() {
-        if (mDisplayMode == DISPLAY_COMMANDER) {
+        if (mDisplayMode == DisplayType.DISPLAY_COMMANDER) {
             return DEFAULT_LIFE_COMMANDER;
         }
         return DEFAULT_LIFE;
