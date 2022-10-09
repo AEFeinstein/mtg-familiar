@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.util.Xml;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 import org.w3c.dom.Document;
@@ -224,11 +225,11 @@ public class GatheringsIO {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(_gatheringFile);
         } catch (ParserConfigurationException | IOException | SAXException pce) {
-            return new Gathering(playerList, 0);
+            return new Gathering(playerList, LifeCounterFragment.DisplayType.DISPLAY_NORMAL);
         }
 
         if (dom == null)
-            return new Gathering(playerList, 0);
+            return new Gathering(playerList, LifeCounterFragment.DisplayType.DISPLAY_NORMAL);
 
         Element docEle = dom.getDocumentElement();
 
@@ -254,13 +255,13 @@ public class GatheringsIO {
             }
         }
 
-        int displayMode;
+        LifeCounterFragment.DisplayType displayMode;
         Element mode = (Element) docEle.getElementsByTagName("displaymode").item(0);
         if (mode != null) {
             String sMode = mode.getChildNodes().item(0).getNodeValue();
-            displayMode = Integer.parseInt(sMode);
+            displayMode = LifeCounterFragment.DisplayType.values()[Integer.parseInt(sMode)];
         } else {
-            displayMode = 0;
+            displayMode = LifeCounterFragment.DisplayType.DISPLAY_NORMAL;
         }
 
         return new Gathering(playerList, displayMode);

@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.LcPlayerDialogFragment;
+import com.gelakinetic.mtgfam.fragments.LifeCounterFragment.DisplayType;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -293,18 +294,18 @@ public class LcPlayer {
      * Inflate the necessary views for this player, set the onClickListeners, and return the view to be added to the
      * GridView
      *
-     * @param displayMode         The display mode, either DISPLAY_COMMANDER, DISPLAY_COMPACT or DISPLAY_NORMAL
+     * @param displayMode         The display mode
      * @param statType            The stat type being displayed, either STAT_POISON, STAT_LIFE, or STAT_COMMANDER
      * @param playersView         The GridLayout to inflate all players into
      * @param commanderPlayerView The LinearLayout to inflate commander players into
      * @return The view to be added to the GridView. Can either be mView or mCommanderRowView
      */
-    public View newView(int displayMode, int statType, GridLayout playersView, LinearLayout commanderPlayerView) {
+    public View newView(DisplayType displayMode, int statType, GridLayout playersView, LinearLayout commanderPlayerView) {
         switch (displayMode) {
-            case LifeCounterFragment.DISPLAY_COMMANDER:
-            case LifeCounterFragment.DISPLAY_NORMAL: {
+            case DISPLAY_COMMANDER:
+            case DISPLAY_NORMAL: {
                 /* Inflate the player view */
-                if (LifeCounterFragment.DISPLAY_COMMANDER == displayMode) {
+                if (DisplayType.DISPLAY_COMMANDER == displayMode) {
                     mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, commanderPlayerView, false);
                 } else {
                     mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, playersView, false);
@@ -321,7 +322,7 @@ public class LcPlayer {
                 mCommanderDamageAdapter = new CommanderDamageAdapter(mFragment.getActivity());
 
                 /* If it's commander, also inflate the entry to display in the grid, and set up the casting and experience counter button */
-                if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
+                if (displayMode == DisplayType.DISPLAY_COMMANDER) {
                     setupCommanderCastingButton();
                     setupCommanderExperienceCounterButton();
 
@@ -345,7 +346,7 @@ public class LcPlayer {
 
                 break;
             }
-            case LifeCounterFragment.DISPLAY_COMPACT: {
+            case DISPLAY_COMPACT:
                 /* inflate the compact view */
                 mView = LayoutInflater
                         .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, playersView, false);
@@ -355,7 +356,17 @@ public class LcPlayer {
                 mHistoryPoisonAdapter = null;
                 mCommanderDamageAdapter = null;
                 break;
-            }
+            case DISPLAY_EFFICIENT:
+                mView = LayoutInflater
+                        .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_efficient, playersView, false);
+                /* Make new adapters */
+                mHistoryList = mView.findViewById(R.id.player_history);
+                mHistoryLifeAdapter = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_LIFE);
+                mHistoryPoisonAdapter
+                        = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_POISON);
+                /* Don't bother with commander stuff */
+                mCommanderDamageAdapter = null;
+                break;
         }
         assert mView != null;
 
@@ -386,7 +397,7 @@ public class LcPlayer {
 
         setMode(statType);
 
-        if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
+        if (displayMode == DisplayType.DISPLAY_COMMANDER) {
             return mCommanderRowView;
         } else {
             return mView;
@@ -555,14 +566,14 @@ public class LcPlayer {
      * @param isPortrait        The orientation of the device
      * @param isSingle          true if this is the only player, false otherwise
      */
-    public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int numRows, int numCols, int displayMode, boolean isPortrait, boolean isSingle) {
+    public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int numRows, int numCols, DisplayType displayMode, boolean isPortrait, boolean isSingle) {
 
         if (null == mView) {
             return;
         }
 
         switch (displayMode) {
-            case LifeCounterFragment.DISPLAY_NORMAL: {
+            case DISPLAY_NORMAL: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
                 if (null != params) {
                     if (isSingle) {
@@ -579,7 +590,7 @@ public class LcPlayer {
                 }
                 break;
             }
-            case LifeCounterFragment.DISPLAY_COMPACT: {
+            case DISPLAY_COMPACT: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
                 if (null != params) {
                     params.width = mGridLayoutWidth / numCols;
@@ -588,7 +599,7 @@ public class LcPlayer {
                 }
                 break;
             }
-            case LifeCounterFragment.DISPLAY_COMMANDER: {
+            case DISPLAY_COMMANDER: {
                 /* Set the row height to 48dp and the width to some fraction of the screen */
                 if (null != mCommanderRowView) {
                     ViewGroup.LayoutParams rowParams = mCommanderRowView.getLayoutParams();

@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
+import com.gelakinetic.mtgfam.fragments.LifeCounterFragment.DisplayType;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
@@ -90,7 +91,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                                from the ArrayList and redraw. Also notify other players to remove this player from
                                the commander list, and reset the main commander player view in case that player was
                                removed */
-                            if (getParentLifeCounterFragment().mDisplayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
+                            if (getParentLifeCounterFragment().mDisplayMode == DisplayType.DISPLAY_COMMANDER) {
                                 getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(position).mCommanderRowView);
                             } else {
                                 getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(position).mView);
@@ -101,7 +102,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
 
                             getParentLifeCounterFragment().setCommanderInfo(position);
 
-                            if (getParentLifeCounterFragment().mDisplayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
+                            if (getParentLifeCounterFragment().mDisplayMode == DisplayType.DISPLAY_COMMANDER) {
                                 getParentLifeCounterFragment().mCommanderPlayerView.removeAllViews();
                                 if (getParentLifeCounterFragment().mPlayers.size() > 0) {
                                     getParentLifeCounterFragment().mCommanderPlayerView.addView(getParentLifeCounterFragment().mPlayers.get(0).mView);
@@ -145,12 +146,12 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
 
                 builder.title(R.string.pref_display_mode_title);
                 builder.items((CharSequence[]) getResources().getStringArray(R.array.display_array_entries))
-                        .itemsCallbackSingleChoice(getParentLifeCounterFragment().mDisplayMode,
+                        .itemsCallbackSingleChoice(getParentLifeCounterFragment().mDisplayMode.ordinal(),
                                 (dialog, itemView, which, text) -> {
                                     dialog.dismiss();
 
-                                    if (getParentLifeCounterFragment().mDisplayMode != which) {
-                                        getParentLifeCounterFragment().mDisplayMode = which;
+                                    if (getParentLifeCounterFragment().mDisplayMode.ordinal() != which) {
+                                        getParentLifeCounterFragment().mDisplayMode = DisplayType.values()[which];
                                         getParentLifeCounterFragment().changeDisplayMode(true);
                                     }
                                     return true;
