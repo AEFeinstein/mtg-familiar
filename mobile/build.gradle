@@ -98,7 +98,7 @@ android {
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 87
         versionName "3.9.4"
         vectorDrawables.useSupportLibrary true
@@ -139,7 +139,7 @@ android {
 
 dependencies {
 // AndroidX
-    annotationProcessor 'androidx.annotation:annotation:1.5.0'
+    annotationProcessor 'androidx.annotation:annotation:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.fragment:fragment:1.5.5'
@@ -182,7 +182,7 @@ dependencies {
 
 // Testing
     //noinspection GradleDependency
-    androidTestImplementation 'androidx.annotation:annotation:1.5.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.3.0'
     androidTestImplementation 'androidx.test:runner:1.5.1'
     androidTestImplementation 'androidx.test:rules:1.5.0'
 
