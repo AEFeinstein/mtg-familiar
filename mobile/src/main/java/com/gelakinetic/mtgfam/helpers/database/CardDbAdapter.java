@@ -55,7 +55,7 @@ import java.util.Set;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 130;
+    public static final int DATABASE_VERSION = 131;
 
     /* Database Tables */
     public static final String DATABASE_TABLE_CARDS = "cards";
@@ -97,7 +97,7 @@ public class CardDbAdapter {
     public static final String KEY_BANNED_LIST = "banned_list";
     public static final String KEY_LEGAL_SETS = "legal_sets";
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
-    private static final String KEY_ONLINE_ONLY = "online_only";
+    public static final String KEY_ONLINE_ONLY = "online_only";
     private static final String KEY_BORDER_COLOR = "border_color";
     public static final String KEY_SET_TYPE = "set_type";
     private static final String KEY_FORMAT = "format";
@@ -201,7 +201,8 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_IS_FUNNY,
             DATABASE_TABLE_CARDS + "." + KEY_IS_REBALANCED,
             DATABASE_TABLE_CARDS + "." + KEY_SECURITY_STAMP,
-            DATABASE_TABLE_CARDS + "." + KEY_IS_TOKEN
+            DATABASE_TABLE_CARDS + "." + KEY_IS_TOKEN,
+            DATABASE_TABLE_CARDS + "." + KEY_ONLINE_ONLY
     ));
 
     /* All the columns in DATABASE_CREATE_SETS */
@@ -273,6 +274,7 @@ public class CardDbAdapter {
                     KEY_IS_REBALANCED + " integer, " +
                     KEY_SECURITY_STAMP + " text, " +
                     KEY_IS_TOKEN + " integer, " +
+                    KEY_ONLINE_ONLY + " integer, " +
                     KEY_NAME_CHINESE_TRADITIONAL + " text, " +
                     KEY_MULTIVERSEID_CHINESE_TRADITIONAL + " integer, " +
                     KEY_NAME_CHINESE_SIMPLIFIED + " text, " +
@@ -481,7 +483,10 @@ public class CardDbAdapter {
                     tableJoin = DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
                             DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET;
                 }
-                where += " AND " + KEY_ONLINE_ONLY + " = 0";
+                where += " AND " + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0";
+                if (CardDbAdapter.DATABASE_TABLE_CARDS.equals(table)) {
+                    where += " AND " + DATABASE_TABLE_CARDS + "." + KEY_ONLINE_ONLY + " = 0";
+                }
             }
 
             if (hideFunny) {
@@ -619,7 +624,8 @@ public class CardDbAdapter {
             }
             sql.append(")");
             if (hideOnline) {
-                sql.append(" AND " + KEY_ONLINE_ONLY + " = 0");
+                sql.append(" AND " + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0");
+                sql.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_ONLINE_ONLY + " = 0");
             }
             if (hideFunny) {
                 sql.append(" AND " + KEY_IS_FUNNY + " = 0");
@@ -908,6 +914,7 @@ public class CardDbAdapter {
 
         if (hideOnline) {
             statement.append(" AND (").append(DATABASE_TABLE_SETS).append(".").append(KEY_ONLINE_ONLY).append(" = 0)");
+            statement.append(" AND (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ONLINE_ONLY).append(" = 0)");
         }
 
         if (hideFunny) {
@@ -1789,6 +1796,7 @@ public class CardDbAdapter {
 
             if (hideOnline) {
                 sql.append(" AND (" + DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY + " = 0)");
+                sql.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ONLINE_ONLY + " = 0)");
             }
 
             if (hideFunny) {
@@ -1906,6 +1914,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_IS_REBALANCED, card.getIsRebalanced() ? 1 : 0);
         initialValues.put(KEY_SECURITY_STAMP, card.getSecurityStamp());
         initialValues.put(KEY_IS_TOKEN, card.getIsToken() ? 1 : 0);
+        initialValues.put(KEY_ONLINE_ONLY, card.getIsOnlineOnly() ? 1 : 0);
 
         for (Card.ForeignPrinting fp : card.getForeignPrintings()) {
             switch (fp.getLanguageCode()) {

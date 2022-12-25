@@ -91,6 +91,7 @@ public class MtgCard extends Card {
         mIsRebalanced = false;
         mSecurityStamp = "";
         mIsToken = false;
+        mIsOnlineOnly = false;
 
         // From MtgCard
         this.mSetName = "";
@@ -136,6 +137,7 @@ public class MtgCard extends Card {
             this.mIsRebalanced = card.mIsRebalanced;
             this.mSecurityStamp = card.mSecurityStamp;
             this.mIsToken = card.mIsToken;
+            this.mIsOnlineOnly = card.mIsOnlineOnly;
 
             // From MtgCard
             this.mSetName = card.mSetName;
@@ -296,6 +298,7 @@ public class MtgCard extends Card {
         this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_REBALANCED) != 0;
         this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, CardDbAdapter.KEY_SECURITY_STAMP);
         this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_TOKEN) != 0;
+        this.mIsOnlineOnly = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_ONLINE_ONLY) != 0;
 
         this.mPrice = 0; /* In cents */
         this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
@@ -457,6 +460,7 @@ public class MtgCard extends Card {
             this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_REBALANCED) != 0;
             this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_SECURITY_STAMP);
             this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_TOKEN) != 0;
+            this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_ONLINE_ONLY) != 0;
 
             this.mSetName = CardDbAdapter.getStringFromCursor(cardCursor, "s_" + CardDbAdapter.KEY_NAME);
 
