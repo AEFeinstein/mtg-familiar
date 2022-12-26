@@ -76,7 +76,7 @@ public class RulesFragment extends FamiliarFragment {
 
     /* Keys for BannedItems */
     private static final String NONE = "NONE";
-    private static final String SETS = "SETS";
+    private static final String SETS = "Sets"; // TODO untranslated string
 
     /* Current rules information */
     private ArrayList<DisplayItem> mRules;
