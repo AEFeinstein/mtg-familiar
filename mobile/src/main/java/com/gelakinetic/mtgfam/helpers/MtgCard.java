@@ -37,6 +37,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -92,6 +93,7 @@ public class MtgCard extends Card {
         mSecurityStamp = "";
         mIsToken = false;
         mIsOnlineOnly = false;
+        mLegalities = new HashMap<>();
 
         // From MtgCard
         this.mSetName = "";
@@ -138,6 +140,8 @@ public class MtgCard extends Card {
             this.mSecurityStamp = card.mSecurityStamp;
             this.mIsToken = card.mIsToken;
             this.mIsOnlineOnly = card.mIsOnlineOnly;
+            this.mLegalities = new HashMap<>(card.mLegalities.size());
+            this.mLegalities.putAll(card.mLegalities);
 
             // From MtgCard
             this.mSetName = card.mSetName;
@@ -299,6 +303,8 @@ public class MtgCard extends Card {
         this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, CardDbAdapter.KEY_SECURITY_STAMP);
         this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_IS_TOKEN) != 0;
         this.mIsOnlineOnly = CardDbAdapter.getIntFromCursor(cardCursor, CardDbAdapter.KEY_ONLINE_ONLY) != 0;
+        this.mLegalities = new HashMap<>();
+        CardDbAdapter.fillCardLegality(this, database);
 
         this.mPrice = 0; /* In cents */
         this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */

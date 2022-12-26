@@ -75,10 +75,8 @@ public class RulesFragment extends FamiliarFragment {
     private static final String FORMAT_KEY = "format";
 
     /* Keys for BannedItems */
-    private static final int BANNED = 1;
-    private static final int RESTRICTED = 2;
-    private static final int NONE = -1;
-    private static final int SETS = -2;
+    private static final String NONE = "NONE";
+    private static final String SETS = "SETS";
 
     /* Current rules information */
     private ArrayList<DisplayItem> mRules;
@@ -193,6 +191,7 @@ public class RulesFragment extends FamiliarFragment {
                 isSearchResult = false;
             } else if (isBanned && format != null) {
                 cursor = CardDbAdapter.getBannedCards(database, format);
+                // TODO i think sets cursor is broken
                 setsCursor = CardDbAdapter.getLegalSets(database, format);
                 isClickable = false;
                 isSearchResult = false;
@@ -236,7 +235,7 @@ public class RulesFragment extends FamiliarFragment {
                         } else if (isBanned && format != null) {
                             mRules.add(new BannedItem(
                                     format,
-                                    CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_LEGALITY),
+                                    CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_LEGALITY),
                                     CardDbAdapter.getStringFromCursor(cursor, CardDbAdapter.KEY_BANNED_LIST), false));
                         } else if (isBanned) {
                             mRules.add(new BannedItem(
@@ -717,45 +716,13 @@ public class RulesFragment extends FamiliarFragment {
          * @param cards     Banned and restricted cards in the format
          * @param clickable Whether clicking on this entry will start a sub-fragment. Main Banned entry point
          */
-        BannedItem(String format, int legality, String cards, boolean clickable) {
+        BannedItem(String format, String legality, String cards, boolean clickable) {
 
             this.mFormat = format;
-            if (format.equalsIgnoreCase("Commander") ||
-                    format.equalsIgnoreCase("Brawl")) {
-                switch (legality) {
-                    case RESTRICTED:
-                        mLegality = getString(R.string.rules_banned_as_commander);
-                        break;
-                    case BANNED:
-                        mLegality = getString(R.string.card_view_banned);
-                        break;
-                    case SETS:
-                        mLegality = getString(R.string.rules_legal_sets);
-                        break;
-                    case NONE:
-                    default:
-                        mLegality = "";
-                        break;
-                }
-            } else {
-                switch (legality) {
-                    case BANNED:
-                        mLegality = getString(R.string.card_view_banned);
-                        break;
-                    case RESTRICTED:
-                        mLegality = getString(R.string.card_view_restricted);
-                        break;
-                    case SETS:
-                        mLegality = getString(R.string.rules_legal_sets);
-                        break;
-                    case NONE:
-                    default:
-                        mLegality = "";
-                        break;
-                }
-            }
+            this.mLegality = legality;
+
             if (cards == null) {
-                if (legality == SETS) {
+                if (legality.equals(SETS)) {
                     this.mCards = getString(R.string.rules_bb_wb_sets);
                 } else {
                     this.mCards = getString(R.string.rules_no_cards);

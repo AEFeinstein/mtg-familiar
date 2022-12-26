@@ -122,37 +122,43 @@ public class DecklistFragment extends FamiliarListFragment {
                     synchronized (parentFrag.mCompressedDecklist) {
                         for (CompressedDecklistInfo info : parentFrag.mCompressedDecklist) {
                             if (!info.getName().isEmpty()) { /* Skip the headers */
-                                switch (CardDbAdapter.checkLegality(info.getName(), format, database)) {
-                                    case CardDbAdapter.LEGAL: {
-                                        if ((format.equalsIgnoreCase("Commander") ||
-                                                format.equalsIgnoreCase("Brawl"))
-                                                && info.getTotalNumber() > 1 && !info.getType().contains("Basic")) {
-                                            deckIsLegal = false;
-                                        }
-                                        break;
-                                    }
-                                    case CardDbAdapter.RESTRICTED: {
-                                        if (format.equalsIgnoreCase("Vintage")
-                                                && info.getTotalNumber() > 1) {
-                                            deckIsLegal = false;
-                                        }
-                                        break;
-                                    }
-                                    case CardDbAdapter.BANNED: {
-                                        deckIsLegal = false;
-                                        break;
-                                    }
+                                if (0 == info.mLegalities.size()) {
+                                    CardDbAdapter.fillCardLegality(info, database);
                                 }
+
+                                String legality = info.mLegalities.get(format);
+                                if (null != legality) {
+                                    switch (legality) {
+                                        case "Legal": {
+                                            if (isSingletonFormat(format)
+                                                    && info.getTotalNumber() > 1 && !info.getType().contains("Basic")) {
+                                                deckIsLegal = false;
+                                            }
+                                            break;
+                                        }
+                                        case "Restricted": {
+                                            if (info.getTotalNumber() > 1) {
+                                                deckIsLegal = false;
+                                            }
+                                            break;
+                                        }
+                                        default:
+                                        case "Banned": {
+                                            deckIsLegal = false;
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    deckIsLegal = false;
+                                }
+
                                 if (!deckIsLegal) {
                                     break;
                                 }
                             }
                         }
                     }
-                    int minCards = 60;
-                    if (format.equals("Commander")) {
-                        minCards = 100;
-                    }
+                    int minCards = minCardsForFormat(format);
                     if (((DecklistDataAdapter) parentFrag.getCardDataAdapter(0)).getTotalCards() < minCards) {
                         deckIsLegal = false;
                     }
@@ -176,6 +182,78 @@ public class DecklistFragment extends FamiliarListFragment {
                 DatabaseManager.closeDatabase(parentFrag.getContext(), handle);
             }
             return parentFrag;
+        }
+
+        /**
+         * Return the minimum deck size for the given format
+         *
+         * @param format The format to chek
+         * @return the minimum deck size
+         */
+        private int minCardsForFormat(String format) {
+            if (null == format) {
+                return 60;
+            }
+            switch (format) {
+                case "commander":
+                case "duel":
+                case "gladiator":
+                case "paupercommander": {
+                    return 100;
+                }
+                case "brawl":
+                case "historicbrawl":
+                case "future":
+                case "historic":
+                case "legacy":
+                case "modern":
+                case "oldschool":
+                case "pauper":
+                case "penny":
+                case "pioneer":
+                case "premodern":
+                case "standard":
+                case "vintage":
+                default: {
+                    return 60;
+                }
+            }
+        }
+
+        /**
+         * Return if the given format is singleton or not
+         *
+         * @param format The format to check
+         * @return true if it is singleton, false if it is not
+         */
+        private boolean isSingletonFormat(String format) {
+            if (null == format) {
+                return false;
+            }
+            switch (format) {
+                case "brawl":
+                case "commander":
+                case "duel":
+                case "gladiator":
+                case "historicbrawl":
+                case "paupercommander": {
+                    return true;
+                }
+                case "future":
+                case "historic":
+                case "legacy":
+                case "modern":
+                case "oldschool":
+                case "pauper":
+                case "penny":
+                case "pioneer":
+                case "premodern":
+                case "standard":
+                case "vintage":
+                default: {
+                    return false;
+                }
+            }
         }
 
         @Override
