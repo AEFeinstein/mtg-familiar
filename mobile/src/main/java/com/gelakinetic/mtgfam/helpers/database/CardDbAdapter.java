@@ -1035,7 +1035,7 @@ public class CardDbAdapter {
             // Planeswalkers can be commanders
             statement.append(" AND ((").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
             // In brawl, every planeswalker is a commander! Otherwise it needs special text
-            if (!("Brawl".equals(criteria.format) || "Historic".equals(criteria.format))) {
+            if (!("brawl".equals(criteria.format) || "historic".equals(criteria.format))) {
                 statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ABILITY).append(" LIKE '%can be your commander%'");
             }
 
@@ -1044,7 +1044,7 @@ public class CardDbAdapter {
 
             // Set the format to Commander if it isn't set already, so the banlist applies
             if (criteria.format == null) {
-                criteria.format = "Commander";
+                criteria.format = "commander";
             }
         }
 
@@ -1393,62 +1393,14 @@ public class CardDbAdapter {
         }
 
         if (criteria.format != null) {
-            /* Check if the format is eternal or not, by the number of legal sets */
-            try (Cursor numLegalSetCursor = mDb.rawQuery("SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + criteria.format + "\"", null)) {
-                /* If the format is not eternal, filter by set */
-                if (numLegalSetCursor.getCount() > 0) {
-                    statement
-                            .append(" AND ")
-                            .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME)
-                            .append(" IN ( SELECT ")
-                            .append(DATABASE_TABLE_CARDS).append("_B.").append(KEY_NAME)
-                            .append(" FROM ")
-                            .append(DATABASE_TABLE_CARDS).append(" ").append(DATABASE_TABLE_CARDS).append("_B ")
-                            .append(" WHERE ")
-                            .append(DATABASE_TABLE_CARDS).append("_B.").append(KEY_SET)
-                            .append(" IN ( SELECT ")
-                            .append(DATABASE_TABLE_LEGAL_SETS).append(".").append(KEY_SET)
-                            .append(" FROM ")
-                            .append(DATABASE_TABLE_LEGAL_SETS)
-                            .append(" WHERE ")
-                            .append(DATABASE_TABLE_LEGAL_SETS).append(".").append(KEY_FORMAT).append("='").append(criteria.format).append("' ) )");
-                } else {
-                    /* Otherwise filter silver bordered cards, giant cards */
-                    statement.append(" AND ")
-                            .append(DATABASE_TABLE_CARDS).append(".").append(KEY_IS_FUNNY).append(" = 0");
-                    statement
-                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Plane'")
-                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Conspiracy'")
-                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE '%Scheme'")
-                            .append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" NOT LIKE 'Vanguard'");
-                }
-
-                /* And make sure the name isn't in the list of banned cads */
-                statement.append(" AND ")
-                        .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME);
-                /* Invert logic for Reserved List */
-                if (criteria.format.equals("Reserved List")) {
-                    statement.append(" IN (SELECT ");
-                } else {
-                    statement.append(" NOT IN (SELECT ");
-                }
-                statement.append(DATABASE_TABLE_CARD_LEGALITIES).append(".").append(KEY_NAME)
-                        .append(" FROM ")
-                        .append(DATABASE_TABLE_CARD_LEGALITIES)
-                        .append(" WHERE ")
-                        .append(DATABASE_TABLE_CARD_LEGALITIES).append(".").append(KEY_FORMAT).append(" = '").append(criteria.format).append("'")
-                        .append(" AND ")
-                        .append(DATABASE_TABLE_CARD_LEGALITIES).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED)
-                        .append(")");
-
-                // Ensure pauper only searches commons in valid Pauper sets
-                if ("Pauper".equals(criteria.format)) {
-                    statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_RARITY).append(" = ").append(((int) 'C')).append(" ");
-                }
-
-            } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
-                throw new FamiliarDbException(e);
-            }
+            statement.append(" AND ")
+                    .append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME)
+                    .append(" IN ")
+                    .append("(SELECT ").append(KEY_NAME).append(" FROM ").append(DATABASE_TABLE_CARD_LEGALITIES)
+                    .append(" WHERE ")
+                    .append(KEY_FORMAT).append(" = ").append(sanitizeString(criteria.format, false))
+                    .append(" AND ")
+                    .append(KEY_LEGALITY).append(" != 'banned')");
         }
 
         if (!backface) {
@@ -2063,7 +2015,7 @@ public class CardDbAdapter {
     /**
      * Fill in legality info for an MtgCard objet
      *
-     * @param mCard The card to fill in legality info for
+     * @param mCard    The card to fill in legality info for
      * @param database The database to query
      * @throws FamiliarDbException If something goes wrong
      */
