@@ -24,6 +24,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.DatabaseUtils;
+import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -2060,15 +2061,51 @@ public class CardDbAdapter {
      */
     public static Cursor getBannedCards(SQLiteDatabase mDb, String format) throws FamiliarDbException {
         try {
-            // TODO alphabetize this maybe
-            String sql =
-                    "SELECT " + KEY_LEGALITY + ", GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST +
-                            " FROM " + DATABASE_TABLE_CARD_LEGALITIES +
-                            " WHERE " + KEY_FORMAT + " = " + sanitizeString(format, false) +
-                            " AND " + KEY_LEGALITY + " != 'Legal'" +
-                            " GROUP BY " + KEY_LEGALITY;
-            FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
-            return mDb.rawQuery(sql, null);
+            String bannedSql = "SELECT " + KEY_LEGALITY + ", GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " +
+                    "(SELECT " + KEY_LEGALITY + ", " + KEY_NAME +
+                    " FROM " + DATABASE_TABLE_CARD_LEGALITIES +
+                    " WHERE " + KEY_FORMAT + " = " + sanitizeString(format, false) +
+                    " AND " + KEY_LEGALITY + " = 'Banned'" +
+                    " ORDER BY " + KEY_NAME + ")";
+            FamiliarLogger.logRawQuery(bannedSql, null, new Throwable().getStackTrace()[0].getMethodName());
+            Cursor bannedCursor = mDb.rawQuery(bannedSql, null);
+
+            String restrictedSql = "SELECT " + KEY_LEGALITY + ", GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " +
+                    "(SELECT " + KEY_LEGALITY + ", " + KEY_NAME +
+                    " FROM " + DATABASE_TABLE_CARD_LEGALITIES +
+                    " WHERE " + KEY_FORMAT + " = " + sanitizeString(format, false) +
+                    " AND " + KEY_LEGALITY + " = 'Restricted'" +
+                    " ORDER BY " + KEY_NAME + ")";
+            FamiliarLogger.logRawQuery(restrictedSql, null, new Throwable().getStackTrace()[0].getMethodName());
+            Cursor restrictedCursor = mDb.rawQuery(restrictedSql, null);
+
+            // If any cursors are non-empty merge them
+            ArrayList<Cursor> alCursors = new ArrayList<>(2);
+
+            // Check null-ness
+            bannedCursor.moveToFirst();
+            if (null != getStringFromCursor(bannedCursor, KEY_BANNED_LIST)) {
+                // Add the cursor to be merged
+                alCursors.add(bannedCursor);
+            }
+
+            // Check null-ness
+            restrictedCursor.moveToFirst();
+            if (null != getStringFromCursor(restrictedCursor, KEY_BANNED_LIST)) {
+                // Add the cursor to be merged
+                alCursors.add(restrictedCursor);
+            }
+
+            // If any cursors were non-null
+            if (alCursors.size() > 0) {
+                // Merge and return
+                return new MergeCursor(alCursors.toArray(new Cursor[0]));
+            } else {
+                // No banned or restricted cards, return null
+                bannedCursor.close();
+                restrictedCursor.close();
+                return null;
+            }
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -2428,13 +2465,15 @@ public class CardDbAdapter {
      * @return A Cursor pointing to all legal sets for the given format
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws FamiliarDbException {
+    public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws
+            FamiliarDbException {
         try {
-            String sql = "SELECT GROUP_CONCAT" +
-                    "(" + DATABASE_TABLE_SETS + "." + KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
+            String sql = "SELECT GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
+                    " FROM (SELECT " + KEY_NAME +
                     " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS +
                     " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
-                    " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
+                    " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'" +
+                    " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC)";
             FamiliarLogger.logRawQuery(sql, null, new Throwable().getStackTrace()[0].getMethodName());
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException e) {

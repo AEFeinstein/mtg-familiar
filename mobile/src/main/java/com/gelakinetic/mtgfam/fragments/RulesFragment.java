@@ -191,7 +191,6 @@ public class RulesFragment extends FamiliarFragment {
                 isSearchResult = false;
             } else if (isBanned && format != null) {
                 cursor = CardDbAdapter.getBannedCards(database, format);
-                // TODO i think sets cursor is broken
                 setsCursor = CardDbAdapter.getLegalSets(database, format);
                 isClickable = false;
                 isSearchResult = false;
@@ -218,7 +217,7 @@ public class RulesFragment extends FamiliarFragment {
                             SETS,
                             CardDbAdapter.getStringFromCursor(setsCursor, CardDbAdapter.KEY_LEGAL_SETS), false));
                 }
-                if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
+                if (null == cursor || cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
                     int listItemResource = R.layout.rules_list_detail_item;
                     RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules, isSearchResult);
                     list.setAdapter(adapter);
@@ -456,6 +455,9 @@ public class RulesFragment extends FamiliarFragment {
      * @return a SpannableString with glyphs and links
      */
     private SpannableString formatText(String input, boolean shouldLink, boolean hasCards) {
+        if (null == input) {
+            return new SpannableString("");
+        }
         String encodedInput = input;
         encodedInput = mUnderscorePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
         encodedInput = mExamplePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
@@ -722,7 +724,7 @@ public class RulesFragment extends FamiliarFragment {
             this.mLegality = legality;
 
             if (cards == null) {
-                if (legality.equals(SETS)) {
+                if ((null != legality) && legality.equals(SETS)) {
                     this.mCards = getString(R.string.rules_bb_wb_sets);
                 } else {
                     this.mCards = getString(R.string.rules_no_cards);
