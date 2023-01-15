@@ -466,11 +466,11 @@ public class MtgCard extends Card {
             this.mIsRebalanced = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_REBALANCED) != 0;
             this.mSecurityStamp = CardDbAdapter.getStringFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_SECURITY_STAMP);
             this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_IS_TOKEN) != 0;
-            this.mIsToken = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_ONLINE_ONLY) != 0;
+            this.mIsOnlineOnly = CardDbAdapter.getIntFromCursor(cardCursor, "c_" + CardDbAdapter.KEY_ONLINE_ONLY) != 0;
 
             this.mSetName = CardDbAdapter.getStringFromCursor(cardCursor, "s_" + CardDbAdapter.KEY_NAME);
 
-            // Don't mess with any of the other MtgCard specific fields that may have been loaded fron files, like mIsCustomPrice
+            // Don't mess with any of the other MtgCard specific fields that may have been loaded from files, like mIsCustomPrice
 
             /* Override choice is the card can't be foil */
             int canBeFoil = CardDbAdapter.getIntFromCursor(cardCursor, "s_" + CardDbAdapter.KEY_CAN_BE_FOIL);
