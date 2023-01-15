@@ -587,6 +587,8 @@ Viel Glück und viel Spaß!
     <!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
     <string name="price_error_api_key">"Verbindungsfehler beim Holen der Preise"</string>
 
+    <string name="price_error_null">"Null-Fehler beim Abrufen der Preise"</string>
+
     <!-- This is shown when a price download fails because the user is looking up a card that has no paper printings, like Magic Online's Vintage Masters -->
     <string name="price_error_online_only">"Karte nur online verfügbar"</string>
 

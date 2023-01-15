@@ -570,6 +570,8 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
     <!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
     <string name="price_error_api_key">"Error al buscar el precio [claves API]"</string>
 
+    <string name="price_error_null">"Error al buscar el precio [null]"</string>
+
     <!-- This is shown when a price download fails because the user is looking up a card that has no paper printings, like Magic Online's Vintage Masters -->
     <string name="price_error_online_only">"La carta solo está online"</string>
 

@@ -564,6 +564,8 @@ Boa sorte, e divirtam-se!
     <!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
     <string name="price_error_api_key">"Erro ao buscar preço [chaves de API]"</string>
 
+    <string name="price_error_null">"Erro ao buscar preço [null]"</string>
+
     <!-- This is shown when a price download fails because the user is looking up a card that has no paper printings, like Magic Online's Vintage Masters -->
     <string name="price_error_online_only">"Carta somente online"</string>
 

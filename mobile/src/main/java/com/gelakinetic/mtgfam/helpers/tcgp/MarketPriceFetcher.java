@@ -311,6 +311,10 @@ public class MarketPriceFetcher {
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
                                  final Consumer<Throwable> onError, final Runnable onAllDoneUI) throws InstantiationException {
 
+        if (null == card) {
+            throw new InstantiationException(mActivity.getString(R.string.price_error_null));
+        }
+
         if (0 >= card.getTcgpProductId()) {
             throw new InstantiationException(mActivity.getString(R.string.price_error_online_only));
         }

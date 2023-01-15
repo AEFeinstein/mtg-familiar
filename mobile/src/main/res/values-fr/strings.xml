@@ -563,6 +563,8 @@ Bonne chance, et bon jeu!
     <!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
     <string name="price_error_api_key">"Erreur d'extraction de prix [clés API]"</string>
 
+    <string name="price_error_null">"Erreur d'extraction de prix [null]"</string>
+
     <!-- This is shown when a price download fails because the user is looking up a card that has no paper printings, like Magic Online's Vintage Masters -->
     <string name="price_error_online_only">"Carte est seulement en ligne"</string>
 
