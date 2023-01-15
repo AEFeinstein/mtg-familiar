@@ -24,6 +24,8 @@ import androidx.annotation.NonNull;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * This class contains all information about a scraped card
@@ -108,6 +110,12 @@ public class Card implements Comparable<Card> {
 
     // If this card is a token or not
     public boolean mIsToken;
+
+    // A map of legalities for this card
+    public Map<String, String> mLegalities = new HashMap<>();
+
+    // If this card is online-only or not
+    public boolean mIsOnlineOnly;
 
     public String getName() {
         return mName;
@@ -207,6 +215,14 @@ public class Card implements Comparable<Card> {
 
     public boolean getIsToken() {
         return mIsToken;
+    }
+
+    public boolean getIsOnlineOnly() {
+        return mIsOnlineOnly;
+    }
+
+    public Map<String, String> getLegalities() {
+        return mLegalities;
     }
 
     // Private class for encapsulating foreign printing information

@@ -150,7 +150,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
                 builder.title(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
-                        mLcPlayer.mCommanderDamage.get(position).mName))
+                                mLcPlayer.mCommanderDamage.get(position).mName))
                         .customView(view, false)
                         .negativeText(R.string.dialog_cancel)
                         .positiveText(R.string.dialog_ok)

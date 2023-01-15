@@ -350,11 +350,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         /* Query the database for all versions of this card */
                         Set<String> searchLanguages = new HashSet<>(Collections.singletonList("en"));
                         cards = CardDbAdapter.fetchCardByName(data.getName(), Arrays.asList(
-                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false,
+                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                                        CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), false,
                                 PreferenceAdapter.getHideOnlineOnly(this.getContext()),
                                 PreferenceAdapter.getHideFunnyCards(this.getContext()), false, database, searchLanguages);
                         /* Build set names and set codes */

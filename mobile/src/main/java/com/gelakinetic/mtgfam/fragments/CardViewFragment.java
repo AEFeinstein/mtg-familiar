@@ -1366,39 +1366,16 @@ public class CardViewFragment extends FamiliarFragment {
                 frag.mFormats = new String[cFormats.getCount()];
                 frag.mLegalities = new String[cFormats.getCount()];
 
+                if (0 == frag.mCard.mLegalities.size()) {
+                    CardDbAdapter.fillCardLegality(frag.mCard, database);
+                }
+
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
                     frag.mFormats[i] = CardDbAdapter.getStringFromCursor(cFormats, CardDbAdapter.KEY_NAME);
-                    switch (CardDbAdapter.checkLegality(frag.mCard.getName(), frag.mFormats[i], database)) {
-                        case CardDbAdapter.LEGAL:
-                            if ("Reserved List".equals(frag.mFormats[i])) {
-                                frag.mLegalities[i] = frag.getString(R.string.card_not_on_reserved_list);
-                            } else {
-                                frag.mLegalities[i] = frag.getString(R.string.card_view_legal);
-                            }
-                            break;
-                        case CardDbAdapter.RESTRICTED:
-                            /* For backwards compatibility, we list cards that are legal in
-                             * commander, but can't be the commander as Restricted in the legality
-                             * file.  This prevents older version of the app from throwing an
-                             * IllegalStateException if we try including a new legality. */
-                            if (frag.mFormats[i].equalsIgnoreCase("Commander") ||
-                                    frag.mFormats[i].equalsIgnoreCase("Brawl")) {
-                                frag.mLegalities[i] = frag.getString(R.string.card_view_no_commander);
-                            } else {
-                                frag.mLegalities[i] = frag.getString(R.string.card_view_restricted);
-                            }
-                            break;
-                        case CardDbAdapter.BANNED:
-                            if ("Reserved List".equals(frag.mFormats[i])) {
-                                frag.mLegalities[i] = frag.getString(R.string.card_on_reserved_list);
-                            } else {
-                                frag.mLegalities[i] = frag.getString(R.string.card_view_banned);
-                            }
-                            break;
-                        default:
-                            frag.mLegalities[i] = frag.getString(R.string.error);
-                            break;
+                    frag.mLegalities[i] = frag.mCard.mLegalities.get(frag.mFormats[i]);
+                    if (null == frag.mLegalities[i]) {
+                        frag.mLegalities[i] = "Banned";
                     }
                     cFormats.moveToNext();
                 }

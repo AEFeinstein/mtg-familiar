@@ -192,18 +192,8 @@ public class DbUpdaterService extends IntentService {
                     CardDbAdapter.createLegalTables(database);
 
                     for (LegalityData.Format format : legalityData.mFormats) {
-                        CardDbAdapter.createFormat(format.mName, database);
-
                         for (String legalSet : format.mSets) {
                             CardDbAdapter.addLegalSet(legalSet, format.mName, database);
-                        }
-
-                        for (String bannedCard : format.mBanlist) {
-                            CardDbAdapter.addLegalCard(bannedCard, format.mName, CardDbAdapter.BANNED, database);
-                        }
-
-                        for (String restrictedCard : format.mRestrictedlist) {
-                            CardDbAdapter.addLegalCard(restrictedCard, format.mName, CardDbAdapter.RESTRICTED, database);
                         }
                     }
                 } catch (SQLiteException | FamiliarDbException e) {
