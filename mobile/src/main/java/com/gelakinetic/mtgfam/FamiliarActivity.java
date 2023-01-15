@@ -1582,10 +1582,10 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public int getResourceIdFromAttr(int attr) {
         assert getTheme() != null;
-        try (TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr})) {
-            int resId = ta.getResourceId(0, 0);
-            return resId;
-        }
+        TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr});
+        int resId = ta.getResourceId(0, 0);
+        ta.recycle();
+        return resId;
     }
 
     /**
@@ -1596,10 +1596,10 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public static int getResourceIdFromAttr(Context c, int attr) {
         assert c.getTheme() != null;
-        try (TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr})) {
-            int resId = ta.getResourceId(0, 0);
-            return resId;
-        }
+        TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr});
+        int resId = ta.getResourceId(0, 0);
+        ta.recycle();
+        return resId;
     }
 
     /**

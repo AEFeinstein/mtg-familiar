@@ -175,30 +175,30 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* Get the different rarities out of resources to populate the list of choices with */
         Resources res = getResources();
-        try (TypedArray mRarityNamesTemp = res.obtainTypedArray(R.array.rarities)) {
-            int i = mRarityNamesTemp.length();
-            mRarityNames = new String[i];
-            mRarityCodes = new char[i];
+        TypedArray mRarityNamesTemp = res.obtainTypedArray(R.array.rarities);
+        int i = mRarityNamesTemp.length();
+        mRarityNames = new String[i];
+        mRarityCodes = new char[i];
 
-            if (savedInstanceState != null) {
-                mSelectedFormat = savedInstanceState.getInt(SAVED_FORMAT_KEY);
-                mRarityCheckedIndices = savedInstanceState.getIntArray(SAVED_RARITY_KEY);
-                mSetCheckedIndices = savedInstanceState.getIntArray(SAVED_SET_KEY);
-            } else {
-                mRarityCheckedIndices = new int[0];
-                mSelectedFormat = -1;
-            }
-
-            while (i-- > 0) {
-                int resID = mRarityNamesTemp.peekValue(i).resourceId;
-                String resEntryName = res.getResourceEntryName(resID);
-                int p = resEntryName.lastIndexOf("_");
-                if (-1 != p && p + 1 < resEntryName.length())
-                    mRarityCodes[i] = resEntryName.charAt(p + 1);
-                else mRarityCodes[i] = ' ';
-                mRarityNames[i] = res.getString(resID);
-            }
+        if (savedInstanceState != null) {
+            mSelectedFormat = savedInstanceState.getInt(SAVED_FORMAT_KEY);
+            mRarityCheckedIndices = savedInstanceState.getIntArray(SAVED_RARITY_KEY);
+            mSetCheckedIndices = savedInstanceState.getIntArray(SAVED_SET_KEY);
+        } else {
+            mRarityCheckedIndices = new int[0];
+            mSelectedFormat = -1;
         }
+
+        while (i-- > 0) {
+            int resID = mRarityNamesTemp.peekValue(i).resourceId;
+            String resEntryName = res.getResourceEntryName(resID);
+            int p = resEntryName.lastIndexOf("_");
+            if (-1 != p && p + 1 < resEntryName.length())
+                mRarityCodes[i] = resEntryName.charAt(p + 1);
+            else mRarityCodes[i] = ' ';
+            mRarityNames[i] = res.getString(resID);
+        }
+        mRarityNamesTemp.recycle();
     }
 
     /**
