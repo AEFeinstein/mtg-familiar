@@ -33,20 +33,23 @@ import java.util.zip.ZipFile;
  */
 class BuildDate {
     /**
-     * http://stackoverflow.com/questions/7607165/how-to-write-build-time-stamp-into-apk
+     * <a href="http://stackoverflow.com/questions/7607165/how-to-write-build-time-stamp-into-apk">...</a>
      *
      * @param context the application context
      * @return a Date object with the time the APK was built
      */
     public static Date get(Context context) {
+        assert context.getPackageManager() != null;
         try {
-            assert context.getPackageManager() != null;
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-            ZipFile zf = new ZipFile(ai.sourceDir);
-            ZipEntry ze = zf.getEntry("classes.dex");
-            long time = ze.getTime();
-            return new Date(time);
-        } catch (PackageManager.NameNotFoundException | IOException e) {
+            try (ZipFile zf = new ZipFile(ai.sourceDir)) {
+                ZipEntry ze = zf.getEntry("classes.dex");
+                long time = ze.getTime();
+                return new Date(time);
+            } catch (IOException e) {
+                return new GregorianCalendar(1990, 2, 13).getTime();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
             return new GregorianCalendar(1990, 2, 13).getTime();
         }
     }

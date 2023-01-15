@@ -976,7 +976,8 @@ public class FamiliarActivity extends AppCompatActivity {
                             this.finish();
                             shouldSelectItem = false;
                         }
-                    } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
+                    } catch (SQLiteException | FamiliarDbException |
+                             CursorIndexOutOfBoundsException e) {
                         e.printStackTrace();
                     } finally {
                         if (null != cursor) {
@@ -1581,10 +1582,10 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public int getResourceIdFromAttr(int attr) {
         assert getTheme() != null;
-        TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = ta.getResourceId(0, 0);
-        ta.recycle();
-        return resId;
+        try (TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr})) {
+            int resId = ta.getResourceId(0, 0);
+            return resId;
+        }
     }
 
     /**
@@ -1595,10 +1596,10 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public static int getResourceIdFromAttr(Context c, int attr) {
         assert c.getTheme() != null;
-        TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = ta.getResourceId(0, 0);
-        ta.recycle();
-        return resId;
+        try (TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr})) {
+            int resId = ta.getResourceId(0, 0);
+            return resId;
+        }
     }
 
     /**
