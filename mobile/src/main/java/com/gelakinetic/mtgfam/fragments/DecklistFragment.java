@@ -195,25 +195,28 @@ public class DecklistFragment extends FamiliarListFragment {
                 return 60;
             }
             switch (format) {
-                case "commander":
-                case "duel":
-                case "gladiator":
-                case "paupercommander": {
+                case "Commander":
+                case "Duel Commander":
+                case "Gladiator":
+                case "Pauper Commander": {
                     return 100;
                 }
-                case "brawl":
-                case "historicbrawl":
-                case "future":
-                case "historic":
-                case "legacy":
-                case "modern":
-                case "oldschool":
-                case "pauper":
-                case "penny":
-                case "pioneer":
-                case "premodern":
-                case "standard":
-                case "vintage":
+                case "Brawl":
+                case "Future":
+                case "Frontier":
+                case "Historic":
+                case "Historic Brawl":
+                case "Legacy":
+                case "Modern":
+                case "Old School":
+                case "Pauper":
+                case "Penny Dreadful":
+                case "Pioneer":
+                case "Pre-Modern":
+                case "Standard":
+                case "Vintage":
+                case "Alchemy":
+                case "Explorer":
                 default: {
                     return 60;
                 }
@@ -230,26 +233,30 @@ public class DecklistFragment extends FamiliarListFragment {
             if (null == format) {
                 return false;
             }
+
             switch (format) {
-                case "brawl":
-                case "commander":
-                case "duel":
-                case "gladiator":
-                case "historicbrawl":
-                case "paupercommander": {
+                case "Brawl":
+                case "Commander":
+                case "Duel Commander":
+                case "Gladiator":
+                case "Historic Brawl":
+                case "Pauper Commander": {
                     return true;
                 }
-                case "future":
-                case "historic":
-                case "legacy":
-                case "modern":
-                case "oldschool":
-                case "pauper":
-                case "penny":
-                case "pioneer":
-                case "premodern":
-                case "standard":
-                case "vintage":
+                case "Future":
+                case "Frontier":
+                case "Historic":
+                case "Legacy":
+                case "Modern":
+                case "Old School":
+                case "Pauper":
+                case "Penny Dreadful":
+                case "Pioneer":
+                case "Pre-Modern":
+                case "Standard":
+                case "Vintage":
+                case "Alchemy":
+                case "Explorer":
                 default: {
                     return false;
                 }

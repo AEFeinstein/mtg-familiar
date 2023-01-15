@@ -1036,7 +1036,7 @@ public class CardDbAdapter {
             // Planeswalkers can be commanders
             statement.append(" AND ((").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
             // In brawl, every planeswalker is a commander! Otherwise it needs special text
-            if (!("brawl".equals(criteria.format) || "historic".equals(criteria.format))) {
+            if (!("Brawl".equals(criteria.format) || "Historic".equals(criteria.format))) {
                 statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ABILITY).append(" LIKE '%can be your commander%'");
             }
 
@@ -1045,7 +1045,7 @@ public class CardDbAdapter {
 
             // Set the format to Commander if it isn't set already, so the banlist applies
             if (criteria.format == null) {
-                criteria.format = "commander";
+                criteria.format = "Commander";
             }
         }
 
