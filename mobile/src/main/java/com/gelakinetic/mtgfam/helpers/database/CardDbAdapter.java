@@ -1401,7 +1401,7 @@ public class CardDbAdapter {
                     .append(" WHERE ")
                     .append(KEY_FORMAT).append(" = ").append(sanitizeString(criteria.format, false))
                     .append(" AND ")
-                    .append(KEY_LEGALITY).append(" != 'banned')");
+                    .append(KEY_LEGALITY).append(" != 'Banned')");
         }
 
         if (!backface) {
