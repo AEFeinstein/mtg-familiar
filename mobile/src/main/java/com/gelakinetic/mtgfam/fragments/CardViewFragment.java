@@ -1374,8 +1374,16 @@ public class CardViewFragment extends FamiliarFragment {
                 for (int i = 0; i < cFormats.getCount(); i++) {
                     frag.mFormats[i] = CardDbAdapter.getStringFromCursor(cFormats, CardDbAdapter.KEY_NAME);
                     frag.mLegalities[i] = frag.mCard.mLegalities.get(frag.mFormats[i]);
-                    if (null == frag.mLegalities[i]) {
-                        frag.mLegalities[i] = "Banned";
+                    if ("Reserved List".equals(frag.mFormats[i])) {
+                        if ("Banned".equals(frag.mLegalities[i])) {
+                            frag.mLegalities[i] = frag.getString(R.string.card_on_reserved_list);
+                        } else {
+                            frag.mLegalities[i] = frag.getString(R.string.card_not_on_reserved_list);
+                        }
+                    } else {
+                        if (null == frag.mLegalities[i]) {
+                            frag.mLegalities[i] = "Banned";
+                        }
                     }
                     cFormats.moveToNext();
                 }

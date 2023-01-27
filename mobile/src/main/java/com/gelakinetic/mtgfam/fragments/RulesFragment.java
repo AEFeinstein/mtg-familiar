@@ -721,7 +721,12 @@ public class RulesFragment extends FamiliarFragment {
         BannedItem(String format, String legality, String cards, boolean clickable) {
 
             this.mFormat = format;
-            this.mLegality = legality;
+
+            if (("Reserved List".equals(this.mFormat)) && ("Banned".equals(legality))) {
+                this.mLegality = getString(R.string.card_on_reserved_list);
+            } else {
+                this.mLegality = legality;
+            }
 
             if (cards == null) {
                 if ((null != legality) && legality.equals(SETS)) {
@@ -773,7 +778,10 @@ public class RulesFragment extends FamiliarFragment {
          * @return whether this entry is a list of cards
          */
         boolean isListOfCards() {
-            return mLegality.equals(getString(R.string.card_view_banned)) || mLegality.equals(getString(R.string.rules_banned_as_commander)) || mLegality.equals(getString(R.string.card_view_restricted));
+            return mLegality.equals(getString(R.string.card_view_banned)) ||
+                    mLegality.equals(getString(R.string.rules_banned_as_commander)) ||
+                    mLegality.equals(getString(R.string.card_view_restricted)) ||
+                    mLegality.equals(getString(R.string.card_on_reserved_list));
         }
     }
 
