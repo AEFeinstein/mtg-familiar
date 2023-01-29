@@ -390,7 +390,7 @@ public class CardDbAdapter {
     }
 
     /* Used to search for NOT a string, rather than that string */
-    public static final String EXCLUDE_TOKEN = "!";
+    public static final char EXCLUDE_TOKEN = '!';
     private static final int EXCLUDE_TOKEN_START = 1;
 
     /* Use a hash map to increase performance for CardSearchProvider queries */
@@ -529,7 +529,8 @@ public class CardDbAdapter {
             Arrays.sort(wordsArr);
             return wordsArr;
 
-        } catch (SQLiteException | IllegalStateException | NullPointerException | CursorIndexOutOfBoundsException e) {
+        } catch (SQLiteException | IllegalStateException | NullPointerException |
+                 CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (cursor != null) {
@@ -991,7 +992,7 @@ public class CardDbAdapter {
             switch (criteria.textLogic) {
                 case 0:
                     for (String s : cardTextParts) {
-                        if (s.contains(EXCLUDE_TOKEN))
+                        if (s.charAt(0) == EXCLUDE_TOKEN)
                             statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " NOT LIKE ").append(sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false)).append(")");
                         else
                             statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + s + "%", false)).append(")");
@@ -1002,12 +1003,12 @@ public class CardDbAdapter {
                     for (String s : cardTextParts) {
                         if (firstRun) {
                             firstRun = false;
-                            if (s.contains(EXCLUDE_TOKEN))
+                            if (s.charAt(0) == EXCLUDE_TOKEN)
                                 statement.append(" AND ((" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " NOT LIKE ").append(sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false)).append(")");
                             else
                                 statement.append(" AND ((" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + s + "%", false)).append(")");
                         } else {
-                            if (s.contains(EXCLUDE_TOKEN))
+                            if (s.charAt(0) == EXCLUDE_TOKEN)
                                 statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " NOT LIKE ").append(sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false)).append(")");
                             else
                                 statement.append(" OR (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + s + "%", false)).append(")");
@@ -1056,7 +1057,7 @@ public class CardDbAdapter {
             switch (criteria.typeLogic) {
                 case 0:
                     for (String s : supertypes) {
-                        if (s.contains(EXCLUDE_TOKEN)) {
+                        if (s.charAt(0) == EXCLUDE_TOKEN) {
                             statement.append(" AND (" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         } else
                             statement.append(" AND (" + supertypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
@@ -1068,11 +1069,11 @@ public class CardDbAdapter {
                         if (firstRun) {
                             firstRun = false;
 
-                            if (s.contains(EXCLUDE_TOKEN))
+                            if (s.charAt(0) == EXCLUDE_TOKEN)
                                 statement.append(" AND ((" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                             else
                                 statement.append(" AND ((" + supertypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
-                        } else if (s.contains(EXCLUDE_TOKEN))
+                        } else if (s.charAt(0) == EXCLUDE_TOKEN)
                             statement.append(" AND (" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         else
                             statement.append(" OR (" + supertypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
@@ -1096,7 +1097,7 @@ public class CardDbAdapter {
             switch (criteria.typeLogic) {
                 case 0:
                     for (String s : subtypes) {
-                        if (s.contains(EXCLUDE_TOKEN)) {
+                        if (s.charAt(0) == EXCLUDE_TOKEN) {
                             statement.append(" AND (" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         } else {
                             statement.append(" AND (" + subtypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
@@ -1108,11 +1109,11 @@ public class CardDbAdapter {
                     for (String s : subtypes) {
                         if (firstRun) {
                             firstRun = false;
-                            if (s.contains(EXCLUDE_TOKEN))
+                            if (s.charAt(0) == EXCLUDE_TOKEN)
                                 statement.append(" AND ((" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                             else
                                 statement.append(" AND ((" + subtypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
-                        } else if (s.contains(EXCLUDE_TOKEN))
+                        } else if (s.charAt(0) == EXCLUDE_TOKEN)
                             statement.append(" AND (" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         else
                             statement.append(" OR (" + subtypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
@@ -1290,23 +1291,54 @@ public class CardDbAdapter {
         }
 
         if (criteria.sets != null && criteria.sets.size() > 0) {
-            statement.append(" AND (");
-
-            boolean first = true;
-
+            // Separate included and excluded sets
+            ArrayList<String> includedSets = new ArrayList<>();
+            ArrayList<String> excludedSets = new ArrayList<>();
             for (String set : criteria.sets) {
-                if (first) {
-                    first = false;
+                if (set.charAt(0) == EXCLUDE_TOKEN) {
+                    excludedSets.add(set.substring(EXCLUDE_TOKEN_START));
                 } else {
-                    statement.append(" OR ");
-                }
-                if (set.contains(EXCLUDE_TOKEN)) {
-                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " != '").append(set.substring(EXCLUDE_TOKEN_START)).append("'");
-                } else {
-                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(set).append("'");
+                    includedSets.add(set);
                 }
             }
 
+            statement.append(" AND (");
+
+            if (!includedSets.isEmpty()) {
+                // Make a list of included sets by OR'ing them together
+                statement.append("(");
+                boolean first = true;
+                for (String set : includedSets) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        statement.append(" OR ");
+                    }
+                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(set).append("'");
+                }
+                statement.append(")");
+            }
+
+            if(!includedSets.isEmpty() && !excludedSets.isEmpty())
+            {
+                // If there are both included and excluded sets, AND them together
+                statement.append(" AND ");
+            }
+
+            if (!excludedSets.isEmpty()) {
+                // Make a list of excluded sets by AND'ing them together
+                statement.append("(");
+                boolean first = true;
+                for (String set : excludedSets) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        statement.append(" AND ");
+                    }
+                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " != '").append(set).append("'");
+                }
+                statement.append(")");
+            }
             statement.append(")");
         }
 
@@ -2206,7 +2238,8 @@ public class CardDbAdapter {
             }
             return sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, selection,
                     null, null, null, KEY_DATE + " DESC");
-        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException | NullPointerException e) {
+        } catch (SQLiteException | CursorIndexOutOfBoundsException | IllegalStateException |
+                 NullPointerException e) {
             throw new FamiliarDbException(e);
         }
     }
