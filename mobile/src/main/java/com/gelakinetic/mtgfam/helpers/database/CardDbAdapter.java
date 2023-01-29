@@ -1031,18 +1031,26 @@ public class CardDbAdapter {
         List<String> subtypes = criteria.subTypes;
 
         if (criteria.isCommander) {
+            statement.append(" AND (");
+
             // Don't check the backface for commanders
             backface = false;
 
             // Planeswalkers can be commanders
-            statement.append(" AND ((").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
+            statement.append("(").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Planeswalker%'");
             // In brawl, every planeswalker is a commander! Otherwise it needs special text
             if (!("Brawl".equals(criteria.format) || "Historic".equals(criteria.format))) {
                 statement.append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_ABILITY).append(" LIKE '%can be your commander%'");
             }
+            statement.append(")");
 
             // Legendary creatures can be commanders
-            statement.append(") OR (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Legendary%Creature%'))");
+            statement.append(" OR (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Legendary%Creature%')");
+
+            // Grist can be a commander
+            statement.append(" OR (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME).append(" = 'Grist, the Hunger Tide')");
+
+            statement.append(")");
 
             // Set the format to Commander if it isn't set already, so the banlist applies
             if (criteria.format == null) {
