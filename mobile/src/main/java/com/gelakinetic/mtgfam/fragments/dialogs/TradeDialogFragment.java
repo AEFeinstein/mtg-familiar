@@ -562,10 +562,13 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
+                /* Sort alphabetically for convenience */
+                Arrays.sort(tradeNames, String.CASE_INSENSITIVE_ORDER);
+
                 return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.trader_load)
                         .negativeText(R.string.dialog_cancel)
-                        .items((CharSequence[]) tradeNames)
+                        .items(tradeNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             /* First save any changes */
                             getParentTradeFragment().saveTrade(getParentTradeFragment().mCurrentTrade + TradeFragment.TRADE_EXTENSION);
@@ -590,10 +593,13 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
+                /* Sort alphabetically for convenience */
+                Arrays.sort(tradeNames, String.CASE_INSENSITIVE_ORDER);
+
                 return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.trader_delete)
                         .negativeText(R.string.dialog_cancel)
-                        .items((CharSequence[]) tradeNames)
+                        .items(tradeNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             File toDelete = new File(getActivity().getFilesDir(), tradeNames[position] +
                                     TradeFragment.TRADE_EXTENSION);

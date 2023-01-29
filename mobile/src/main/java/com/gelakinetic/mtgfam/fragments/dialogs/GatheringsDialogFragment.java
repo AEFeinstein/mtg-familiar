@@ -170,7 +170,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 return new MaterialDialog.Builder(getActivity())
                         .title(R.string.gathering_delete)
-                        .items((CharSequence[]) dProperNames)
+                        .items(dProperNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             GatheringsIO.DeleteGathering(dfGatherings[position], getActivity().getFilesDir(),
                                     getActivity());
@@ -196,7 +196,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 return new MaterialDialog.Builder(requireActivity())
                         .title(R.string.life_counter_remove_player)
-                        .items((CharSequence[]) aNames)
+                        .items(aNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             getParentGatheringsFragment().mLinearLayout.removeViewAt(position);
                             getActivity().invalidateOptionsMenu();
@@ -221,7 +221,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 return new MaterialDialog.Builder(getActivity())
                         .title(R.string.gathering_load)
-                        .items((CharSequence[]) properNames)
+                        .items(properNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             getParentGatheringsFragment().mLinearLayout.removeAllViews();
                             getParentGatheringsFragment().mLargestPlayerNumber = 0;

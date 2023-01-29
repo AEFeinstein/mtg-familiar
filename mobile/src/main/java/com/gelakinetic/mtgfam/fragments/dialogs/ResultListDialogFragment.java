@@ -37,6 +37,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -94,10 +95,13 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
+                /* Sort alphabetically for convenience */
+                Arrays.sort(deckNames, String.CASE_INSENSITIVE_ORDER);
+
                 return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items((CharSequence[]) deckNames)
+                        .items(deckNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
 
                             try {

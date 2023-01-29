@@ -84,7 +84,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog */
                 builder.title(getString(R.string.life_counter_remove_player));
 
-                builder.items((CharSequence[]) names)
+                builder.items(names)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             /* Remove the view from the GridLayout based on display mode, then remove the player
                                from the ArrayList and redraw. Also notify other players to remove this player from
@@ -144,7 +144,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             case DIALOG_CHANGE_DISPLAY: {
 
                 builder.title(R.string.pref_display_mode_title);
-                builder.items((CharSequence[]) getResources().getStringArray(R.array.display_array_entries))
+                builder.items(getResources().getStringArray(R.array.display_array_entries))
                         .itemsCallbackSingleChoice(getParentLifeCounterFragment().mDisplayMode,
                                 (dialog, itemView, which, text) -> {
                                     dialog.dismiss();
@@ -178,7 +178,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the AlertDialog title, items */
                 builder.title(R.string.life_counter_gathering_dialog_title);
-                builder.items((CharSequence[]) properNames)
+                builder.items(properNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             /* Read the gathering from XML, clear and set all the info! changeDisplayMode() adds
                                the player Views */

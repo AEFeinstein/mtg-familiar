@@ -66,7 +66,7 @@ public class MtgAppWidgetConfigure extends Activity {
         /* Build the dialog */
         MaterialDialog.Builder adb = new MaterialDialog.Builder(this);
         adb
-                .items((CharSequence[]) mLaunchers)
+                .items(mLaunchers)
                 .alwaysCallMultiChoiceCallback()
                 .itemsCallbackMultiChoice(mSelectedIndices, (dialog, which, text) -> {
                     mSelectedIndices = which;

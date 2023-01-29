@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -190,10 +191,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
+                /* Sort deck names for convenience */
+                Arrays.sort(deckNames, String.CASE_INSENSITIVE_ORDER);
+
                 return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items((CharSequence[]) deckNames)
+                        .items(deckNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
 
                             if (!getParentDecklistFragment().getDecklistReadError()) {
@@ -230,10 +234,13 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
+                /* Sort alphabetically for convenience */
+                Arrays.sort(deckNames, String.CASE_INSENSITIVE_ORDER);
+
                 return new MaterialDialog.Builder(this.requireActivity())
                         .title(R.string.decklist_delete_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items((CharSequence[]) deckNames)
+                        .items(deckNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
 
                             File toDelete = new File(getActivity().getFilesDir(),

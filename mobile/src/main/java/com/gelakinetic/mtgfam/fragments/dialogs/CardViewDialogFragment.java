@@ -56,6 +56,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -291,10 +292,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
+                /* Sort alphabetically for convenience */
+                Arrays.sort(deckNames, String.CASE_INSENSITIVE_ORDER);
+
                 return new MaterialDialog.Builder(this.getParentCardViewFragment().mActivity)
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items((CharSequence[]) deckNames)
+                        .items(deckNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
 
                             try {
