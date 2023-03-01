@@ -743,7 +743,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a list of cards, fetch all the database info about them in a single query.
+     * Given a list of cards, fetch all the database info about them in queries of 500 cards at a time
      *
      * @param cards A list of cards to fetch info for
      * @param mDb   The database to query
@@ -752,6 +752,24 @@ public class CardDbAdapter {
      */
     public static Cursor fetchCardByNamesAndSets(List<MtgCard> cards, SQLiteDatabase mDb)
             throws FamiliarDbException {
+        int cardsPerQuery = 500;
+        Cursor[] cursors = new Cursor[(int) Math.ceil(cards.size() / (float) cardsPerQuery)];
+        for (int startIdx = 0; startIdx < cards.size(); startIdx += cardsPerQuery) {
+            int endIdx = Math.min(startIdx + cardsPerQuery, cards.size());
+            cursors[startIdx / cardsPerQuery] = fetchCardByNamesAndSetsInner(cards.subList(startIdx, endIdx), mDb);
+        }
+        return new MergeCursor(cursors);
+    }
+
+    /**
+     * Given a list of cards, fetch all the database info about them in a single query.
+     *
+     * @param cards A list of cards to fetch info for
+     * @param mDb   The database to query
+     * @return A Cursor with the requested information
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor fetchCardByNamesAndSetsInner(List<MtgCard> cards, SQLiteDatabase mDb) throws FamiliarDbException {
         try {
             StringBuilder sql = new StringBuilder("SELECT ");
 
@@ -1327,8 +1345,7 @@ public class CardDbAdapter {
                 statement.append(")");
             }
 
-            if(!includedSets.isEmpty() && !excludedSets.isEmpty())
-            {
+            if (!includedSets.isEmpty() && !excludedSets.isEmpty()) {
                 // If there are both included and excluded sets, AND them together
                 statement.append(" AND ");
             }
