@@ -1176,6 +1176,15 @@ public class CardDbAdapter {
                     statement.append(" OR ");
                 }
                 statement.append(DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " LIKE ").append(sanitizeString(part, false));
+                // dual-face card's collector numbers are NNNa for the front face and NNNb
+                // for the back face. However, the 'a' and 'b' markers are not present on the
+                // physical cards, so the number alone should also include 'a' and 'b' variants
+                if (part.matches("\\d+")) {
+                    statement.append(" OR ");
+                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " LIKE ").append(sanitizeString(part + "a", false));
+                    statement.append(" OR ");
+                    statement.append(DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " LIKE ").append(sanitizeString(part + "b", false));
+                }
             }
             statement.append(")");
         }
