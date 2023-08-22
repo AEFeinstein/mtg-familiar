@@ -68,7 +68,7 @@ repositories {
 //    }
 //}
 
-task checkstyleMain(type: Checkstyle, group: "verification") {
+tasks.register('checkstyleMain', Checkstyle) {
     ignoreFailures = true
     configFile file("$configDir/checkstyle/checkstyle.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle/suppressions.xml").absolutePath
@@ -78,7 +78,7 @@ task checkstyleMain(type: Checkstyle, group: "verification") {
     classpath = files()
 }
 
-task pmdMain(type: Pmd, group: "verification") {
+tasks.register('pmdMain', Pmd) {
     ignoreFailures = true
     ruleSetFiles = files("$configDir/pmd/pmd.xml")
     reports {
@@ -93,7 +93,6 @@ task pmdMain(type: Pmd, group: "verification") {
 
 android {
     compileSdk 33
-    buildToolsVersion '33.0.0'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 21
@@ -137,13 +136,22 @@ android {
 }
 
 dependencies {
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
+
 // AndroidX
     annotationProcessor 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.fragment:fragment:1.5.6'
+    implementation 'androidx.fragment:fragment:1.6.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
 
 // Third-party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
@@ -155,7 +163,7 @@ dependencies {
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
     implementation 'com.github.machinarius:preferencefragment:0.1.2'
-    implementation 'org.jsoup:jsoup:1.15.4'
+    implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'com.splitwise:tokenautocomplete:3.0.2'
     implementation 'com.google.code.findbugs:annotations:3.0.1', {
         // Need to exclude these, or build is broken by:
@@ -164,8 +172,8 @@ dependencies {
         exclude module: 'jcip-annotations'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'com.nytimes.android:cache3:3.1.1', {
@@ -188,7 +196,7 @@ dependencies {
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.2.0'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
