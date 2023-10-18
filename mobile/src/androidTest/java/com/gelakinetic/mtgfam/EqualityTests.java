@@ -33,7 +33,7 @@ public class EqualityTests {
     public void setUp() {
         try {
             lightningBolt = new MtgCard(
-                    mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, false, 1);
+                    mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, null, false, 1);
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
@@ -41,30 +41,30 @@ public class EqualityTests {
 
     @Test
     public void cdiEqualscdi_ReturnsTrue() {
-        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
-        CompressedDecklistInfo cdi2 = new CompressedDecklistInfo(lightningBolt, false);
+        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt);
+        CompressedDecklistInfo cdi2 = new CompressedDecklistInfo(lightningBolt);
 
         assertTrue(cdi1.equals(cdi2));
     }
 
     @Test
     public void cdiEqualscdi_ReturnsFalse() {
-        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
-        CompressedDecklistInfo cdi2 = new CompressedDecklistInfo(lightningBolt, true);
+        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt);
+        CompressedDecklistInfo cdi2 = new CompressedDecklistInfo(lightningBolt);
 
         assertFalse(cdi1.equals(cdi2));
     }
     
     @Test
     public void cdiEqualsMtgCard_ReturnsTrue() {
-        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
+        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt);
 
         assertTrue(cdi1.equals(lightningBolt));
     }
 
     @Test
     public void mtgCardEqualscdi_ReturnsTrue() {
-        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt, false);
+        CompressedDecklistInfo cdi1 = new CompressedDecklistInfo(lightningBolt);
 
         assertTrue(lightningBolt.equals(cdi1));
     }
