@@ -92,11 +92,11 @@ tasks.register('pmdMain', Pmd) {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdk 34
         versionCode 91
         versionName "3.9.8"
         vectorDrawables.useSupportLibrary true
@@ -151,7 +151,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.fragment:fragment:1.6.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
 
 // Third-party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
@@ -187,6 +187,8 @@ dependencies {
         exclude module: 'rxjava'
     }
 
+    implementation 'org.apache.commons:commons-text:1.10.0'
+
 // Testing
     //noinspection GradleDependency
     androidTestImplementation 'androidx.annotation:annotation:1.5.0'
@@ -196,7 +198,7 @@ dependencies {
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.4.0'
+    testImplementation 'org.mockito:mockito-core:5.6.0'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
