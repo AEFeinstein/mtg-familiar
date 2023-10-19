@@ -284,6 +284,20 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
 
+    /**
+     * Request permission to shot notifications. This should be done before updating and running the round timer
+     */
+    public void requestNotificationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // Request the permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        FamiliarActivity.REQUEST_POST_NOTIFICATION);
+            }
+        }
+    }
+
     private class DatabaseUpdateReceiver extends BroadcastReceiver {
         /**
          * Receive a DATABASE_UPDATE_INTENT from a DbUpdaterService when the database update
@@ -639,15 +653,7 @@ public class FamiliarActivity extends AppCompatActivity {
             } else if (mPageEntries[i].mNameResource == R.string.main_force_update_title) {
                 if (getNetworkState(FamiliarActivity.this, true) != -1) {
                     PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        } else {
-                            startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        }
-                    } catch (IllegalStateException e) {
-                        // Ignore it
-                    }
+                    startServiceSafe(DbUpdaterService.class);
                 }
                 shouldCloseDrawer = true;
             }
@@ -822,14 +828,6 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         }
 
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // Request the permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                    FamiliarActivity.REQUEST_POST_NOTIFICATION);
-        }
-
         // Uncomment this to run a test to lookup all prices for all cards
         // (new LookupAllPricesTest()).execute(this);
     }
@@ -842,6 +840,12 @@ public class FamiliarActivity extends AppCompatActivity {
      *                Intent extras to supply arguments along with this specific start call.
      */
     private void startServiceSafe(Class<?> service) {
+        /* If the database updater is being started */
+        if (service == DbUpdaterService.class) {
+            /* Request the permission to show notifications */
+            requestNotificationPermission();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             try {
                 startForegroundService(new Intent(this, service));
@@ -1120,7 +1124,11 @@ public class FamiliarActivity extends AppCompatActivity {
         }
         IntentFilter intentFilter = new IntentFilter(DbUpdaterService.DATABASE_UPDATE_INTENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            registerReceiver(dataUpdateReceiver, intentFilter, RECEIVER_EXPORTED);
+            int flags = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                flags |= RECEIVER_EXPORTED;
+            }
+            registerReceiver(dataUpdateReceiver, intentFilter, flags);
         } else {
             registerReceiver(dataUpdateReceiver, intentFilter);
         }

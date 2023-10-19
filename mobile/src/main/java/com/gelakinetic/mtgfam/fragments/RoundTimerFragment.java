@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -139,24 +140,50 @@ public class RoundTimerFragment extends FamiliarFragment {
         am.cancel(fifteenMinPI);
         am.cancel(easterEggPI);
 
-        if (set) {
-            /* Set all applicable alarms */
-            am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+        boolean canScheduleExact = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            canScheduleExact = am.canScheduleExactAlarms();
+        }
 
-            if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-                am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+        if (set) {
+            if (canScheduleExact) {
+                /* Set all applicable alarms */
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+
+                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+                }
+            } else {
+                /* Set all applicable alarms */
+                am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+
+                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+                }
             }
         }
     }
@@ -164,11 +191,16 @@ public class RoundTimerFragment extends FamiliarFragment {
     /**
      * Create and show a notification in the status bar. It will say when the round ends. This method is static so that
      * FamiliarActivity can call it without instantiating a fragment
+     * <p>
+     * Note, MissingPermission is suppressed here because requestNotificationPermission() is called here
      *
      * @param context The application context to build the notification with
      * @param endTime The time the round will end, relative to System.currentTimeInMillis()
      */
-    public static void showTimerRunningNotification(Context context, long endTime) {
+    @SuppressLint("MissingPermission")
+    public static void showTimerRunningNotification(FamiliarActivity context, long endTime) {
+        /* Request the permission */
+        context.requestNotificationPermission();
         /* Format the String */
         Calendar then = Calendar.getInstance();
         then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
@@ -248,7 +280,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 /* Set the alarm, and any warning alarms if applicable */
                 setOrCancelAlarms(requireActivity(), endTime, true);
                 /* Show the notification */
-                showTimerRunningNotification(getActivity(), endTime);
+                showTimerRunningNotification(getFamiliarActivity(), endTime);
                 /* Start the ActionBar display Timer */
                 getFamiliarActivity().startUpdatingDisplay();
                 /* Set the button text to stop the timer */

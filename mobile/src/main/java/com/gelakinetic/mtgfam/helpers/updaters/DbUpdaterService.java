@@ -104,7 +104,7 @@ public class DbUpdaterService extends IntentService {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
         }
-        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, pendingIntentFlags);
+        PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, pendingIntentFlags);
 
         mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), NotificationHelper.NOTIFICATION_CHANNEL_UPDATE);
         mBuilder.setContentTitle(getString(R.string.app_name))
@@ -515,9 +515,13 @@ public class DbUpdaterService extends IntentService {
 
     /**
      * Show a notification which displays what parts of the app were updated
+     * <p>
+     * Note, MissingPermission is suppressed here because requestNotificationPermission() is called
+     * before creating the service
      *
      * @param newStuff A list of strings corresponding to what was updated
      */
+    @SuppressLint("MissingPermission")
     private void showUpdatedNotification(List<String> newStuff) {
         if (newStuff.size() < 1) {
             return;

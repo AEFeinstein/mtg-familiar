@@ -58,10 +58,14 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
      * If an N minute left PendingIntent is received, tell the TTS service to do it's thing. If the round is over,
      * play the notification sound and reset the notification in the status bar. The activity will handle the ActionBar
      * display and button text in the fragment, if it is showing
+     * <p>
+     * Note, MissingPermission is suppressed here because requestNotificationPermission() is called
+     * in showTimerRunningNotification()
      *
      * @param context The Context in which the receiver is running.
      * @param intent  The Intent being received.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onReceive(final Context context, Intent intent) {
         assert intent.getExtras() != null;
