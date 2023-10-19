@@ -45,7 +45,7 @@ public class NotificationHelper {
                     new NotificationChannel(
                             NotificationHelper.NOTIFICATION_CHANNEL_UPDATE,
                             context.getString(R.string.pref_cat_updates),
-                            NotificationManager.IMPORTANCE_LOW));
+                            NotificationManager.IMPORTANCE_DEFAULT));
 
             // Create the channel for displaying round timer updates, high priority, no sound
             // Sound is handled in RoundTimerBroadcastReceiver's onReceive(), case TIMER_RING_ALARM

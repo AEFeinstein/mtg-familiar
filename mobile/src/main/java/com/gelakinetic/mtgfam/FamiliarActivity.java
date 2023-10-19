@@ -70,6 +70,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -101,6 +102,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
+import com.gelakinetic.mtgfam.helpers.NotificationHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
@@ -150,6 +152,7 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE = 77;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP = 78;
     public static final int REQUEST_READ_EXTERNAL_STORAGE_BACKUP = 79;
+    public static final int REQUEST_POST_NOTIFICATION = 80;
 
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
@@ -508,6 +511,8 @@ public class FamiliarActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        NotificationHelper.createChannels(this);
+
         DatabaseManager.initializeInstances(getApplicationContext());
 
         mSmoothProgressBar = findViewById(R.id.smooth_progress_bar);
@@ -817,6 +822,14 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         }
 
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // Request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    FamiliarActivity.REQUEST_POST_NOTIFICATION);
+        }
+
         // Uncomment this to run a test to lookup all prices for all cards
         // (new LookupAllPricesTest()).execute(this);
     }
@@ -1106,7 +1119,11 @@ public class FamiliarActivity extends AppCompatActivity {
             dataUpdateReceiver = new DatabaseUpdateReceiver();
         }
         IntentFilter intentFilter = new IntentFilter(DbUpdaterService.DATABASE_UPDATE_INTENT);
-        registerReceiver(dataUpdateReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            registerReceiver(dataUpdateReceiver, intentFilter, RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(dataUpdateReceiver, intentFilter);
+        }
     }
 
     /**
@@ -1657,13 +1674,14 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
                 break;
             }
-            case REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP:
+            case REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     ZipUtils.exportData(this);
                 }
                 break;
+            }
             default:
                 Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container))
                         .onRequestPermissionsResult(requestCode, permissions, grantResults);

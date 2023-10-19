@@ -26,6 +26,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -115,7 +117,8 @@
         </activity>
 
         <!-- Register the service for database updates -->
-        <service android:name=".helpers.updaters.DbUpdaterService" />
+        <service android:name=".helpers.updaters.DbUpdaterService"
+            android:foregroundServiceType="dataSync"/>
 
         <!-- for the round timer -->
         <receiver
@@ -123,7 +126,8 @@
             android:exported="false"
             android:process=":remote" />
 
-        <service android:name=".helpers.RoundTimerBroadcastReceiver$TtsService" />
+        <service android:name=".helpers.RoundTimerBroadcastReceiver$TtsService"
+            android:foregroundServiceType="mediaPlayback"/>
 
         <!-- Provides search suggestions for cards by name. -->
         <provider

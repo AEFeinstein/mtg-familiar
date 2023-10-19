@@ -174,7 +174,6 @@ public class RoundTimerFragment extends FamiliarFragment {
         then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
         String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);
 
-        NotificationHelper.createChannels(context);
         int pendingIntentFlags = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
@@ -186,7 +185,8 @@ public class RoundTimerFragment extends FamiliarFragment {
                 .setContentText(messageText)
                 .setContentIntent(PendingIntent.getActivity(context, 7, new Intent(context,
                         FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER), pendingIntentFlags))
-                .setOngoing(true);
+                .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         /* Get an instance of the NotificationManager service */
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

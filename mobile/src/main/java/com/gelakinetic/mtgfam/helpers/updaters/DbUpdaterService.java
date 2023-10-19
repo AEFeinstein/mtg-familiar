@@ -106,7 +106,6 @@ public class DbUpdaterService extends IntentService {
         }
         @SuppressLint("UnspecifiedImmutableFlag") PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, pendingIntentFlags);
 
-        NotificationHelper.createChannels(this);
         mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), NotificationHelper.NOTIFICATION_CHANNEL_UPDATE);
         mBuilder.setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.update_notification))
@@ -114,7 +113,8 @@ public class DbUpdaterService extends IntentService {
                 .setContentIntent(mNotificationIntent)
                 .setWhen(System.currentTimeMillis())
                 .setOngoing(true)
-                .setOnlyAlertOnce(true);
+                .setOnlyAlertOnce(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
     }

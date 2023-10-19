@@ -73,7 +73,6 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 PlayNotificationSound(context, PreferenceAdapter.getTimerSound(context));
 
                 /* Change the notification to show that the round ended */
-                NotificationHelper.createChannels(context);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER);
                 int pendingIntentFlags = 0;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
