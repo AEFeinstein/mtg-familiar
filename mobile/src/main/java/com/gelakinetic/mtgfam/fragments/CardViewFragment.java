@@ -33,6 +33,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -767,16 +768,20 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-        // Check if permission is granted
-        if (ContextCompat.checkSelfPermission(CardViewFragment.this.mActivity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Request the permission
-            ActivityCompat.requestPermissions(CardViewFragment.this.mActivity,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE);
-            // Wait for the permission to be granted
-            mSaveImageWhereTo = whereTo;
-            return;
+        // Note: If your app targets Build.VERSION_CODES.R or higher, this permission has no effect.
+        // See https://developer.android.com/reference/android/Manifest.permission#WRITE_EXTERNAL_STORAGE
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            // Check if permission is granted
+            if (ContextCompat.checkSelfPermission(CardViewFragment.this.mActivity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // Request the permission
+                ActivityCompat.requestPermissions(CardViewFragment.this.mActivity,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE);
+                // Wait for the permission to be granted
+                mSaveImageWhereTo = whereTo;
+                return;
+            }
         }
 
         // Query the MediaStore to see if an image is already saved
