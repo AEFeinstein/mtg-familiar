@@ -131,28 +131,27 @@ class MTRIPGParser {
         }
 
         /* Then update via the internet */
-        try {
-            String urlString;
-            switch (mode) {
-                case MODE_IPG:
-                    urlString = IPG_SOURCE;
-                    break;
-                case MODE_MTR:
-                    urlString = MTR_SOURCE;
-                    break;
-                case MODE_JAR:
-                    urlString = JAR_SOURCE;
-                    break;
-                case MODE_DIPG:
-                    urlString = DIPG_SOURCE;
-                    break;
-                case MODE_DMTR:
-                    urlString = DMTR_SOURCE;
-                    break;
-                default:
-                    throw new FileNotFoundException("Invalid switch"); /* handled below */
-            }
-            InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter, mContext);
+        String urlString;
+        switch (mode) {
+            case MODE_IPG:
+                urlString = IPG_SOURCE;
+                break;
+            case MODE_MTR:
+                urlString = MTR_SOURCE;
+                break;
+            case MODE_JAR:
+                urlString = JAR_SOURCE;
+                break;
+            case MODE_DIPG:
+                urlString = DIPG_SOURCE;
+                break;
+            case MODE_DMTR:
+                urlString = DMTR_SOURCE;
+                break;
+            default:
+                return updated;
+        }
+        try (InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter, mContext)) {
             if (stream != null) {
                 updated = parseDocument(mode, stream);
             }

@@ -228,7 +228,8 @@ public class MtgCard extends Card {
             if (!CardDbAdapter.canBeFoil(this.mExpansion, database)) {
                 this.mIsFoil = false;
             }
-        } catch (SQLiteException | FamiliarDbException | NumberFormatException | CursorIndexOutOfBoundsException fde) {
+        } catch (SQLiteException | FamiliarDbException | NumberFormatException |
+                 CursorIndexOutOfBoundsException fde) {
             throw new InstantiationException();
         } finally {
             if (null != cardCursor) {

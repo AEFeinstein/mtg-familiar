@@ -25,7 +25,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -47,23 +46,19 @@ class RulesParser {
 
     /* Instance variables */
     private final Date mLastUpdated;
-    private final RulesProgressReporter mProgressReporter;
+    private final DbUpdater.OnProcessedListener mProgressReporter;
     private final ArrayList<RuleItem> mRules;
     private final ArrayList<GlossaryItem> mGlossary;
-    private InputStream mInputStream;
-    private BufferedReader mBufferedReader;
 
     /**
      * Default Constructor
      *
-     * @param lastUpdated    When the rules were last updated
-     * @param progressReport Progress is reported to the notification through this object
+     * @param lastUpdated When the rules were last updated
+     * @param listener    Progress is reported to the notification through this object
      */
-    public RulesParser(Date lastUpdated, RulesProgressReporter progressReport) {
+    public RulesParser(Date lastUpdated, DbUpdater.OnProcessedListener listener) {
         this.mLastUpdated = lastUpdated;
-        this.mInputStream = null;
-        this.mBufferedReader = null;
-        this.mProgressReporter = progressReport;
+        this.mProgressReporter = listener;
 
         this.mRules = new ArrayList<>();
         this.mGlossary = new ArrayList<>();
@@ -79,15 +74,10 @@ class RulesParser {
      */
     public boolean needsToUpdate(Context context, PrintWriter logWriter) {
 
-        try {
-            this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter, context);
-            if (this.mInputStream == null) {
-                throw new IOException("No Stream");
-            }
-            this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream, StandardCharsets.UTF_8));
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FamiliarActivity.getHttpInputStream(SOURCE, logWriter, context), StandardCharsets.UTF_8))) {
 
-            /*First line will be the date formatted as YYYY-MM-DD */
-            String line = this.mBufferedReader.readLine();
+            /* First line will be the date formatted as YYYY-MM-DD */
+            String line = bufferedReader.readLine();
             String[] parts = line.split("-");
             Calendar c = Calendar.getInstance();
             c.clear();
@@ -99,17 +89,11 @@ class RulesParser {
                 logWriter.write("mCurrentRulesPatchDate: " + patchDate + '\n');
             }
 
-            if (c.getTime().after(this.mLastUpdated)) {
-                return true;
-            } else {
-                closeReader(logWriter);
-                return false;
-            }
-        } catch (IOException e) {
+            return c.getTime().after(this.mLastUpdated);
+        } catch (IOException | NullPointerException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
-            closeReader(logWriter);
             return false;
         }
     }
@@ -121,27 +105,22 @@ class RulesParser {
      *
      * @return Whether or not the parsing is successful
      */
-    public boolean parseRules(PrintWriter logWriter) {
-        if (this.mBufferedReader == null) {
-            /* This should only be the case if we called parseRules() before needsToUpdate()
-             * or if needsToUpdate() returned false */
-            return false;
-        }
+    public boolean parseRules(Context context, PrintWriter logWriter) {
 
-        try {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FamiliarActivity.getHttpInputStream(SOURCE, logWriter, context), StandardCharsets.UTF_8))) {
             RuleItem currentRule = null;
             GlossaryItem currentTerm = null;
             int position = -1;
             this.mRules.clear();
             this.mGlossary.clear();
 
-            String line = this.mBufferedReader.readLine().trim();
+            String line = bufferedReader.readLine().trim();
             while (!line.equals(RULES_TOKEN)) {
                 /* Burn through lines until we hit the rules token */
-                line = mBufferedReader.readLine().trim();
+                line = bufferedReader.readLine().trim();
             }
 
-            line = mBufferedReader.readLine(); /* Step past the token */
+            line = bufferedReader.readLine(); /* Step past the token */
 
             while (!line.equals(GLOSSARY_TOKEN)) {
                 /* Parse the line */
@@ -194,10 +173,10 @@ class RulesParser {
                 }
 
                 /* Then move to the next line */
-                line = mBufferedReader.readLine().trim();
+                line = bufferedReader.readLine().trim();
             }
 
-            line = mBufferedReader.readLine().trim(); /* Step past the token */
+            line = bufferedReader.readLine().trim(); /* Step past the token */
 
             while (!line.equals(EOF_TOKEN)) {
                 /* Parse the line */
@@ -217,7 +196,7 @@ class RulesParser {
                 }
 
                 /* Then move to the next line */
-                line = mBufferedReader.readLine().trim();
+                line = bufferedReader.readLine().trim();
             }
             if (currentTerm != null) {
                 /* Document is over but we still have a term; add it to the list */
@@ -225,13 +204,11 @@ class RulesParser {
             }
 
             return true;
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
             return false;
-        } finally {
-            closeReader(logWriter);
         }
     }
 
@@ -240,49 +217,24 @@ class RulesParser {
      * main activity will have a progress dialog that gets updated as the count does.
      *
      * @param rulesToAdd         A place to store rules before inserting into the database
-     * @param glossaryItemsToAdd A place to store glossary items vefore inserting into the database
+     * @param glossaryItemsToAdd A place to store glossary items before inserting into the database
      */
     public void loadRulesAndGlossary(ArrayList<RuleItem> rulesToAdd, ArrayList<GlossaryItem> glossaryItemsToAdd) {
         int numTotalElements = mRules.size() + mGlossary.size();
         int elementsParsed = 0;
-        mProgressReporter.reportRulesProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
+        mProgressReporter.onUpdateProgress(0);
 
         for (RuleItem rule : mRules) {
             rulesToAdd.add(rule);
             elementsParsed++;
-            mProgressReporter.reportRulesProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
+            mProgressReporter.onUpdateProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
         }
 
         for (GlossaryItem term : mGlossary) {
             glossaryItemsToAdd.add(term);
             elementsParsed++;
-            mProgressReporter.reportRulesProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
+            mProgressReporter.onUpdateProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
         }
-    }
-
-    /**
-     * Convenience method to close input streams
-     */
-    private void closeReader(PrintWriter logWriter) {
-        try {
-            this.mInputStream.close();
-            this.mBufferedReader.close();
-        } catch (IOException e) {
-            if (logWriter != null) {
-                e.printStackTrace(logWriter);
-            }
-        }
-
-        this.mInputStream = null;
-        this.mBufferedReader = null;
-    }
-
-    /**
-     * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
-     * notification
-     */
-    public interface RulesProgressReporter {
-        void reportRulesProgress(int progress);
     }
 
     /**
