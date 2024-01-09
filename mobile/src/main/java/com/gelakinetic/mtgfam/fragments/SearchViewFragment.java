@@ -996,9 +996,9 @@ public class SearchViewFragment extends FamiliarFragment {
                 safeSetSelection(mPowChoice, ptList.indexOf("∞"));
             else {
                 if (p == (int) p) {
-                    safeSetSelection(mPowChoice, ptList.indexOf(((int) p) + ""));
+                    safeSetSelection(mPowChoice, ptList.indexOf(String.valueOf((int) p)));
                 } else {
-                    safeSetSelection(mPowChoice, ptList.indexOf(p + ""));
+                    safeSetSelection(mPowChoice, ptList.indexOf(String.valueOf(p)));
                 }
             }
         }
@@ -1023,9 +1023,9 @@ public class SearchViewFragment extends FamiliarFragment {
                 safeSetSelection(mTouChoice, ptList.indexOf("∞"));
             else {
                 if (t == (int) t) {
-                    safeSetSelection(mTouChoice, ptList.indexOf(((int) t) + ""));
+                    safeSetSelection(mTouChoice, ptList.indexOf(String.valueOf((int) t)));
                 } else {
-                    safeSetSelection(mTouChoice, ptList.indexOf(t + ""));
+                    safeSetSelection(mTouChoice, ptList.indexOf(String.valueOf(t)));
                 }
             }
         }
@@ -1058,7 +1058,7 @@ public class SearchViewFragment extends FamiliarFragment {
             /* For each rarity */
             for (int i = 0; i < mRarityCodes.length; i++) {
                 /* If the persisted options contain that rarity */
-                if (criteria.rarity.contains(mRarityCodes[i] + "")) {
+                if (criteria.rarity.contains(String.valueOf(mRarityCodes[i]))) {
                     /* Save that index */
                     rarityCheckedIndicesTmp.add(i);
                 }

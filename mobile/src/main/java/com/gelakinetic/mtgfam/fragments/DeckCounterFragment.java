@@ -102,7 +102,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
             history.append(aSequence).append("  ");
         }
         mDeckCountHistory.setText(history.toString());
-        mDeckCountText.setText("" + mDeckCount);
+        mDeckCountText.setText(String.valueOf(mDeckCount));
 
         /* Attach actions to all the buttons */
         myFragmentView.findViewById(R.id.deck_counter_1).setOnClickListener(v -> updateCardCount(1));

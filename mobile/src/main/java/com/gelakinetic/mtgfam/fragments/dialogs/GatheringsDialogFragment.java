@@ -106,7 +106,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                         .onPositive((dialog1, which) -> {
                             assert nameInput.getText() != null;
                             String gatheringName = nameInput.getText().toString().trim();
-                            if (gatheringName.length() <= 0) {
+                            if (gatheringName.length() == 0) {
                                 SnackbarWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name,
                                         SnackbarWrapper.LENGTH_LONG);
                                 return;
@@ -129,7 +129,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 }
                             }
 
-                            if (existingGatheringsFiles.size() <= 0 || !existing) {
+                            if (existingGatheringsFiles.size() == 0 || !existing) {
                                 getParentGatheringsFragment().SaveGathering(gatheringName);
                             }
                         })

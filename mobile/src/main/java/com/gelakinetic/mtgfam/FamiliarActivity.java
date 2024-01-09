@@ -1086,14 +1086,6 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Unregister the receiver when the activity pauses
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    /**
      * Select an item from the drawer menu. This will highlight the entry and manage fragment
      * transactions.
      *

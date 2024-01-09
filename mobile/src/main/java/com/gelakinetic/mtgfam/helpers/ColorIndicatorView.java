@@ -90,7 +90,7 @@ public class ColorIndicatorView extends View {
 
         /* For each color, draw a slice of the pie, rotated a bit for niceness */
         for (int i = 0; i < COLORS_CHARS.length; i++) {
-            if (color.contains(COLORS_CHARS[i] + "")) {
+            if (color.contains(COLORS_CHARS[i])) {
                 mDrawableShapes[shapesIndex] = new ShapeDrawable(new ArcShape(shapesIndex * (360 / numColors) + 135, (360 / numColors)));
                 mDrawableShapes[shapesIndex].getPaint().setColor(ContextCompat.getColor(context, COLOR_RESOURCES[i]));
                 mDrawableShapes[shapesIndex].setBounds(border, border, dimen - border, dimen - border);

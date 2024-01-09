@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -137,7 +138,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         /* Get the document from the bundle, load it */
         File file = new File(requireActivity().getFilesDir(), requireArguments().getString(JudgesCornerFragment.HTML_DOC));
         StringBuilder html = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath())))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 html.append(line);

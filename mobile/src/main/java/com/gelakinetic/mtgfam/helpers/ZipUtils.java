@@ -33,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Objects;
@@ -214,11 +215,9 @@ public class ZipUtils {
                 String sharedPrefsDir = context.getFilesDir().getPath();
                 sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
 
-                out = new BufferedOutputStream(new FileOutputStream(
-                        new File(sharedPrefsDir, entry.getName())));
+                out = new BufferedOutputStream(Files.newOutputStream(new File(sharedPrefsDir, entry.getName()).toPath()));
             } else {
-                out = new BufferedOutputStream(new FileOutputStream(
-                        new File(context.getFilesDir(), entry.getName())));
+                out = new BufferedOutputStream(Files.newOutputStream(new File(context.getFilesDir(), entry.getName()).toPath()));
             }
             IOUtils.copy(in, out);
 
@@ -264,7 +263,7 @@ public class ZipUtils {
 
             // Unzip the zip entry to the disk
             try (InputStream in = zipFile.getInputStream(entry);
-                 OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(applicationPath, entry.getName())))) {
+                 OutputStream out = new BufferedOutputStream(Files.newOutputStream(new File(applicationPath, entry.getName()).toPath()))) {
                 IOUtils.copy(in, out);
             }
         }
@@ -280,7 +279,7 @@ public class ZipUtils {
      */
     private static void zipIt(File zipFile, ArrayList<File> files, Context context) throws IOException {
         // Open a ZipOutputStream
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile))) {
+        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipFile.toPath()))) {
             // For each file to compress
             for (File file : files) {
                 // Add that file to the ZipOutputStream
