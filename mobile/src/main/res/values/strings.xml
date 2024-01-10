@@ -33,7 +33,9 @@
     <string name="dialog_enjoy">"Enjoy!"</string>
     <string name="update_notification">"Checking for database updates"</string>
     <string name="update_updating_set">"Adding %s"</string>
+    <string name="update_updating_cards">"Updating cards"</string>
     <string name="update_updating_rules">"Updating comprehensive rules"</string>
+    <string name="update_updating_docs">"Updating Judge Docs"</string>
     <string name="update_added">"Added"</string>
     <string name="update_added_rules">"new comprehensive rules"</string>
     <string name="update_added_mtr">"new Magic Tournament Rules"</string>

@@ -21,14 +21,11 @@ package com.gelakinetic.mtgfam;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -112,7 +109,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetcher;
-import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
+import com.gelakinetic.mtgfam.helpers.updaters.DbUpdater;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -197,6 +194,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
     /* Listen for changes to preferences */
     private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = (sharedPreferences, s) -> {
+        assert s != null;
         if (s.equals(getString(R.string.key_widgetButtons))) {
             Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -283,6 +281,11 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
+    private final DbUpdater mDbUpdater;
+
+    public FamiliarActivity() {
+        mDbUpdater = new DbUpdater(this);
+    }
 
     /**
      * Request permission to shot notifications. This should be done before updating and running the round timer
@@ -298,27 +301,14 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
-    private class DatabaseUpdateReceiver extends BroadcastReceiver {
-        /**
-         * Receive a DATABASE_UPDATE_INTENT from a DbUpdaterService when the database update
-         *
-         * @param context Unused
-         * @param intent  The intent for this notification
-         */
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(DbUpdaterService.DATABASE_UPDATE_INTENT)) {
-                // Notify the fragment
-                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                    if (fragment instanceof FamiliarFragment) {
-                        ((FamiliarFragment) fragment).notifyDatabaseUpdated();
-                    }
-                }
+    public void onReceiveDatabaseUpdate() {
+        // Notify the fragment
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof FamiliarFragment) {
+                ((FamiliarFragment) fragment).notifyDatabaseUpdated();
             }
         }
     }
-
-    private DatabaseUpdateReceiver dataUpdateReceiver;
 
     /**
      * Open an inputStream to the HTML content at the given URL.
@@ -605,7 +595,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
                         PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
                         PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
-                        startServiceSafe(DbUpdaterService.class);
+                        startDatabaseUpdate();
                     } catch (SQLiteException | FamiliarDbException | IllegalStateException e) {
                         e.printStackTrace();
                     } finally {
@@ -653,7 +643,7 @@ public class FamiliarActivity extends AppCompatActivity {
             } else if (mPageEntries[i].mNameResource == R.string.main_force_update_title) {
                 if (getNetworkState(FamiliarActivity.this, true) != -1) {
                     PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
-                    startServiceSafe(DbUpdaterService.class);
+                    startDatabaseUpdate();
                 }
                 shouldCloseDrawer = true;
             }
@@ -820,11 +810,7 @@ public class FamiliarActivity extends AppCompatActivity {
             int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > ((long) updateFrequency * 24 * 60 * 60)) {
-                try {
-                    startServiceSafe(DbUpdaterService.class);
-                } catch (IllegalStateException e) {
-                    // Ignore it
-                }
+                startDatabaseUpdate();
             }
         }
 
@@ -833,30 +819,10 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Wrapper for {@link android.content.ContextWrapper#startForegroundService(Intent)} with exception handling
-     *
-     * @param service Identifies the service to be started. The Intent must be fully explicit
-     *                (supplying a component name). Additional values may be included in the
-     *                Intent extras to supply arguments along with this specific start call.
+     * Start a database update
      */
-    private void startServiceSafe(Class<?> service) {
-        /* If the database updater is being started */
-        if (service == DbUpdaterService.class) {
-            /* Request the permission to show notifications */
-            requestNotificationPermission();
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            try {
-                startForegroundService(new Intent(this, service));
-            } catch (ForegroundServiceStartNotAllowedException e) {
-                // Eat it
-            }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(new Intent(this, service));
-        } else {
-            startService(new Intent(this, service));
-        }
+    private void startDatabaseUpdate() {
+        mDbUpdater.checkForUpdates();
     }
 
     private boolean processIntent(@NonNull Intent intent) {
@@ -1117,32 +1083,6 @@ public class FamiliarActivity extends AppCompatActivity {
         }
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
         mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
-
-        // Register a receiver to be notified when the database updates
-        if (dataUpdateReceiver == null) {
-            dataUpdateReceiver = new DatabaseUpdateReceiver();
-        }
-        IntentFilter intentFilter = new IntentFilter(DbUpdaterService.DATABASE_UPDATE_INTENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int flags = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                flags |= RECEIVER_EXPORTED;
-            }
-            registerReceiver(dataUpdateReceiver, intentFilter, flags);
-        } else {
-            registerReceiver(dataUpdateReceiver, intentFilter);
-        }
-    }
-
-    /**
-     * Unregister the receiver when the activity pauses
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (dataUpdateReceiver != null) {
-            unregisterReceiver(dataUpdateReceiver);
-        }
     }
 
     /**
@@ -1212,27 +1152,26 @@ public class FamiliarActivity extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft;
-        if (fm != null) {
-            if (shouldClearFragmentStack && !fm.isStateSaved()) {
-                /* Remove any current fragments on the back stack */
-                while (fm.getBackStackEntryCount() > 0) {
-                    fm.popBackStackImmediate();
-                }
+        if (shouldClearFragmentStack && !fm.isStateSaved()) {
+            /* Remove any current fragments on the back stack */
+            while (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStackImmediate();
             }
-
-            /* Begin a new transaction */
-            ft = fm.beginTransaction();
-
-            /* Replace or add the fragment */
-            ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
-            if (!shouldClearFragmentStack) {
-                ft.addToBackStack(null);
-            }
-            ft.commitAllowingStateLoss();
-
-            /* Color the icon when the fragment changes */
-            mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
         }
+
+        /* Begin a new transaction */
+        ft = fm.beginTransaction();
+
+        /* Replace or add the fragment */
+        assert newFrag != null;
+        ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
+        if (!shouldClearFragmentStack) {
+            ft.addToBackStack(null);
+        }
+        ft.commitAllowingStateLoss();
+
+        /* Color the icon when the fragment changes */
+        mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
     }
 
     /**
@@ -1428,8 +1367,9 @@ public class FamiliarActivity extends AppCompatActivity {
      * Dismiss any currently showing dialogs, then show the requested one.
      *
      * @param id the ID of the dialog to show
+     * @return The FamiliarActivityDialogFragment which was created
      */
-    private void showDialogFragment(final int id) throws IllegalStateException {
+    public FamiliarActivityDialogFragment showDialogFragment(final int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -1441,6 +1381,7 @@ public class FamiliarActivity extends AppCompatActivity {
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
         newFragment.setArguments(arguments);
         newFragment.show(getSupportFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        return newFragment;
     }
 
     /**

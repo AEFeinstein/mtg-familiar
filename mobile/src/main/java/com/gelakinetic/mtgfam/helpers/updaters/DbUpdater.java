@@ -18,29 +18,26 @@
  */
 package com.gelakinetic.mtgfam.helpers.updaters;
 
-import android.annotation.SuppressLint;
-import android.app.ForegroundServiceStartNotAllowedException;
-import android.app.IntentService;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.widget.ContentLoadingProgressBar;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
 import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.NotificationHelper;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -60,101 +57,143 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 
 /**
  * This service takes care of updating the database off of the UI thread
  */
-public class DbUpdaterService extends IntentService {
+public class DbUpdater {
 
-    public static final String DATABASE_UPDATE_INTENT = "DATABASE_UPDATE_INTENT";
+    /* Create an interface to respond with the result after processing */
+    public interface OnProcessedListener {
+        void updateTitle(int idx, String title);
 
-    /* Status Codes */
-    private static final int STATUS_NOTIFICATION = 31;
+        void updateProgress(int idx, int progress);
 
-    private static final int FOREGROUND_SERVICE_ID = 295869032;
+        void finish(String updatedStuffString);
+    }
 
-    /* To build and display the notification */
-    private NotificationCompat.Builder mBuilder;
+    /* The activity that is running this update */
+    private final FamiliarActivity mContext;
 
-    /* To keep track of progress percentage when adding cards in a set */
-    private Handler mHandler;
-    private Runnable mProgressUpdater;
-    private int mProgress;
+    /* The dialog fragment shown for this update */
+    private FamiliarActivityDialogFragment mUpdateDialog;
+
+    /* An executor service to run the update off the main thread */
+    private final ExecutorService mExecutor;
+
+    /* A handler to communicate progress between threads */
+    private final Handler mHandler;
 
     /**
-     * Default constructor with a default name.
-     * The string is used to name the worker thread, important only for debugging.
+     * Constructor
      */
-    public DbUpdaterService() {
-        super("com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService");
+    public DbUpdater(FamiliarActivity ctx) {
+        mContext = ctx;
+        mHandler = new Handler(Looper.getMainLooper());
+        mExecutor = Executors.newSingleThreadExecutor();
     }
 
     /**
-     * When the service is created, set up the notification manager and the actual notification
+     * This will start the update process on a separate thread and display a progress dialog
      */
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    public void checkForUpdates() {
 
-        mHandler = new Handler();
+        final OnProcessedListener listener = new OnProcessedListener() {
 
-        Intent intent = new Intent(this, FamiliarActivity.class);
-        int pendingIntentFlags = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            pendingIntentFlags |= PendingIntent.FLAG_MUTABLE;
-        }
-        PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, pendingIntentFlags);
-
-        mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), NotificationHelper.NOTIFICATION_CHANNEL_UPDATE);
-        mBuilder.setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.update_notification))
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentIntent(mNotificationIntent)
-                .setWhen(System.currentTimeMillis())
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
-    }
-
-    /**
-     * Wrapper for {@link android.app.Service#startForeground(int, Notification)} with exception handling
-     *
-     * @param id           The identifier for this notification as per NotificationManager.notify(int, Notification); must not be 0.
-     * @param notification The Notification to be displayed.
-     */
-    private void startForegroundSafe(int id, Notification notification) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            try {
-                startForeground(id, notification);
-            } catch (ForegroundServiceStartNotAllowedException e) {
-                // Eat it
+            @Override
+            public void updateTitle(int idx, String title) {
+                mHandler.post(() -> {
+                    /* Update the UI here */
+                    MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
+                    if (null != d) {
+                        switch (idx) {
+                            case 0:
+                                ((AppCompatTextView) d.getCustomView().findViewById(R.id.progress_title_1)).setText(title);
+                                break;
+                            case 1:
+                                ((AppCompatTextView) d.getCustomView().findViewById(R.id.progress_title_2)).setText(title);
+                                break;
+                        }
+                    }
+                });
             }
-        } else {
-            startForeground(id, notification);
-        }
+
+            @Override
+            public void updateProgress(int idx, int progress) {
+                mHandler.post(() -> {
+                    /* Update the UI here */
+                    MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
+                    if (null != d) {
+                        switch (idx) {
+                            case 0:
+                                ((ContentLoadingProgressBar) d.getCustomView().findViewById(R.id.progress_bar_1)).setProgress(progress);
+                                break;
+                            case 1:
+                                ((ContentLoadingProgressBar) d.getCustomView().findViewById(R.id.progress_bar_2)).setProgress(progress);
+                                break;
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void finish(String updatedStuffString) {
+                mHandler.post(() -> {
+                    if (null != updatedStuffString) {
+                        /* Notify the activity of changes */
+                        mContext.onReceiveDatabaseUpdate();
+                        MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
+                        if (null != d) {
+                            d.findViewById(R.id.progress_layout).setVisibility(View.GONE);
+                            d.findViewById(R.id.result_layout).setVisibility(View.VISIBLE);
+                            ((AppCompatTextView) d.getCustomView().findViewById(R.id.result_text)).setText(updatedStuffString);
+                            d.setCancelable(true);
+                            d.setActionButton(DialogAction.POSITIVE, R.string.dialog_ok);
+                            d.setOnKeyListener((dialog, keyCode, event) -> {
+                                mContext.removeDialogFragment(mContext.getSupportFragmentManager());
+                                return true;
+                            });
+                        }
+                    } else {
+                        /* Remove the dialog */
+                        mContext.removeDialogFragment(mContext.getSupportFragmentManager());
+                    }
+                });
+            }
+        };
+
+        /* Show the dialog for updates */
+        mUpdateDialog = mContext.showDialogFragment(FamiliarActivityDialogFragment.DIALOG_UPDATE);
+
+        /* Start the update in another thread */
+        mExecutor.execute(() -> checkForUpdatesBackground(listener));
     }
 
     /**
      * This method does the heavy lifting. It opens transactional access to the database, checks the web for new files
-     * to patch in, patches them as necessary, and manipulates the notification to inform the user.
-     *
-     * @param intent The value passed to startService(Intent), it's not used
+     * to patch in, patches them as necessary, and updates the progress dialog to inform the user.
      */
-    @Override
-    public void onHandleIntent(Intent intent) {
+    public void checkForUpdatesBackground(OnProcessedListener listener) {
 
-        showStatusNotification();
-        switchToChecking();
+        /* Set up progress for the entire update */
+        int numItemsChecked = 0;
+        int numItemsToCheck = 6; /* 1 for comprehensive rules, 5 judge docs, sets added later */
+        listener.updateProgress(0, 0);
+
+        /* Change the dialog to "updating cards" */
+        listener.updateTitle(0, mContext.getString(R.string.update_updating_cards));
+        listener.updateTitle(1, "");
+        listener.updateProgress(1, 0);
 
         /* Try to open up a log */
         PrintWriter logWriter = null;
         try {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 /* Open the log */
-                File logfile = new File(this.getApplicationContext().getExternalFilesDir(null), "mtgf_update.txt");
+                File logfile = new File(mContext.getExternalFilesDir(null), "mtgf_update.txt");
                 logWriter = new PrintWriter(new FileWriter(logfile));
                 /* Datestamp it */
                 logWriter.write((new Date()).toString() + '\n');
@@ -164,54 +203,13 @@ public class DbUpdaterService extends IntentService {
         }
 
         try {
-            ProgressReporter reporter = new ProgressReporter();
             ArrayList<String> updatedStuff = new ArrayList<>();
             CardAndSetParser parser = new CardAndSetParser();
             boolean commitDates = true;
             boolean newRulesParsed = false;
 
-            /* Look for updates with the banned / restricted lists and formats */
-            LegalityData legalityData = parser.readLegalityJsonStream(this, logWriter);
-
-            /* Log the date */
-            if (logWriter != null) {
-                logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
-            }
-
-            if (legalityData != null) {
-                if (logWriter != null) {
-                    logWriter.write("Adding new legalityData" + '\n');
-                }
-
-                /* Open a writable database, insert the legality data */
-                FamiliarDbHandle legalHandle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, legalHandle);
-                    /* Add all the data we've downloaded */
-                    CardDbAdapter.dropLegalTables(database);
-                    CardDbAdapter.createLegalTables(database);
-
-                    for (LegalityData.Format format : legalityData.mFormats) {
-                        for (String legalSet : format.mSets) {
-                            CardDbAdapter.addLegalSet(legalSet, format.mName, database);
-                        }
-                    }
-                } catch (SQLiteException | FamiliarDbException e) {
-                    commitDates = false; /* don't commit the dates */
-                    if (logWriter != null) {
-                        e.printStackTrace(logWriter);
-                    }
-                } finally {
-                    /* Close the writable database */
-                    DatabaseManager.closeDatabase(getApplicationContext(), legalHandle);
-                }
-            }
-
-            /* Change the notification to generic "checking for updates" */
-            switchToChecking();
-
             /* Look for new cards */
-            Manifest manifest = parser.readUpdateJsonStream(getApplicationContext(), logWriter);
+            Manifest manifest = parser.readUpdateJsonStream(mContext, logWriter);
 
             if (manifest != null) {
                 /* Make an arraylist of all the current set codes */
@@ -221,7 +219,7 @@ public class DbUpdaterService extends IntentService {
                 FamiliarDbHandle setsHandle = new FamiliarDbHandle();
                 try {
                     /* Get readable database access */
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), false, setsHandle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(mContext, false, setsHandle);
                     setCursor = CardDbAdapter.fetchAllSets(database, false, false);
                     if (setCursor != null) {
                         setCursor.moveToFirst();
@@ -242,17 +240,17 @@ public class DbUpdaterService extends IntentService {
                     if (null != setCursor) {
                         setCursor.close();
                     }
-                    DatabaseManager.closeDatabase(getApplicationContext(), setsHandle);
+                    DatabaseManager.closeDatabase(mContext, setsHandle);
                 }
 
                 /* Look through the manifest and drop all out of date sets */
                 FamiliarDbHandle manifestHandle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, manifestHandle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, manifestHandle);
                     for (Manifest.ManifestEntry set : manifest.mPatches) {
                         try {
                             /* If the digest doesn't match, mark the set for dropping
-                             * and remove it from currentSetCodes so it redownloads
+                             * and remove it from currentSetCodes so it re-downloads
                              */
                             if (set.mDigest != null && !Objects.requireNonNull(storedDigests.get(set.mCode)).equals(set.mDigest)) {
                                 if (logWriter != null) {
@@ -271,7 +269,14 @@ public class DbUpdaterService extends IntentService {
                         e.printStackTrace(logWriter);
                     }
                 } finally {
-                    DatabaseManager.closeDatabase(getApplicationContext(), manifestHandle);
+                    DatabaseManager.closeDatabase(mContext, manifestHandle);
+                }
+
+                /* Count the number of sets to add */
+                for (Manifest.ManifestEntry set : manifest.mPatches) {
+                    if (!set.mCode.equals("DD3") && !currentSetCodes.contains(set.mCode)) {
+                        numItemsToCheck++;
+                    }
                 }
 
                 /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
@@ -280,10 +285,9 @@ public class DbUpdaterService extends IntentService {
                             !currentSetCodes.contains(set.mCode)) { /* check to see if the patch is known already */
                         int retries = 5;
                         while (retries > 0) {
-                            try {
-                                /* Change the notification to the specific set */
-                                switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
-                                InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, getApplicationContext());
+                            try (InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, mContext)) {
+                                /* Update the dialog to the set being added */
+                                listener.updateTitle(1, String.format(mContext.getString(R.string.update_updating_set), set.mName));
                                 if (streamToRead != null) {
                                     ArrayList<Card> cardsToAdd = new ArrayList<>();
                                     ArrayList<Expansion> setsToAdd = new ArrayList<>();
@@ -291,7 +295,6 @@ public class DbUpdaterService extends IntentService {
                                     GZIPInputStream gis = new GZIPInputStream(streamToRead);
                                     JsonReader reader = new JsonReader(new InputStreamReader(gis, StandardCharsets.UTF_8));
                                     parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
-                                    streamToRead.close();
                                     updatedStuff.add(set.mName);
                                     /* Everything was successful, retries = 0 breaks the while loop */
                                     retries = 0;
@@ -299,7 +302,7 @@ public class DbUpdaterService extends IntentService {
                                     /* After the download, open the database */
                                     FamiliarDbHandle expansionHandle = new FamiliarDbHandle();
                                     try {
-                                        SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, expansionHandle);
+                                        SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, expansionHandle);
                                         /* Insert the newly downloaded info */
                                         for (Expansion expansion : setsToAdd) {
                                             if (logWriter != null) {
@@ -312,7 +315,7 @@ public class DbUpdaterService extends IntentService {
                                         for (Card card : cardsToAdd) {
                                             CardDbAdapter.createCard(card, database);
                                             cardsAdded++;
-                                            mProgress = (int) (100 * (cardsAdded / (float) cardsToAdd.size()));
+                                            listener.updateProgress(1, (int) (100 * (cardsAdded / (float) cardsToAdd.size())));
                                         }
 
                                     } catch (SQLiteException | FamiliarDbException e) {
@@ -322,7 +325,7 @@ public class DbUpdaterService extends IntentService {
                                         }
                                     } finally {
                                         /* Close the database */
-                                        DatabaseManager.closeDatabase(getApplicationContext(), expansionHandle);
+                                        DatabaseManager.closeDatabase(mContext, expansionHandle);
                                     }
                                 }
                             } catch (IOException e) {
@@ -333,12 +336,54 @@ public class DbUpdaterService extends IntentService {
                             }
                             retries--;
                         }
+
+                        /* Update total progress after this set is updated */
+                        numItemsChecked++;
+                        listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
                     }
                 }
             }
 
-            /* Change the notification to generic "checking for updates" */
-            switchToChecking();
+            /* Look for updates with the banned / restricted lists and formats */
+            LegalityData legalityData = parser.readLegalityJsonStream(mContext, logWriter);
+
+            /* Log the date */
+            if (logWriter != null) {
+                logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
+            }
+
+            if (legalityData != null) {
+                if (logWriter != null) {
+                    logWriter.write("Adding new legalityData" + '\n');
+                }
+
+                /* Open a writable database, insert the legality data */
+                FamiliarDbHandle legalHandle = new FamiliarDbHandle();
+                try {
+                    SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, legalHandle);
+                    /* Add all the data we've downloaded */
+                    CardDbAdapter.dropLegalTables(database);
+                    CardDbAdapter.createLegalTables(database);
+
+                    for (LegalityData.Format format : legalityData.mFormats) {
+                        for (String legalSet : format.mSets) {
+                            CardDbAdapter.addLegalSet(legalSet, format.mName, database);
+                        }
+                    }
+                } catch (SQLiteException | FamiliarDbException e) {
+                    commitDates = false; /* don't commit the dates */
+                    if (logWriter != null) {
+                        e.printStackTrace(logWriter);
+                    }
+                } finally {
+                    /* Close the writable database */
+                    DatabaseManager.closeDatabase(mContext, legalHandle);
+                }
+            }
+
+            /* Change the dialog to "updating comprehensive rules" */
+            listener.updateTitle(0, mContext.getString(R.string.update_updating_rules));
+            listener.updateProgress(1, 0);
 
             /* Parse the rules
              * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
@@ -346,13 +391,12 @@ public class DbUpdaterService extends IntentService {
              * in.
              */
 
-            long lastRulesUpdate = PreferenceAdapter.getLastRulesUpdate(this);
+            long lastRulesUpdate = PreferenceAdapter.getLastRulesUpdate(mContext);
 
-            RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
+            RulesParser rp = new RulesParser(new Date(lastRulesUpdate), listener);
 
-            if (rp.needsToUpdate(getApplicationContext(), logWriter)) {
-                switchToUpdating(getString(R.string.update_updating_rules));
-                if (rp.parseRules(logWriter)) {
+            if (rp.needsToUpdate(mContext, logWriter)) {
+                if (rp.parseRules(mContext, logWriter)) {
                     ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
                     ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
                     rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
@@ -366,7 +410,7 @@ public class DbUpdaterService extends IntentService {
                     FamiliarDbHandle rulesHandle = new FamiliarDbHandle();
                     try {
 
-                        SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, rulesHandle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, rulesHandle);
 
                         /* Add stored rules */
                         if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
@@ -381,73 +425,94 @@ public class DbUpdaterService extends IntentService {
                         for (RulesParser.GlossaryItem term : glossaryItemsToAdd) {
                             CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
                         }
-                        updatedStuff.add(getString(R.string.update_added_rules));
+                        updatedStuff.add(mContext.getString(R.string.update_added_rules));
                     } catch (SQLiteException | FamiliarDbException e) {
                         commitDates = false; /* don't commit the dates */
                         if (logWriter != null) {
                             e.printStackTrace(logWriter);
                         }
                     } finally {
-                        DatabaseManager.closeDatabase(getApplicationContext(), rulesHandle);
+                        DatabaseManager.closeDatabase(mContext, rulesHandle);
                     }
                 }
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            /* Change the notification to generic "checking for updates" */
-            switchToChecking();
+            /* Change the dialog to  "Updating Judge Docs" */
+            listener.updateTitle(0, mContext.getString(R.string.update_updating_docs));
+            listener.updateProgress(1, 0);
+
+            int numDocsToProcess = 5;
+            int numProcessedDocs = 0;
 
             /* Parse the MTR and IPG */
-            MTRIPGParser mtrIpgParser = new MTRIPGParser(this);
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR, logWriter)) {
-                updatedStuff.add(getString(R.string.update_added_mtr));
+            MTRIPGParser mtrIpgParser = new MTRIPGParser(mContext);
+
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
+                updatedStuff.add(mContext.getString(R.string.update_added_mtr));
             }
             if (logWriter != null) {
                 logWriter.write("MTR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG, logWriter)) {
-                updatedStuff.add(getString(R.string.update_added_ipg));
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
+                updatedStuff.add(mContext.getString(R.string.update_added_ipg));
             }
             if (logWriter != null) {
                 logWriter.write("IPG date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR, logWriter)) {
-                updatedStuff.add(getString(R.string.update_added_jar));
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
+                updatedStuff.add(mContext.getString(R.string.update_added_jar));
             }
             if (logWriter != null) {
                 logWriter.write("JAR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DMTR, logWriter)) {
-                updatedStuff.add(getString(R.string.update_added_dmtr));
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DMTR, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
+                updatedStuff.add(mContext.getString(R.string.update_added_dmtr));
             }
             if (logWriter != null) {
                 logWriter.write("DMTR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DIPG, logWriter)) {
-                updatedStuff.add(getString(R.string.update_added_dipg));
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DIPG, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
+                updatedStuff.add(mContext.getString(R.string.update_added_dipg));
             }
             if (logWriter != null) {
                 logWriter.write("DIPG date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            /* If everything went well so far, commit the date and show the update complete notification */
+            /* If everything went well so far, commit the date and show the update complete dialog */
             if (commitDates) {
-                parser.commitDates(this);
+                parser.commitDates(mContext);
 
                 long curTime = new Date().getTime();
-                PreferenceAdapter.setLastLegalityUpdate(this, (int) (curTime / 1000));
+                PreferenceAdapter.setLastLegalityUpdate(mContext, (int) (curTime / 1000));
                 if (newRulesParsed) {
-                    PreferenceAdapter.setLastRulesUpdate(this, curTime);
+                    PreferenceAdapter.setLastRulesUpdate(mContext, curTime);
                 }
 
                 if (updatedStuff.size() > 0) {
-                    showUpdatedNotification(updatedStuff);
-
-                    /* Notify the activity of changes */
-                    sendBroadcast(new Intent(DATABASE_UPDATE_INTENT));
+                    listener.finish(getUpdatedStuffString(updatedStuff));
+                } else {
+                    listener.finish(null);
                 }
             }
         } catch (Exception e) {
@@ -457,9 +522,6 @@ public class DbUpdaterService extends IntentService {
             }
         }
 
-        /* Always cancel the status notification */
-        cancelStatusNotification();
-
         /* close the log */
         if (logWriter != null) {
             logWriter.close();
@@ -467,67 +529,16 @@ public class DbUpdaterService extends IntentService {
     }
 
     /**
-     * Show the notification in the status bar
-     */
-    private void showStatusNotification() {
-        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
-    }
-
-    /**
-     * Hide the notification in the status bar
-     */
-    private void cancelStatusNotification() {
-        stopForeground(true);
-    }
-
-    /**
-     * Set the notification to display "Checking for database updates"
-     */
-    private void switchToChecking() {
-        mHandler.removeCallbacks(mProgressUpdater);
-        mBuilder.setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.update_notification))
-                .setProgress(0, 0, false);
-
-        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
-    }
-
-    /**
-     * Set the notification to display "Updating %s"
+     * Generate a string with a list of all items which were updated
      *
-     * @param title The name of the set being updated
+     * @param newStuff A strings to show the user in a dialog
      */
-    private void switchToUpdating(String title) {
-
-        mBuilder.setContentTitle(title);
-        startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
-
-        /* Periodically update the progress bar */
-        mProgressUpdater = () -> {
-            mBuilder.setProgress(100, mProgress, false);
-            startForegroundSafe(FOREGROUND_SERVICE_ID, mBuilder.build());
-            if (mProgress != 100) {
-                mHandler.postDelayed(mProgressUpdater, 200);
-            }
-        };
-        mHandler.postDelayed(mProgressUpdater, 200);
-    }
-
-    /**
-     * Show a notification which displays what parts of the app were updated
-     * <p>
-     * Note, MissingPermission is suppressed here because requestNotificationPermission() is called
-     * before creating the service
-     *
-     * @param newStuff A list of strings corresponding to what was updated
-     */
-    @SuppressLint("MissingPermission")
-    private void showUpdatedNotification(List<String> newStuff) {
+    private String getUpdatedStuffString(List<String> newStuff) {
         if (newStuff.size() < 1) {
-            return;
+            return null;
         }
 
-        StringBuilder body = new StringBuilder(getString(R.string.update_added)).append(" ");
+        StringBuilder body = new StringBuilder(mContext.getString(R.string.update_added)).append(" ");
         boolean first = true;
         for (String stuff : newStuff) {
             if (first) {
@@ -538,26 +549,6 @@ public class DbUpdaterService extends IntentService {
             body.append(stuff);
         }
 
-        mBuilder.setContentTitle(getString(R.string.app_name))
-                .setContentText(body.toString())
-                .setAutoCancel(true)
-                .setOngoing(false);
-
-        NotificationManagerCompat.from(this).notify(STATUS_NOTIFICATION, mBuilder.build());
+        return body.toString();
     }
-
-    /**
-     * This inner class is used by other parsers to pass progress percentages to the notification
-     */
-    private class ProgressReporter implements RulesParser.RulesProgressReporter {
-        /**
-         * This is used by RulesParser to report the progress for adding new rules
-         *
-         * @param progress An integer between 0 and 100 representing the progress percent
-         */
-        public void reportRulesProgress(int progress) {
-            mProgress = progress;
-        }
-    }
-
 }

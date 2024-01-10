@@ -674,7 +674,7 @@ public class CardViewFragment extends FamiliarFragment {
                         // Price not received
                         mPriceInfo = null;
                         mErrorMessage = getString(R.string.card_view_price_not_found);
-                    }, () -> setPricesOnFragment());
+                    }, this::setPricesOnFragment);
                 } catch (java.lang.InstantiationException e) {
                     // Failure, meh
                 }
@@ -1309,12 +1309,8 @@ public class CardViewFragment extends FamiliarFragment {
             // eh, couldn't find the menu item. Image _should_ be there
         }
 
-        if (mIsOnlineOnly || mShowPriceOnFrag) {
-            /* If this is an online-only card, or it's show on the page, hide the price lookup button */
-            menu.findItem(R.id.price).setVisible(false);
-        } else {
-            menu.findItem(R.id.price).setVisible(true);
-        }
+        /* If this is an online-only card, or it's show on the page, hide the price lookup button */
+        menu.findItem(R.id.price).setVisible(!mIsOnlineOnly && !mShowPriceOnFrag);
 
         /* This code removes the "change set" button if there is only one set.
          * Turns out some users use it to view the full set name when there is only one set/

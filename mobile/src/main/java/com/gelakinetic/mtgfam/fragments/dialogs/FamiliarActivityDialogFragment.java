@@ -54,6 +54,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     //    public static final int DIALOG_DONATE = 102;
     public static final int DIALOG_TTS = 103;
     public static final int DIALOG_LOGGING = 104;
+    public static final int DIALOG_UPDATE = 105;
 
     /**
      * Overridden to create the specific dialogs
@@ -185,6 +186,14 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_LOGGING: {
                 return FamiliarLogger.createDialog(getFamiliarActivity(), builder);
+            }
+            case DIALOG_UPDATE: {
+                // Show a dialog for database updates
+                builder.title(R.string.update_notification)
+                        .customView(getActivity().getLayoutInflater().inflate(R.layout.activity_dialog_update, null, false), false)
+                        .cancelable(false)
+                        .canceledOnTouchOutside(false);
+                return builder.build();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

@@ -158,7 +158,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
      */
     private void rollDie(int dieFaces) {
         if (mDieOutput != null) {
-            mDieOutput.setText("" + (mRandom.nextInt(dieFaces) + 1));
+            mDieOutput.setText(String.valueOf(mRandom.nextInt(dieFaces) + 1));
         }
     }
 

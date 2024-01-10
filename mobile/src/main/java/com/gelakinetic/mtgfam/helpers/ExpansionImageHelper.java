@@ -135,7 +135,7 @@ public class ExpansionImageHelper {
 
     public static void loadExpansionImage(Context context, String set, char rarity, ImageView imageView, @Nullable TextView textView, ExpansionImageSize size) {
         /* If the user doesn't want images, don't show them */
-        if(!PreferenceAdapter.getShowExpansionImages(context)){
+        if (!PreferenceAdapter.getShowExpansionImages(context)) {
             if (null != textView) {
                 textView.setVisibility(View.VISIBLE);
             }

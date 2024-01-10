@@ -26,7 +26,6 @@ import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -166,33 +165,28 @@ public class TcgpApi {
             conn.getOutputStream().write(payload.getBytes(StandardCharsets.UTF_8));
 
             // Get the response stream
-            InputStream inStream;
-            try {
-                inStream = conn.getInputStream();
-            } catch (FileNotFoundException e) {
-                inStream = conn.getErrorStream();
-                if (null == inStream) {
-                    conn.disconnect();
+            try (InputStream inStream = conn.getInputStream()) {
+                // Parse the json out of the response and save it
+                GsonBuilder builder = new GsonBuilder();
+                AccessToken.setDateFormat(builder);
+                AccessToken token = builder.create()
+                        .fromJson(new InputStreamReader(inStream), AccessToken.class);
+                this.mAccessToken = token.access_token;
+                return token;
+            } catch (IOException e) {
+                try (InputStream inStream = conn.getErrorStream()) {
+                    if (null == inStream) {
+                        // Return an empty, not null, object
+                        return new AccessToken();
+                    }
+                } catch (IOException e2) {
                     // Return an empty, not null, object
                     return new AccessToken();
                 }
             }
-
-            // Parse the json out of the response and save it
-            GsonBuilder builder = new GsonBuilder();
-            AccessToken.setDateFormat(builder);
-            AccessToken token = builder.create()
-                    .fromJson(new InputStreamReader(inStream), AccessToken.class);
-            this.mAccessToken = token.access_token;
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-
-            return token;
         }
 
-        // Return the saved access token
+        // Already have an access token, so don't return anything
         return null;
     }
 
@@ -388,26 +382,20 @@ public class TcgpApi {
             addHeaders(conn);
 
             // Get the response stream. This opens the connection
-            InputStream inStream;
-            try {
-                inStream = conn.getInputStream();
-            } catch (FileNotFoundException e) {
-                inStream = conn.getErrorStream();
-                if (null == inStream) {
-                    conn.disconnect();
+            try (InputStream inStream = conn.getInputStream()) {
+                // Parse the json out of the response and save it
+                return new Gson().fromJson(new InputStreamReader(inStream), ProductMarketPrice.class);
+            } catch (IOException e) {
+                try (InputStream inStream = conn.getErrorStream()) {
+                    if (null == inStream) {
+                        // Return an empty, not null, object
+                        return new ProductMarketPrice();
+                    }
+                } catch (IOException e2) {
                     // Return an empty, not null, object
                     return new ProductMarketPrice();
                 }
             }
-
-            // Parse the json out of the response and save it
-            ProductMarketPrice price = new Gson()
-                    .fromJson(new InputStreamReader(inStream), ProductMarketPrice.class);
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-            return price;
         }
         // No access token
         return null;
@@ -440,28 +428,23 @@ public class TcgpApi {
             addHeaders(conn);
 
             // Get the response stream. This opens the connection
-            InputStream inStream;
-            try {
-                inStream = conn.getInputStream();
-            } catch (FileNotFoundException e) {
-                inStream = conn.getErrorStream();
-                if (null == inStream) {
-                    conn.disconnect();
+            try (InputStream inStream = conn.getInputStream()) {
+                // Parse the json out of the response and save it
+                GsonBuilder builder = new GsonBuilder();
+                CatalogData.CatalogDataItem.setDateFormat(builder);
+                return builder.create()
+                        .fromJson(new InputStreamReader(inStream), ProductDetails.class);
+            } catch (IOException e) {
+                try (InputStream inStream = conn.getErrorStream()) {
+                    if (null == inStream) {
+                        // Return an empty, not null, object
+                        return new ProductDetails();
+                    }
+                } catch (IOException e2) {
                     // Return an empty, not null, object
                     return new ProductDetails();
                 }
             }
-
-            // Parse the json out of the response and save it
-            GsonBuilder builder = new GsonBuilder();
-            CatalogData.CatalogDataItem.setDateFormat(builder);
-            ProductDetails details = builder.create()
-                    .fromJson(new InputStreamReader(inStream), ProductDetails.class);
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-            return details;
         }
         // No access token
         return null;

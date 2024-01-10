@@ -34,7 +34,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -99,18 +98,12 @@ class CardAndSetParser {
     public Manifest readUpdateJsonStream(Context context, PrintWriter logWriter) {
         Manifest manifest;
 
-        try {
-            InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter, context);
-            if (stream == null) {
-                throw new IOException("No Stream");
-            }
-            InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
-
+        try (InputStreamReader isr = new InputStreamReader(FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter, context), StandardCharsets.UTF_8)) {
             JsonReader reader = new JsonReader(isr);
             Gson gson = CardAndSetParser.getGson();
 
             manifest = gson.fromJson(reader, Manifest.class);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
@@ -131,12 +124,7 @@ class CardAndSetParser {
 
         LegalityData legalityData;
 
-        try {
-            InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter, context);
-            if (stream == null) {
-                throw new IOException("No Stream");
-            }
-            JsonReader reader = new JsonReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+        try (JsonReader reader = new JsonReader(new InputStreamReader(FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter, context), StandardCharsets.UTF_8))) {
             Gson gson = CardAndSetParser.getGson();
 
             legalityData = gson.fromJson(reader, LegalityData.class);
@@ -146,7 +134,7 @@ class CardAndSetParser {
             if (spDate >= mCurrentLegalityTimestamp) {
                 legalityData = null; /* dates match, nothing new here. */
             }
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }

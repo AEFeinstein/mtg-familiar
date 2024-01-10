@@ -291,7 +291,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
                             getParentTradeFragment().startNewFragment(cvpFrag, args);
-                        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
+                        } catch (SQLiteException | FamiliarDbException |
+                                 CursorIndexOutOfBoundsException e) {
                             getParentTradeFragment().handleFamiliarDbException(false);
                         } finally {
                             if (null != cursor) {
@@ -367,7 +368,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     0));
                             cards.moveToNext();
                         }
-                    } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
+                    } catch (SQLiteException | FamiliarDbException |
+                             CursorIndexOutOfBoundsException e) {
                         /* Don't show the dialog, but pop a toast */
                         getParentTradeFragment().handleFamiliarDbException(true);
                         return DontShowDialog();

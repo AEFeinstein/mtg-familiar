@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
+
 import org.apache.commons.text.StringEscapeUtils;
 
 public class MarketPriceInfo {

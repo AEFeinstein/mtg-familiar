@@ -247,7 +247,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @param _gatheringName The name of the gathering to save
      */
     public void SaveGathering(String _gatheringName) {
-        if (_gatheringName.length() <= 0) {
+        if (_gatheringName.length() == 0) {
             SnackbarWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name, SnackbarWrapper.LENGTH_LONG);
             return;
         }
