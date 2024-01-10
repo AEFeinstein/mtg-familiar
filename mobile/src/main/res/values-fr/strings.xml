@@ -8,7 +8,6 @@
     <string name="dialog_both">"Joueurs &amp; Vie"</string>
     <string name="dialog_life">"Que Vie"</string>
     <string name="dialog_thanks">"Merci!"</string>
-    <string name="dialog_thanks_anyway">"Merci quand même!"</string>
     <string name="dialog_enjoy">"Amusez-vous!"</string>
     <string name="update_notification">"Recherche de mise à jour des données"</string>
     <string name="update_updating_set">"Ajout de %s…"</string>
@@ -18,15 +17,12 @@
     <string name="update_added_mtr">"nouvelles MTR"</string>
     <string name="update_added_ipg">"nouveau IPG"</string>
     <string name="update_added_jar">"nouveau JAR"</string>
-    <string name="error">"Erreur"</string>
     <string name="error_database">"Une erreur de base de données est survenue. Si le problème persiste, essayez de nettoyer les données du programme depuis le menu Android."</string>
     <string name="error_no_email_client">"Il semble que vous n'avez aucun client de messagerie active d'installé. Veuillez configurer une application de messagerie."</string>
     <string name="toast_no_card">"Aucune carte trouvée avec ce nom."</string>
     <string name="not_deleted">"non supprimé"</string>
     <string name="no_network">"Réseau non disponible"</string>
     <string name="filter_title_view_card">"Vue Carte"</string>
-    <string name="tutor_cards_notice">"Optimisé par TutorCards"</string>
-    <string name="tutor_cards_fail">"TutorCards inaccessible"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PAGES"</string>
@@ -44,24 +40,9 @@
     <string name="main_decklist">"Concepteur de Deck"</string>
     <string name="main_force_update_title">"Forcer la mise à jour"</string>
     <string name="main_settings_title">"Paramètres"</string>
-    <string name="main_donate_title">"Faire un don"</string>
-    <string name="main_donate_dialog_title">"Don aux créateurs"</string>
 
     <!-- <string name="main_donate_title">"Donate"</string> 
  <string name="main_donate_dialog_title">"Donate to the Developers"</string> -->
-    <string name="main_profile">"Profile"</string>
-    <string name="main_donate_text">"Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;
-&lt;br&gt;
-Bon, si vous lisez ceci, vous savez déjà qu'on la distribue gratuitement!&lt;br&gt;
-&lt;br&gt;
-Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;
-&lt;br&gt;
-Nous avons une passion du draft à alimenter, ok?&lt;br&gt;
-&lt;br&gt;
-Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c'est cool, 5€ ça l'est encore plus. A vous de choisir.&lt;br&gt;
-&lt;br&gt;
-Alors, à quel point vous sentez-vous généreux aujourd'hui?
-"</string>
 
     <!-- <string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
@@ -166,7 +147,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="search_NOT_any_selected_types">"AUCUN des types saisis"</string>
     <string name="search_All_words">"Tous les mots"</string>
     <string name="search_Any_words">"Au moins 1 mot"</string>
-    <string name="search_Exact_phrase">"Phrase exacte"</string>
     <string name="search_Most_recent_printing">"Edition la plus récente"</string>
     <string name="search_Original_printing">"Edition originale"</string>
     <string name="search_All_printings">"Toutes les éditions"</string>
@@ -183,7 +163,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="search_Rare">"Rare"</string>
     <string name="search_Mythic">"Mythique"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Type"</string>
     <string name="search_mana_cost">"Coût Mana"</string>
     <string name="search_collectors_number">"Numéro de collection"</string>
     <string name="search_color_title">"Couleur"</string>
@@ -203,7 +182,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="card_view_legal">"Légal"</string>
     <string name="card_view_restricted">"Restreint"</string>
     <string name="card_view_banned">"Interdit"</string>
-    <string name="card_view_no_commander">"Ne peut pas être Commandant"</string>
     <string name="card_view_price_dialog_title">"Prix sur TCGPlayer.com"</string>
     <string name="card_view_price_dialog_link">"Cliquer ici pour tous les prix et tendance"</string>
     <string name="card_view_no_rulings">"Pas de règles pour cette carte"</string>
@@ -212,10 +190,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="card_view_price_not_found">"Prix non trouvé."</string>
     <string name="card_view_image_not_found">"Image non trouvée."</string>
     <string name="card_view_no_external_storage">"Impossible d'accéder au stockage externe, veuillez vérifier votre carte SD."</string>
-    <string name="card_view_no_pictures_folder">"Impossible de trouver le répertoire des images, veuillez essayer à nouveau."</string>
-    <string name="card_view_unable_to_create_dir">"Impossible de créer le répertoire pour contenir les images, veuillez essayer à nouveau."</string>
-    <string name="card_view_unable_to_create_file">"Impossible de créer le fichier image, veuillez essayer à nouveau."</string>
-    <string name="card_view_no_image">"Impossible de trouver l'image à sauver, veuillez essayer à nouveau."</string>
     <string name="card_view_unable_to_save_image">"Impossible de sauver l'image, veuillez essayer à nouveau."</string>
     <string name="card_view_save_failure">"Echec lors de la sauvegarde de l'image, veuillez essayer à nouveau."</string>
     <string name="card_view_image_saved">"Image sauvée à"</string>
@@ -268,22 +242,18 @@ La réserve de mana sera aussi vidée."</string>
     <string name="dice_tails">"pile"</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Echec du chargement de la Réserve de Mana!"</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_clear_all">"Tout effacer"</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">"Ajouter Carte"</string>
-    <string name="trader_save">"Sauver Echange"</string>
     <string name="trader_load">"Charger Echange"</string>
     <string name="trader_delete">"Supprimer Echange"</string>
     <string name="trader_edit_dialog_remove">"Enlever"</string>
     <string name="trader_edit_dialog_reset_price">"Réinitialiser Prix"</string>
     <string name="trader_clear_dialog_title">"Vider Echange"</string>
     <string name="trader_clear_dialog_text">"Etes-vous sûr de vouloir vider l'échange actuel?"</string>
-    <string name="trader_select_dialog_title">"Choisir un échange"</string>
-    <string name="trader_delete_dialog_title">"Supprimer un échange"</string>
     <string name="trader_edit_dialog_info">"Informations de carte"</string>
     <string name="trader_toast_no_trades">"Vous n'avez aucun échange sauvé."</string>
     <string name="trader_toast_save_error">"L'échange n'a pu être sauvé; veuillez réessayer."</string>
@@ -337,20 +307,13 @@ La réserve de mana sera aussi vidée."</string>
     <string name="rules_banned_and_restricted">"Formats, interdictions et restrictions"</string>
     <string name="rules_banned_as_commander">"Interdit en tant que Commandant"</string>
     <string name="rules_no_cards">"Sans cartes"</string>
-    <string name="rules_legal_sets">"Extensions légales"</string>
     <string name="rules_bb_wb_sets">"Toutes les extensions à bords noirs ou blancs"</string>
     <string name="rules_coppied">"Règles copiées dans le Presse-papier"</string>
     <string name="rules_copy_tag">"Règles de MTG"</string>
 
     <!-- Profile activity -->
-    <string name="profile_update_dci">"Mettre à jour le numéro DCI"</string>
-    <string name="profile_remove_dci">"Effacer le numéro DCI"</string>
 
     <!-- Fuzzy -->
-    <string name="profile_update_dci_dialog_title">"Saisir le numéro DCI"</string>
-    <string name="profile_invalid_dci">"Numéro DCI saisi non valide"</string>
-    <string name="profile_no_dci">"Vous n'avez pas saisi votre numéro DCI"</string>
-    <string name="profile_planeswalker_points">"Points de Planeswalker"</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">"Règles MoJhoSto Basic"</string>
@@ -390,8 +353,6 @@ Bonne chance, et bon jeu!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Paramètres généraux"</string>
-    <string name="pref_screen_search">"Recherche &amp; Résultats"</string>
-    <string name="pref_screen_trade_wishlist">"Echange &amp; Liste de voeux"</string>
     <string name="pref_cat_default_fragment">"Page par défaut"</string>
     <string name="pref_default_fragment_mode_summary">"La première chose que vous voyez quand l'application démarre"</string>
     <string name="pref_cat_updates">"Mise à jour des données"</string>
@@ -558,7 +519,6 @@ Bonne chance, et bon jeu!
     <string name="price_error_network">"Erreur d'extraction de prix [réseau]"</string>
 
     <!-- This is shown when a price download fails because there is a database error -->
-    <string name="price_error_database">"Erreur d'extraction de prix [base de données]"</string>
 
     <!-- This is shown when a price download fails because the user can't connect to TCGPlayer.com's data (an API is how software talks to other software) -->
     <string name="price_error_api_key">"Erreur d'extraction de prix [clés API]"</string>

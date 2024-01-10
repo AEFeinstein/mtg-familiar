@@ -43,7 +43,6 @@
     <string name="update_added_jar">"new Judging at Regular"</string>
     <string name="update_added_dmtr">"new Digital Magic Tournament Rules"</string>
     <string name="update_added_dipg">"new Digital Infraction Procedure Guide"</string>
-    <string name="error">"Error"</string>
     <string name="error_database">"A database error occurred. If it persists, try clearing the app data from the Android settings menu."</string>
     <string name="error_no_email_client">"It does not appear that you have an active email client installed. Please configure an email application."</string>
     <string name="toast_no_card">"No card found with that name."</string>
@@ -52,7 +51,6 @@
     <string name="filter_title_view_card">"View Card"</string>
     <string name="price_error_unknown">"Error fetching price"</string>
     <string name="price_error_network">"Error fetching price [network]"</string>
-    <string name="price_error_database">"Error fetching price [database]"</string>
     <string name="price_error_api_key">"Error fetching price [API keys]"</string>
     <string name="price_error_online_only">"Card is online only"</string>
     <string name="price_error_null">Error fetching price [null]</string>
@@ -226,7 +224,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_legal">"Legal"</string>
     <string name="card_view_restricted">"Restricted"</string>
     <string name="card_view_banned">"Banned"</string>
-    <string name="card_view_no_commander">"Cannot be commander"</string>
     <string name="card_view_price_dialog_title">"TCGPlayer.com Prices"</string>
     <string name="card_view_price_dialog_link">"Click here for all prices and trend info"</string>
     <string name="card_view_no_rulings">"No rulings for this card"</string>
@@ -358,7 +355,6 @@ Mana pool will also be cleared."</string>
     <string name="rules_banned_and_restricted">"Formats, Banned, and Restricted"</string>
     <string name="rules_banned_as_commander">"Banned as Commander"</string>
     <string name="rules_no_cards">"No Cards"</string>
-    <string name="rules_legal_sets">"Legal Sets"</string>
     <string name="rules_bb_wb_sets">"All black &amp; white bordered sets"</string>
     <string name="rules_coppied">"Rule copied to clipboard"</string>
     <string name="rules_copy_tag">"MTG Rule"</string>
