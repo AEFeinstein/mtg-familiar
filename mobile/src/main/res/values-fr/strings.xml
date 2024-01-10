@@ -652,4 +652,8 @@ Standard ....... Not Legal -->
     <string name="decklist_share_body">"Partagez le deck avec uniquement les noms de cartes, ou définissez également des noms"</string>
     <string name="up">En haut</string>
     <string name="down">Vers le bas</string>
+    <string name="update_updating_cards">"Cartes de mise à jour"</string>
+    <string name="update_updating_docs">"Mise à jour des documents juge"</string>
+    <string name="pref_show_price_on_card_view_title">"Afficher le prix sur la vue de la carte"</string>
+    <string name="pref_show_price_on_card_view_summary">"Lorsque vous affichez une carte, chargez immédiatement le prix de la page Affichage de la carte"</string>
 </resources>

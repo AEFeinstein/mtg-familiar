@@ -670,4 +670,8 @@ Standard ....... Not Legal -->
     <string name="decklist_share_body">"¿Compartir el mazo solo con los nombres de carta, o también con nombres de expansión?"</string>
     <string name="up">Arriba</string>
     <string name="down">Abajo</string>
+    <string name="update_updating_cards">"Tarjetas de actualización"</string>
+    <string name="update_updating_docs">"Actualización de Judge Docs"</string>
+    <string name="pref_show_price_on_card_view_title">"Mostrar precio en la vista de tarjeta"</string>
+    <string name="pref_show_price_on_card_view_summary">"Al ver una tarjeta, cargue inmediatamente el precio en la página de la vista de la tarjeta"</string>
 </resources>

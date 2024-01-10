@@ -652,4 +652,8 @@ Standard ....... Not Legal -->
     <string name="decklist_share_body">"Condividi il grimorio con solo i nomi delle carte, o anche con i nomi delle espansioni"</string>
     <string name="up">Su</string>
     <string name="down">Giù</string>
+    <string name="update_updating_cards">"Aggiornamento delle carte"</string>
+    <string name="update_updating_docs">"Aggiornamento dei documenti del giudice"</string>
+    <string name="pref_show_price_on_card_view_title">"Mostra il prezzo sulla vista delle carte"</string>
+    <string name="pref_show_price_on_card_view_summary">"Quando si visualizza una scheda, caricare immediatamente il prezzo sulla pagina Visualizza carta"</string>
 </resources>

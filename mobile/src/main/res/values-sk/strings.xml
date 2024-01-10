@@ -665,4 +665,8 @@ Standard ....... Not Legal -->
     <string name="decklist_share_body">"Zdieľajte balíček iba s názvami kariet alebo aj s menami súborov"</string>
     <string name="up">Hore</string>
     <string name="down">Dole</string>
+    <string name="update_updating_cards">"Aktualizácia kariet"</string>
+    <string name="update_updating_docs">"Aktualizácia sudcu Docs"</string>
+    <string name="pref_show_price_on_card_view_title">"Zobraziť cenu na zobrazení karty"</string>
+    <string name="pref_show_price_on_card_view_summary">"Pri prezeraní karty okamžite načítajte cenu na stránku Zobraziť kartu"</string>
 </resources>

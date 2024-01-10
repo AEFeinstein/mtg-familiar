@@ -665,4 +665,8 @@ Standard ....... Not Legal -->
     <string name="decklist_share_body">"Udostępnij talię tylko z nazwami kart, lub również z nazwami dodatków"</string>
     <string name="up">W górę</string>
     <string name="down">W dół</string>
+    <string name="update_updating_cards">"Aktualizacja kart"</string>
+    <string name="update_updating_docs">"Aktualizacja dokumentów sędziego"</string>
+    <string name="pref_show_price_on_card_view_title">"Pokaż cenę na widok karty"</string>
+    <string name="pref_show_price_on_card_view_summary">"Podczas przeglądania karty natychmiast załaduj cenę na stronę widoku karty"</string>
 </resources>

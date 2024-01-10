@@ -33,8 +33,8 @@
     <string name="dialog_enjoy">"Enjoy!"</string>
     <string name="update_notification">"Checking for database updates"</string>
     <string name="update_updating_set">"Adding %s"</string>
-    <string name="update_updating_cards">"Updating cards"</string>
-    <string name="update_updating_rules">"Updating comprehensive rules"</string>
+    <string name="update_updating_cards">Updating Cards</string>
+    <string name="update_updating_rules">"Updating Comprehensive Rules"</string>
     <string name="update_updating_docs">"Updating Judge Docs"</string>
     <string name="update_added">"Added"</string>
     <string name="update_added_rules">"new comprehensive rules"</string>
@@ -438,7 +438,7 @@ Good luck, and have fun!
     <string name="pref_persist_search_title">"Save Search Options"</string>
     <string name="pref_persist_search_summary">"Save search options when leaving the search page"</string>
     <string name="pref_search_languages_title">"Search Languages"</string>
-	<string name="pref_search_languages_summary">"Languages used for card searches (default: English)"</string>
+    <string name="pref_search_languages_summary">"Languages used for card searches (default: English)"</string>
     <string name="pref_hide_online_title">"Hide Online Only Cards"</string>
     <string name="pref_hide_online_summary">"Don't show online only cards anywhere"</string>
     <string name="pref_hide_funny_title">"Hide Funny Cards"</string>

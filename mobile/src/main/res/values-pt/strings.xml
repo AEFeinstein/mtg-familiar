@@ -653,4 +653,8 @@ Standard ....... Not Legal -->
     <string name="decklist_share_body">"Compartilhe o baralho apenas com os nomes das cartas ou defina também os nomes"</string>
     <string name="up">Acima</string>
     <string name="down">Baixa</string>
+    <string name="update_updating_cards">"Atualizando cartões"</string>
+    <string name="update_updating_docs">"Atualizando os documentos do juiz"</string>
+    <string name="pref_show_price_on_card_view_title">"Mostrar preço na visualização do cartão"</string>
+    <string name="pref_show_price_on_card_view_summary">"Ao visualizar um cartão, carregue imediatamente o preço na página de visualização do cartão"</string>
 </resources>
