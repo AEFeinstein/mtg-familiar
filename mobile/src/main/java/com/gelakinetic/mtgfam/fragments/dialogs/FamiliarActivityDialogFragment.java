@@ -190,7 +190,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             case DIALOG_UPDATE: {
                 // Show a dialog for database updates
                 builder.title(R.string.update_notification)
-                        .progress(false, 100)
+                        .customView(getActivity().getLayoutInflater().inflate(R.layout.activity_dialog_update, null, false), false)
                         .cancelable(false)
                         .canceledOnTouchOutside(false);
                 return builder.build();

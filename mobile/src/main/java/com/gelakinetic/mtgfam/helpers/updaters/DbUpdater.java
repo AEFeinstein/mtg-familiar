@@ -24,6 +24,10 @@ import android.database.sqlite.SQLiteException;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -62,15 +66,13 @@ import java.util.zip.GZIPInputStream;
  */
 public class DbUpdater {
 
-    // Create an interface to respond with the result after processing
+    /* Create an interface to respond with the result after processing */
     public interface OnProcessedListener {
-        void onChecking();
+        void updateTitle(int idx, String title);
 
-        void onUpdateTitle(String title);
+        void updateProgress(int idx, int progress);
 
-        void onUpdateProgress(int progress);
-
-        void onFinish(String updatedStuffString);
+        void finish(String updatedStuffString);
     }
 
     /* The activity that is running this update */
@@ -102,48 +104,52 @@ public class DbUpdater {
         final OnProcessedListener listener = new OnProcessedListener() {
 
             @Override
-            public void onChecking() {
+            public void updateTitle(int idx, String title) {
                 mHandler.post(() -> {
+                    /* Update the UI here */
                     MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
                     if (null != d) {
-                        d.setTitle(mContext.getString(R.string.update_notification));
-                        d.setProgress(0);
+                        switch (idx) {
+                            case 0:
+                                ((AppCompatTextView) d.getCustomView().findViewById(R.id.progress_title_1)).setText(title);
+                                break;
+                            case 1:
+                                ((AppCompatTextView) d.getCustomView().findViewById(R.id.progress_title_2)).setText(title);
+                                break;
+                        }
                     }
                 });
             }
 
             @Override
-            public void onUpdateTitle(String title) {
+            public void updateProgress(int idx, int progress) {
                 mHandler.post(() -> {
-                    // Update the UI here
+                    /* Update the UI here */
                     MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
                     if (null != d) {
-                        d.setTitle(title);
+                        switch (idx) {
+                            case 0:
+                                ((ContentLoadingProgressBar) d.getCustomView().findViewById(R.id.progress_bar_1)).setProgress(progress);
+                                break;
+                            case 1:
+                                ((ContentLoadingProgressBar) d.getCustomView().findViewById(R.id.progress_bar_2)).setProgress(progress);
+                                break;
+                        }
                     }
                 });
             }
 
             @Override
-            public void onUpdateProgress(int progress) {
-                mHandler.post(() -> {
-                    // Update the UI here
-                    MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
-                    if (null != d) {
-                        d.setProgress(progress);
-                    }
-                });
-            }
-
-            @Override
-            public void onFinish(String updatedStuffString) {
+            public void finish(String updatedStuffString) {
                 mHandler.post(() -> {
                     if (null != updatedStuffString) {
                         /* Notify the activity of changes */
                         mContext.onReceiveDatabaseUpdate();
-                        onUpdateTitle(updatedStuffString);
                         MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
                         if (null != d) {
-                            d.setProgress(100);
+                            d.findViewById(R.id.progress_layout).setVisibility(View.GONE);
+                            d.findViewById(R.id.result_layout).setVisibility(View.VISIBLE);
+                            ((AppCompatTextView) d.getCustomView().findViewById(R.id.result_text)).setText(updatedStuffString);
                             d.setCancelable(true);
                             d.setActionButton(DialogAction.POSITIVE, R.string.dialog_ok);
                             d.setOnKeyListener((dialog, keyCode, event) -> {
@@ -152,22 +158,36 @@ public class DbUpdater {
                             });
                         }
                     } else {
-                        // Remove the dialog
+                        /* Remove the dialog */
                         mContext.removeDialogFragment(mContext.getSupportFragmentManager());
                     }
                 });
             }
         };
 
-        showStatusNotification();
+        /* Show the dialog for updates */
+        mUpdateDialog = mContext.showDialogFragment(FamiliarActivityDialogFragment.DIALOG_UPDATE);
+
+        /* Start the update in another thread */
         mExecutor.execute(() -> checkForUpdatesBackground(listener));
     }
 
     /**
      * This method does the heavy lifting. It opens transactional access to the database, checks the web for new files
-     * to patch in, patches them as necessary, and manipulates the notification to inform the user.
+     * to patch in, patches them as necessary, and updates the progress dialog to inform the user.
      */
     public void checkForUpdatesBackground(OnProcessedListener listener) {
+
+        /* Set up progress for the entire update */
+        int numItemsChecked = 0;
+        int numItemsToCheck = 6; /* 1 for comprehensive rules, 5 judge docs, sets added later */
+        listener.updateProgress(0, 0);
+
+        /* Change the dialog to "updating cards" */
+        listener.updateTitle(0, mContext.getString(R.string.update_updating_cards));
+        listener.updateTitle(1, "");
+        listener.updateProgress(1, 0);
+
         /* Try to open up a log */
         PrintWriter logWriter = null;
         try {
@@ -187,46 +207,6 @@ public class DbUpdater {
             CardAndSetParser parser = new CardAndSetParser();
             boolean commitDates = true;
             boolean newRulesParsed = false;
-
-            /* Look for updates with the banned / restricted lists and formats */
-            LegalityData legalityData = parser.readLegalityJsonStream(mContext, logWriter);
-
-            /* Log the date */
-            if (logWriter != null) {
-                logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
-            }
-
-            if (legalityData != null) {
-                if (logWriter != null) {
-                    logWriter.write("Adding new legalityData" + '\n');
-                }
-
-                /* Open a writable database, insert the legality data */
-                FamiliarDbHandle legalHandle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, legalHandle);
-                    /* Add all the data we've downloaded */
-                    CardDbAdapter.dropLegalTables(database);
-                    CardDbAdapter.createLegalTables(database);
-
-                    for (LegalityData.Format format : legalityData.mFormats) {
-                        for (String legalSet : format.mSets) {
-                            CardDbAdapter.addLegalSet(legalSet, format.mName, database);
-                        }
-                    }
-                } catch (SQLiteException | FamiliarDbException e) {
-                    commitDates = false; /* don't commit the dates */
-                    if (logWriter != null) {
-                        e.printStackTrace(logWriter);
-                    }
-                } finally {
-                    /* Close the writable database */
-                    DatabaseManager.closeDatabase(mContext, legalHandle);
-                }
-            }
-
-            /* Change the notification to generic "checking for updates" */
-            listener.onChecking();
 
             /* Look for new cards */
             Manifest manifest = parser.readUpdateJsonStream(mContext, logWriter);
@@ -292,6 +272,13 @@ public class DbUpdater {
                     DatabaseManager.closeDatabase(mContext, manifestHandle);
                 }
 
+                /* Count the number of sets to add */
+                for (Manifest.ManifestEntry set : manifest.mPatches) {
+                    if (!set.mCode.equals("DD3") && !currentSetCodes.contains(set.mCode)) {
+                        numItemsToCheck++;
+                    }
+                }
+
                 /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                 for (Manifest.ManifestEntry set : manifest.mPatches) {
                     if (!set.mCode.equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
@@ -299,8 +286,8 @@ public class DbUpdater {
                         int retries = 5;
                         while (retries > 0) {
                             try (InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, mContext)) {
-                                /* Change the notification to the specific set */
-                                listener.onUpdateTitle(String.format(mContext.getString(R.string.update_updating_set), set.mName));
+                                /* Update the dialog to the set being added */
+                                listener.updateTitle(1, String.format(mContext.getString(R.string.update_updating_set), set.mName));
                                 if (streamToRead != null) {
                                     ArrayList<Card> cardsToAdd = new ArrayList<>();
                                     ArrayList<Expansion> setsToAdd = new ArrayList<>();
@@ -328,7 +315,7 @@ public class DbUpdater {
                                         for (Card card : cardsToAdd) {
                                             CardDbAdapter.createCard(card, database);
                                             cardsAdded++;
-                                            listener.onUpdateProgress((int) (100 * (cardsAdded / (float) cardsToAdd.size())));
+                                            listener.updateProgress(1, (int) (100 * (cardsAdded / (float) cardsToAdd.size())));
                                         }
 
                                     } catch (SQLiteException | FamiliarDbException e) {
@@ -349,12 +336,54 @@ public class DbUpdater {
                             }
                             retries--;
                         }
+
+                        /* Update total progress after this set is updated */
+                        numItemsChecked++;
+                        listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
                     }
                 }
             }
 
-            /* Change the notification to generic "checking for updates" */
-            listener.onChecking();
+            /* Look for updates with the banned / restricted lists and formats */
+            LegalityData legalityData = parser.readLegalityJsonStream(mContext, logWriter);
+
+            /* Log the date */
+            if (logWriter != null) {
+                logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
+            }
+
+            if (legalityData != null) {
+                if (logWriter != null) {
+                    logWriter.write("Adding new legalityData" + '\n');
+                }
+
+                /* Open a writable database, insert the legality data */
+                FamiliarDbHandle legalHandle = new FamiliarDbHandle();
+                try {
+                    SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, legalHandle);
+                    /* Add all the data we've downloaded */
+                    CardDbAdapter.dropLegalTables(database);
+                    CardDbAdapter.createLegalTables(database);
+
+                    for (LegalityData.Format format : legalityData.mFormats) {
+                        for (String legalSet : format.mSets) {
+                            CardDbAdapter.addLegalSet(legalSet, format.mName, database);
+                        }
+                    }
+                } catch (SQLiteException | FamiliarDbException e) {
+                    commitDates = false; /* don't commit the dates */
+                    if (logWriter != null) {
+                        e.printStackTrace(logWriter);
+                    }
+                } finally {
+                    /* Close the writable database */
+                    DatabaseManager.closeDatabase(mContext, legalHandle);
+                }
+            }
+
+            /* Change the dialog to "updating comprehensive rules" */
+            listener.updateTitle(0, mContext.getString(R.string.update_updating_rules));
+            listener.updateProgress(1, 0);
 
             /* Parse the rules
              * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
@@ -367,7 +396,6 @@ public class DbUpdater {
             RulesParser rp = new RulesParser(new Date(lastRulesUpdate), listener);
 
             if (rp.needsToUpdate(mContext, logWriter)) {
-                listener.onUpdateTitle(mContext.getString(R.string.update_updating_rules));
                 if (rp.parseRules(mContext, logWriter)) {
                     ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
                     ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
@@ -408,48 +436,70 @@ public class DbUpdater {
                     }
                 }
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            /* Change the notification to generic "checking for updates" */
-            listener.onChecking();
+            /* Change the dialog to  "Updating Judge Docs" */
+            listener.updateTitle(0, mContext.getString(R.string.update_updating_docs));
+            listener.updateProgress(1, 0);
+
+            int numDocsToProcess = 5;
+            int numProcessedDocs = 0;
 
             /* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mContext);
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR, logWriter)) {
+
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
                 updatedStuff.add(mContext.getString(R.string.update_added_mtr));
             }
             if (logWriter != null) {
                 logWriter.write("MTR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG, logWriter)) {
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
                 updatedStuff.add(mContext.getString(R.string.update_added_ipg));
             }
             if (logWriter != null) {
                 logWriter.write("IPG date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR, logWriter)) {
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
                 updatedStuff.add(mContext.getString(R.string.update_added_jar));
             }
             if (logWriter != null) {
                 logWriter.write("JAR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DMTR, logWriter)) {
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DMTR, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
                 updatedStuff.add(mContext.getString(R.string.update_added_dmtr));
             }
             if (logWriter != null) {
                 logWriter.write("DMTR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DIPG, logWriter)) {
+            numProcessedDocs++;
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_DIPG, listener, logWriter, numProcessedDocs, numDocsToProcess)) {
                 updatedStuff.add(mContext.getString(R.string.update_added_dipg));
             }
             if (logWriter != null) {
                 logWriter.write("DIPG date: " + mtrIpgParser.mPrettyDate + '\n');
             }
+            numItemsChecked++;
+            listener.updateProgress(0, (int) (100 * numItemsChecked / (float) numItemsToCheck));
 
-            /* If everything went well so far, commit the date and show the update complete notification */
+            /* If everything went well so far, commit the date and show the update complete dialog */
             if (commitDates) {
                 parser.commitDates(mContext);
 
@@ -460,9 +510,9 @@ public class DbUpdater {
                 }
 
                 if (updatedStuff.size() > 0) {
-                    listener.onFinish(getUpdatedStuffString(updatedStuff));
+                    listener.finish(getUpdatedStuffString(updatedStuff));
                 } else {
-                    listener.onFinish(null);
+                    listener.finish(null);
                 }
             }
         } catch (Exception e) {
@@ -472,9 +522,6 @@ public class DbUpdater {
             }
         }
 
-        /* Always cancel the status notification */
-        cancelStatusNotification();
-
         /* close the log */
         if (logWriter != null) {
             logWriter.close();
@@ -482,26 +529,9 @@ public class DbUpdater {
     }
 
     /**
-     * Show the notification in the status bar
-     */
-    private void showStatusNotification() {
-        mUpdateDialog = mContext.showDialogFragment(FamiliarActivityDialogFragment.DIALOG_UPDATE);
-    }
-
-    /**
-     * Hide the notification in the status bar
-     */
-    private void cancelStatusNotification() {
-        mContext.removeDialogFragment(mContext.getSupportFragmentManager());
-    }
-
-    /**
-     * Show a notification which displays what parts of the app were updated
-     * <p>
-     * Note, MissingPermission is suppressed here because requestNotificationPermission() is called
-     * before creating the service
+     * Generate a string with a list of all items which were updated
      *
-     * @param newStuff A list of strings corresponding to what was updated
+     * @param newStuff A strings to show the user in a dialog
      */
     private String getUpdatedStuffString(List<String> newStuff) {
         if (newStuff.size() < 1) {

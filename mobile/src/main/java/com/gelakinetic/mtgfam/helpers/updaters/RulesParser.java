@@ -222,18 +222,18 @@ class RulesParser {
     public void loadRulesAndGlossary(ArrayList<RuleItem> rulesToAdd, ArrayList<GlossaryItem> glossaryItemsToAdd) {
         int numTotalElements = mRules.size() + mGlossary.size();
         int elementsParsed = 0;
-        mProgressReporter.onUpdateProgress(0);
+        mProgressReporter.updateProgress(1, 0);
 
         for (RuleItem rule : mRules) {
             rulesToAdd.add(rule);
             elementsParsed++;
-            mProgressReporter.onUpdateProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
+            mProgressReporter.updateProgress(1, (int) (100 * elementsParsed / (double) numTotalElements));
         }
 
         for (GlossaryItem term : mGlossary) {
             glossaryItemsToAdd.add(term);
             elementsParsed++;
-            mProgressReporter.onUpdateProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
+            mProgressReporter.updateProgress(1, (int) (100 * elementsParsed / (double) numTotalElements));
         }
     }
 

@@ -79,10 +79,13 @@ class MTRIPGParser {
      * This method gets a new document from the web, compares it's date stamp to the one given in the constructor, and
      * writes it to the device if it is newer
      *
-     * @param mode Whether we are updating the IPG or MTR
+     * @param mode             Whether we are updating the IPG or MTR
+     * @param listener         A listener to update the dialog with
+     * @param numProcessedDocs The number of processed documents
+     * @param numDocsToProcess The total number of documents to process
      * @return True if the document was updated, false otherwise
      */
-    public boolean performMtrIpgUpdateIfNeeded(final int mode, PrintWriter logWriter) {
+    public boolean performMtrIpgUpdateIfNeeded(final int mode, DbUpdater.OnProcessedListener listener, PrintWriter logWriter, int numProcessedDocs, int numDocsToProcess) {
         boolean updated = false;
 
         /* First, inflate local files if they do not exist */
@@ -104,6 +107,10 @@ class MTRIPGParser {
                 output = new File(mContext.getFilesDir(), DMTR_LOCAL_FILE);
                 break;
         }
+
+        /* Update the dialog with the document being processed */
+        listener.updateTitle(1, String.format(mContext.getString(R.string.update_updating_set), output.getName()));
+
         try {
             if (output != null && !output.exists()) {
                 switch (mode) {
@@ -160,6 +167,9 @@ class MTRIPGParser {
                 e.printStackTrace(logWriter);
             }
         }
+
+        /* Update the dialog's progress */
+        listener.updateProgress(1, (int) (100 * (numProcessedDocs / (float) numDocsToProcess)));
 
         return updated;
     }
