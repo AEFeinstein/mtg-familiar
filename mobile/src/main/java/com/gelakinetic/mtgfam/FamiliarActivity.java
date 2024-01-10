@@ -60,6 +60,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -555,6 +556,22 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Set up a listener to update the home screen widget whenever the user changes the
            preference */
         PreferenceAdapter.registerOnSharedPreferenceChangeListener(this, mPreferenceChangeListener);
+
+        this.getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                /* If the drawer is not open, and the fragment backstack is empty */
+                if (!mDrawerLayout.isDrawerOpen(mDrawerList) && (0 == getSupportFragmentManager().getBackStackEntryCount())) {
+                    /* Open the drawer */
+                    mDrawerLayout.openDrawer(mDrawerList);
+                } else {
+                    /* Otherwise handle the back as normal */
+                    this.setEnabled(false);
+                    FamiliarActivity.this.getOnBackPressedDispatcher().onBackPressed();
+                    this.setEnabled(true);
+                }
+            }
+        });
 
         /* Create the handler to update the timer in the action bar */
         mRoundTimerUpdateHandler = new Handler();
@@ -1548,9 +1565,10 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public int getResourceIdFromAttr(int attr) {
         assert getTheme() != null;
-        TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = ta.getResourceId(0, 0);
-        ta.recycle();
+        int resId = R.color.glyph_grey;
+        try (TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr})) {
+            resId = ta.getResourceId(0, 0);
+        }
         return resId;
     }
 
@@ -1562,9 +1580,10 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public static int getResourceIdFromAttr(Context c, int attr) {
         assert c.getTheme() != null;
-        TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = ta.getResourceId(0, 0);
-        ta.recycle();
+        int resId = R.color.glyph_grey;
+        try (TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr})) {
+            resId = ta.getResourceId(0, 0);
+        }
         return resId;
     }
 
