@@ -46,6 +46,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -137,7 +138,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         /* Get the document from the bundle, load it */
         File file = new File(requireActivity().getFilesDir(), requireArguments().getString(JudgesCornerFragment.HTML_DOC));
         StringBuilder html = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(file.toPath())))) {
+         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 html.append(line);

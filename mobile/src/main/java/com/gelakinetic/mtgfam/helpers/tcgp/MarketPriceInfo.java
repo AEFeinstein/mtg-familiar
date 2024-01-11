@@ -21,7 +21,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.web.util.HtmlUtils;
 
 public class MarketPriceInfo {
 
@@ -241,6 +241,6 @@ public class MarketPriceInfo {
      * @return The URL to the TCGPlayer.com page for this MarketPriceInfo
      */
     public String getUrl() {
-        return "https://tcgplayer.pxf.io/c/4925533/1830156/21018?u=" + StringEscapeUtils.escapeHtml4(mProductUrl);
+        return "https://tcgplayer.pxf.io/c/4925533/1830156/21018?u=" + HtmlUtils.htmlEscape(mProductUrl);
     }
 }

@@ -29,6 +29,7 @@ import com.gelakinetic.mtgfam.helpers.util.IOUtils;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -214,9 +215,9 @@ public class ZipUtils {
                 String sharedPrefsDir = context.getFilesDir().getPath();
                 sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
 
-                out = new BufferedOutputStream(Files.newOutputStream(new File(sharedPrefsDir, entry.getName()).toPath()));
+                out = new BufferedOutputStream(new FileOutputStream(new File(sharedPrefsDir, entry.getName())));
             } else {
-                out = new BufferedOutputStream(Files.newOutputStream(new File(context.getFilesDir(), entry.getName()).toPath()));
+                out = new BufferedOutputStream(new FileOutputStream(new File(context.getFilesDir(), entry.getName())));
             }
             IOUtils.copy(in, out);
 
@@ -262,7 +263,7 @@ public class ZipUtils {
 
             // Unzip the zip entry to the disk
             try (InputStream in = zipFile.getInputStream(entry);
-                 OutputStream out = new BufferedOutputStream(Files.newOutputStream(new File(applicationPath, entry.getName()).toPath()))) {
+                 OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(applicationPath, entry.getName())))) {
                 IOUtils.copy(in, out);
             }
         }
@@ -278,7 +279,7 @@ public class ZipUtils {
      */
     private static void zipIt(File zipFile, ArrayList<File> files, Context context) throws IOException {
         // Open a ZipOutputStream
-        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipFile.toPath()))) {
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile))) {
             // For each file to compress
             for (File file : files) {
                 // Add that file to the ZipOutputStream
