@@ -281,7 +281,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
      * @return the resource ID
      */
     private int getResourceIdFromAttr(int attr) {
-        int resId = R.color.glyph_grey;
+        int resId;
         try (TypedArray ta = mTheme.obtainStyledAttributes(new int[]{attr})) {
             resId = ta.getResourceId(0, 0);
         }

@@ -24,8 +24,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
@@ -85,34 +85,31 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case DIALOG_PRICE_SETTING: {
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.pref_trade_price_title)
-                        .items(getResources().getStringArray(R.array.trade_option_entries))
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
-                            if (getParentWishlistFragment().getPriceSetting().ordinal() != which) {
-                                getParentWishlistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
-                                PreferenceAdapter.setWishlistPrice(getContext(), getParentWishlistFragment().getPriceSetting());
-                                getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                                getParentWishlistFragment().updateTotalPrices(0);
-                            }
-                            dialog.dismiss();
-                            return true;
-                        })
-                        .build();
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.pref_trade_price_title)
+                        .setItems(R.array.trade_option_entries, (dialog, which) -> {
+                                    if (getParentWishlistFragment().getPriceSetting().ordinal() != which) {
+                                        getParentWishlistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
+                                        PreferenceAdapter.setWishlistPrice(getContext(), getParentWishlistFragment().getPriceSetting());
+                                        getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                        getParentWishlistFragment().updateTotalPrices(0);
+                                    }
+                                    dialog.dismiss();
+                                }
+                        )
+                        .create();
             }
             case DIALOG_CONFIRMATION: {
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.wishlist_empty_dialog_title)
-                        .content(R.string.wishlist_empty_dialog_text)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog, which) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.wishlist_empty_dialog_title)
+                        .setMessage(R.string.wishlist_empty_dialog_text)
+                        .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                             getParentWishlistFragment().clearTrade();
                             dialog.dismiss();
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .cancelable(true)
-                        .build();
-
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setCancelable(true)
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

@@ -30,8 +30,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
@@ -46,9 +46,6 @@ import java.util.Objects;
  * Class that creates dialogs for RulesFragment
  */
 public class RulesDialogFragment extends FamiliarDialogFragment {
-
-    /* Dialog constant */
-    private static final int DIALOG_SEARCH = 1;
 
     private Bundle searchArgs = null;
 
@@ -110,11 +107,10 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
             }
         }
 
-        Dialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(title)
-                .customView(textEntryView, false)
-                .positiveText(R.string.dialog_ok)
-                .onPositive((dialog1, which) -> {
+        Dialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setView(textEntryView)
+                .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
                     if (nameInput.getText() == null) {
                         dialog1.dismiss();
                         return;
@@ -130,8 +126,8 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                         searchArgs.putInt(RulesFragment.SUBCATEGORY_KEY, getParentRulesFragment().mSubcategory);
                     }
                 })
-                .negativeText(R.string.dialog_cancel)
-                .build();
+                .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> dialog1.dismiss())
+                .create();
         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         return dialog;
     }

@@ -9,10 +9,10 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ShareCompat;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -258,10 +258,7 @@ public class FamiliarLogger {
      * @param builder
      * @return
      */
-    public static Dialog createDialog(FamiliarActivity familiarActivity, MaterialDialog.Builder builder) {
-        builder.title(R.string.logging_title);
-        builder.positiveText(R.string.dialog_ok);
-
+    public static Dialog createDialog(FamiliarActivity familiarActivity, AlertDialog.Builder builder) {
         /* Set the custom view, with some images below the text */
         LayoutInflater inflater = familiarActivity.getLayoutInflater();
         @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_logging, null, false);
@@ -284,7 +281,9 @@ public class FamiliarLogger {
             familiarActivity.removeDialogFragment(familiarActivity.getSupportFragmentManager());
             FamiliarLogger.shareLog(familiarActivity);
         });
-        builder.customView(dialogLayout, false);
-        return builder.build();
+        return builder.setTitle(R.string.logging_title)
+                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> dialog.dismiss())
+                .setView(dialogLayout)
+                .create();
     }
 }

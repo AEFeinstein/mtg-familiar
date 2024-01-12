@@ -18,19 +18,17 @@
  */
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.ContentLoadingProgressBar;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
@@ -107,14 +105,14 @@ public class DbUpdater {
             public void updateTitle(int idx, String title) {
                 mHandler.post(() -> {
                     /* Update the UI here */
-                    MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
+                    Dialog d = mUpdateDialog.getDialog();
                     if (null != d) {
                         switch (idx) {
                             case 0:
-                                ((AppCompatTextView) d.getCustomView().findViewById(R.id.progress_title_1)).setText(title);
+                                ((AppCompatTextView) d.findViewById(R.id.progress_title_1)).setText(title);
                                 break;
                             case 1:
-                                ((AppCompatTextView) d.getCustomView().findViewById(R.id.progress_title_2)).setText(title);
+                                ((AppCompatTextView) d.findViewById(R.id.progress_title_2)).setText(title);
                                 break;
                         }
                     }
@@ -125,14 +123,14 @@ public class DbUpdater {
             public void updateProgress(int idx, int progress) {
                 mHandler.post(() -> {
                     /* Update the UI here */
-                    MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
+                    Dialog d = mUpdateDialog.getDialog();
                     if (null != d) {
                         switch (idx) {
                             case 0:
-                                ((ContentLoadingProgressBar) d.getCustomView().findViewById(R.id.progress_bar_1)).setProgress(progress);
+                                ((ContentLoadingProgressBar) d.findViewById(R.id.progress_bar_1)).setProgress(progress);
                                 break;
                             case 1:
-                                ((ContentLoadingProgressBar) d.getCustomView().findViewById(R.id.progress_bar_2)).setProgress(progress);
+                                ((ContentLoadingProgressBar) d.findViewById(R.id.progress_bar_2)).setProgress(progress);
                                 break;
                         }
                     }
@@ -142,24 +140,15 @@ public class DbUpdater {
             @Override
             public void finish(String updatedStuffString) {
                 mHandler.post(() -> {
+                    /* Remove the dialog */
+                    mContext.removeDialogFragment(mContext.getSupportFragmentManager());
+
                     if (null != updatedStuffString) {
                         /* Notify the activity of changes */
                         mContext.onReceiveDatabaseUpdate();
-                        MaterialDialog d = (MaterialDialog) mUpdateDialog.getDialog();
-                        if (null != d) {
-                            d.findViewById(R.id.progress_layout).setVisibility(View.GONE);
-                            d.findViewById(R.id.result_layout).setVisibility(View.VISIBLE);
-                            ((AppCompatTextView) d.getCustomView().findViewById(R.id.result_text)).setText(updatedStuffString);
-                            d.setCancelable(true);
-                            d.setActionButton(DialogAction.POSITIVE, R.string.dialog_ok);
-                            d.setOnKeyListener((dialog, keyCode, event) -> {
-                                mContext.removeDialogFragment(mContext.getSupportFragmentManager());
-                                return true;
-                            });
-                        }
-                    } else {
-                        /* Remove the dialog */
-                        mContext.removeDialogFragment(mContext.getSupportFragmentManager());
+
+                        /* Show new dialog */
+                        mContext.showDialogFragment(FamiliarActivityDialogFragment.DIALOG_UPDATE_RESULT, updatedStuffString);
                     }
                 });
             }

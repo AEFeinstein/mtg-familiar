@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,8 +35,10 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
@@ -202,7 +205,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* Create the callback for when the dialog is successfully closed or when the card
                      * info is shown or when the set is changed
                      */
-                    MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
+                    DialogInterface.OnClickListener onPositiveCallback = (dialog, which) -> {
                         /* Grab a reference to the card */
                         synchronized (lSide) {
                             if (lSide.size() <= positionForDialog) {
@@ -269,7 +272,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                     /* Set up the button to show info about this card */
                     view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
-                        onPositiveCallback.onClick(null, null);
+                        onPositiveCallback.onClick(null, 0);
                         Cursor cursor = null;
                         FamiliarDbHandle infoHandle = new FamiliarDbHandle();
                         try {
@@ -305,17 +308,15 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                     /* Set up the button to change the set of this card */
                     view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> {
-                        onPositiveCallback.onClick(null, null);
+                        onPositiveCallback.onClick(null, 0);
                         getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
                     });
 
-                    return new MaterialDialog.Builder(this.requireActivity())
-                            .title(lSide.get(positionForDialog).getName())
-                            .customView(view, false)
-                            .positiveText(R.string.dialog_done)
-                            .onPositive(onPositiveCallback)
-                            .negativeText(R.string.dialog_cancel)
-                            .onNegative((dialog, which) -> {
+                    return new AlertDialog.Builder(this.requireActivity())
+                            .setTitle(lSide.get(positionForDialog).getName())
+                            .setView(view)
+                            .setPositiveButton(R.string.dialog_done, onPositiveCallback)
+                            .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
                                 synchronized (lSide) {
                                     // Revert any foil changes
                                     if (lSide.size() <= positionForDialog) {
@@ -329,7 +330,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     }
                                 }
                             })
-                            .build();
+                            .create();
                 }
             }
             case DIALOG_CHANGE_SET: {
@@ -431,20 +432,25 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     }
                                 }
                             };
-                    Dialog dialog = new MaterialDialog.Builder(requireActivity())
-                            .title(R.string.card_view_set_dialog_title)
-                            .adapter(adapter, null)
-                            .build();
+
+                    RecyclerView rv = new RecyclerView(getContext());
+                    // you can use LayoutInflater.from(getContext()).inflate(...) if you have xml layout
+                    rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                    rv.setAdapter(adapter);
+
+                    Dialog dialog = new AlertDialog.Builder(requireActivity())
+                            .setTitle(R.string.card_view_set_dialog_title)
+                            .setView(rv)
+                            .create();
                     adapter.setDialogReference(dialog);
                     return dialog;
                 }
             }
             case DIALOG_PRICE_SETTING: {
                 /* Build the dialog with some choices */
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.pref_trade_price_title)
-                        .items(getResources().getStringArray(R.array.trade_option_entries))
-                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting().ordinal(), (dialog, itemView, which, text) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.pref_trade_price_title)
+                        .setItems(R.array.trade_option_entries, (dialog, which) -> {
                             if (getParentTradeFragment().getPriceSetting().ordinal() != which) {
                                 getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
 
@@ -475,9 +481,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                             }
                             dialog.dismiss();
-                            return true;
                         })
-                        .build();
+                        .create();
             }
             case DIALOG_NEW_TRADE: {
                 /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
@@ -487,11 +492,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
                 textEntryView.findViewById(R.id.clear_button).setVisibility(View.GONE);
 
-                Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(R.string.trader_new)
-                        .customView(textEntryView, false)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog1, which) -> {
+                Dialog dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.trader_new)
+                        .setView(textEntryView)
+                        .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
                             if (nameInput.getText() == null) {
                                 getParentTradeFragment().showErrorSnackbarNoName();
                                 return;
@@ -514,8 +518,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             getParentTradeFragment().setTradeName(tradeName);
                             getParentTradeFragment().saveTrade(tradeName + TradeFragment.TRADE_EXTENSION);
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
+                        .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> dialog1.dismiss())
+                        .create();
                 Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
@@ -529,11 +533,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Set the button to clear the text field */
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
-                Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(R.string.trader_save_as)
-                        .customView(textEntryView, false)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog1, which) -> {
+                Dialog dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.trader_save_as)
+                        .setView(textEntryView)
+                        .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
                             if (nameInput.getText() == null) {
                                 getParentTradeFragment().showErrorSnackbarNoName();
                                 return;
@@ -549,8 +552,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             getParentTradeFragment().saveTrade(tradeName + TradeFragment.TRADE_EXTENSION);
                             getParentTradeFragment().setTradeName(tradeName);
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
+                        .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> dialog1.dismiss())
+                        .create();
                 Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
@@ -567,23 +570,22 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Sort alphabetically for convenience */
                 Arrays.sort(tradeNames, String.CASE_INSENSITIVE_ORDER);
 
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.trader_load)
-                        .negativeText(R.string.dialog_cancel)
-                        .items(tradeNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.trader_load)
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setItems(tradeNames, (dialog, which) -> {
                             /* First save any changes */
                             getParentTradeFragment().saveTrade(getParentTradeFragment().mCurrentTrade + TradeFragment.TRADE_EXTENSION);
                             /* Then load the trade, set the current trade name */
-                            getParentTradeFragment().loadTrade(tradeNames[position] + TradeFragment.TRADE_EXTENSION);
-                            getParentTradeFragment().setTradeName(tradeNames[position]);
+                            getParentTradeFragment().loadTrade(tradeNames[which] + TradeFragment.TRADE_EXTENSION);
+                            getParentTradeFragment().setTradeName(tradeNames[which]);
 
                             /* Alert things to update */
                             getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
                             getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
                             getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                         })
-                        .build();
+                        .create();
             }
             case DIALOG_DELETE_TRADE: {
 
@@ -598,34 +600,32 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Sort alphabetically for convenience */
                 Arrays.sort(tradeNames, String.CASE_INSENSITIVE_ORDER);
 
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.trader_delete)
-                        .negativeText(R.string.dialog_cancel)
-                        .items(tradeNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
-                            File toDelete = new File(getActivity().getFilesDir(), tradeNames[position] +
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.trader_delete)
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setItems(tradeNames, (dialog, which) -> {
+                            File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] +
                                     TradeFragment.TRADE_EXTENSION);
                             if (!toDelete.delete()) {
                                 SnackbarWrapper.makeAndShowText(getActivity(), toDelete.getName() + " " +
                                         getString(R.string.not_deleted), SnackbarWrapper.LENGTH_LONG);
-                            } else if (getParentTradeFragment().mCurrentTrade.equals(tradeNames[position])) {
+                            } else if (getParentTradeFragment().mCurrentTrade.equals(tradeNames[which])) {
                                 getParentTradeFragment().clearTrade(false);
                             }
                         })
-                        .build();
+                        .create();
             }
             case DIALOG_CONFIRMATION: {
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.trader_clear_dialog_title)
-                        .content(R.string.trader_clear_dialog_text)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog, which) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.trader_clear_dialog_title)
+                        .setMessage(R.string.trader_clear_dialog_text)
+                        .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                             getParentTradeFragment().clearTrade(true);
                             dialog.dismiss();
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .cancelable(true)
-                        .build();
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setCancelable(true)
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

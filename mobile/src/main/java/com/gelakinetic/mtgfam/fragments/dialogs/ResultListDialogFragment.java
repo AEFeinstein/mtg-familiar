@@ -24,9 +24,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.StackingBehavior;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
@@ -67,21 +66,18 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
             case QUICK_ADD: {
                 final String cardName = getArguments().getString(NAME_KEY);
                 final String cardSet = getArguments().getString(NAME_SET);
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .stackingBehavior(StackingBehavior.ALWAYS)
-                        .title(Objects.requireNonNull(cardName))
-                        .positiveText(R.string.result_list_Add_to_wishlist)
-                        .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getActivity(),
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(Objects.requireNonNull(cardName))
+                        .setPositiveButton(R.string.result_list_Add_to_wishlist, (dialog, which) -> WishlistHelpers.addItemToWishlist(getActivity(),
                                 new WishlistHelpers.CompressedWishlistInfo(
                                         new MtgCard(cardName, cardSet, "", false, 1, false), 0)))
-                        .negativeText(R.string.result_list_Add_to_decklist)
-                        .onNegative((dialog, which) -> {
+                        .setNegativeButton(R.string.result_list_Add_to_decklist, (dialog, which) -> {
                             // Show the dialog to pick a deck
                             if (null != getParentResultListFragment()) {
                                 getParentResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
                             }
                         })
-                        .build();
+                        .create();
             }
             case PICK_DECK: {
                 final String cardName = getArguments().getString(NAME_KEY);
@@ -98,15 +94,14 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                 /* Sort alphabetically for convenience */
                 Arrays.sort(deckNames, String.CASE_INSENSITIVE_ORDER);
 
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.decklist_select_dialog_title)
-                        .negativeText(R.string.dialog_cancel)
-                        .items(deckNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.decklist_select_dialog_title)
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setItems(deckNames, (dialog, which) -> {
 
                             try {
                                 // Read the decklist
-                                String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
+                                String deckFileName = deckNames[which] + DecklistFragment.DECK_EXTENSION;
                                 ArrayList<MtgCard> decklist =
                                         DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 
@@ -133,7 +128,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                                 getParentResultListFragment().handleFamiliarDbException(false);
                             }
                         })
-                        .build();
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

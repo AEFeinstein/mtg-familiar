@@ -24,13 +24,12 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.GatheringsFragment;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
@@ -39,7 +38,6 @@ import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Class that creates dialogs for GatheringsFragment
@@ -99,11 +97,10 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
-                Dialog dialog = new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.gathering_enter_name)
-                        .customView(textEntryView, false)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog1, which) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.gathering_enter_name)
+                        .setView(textEntryView)
+                        .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
                             assert nameInput.getText() != null;
                             String gatheringName = nameInput.getText().toString().trim();
                             if (gatheringName.length() == 0) {
@@ -133,24 +130,21 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 getParentGatheringsFragment().SaveGathering(gatheringName);
                             }
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
-                Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                return dialog;
+                        .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> dialog1.dismiss())
+                        .create();
             }
             case DIALOG_GATHERING_EXIST: {
                 /* The user tried to save, and the gathering already exists. Prompt to overwrite */
-                return new MaterialDialog.Builder(this.requireActivity())
-                        .title(R.string.gathering_dialog_overwrite_title)
-                        .content(R.string.gathering_dialog_overwrite_text)
-                        .positiveText(R.string.dialog_yes)
-                        .onPositive((dialog, which) -> {
+                return new AlertDialog.Builder(this.requireActivity())
+                        .setTitle(R.string.gathering_dialog_overwrite_title)
+                        .setMessage(R.string.gathering_dialog_overwrite_text)
+                        .setPositiveButton(R.string.dialog_yes, (dialog, which) -> {
                             GatheringsIO.DeleteGatheringByName(getParentGatheringsFragment().mProposedGathering,
                                     getActivity().getFilesDir(), getActivity());
                             getParentGatheringsFragment().SaveGathering(getParentGatheringsFragment().mProposedGathering);
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .create();
             }
             case DIALOG_DELETE_GATHERING: {
                 /* Show all gatherings, and delete the selected one */
@@ -168,15 +162,14 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             getActivity().getFilesDir());
                 }
 
-                return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.gathering_delete)
-                        .items(dProperNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
-                            GatheringsIO.DeleteGathering(dfGatherings[position], getActivity().getFilesDir(),
+                return new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.gathering_delete)
+                        .setItems(dProperNames, (dialog, which) -> {
+                            GatheringsIO.DeleteGathering(dfGatherings[which], getActivity().getFilesDir(),
                                     getActivity());
                             getActivity().invalidateOptionsMenu();
                         })
-                        .build();
+                        .create();
             }
             case DIALOG_REMOVE_PLAYER: {
                 /* Remove a player from the Gathering and linear layout */
@@ -194,14 +187,13 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new MaterialDialog.Builder(requireActivity())
-                        .title(R.string.life_counter_remove_player)
-                        .items(aNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
-                            getParentGatheringsFragment().mLinearLayout.removeViewAt(position);
+                return new AlertDialog.Builder(requireActivity())
+                        .setTitle(R.string.life_counter_remove_player)
+                        .setItems(aNames, (dialog, which) -> {
+                            getParentGatheringsFragment().mLinearLayout.removeViewAt(which);
                             getActivity().invalidateOptionsMenu();
                         })
-                        .build();
+                        .create();
             }
             case DIALOG_LOAD_GATHERING: {
                 /* Load a gathering, if there is a gathering to load */
@@ -219,16 +211,15 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             getActivity().getFilesDir());
                 }
 
-                return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.gathering_load)
-                        .items(properNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
+                return new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.gathering_load)
+                        .setItems(properNames, (dialog, which) -> {
                             getParentGatheringsFragment().mLinearLayout.removeAllViews();
                             getParentGatheringsFragment().mLargestPlayerNumber = 0;
-                            Gathering gathering = GatheringsIO.ReadGatheringXML(fGatherings[position],
+                            Gathering gathering = GatheringsIO.ReadGatheringXML(fGatherings[which],
                                     getActivity().getFilesDir());
 
-                            getParentGatheringsFragment().mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[position],
+                            getParentGatheringsFragment().mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[which],
                                     getActivity().getFilesDir());
                             if (gathering.mDisplayMode >= getParentGatheringsFragment().mDisplayModeSpinner.getAdapter().getCount()) {
                                 gathering.mDisplayMode = 0;
@@ -240,7 +231,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             }
                             getActivity().invalidateOptionsMenu();
                         })
-                        .build();
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

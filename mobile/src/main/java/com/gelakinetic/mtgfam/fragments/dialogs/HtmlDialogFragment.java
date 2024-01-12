@@ -28,8 +28,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.HtmlDocFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
@@ -37,9 +37,6 @@ import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import java.util.Objects;
 
 public class HtmlDialogFragment extends FamiliarDialogFragment {
-
-    /* Dialog constant */
-    private static final int DIALOG_SEARCH = 1;
 
     /**
      * @return The currently viewed HtmlDocFragment
@@ -79,14 +76,12 @@ public class HtmlDialogFragment extends FamiliarDialogFragment {
         String title = String.format(getString(R.string.rules_search_cat),
                 getParentHtmlDocFragment().getName());
 
-        Dialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(title)
-                .customView(textEntryView, false)
-                .positiveText(R.string.dialog_ok)
-                .onPositive((dialog1, which) -> getParentHtmlDocFragment().doSearch(nameInput.getText().toString()))
-                .negativeText(R.string.dialog_cancel)
-                .onNegative((dialog1, which) -> getParentHtmlDocFragment().cancelSearch())
-                .build();
+        Dialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setView(textEntryView)
+                .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> getParentHtmlDocFragment().doSearch(nameInput.getText().toString()))
+                .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> getParentHtmlDocFragment().cancelSearch())
+                .create();
         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         return dialog;
     }

@@ -154,7 +154,6 @@ dependencies {
     implementation 'com.github.woxthebox:draglistview:1.7.3'
     implementation 'org.jetbrains:annotations:24.1.0'
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
     implementation 'com.github.machinarius:preferencefragment:0.1.2'
