@@ -287,15 +287,17 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
             case DIALOG_PRICE_SETTING: {
                 return new AlertDialog.Builder(this.requireActivity())
                         .setTitle(R.string.pref_trade_price_title)
-                        .setItems(getResources().getStringArray(R.array.trade_option_entries), (dialog, which) -> {
-                            if (getParentDecklistFragment().getPriceSetting().ordinal() != which) {
-                                getParentDecklistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
-                                PreferenceAdapter.setDeckPrice(getContext(), getParentDecklistFragment().getPriceSetting());
-                                getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                                getParentDecklistFragment().updateTotalPrices(0);
-                            }
-                            dialog.dismiss();
-                        })
+                        .setSingleChoiceItems(getResources().getStringArray(R.array.trade_option_entries),
+                                getParentDecklistFragment().getPriceSetting().ordinal(),
+                                (dialog, which) -> {
+                                    if (getParentDecklistFragment().getPriceSetting().ordinal() != which) {
+                                        getParentDecklistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
+                                        PreferenceAdapter.setDeckPrice(getContext(), getParentDecklistFragment().getPriceSetting());
+                                        getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                        getParentDecklistFragment().updateTotalPrices(0);
+                                    }
+                                    dialog.dismiss();
+                                })
                         .create();
             }
             case DIALOG_SHARE_DECK: {

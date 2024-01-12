@@ -87,7 +87,9 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
             case DIALOG_PRICE_SETTING: {
                 return new AlertDialog.Builder(this.requireActivity())
                         .setTitle(R.string.pref_trade_price_title)
-                        .setItems(R.array.trade_option_entries, (dialog, which) -> {
+                        .setSingleChoiceItems(R.array.trade_option_entries,
+                                getParentWishlistFragment().getPriceSetting().ordinal(),
+                                (dialog, which) -> {
                                     if (getParentWishlistFragment().getPriceSetting().ordinal() != which) {
                                         getParentWishlistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
                                         PreferenceAdapter.setWishlistPrice(getContext(), getParentWishlistFragment().getPriceSetting());

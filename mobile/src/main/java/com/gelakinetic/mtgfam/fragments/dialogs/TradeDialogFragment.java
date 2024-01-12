@@ -450,38 +450,40 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog with some choices */
                 return new AlertDialog.Builder(this.requireActivity())
                         .setTitle(R.string.pref_trade_price_title)
-                        .setItems(R.array.trade_option_entries, (dialog, which) -> {
-                            if (getParentTradeFragment().getPriceSetting().ordinal() != which) {
-                                getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
+                        .setSingleChoiceItems(R.array.trade_option_entries,
+                                getParentTradeFragment().getPriceSetting().ordinal(),
+                                (dialog, which) -> {
+                                    if (getParentTradeFragment().getPriceSetting().ordinal() != which) {
+                                        getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
 
-                                /* Update ALL the prices! */
-                                synchronized (getParentTradeFragment().mListLeft) {
-                                    for (MtgCard data : getParentTradeFragment().mListLeft) {
-                                        if (!data.mIsCustomPrice) {
-                                            data.mMessage = getString(R.string.wishlist_loading);
-                                            getParentTradeFragment().loadPrice(data);
+                                        /* Update ALL the prices! */
+                                        synchronized (getParentTradeFragment().mListLeft) {
+                                            for (MtgCard data : getParentTradeFragment().mListLeft) {
+                                                if (!data.mIsCustomPrice) {
+                                                    data.mMessage = getString(R.string.wishlist_loading);
+                                                    getParentTradeFragment().loadPrice(data);
+                                                }
+                                            }
                                         }
-                                    }
-                                }
-                                getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
+                                        getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
 
-                                synchronized (getParentTradeFragment().mListRight) {
-                                    for (MtgCard data : getParentTradeFragment().mListRight) {
-                                        if (!data.mIsCustomPrice) {
-                                            data.mMessage = getString(R.string.wishlist_loading);
-                                            getParentTradeFragment().loadPrice(data);
+                                        synchronized (getParentTradeFragment().mListRight) {
+                                            for (MtgCard data : getParentTradeFragment().mListRight) {
+                                                if (!data.mIsCustomPrice) {
+                                                    data.mMessage = getString(R.string.wishlist_loading);
+                                                    getParentTradeFragment().loadPrice(data);
+                                                }
+                                            }
                                         }
+                                        getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
+
+                                        /* And also update the preference */
+                                        PreferenceAdapter.setTradePrice(getContext(), getParentTradeFragment().getPriceSetting());
+
+                                        getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                                     }
-                                }
-                                getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
-
-                                /* And also update the preference */
-                                PreferenceAdapter.setTradePrice(getContext(), getParentTradeFragment().getPriceSetting());
-
-                                getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
-                            }
-                            dialog.dismiss();
-                        })
+                                    dialog.dismiss();
+                                })
                         .create();
             }
             case DIALOG_NEW_TRADE: {

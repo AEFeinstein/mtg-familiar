@@ -141,7 +141,9 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             case DIALOG_CHANGE_DISPLAY: {
 
                 builder.setTitle(R.string.pref_display_mode_title)
-                        .setItems(R.array.display_array_entries, (dialog, which) -> {
+                        .setSingleChoiceItems(R.array.display_array_entries,
+                                getParentLifeCounterFragment().mDisplayMode,
+                                (dialog, which) -> {
                                     dialog.dismiss();
 
                                     if (getParentLifeCounterFragment().mDisplayMode != which) {
