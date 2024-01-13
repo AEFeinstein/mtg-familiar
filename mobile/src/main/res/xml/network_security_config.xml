@@ -2,7 +2,9 @@
 <network-security-config>
     <base-config>
         <trust-anchors>
-            <certificates src="@raw/cacerts_extra__digicert_tls_rsa_sha256_2020_ca1" />
+            <certificates src="@raw/gatherer_chain_1" />
+            <certificates src="@raw/gatherer_chain_2" />
+            <certificates src="@raw/gatherer_chain_3" />
             <certificates src="system" />
         </trust-anchors>
     </base-config>
