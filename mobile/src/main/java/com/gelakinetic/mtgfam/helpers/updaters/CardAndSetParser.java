@@ -42,7 +42,7 @@ import java.util.ArrayList;
 /**
  * This class is used to parse various JSON update files and populate the database
  */
-class CardAndSetParser {
+public class CardAndSetParser {
     /* Hardcoded URLs */
     private static final String PATCHES_URL = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/patches-v2/patches.json";
     private static final String LEGALITY_URL = "https://github.com/AEFeinstein/Mtgjson2Familiar/raw/main/patches-v2/legality.json";
