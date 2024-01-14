@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -366,7 +366,7 @@ public class RulesFragment extends FamiliarFragment {
         } else {
             mKeywordPattern = null;
         }
-        mHyperlinkPattern = Pattern.compile("<(http://)?(www|gatherer|mtgcommander)(.+?)>");
+        mHyperlinkPattern = Pattern.compile("([^\\(\\s]*\\.(com|net)[^\\.\\)\\s]*)");
 
         /*
          * Regex breakdown for Adam:
@@ -468,7 +468,7 @@ public class RulesFragment extends FamiliarFragment {
                             String.format("0x%06X", 0xFFFFFF & ContextCompat.getColor(requireContext(), R.color.material_green_800)) +
                             "\"\\>$1\\</font\\>\\</u\\>\\</b\\>");
         }
-        encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");
+        encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"https://$1\"\\>$1\\</a\\>");
         encodedInput = encodedInput.replace("{", "").replace("}", "");
 
         CharSequence cs = ImageGetterHelper
