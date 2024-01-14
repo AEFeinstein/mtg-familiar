@@ -26,8 +26,8 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
@@ -35,8 +35,6 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
  * Class that creates dialogs for RoundTimerFragment
  */
 public class RoundTimerDialogFragment extends FamiliarDialogFragment {
-
-    private static final int DIALOG_SET_WARNINGS = 1;
 
     @NonNull
     @Override
@@ -64,11 +62,10 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
         chkTwo.setChecked(two);
         chkUseSound.setChecked(useSound);
 
-        return new MaterialDialog.Builder(getActivity())
-                .customView(v, false)
-                .title(R.string.timer_warning_dialog_title)
-                .positiveText(R.string.dialog_ok)
-                .onPositive((dialog, which) -> {
+        return new AlertDialog.Builder(getActivity())
+                .setView(v)
+                .setTitle(R.string.timer_warning_dialog_title)
+                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                     PreferenceAdapter
                             .setFifteenMinutePref(getContext(), chkFifteen.isChecked());
                     PreferenceAdapter
@@ -80,6 +77,6 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                     PreferenceAdapter
                             .setUseSoundInsteadOfTTSPref(getContext(), chkUseSound.isChecked());
                 })
-                .build();
+                .create();
     }
 }

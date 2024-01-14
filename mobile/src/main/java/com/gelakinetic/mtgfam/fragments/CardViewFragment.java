@@ -88,6 +88,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
+import com.gelakinetic.mtgfam.helpers.updaters.CardAndSetParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -107,6 +108,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
+
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  * This class handles displaying card info.
@@ -1424,6 +1427,33 @@ public class CardViewFragment extends FamiliarFragment {
 
         String mErrorMessage = null;
 
+        void parseRulings(BufferedReader br, CardViewFragment frag) throws IOException {
+            StringBuilder gpBuilder = new StringBuilder();
+            String line;
+            while (null != (line = br.readLine())) {
+                gpBuilder.append(line);
+            }
+            String gathererPage = gpBuilder.toString();
+
+            Document document = Jsoup.parse(gathererPage);
+            Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
+
+            for (Element ruling : rulingTable) {
+                String date = ruling.children().get(0).text();
+                Element rulingText = ruling.children().get(1);
+                Elements imageTags = rulingText.getElementsByTag("img");
+                /* For each symbol in the rulings text */
+                for (Element symbol : imageTags) {
+                    /* Build the glyph with {, the text between "name=" and "&" and } */
+                    String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
+                    /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
+                    symbol.html(symbolString);
+                }
+                Ruling r = new Ruling(date, rulingText.text());
+                frag.mRulingsArrayList.add(r);
+            }
+        }
+
         /**
          * This function downloads the source of the gatherer page, scans it for rulings, and stores
          * them for display.
@@ -1445,30 +1475,18 @@ public class CardViewFragment extends FamiliarFragment {
                         new InputStreamReader(
                                 FamiliarActivity.getHttpInputStream(url, null, frag.getContext()),
                                 StandardCharsets.UTF_8))) {
-
-                    StringBuilder gpBuilder = new StringBuilder();
-                    String line;
-                    while (null != (line = br.readLine())) {
-                        gpBuilder.append(line);
-                    }
-                    String gathererPage = gpBuilder.toString();
-
-                    Document document = Jsoup.parse(gathererPage);
-                    Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
-
-                    for (Element ruling : rulingTable) {
-                        String date = ruling.children().get(0).text();
-                        Element rulingText = ruling.children().get(1);
-                        Elements imageTags = rulingText.getElementsByTag("img");
-                        /* For each symbol in the rulings text */
-                        for (Element symbol : imageTags) {
-                            /* Build the glyph with {, the text between "name=" and "&" and } */
-                            String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
-                            /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
-                            symbol.html(symbolString);
-                        }
-                        Ruling r = new Ruling(date, rulingText.text());
-                        frag.mRulingsArrayList.add(r);
+                    parseRulings(br, frag);
+                } catch (SSLHandshakeException she) {
+                    // I don't know why this works... download an update first
+                    (new CardAndSetParser()).readUpdateJsonStream(frag.requireContext(), null);
+                    // Then try again
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(
+                                    FamiliarActivity.getHttpInputStream(url, null, frag.getContext()),
+                                    StandardCharsets.UTF_8))) {
+                        parseRulings(br, frag);
+                    } catch (IOException ioe) {
+                        mErrorMessage = ioe.getLocalizedMessage();
                     }
                 } catch (IOException ioe) {
                     mErrorMessage = ioe.getLocalizedMessage();

@@ -44,6 +44,7 @@ import java.util.ArrayList;
 public class FamiliarDialogFragment extends DialogFragment {
 
     public static final String ID_KEY = "DIALOG_ID";
+    public static final String ID_ARG_STR = "ARG_STR";
     int mDialogId;
 
     /**

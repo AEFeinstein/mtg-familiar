@@ -31,8 +31,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
@@ -97,11 +97,10 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                 nameInput.append(mLcPlayer.mName);
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
-                Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(R.string.life_counter_edit_name_dialog_title)
-                        .customView(textEntryView, false)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog12, which) -> {
+                Dialog dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.life_counter_edit_name_dialog_title)
+                        .setView(textEntryView)
+                        .setPositiveButton(R.string.dialog_ok, (dialog12, which) -> {
                             assert nameInput.getText() != null;
                             String newName = nameInput.getText().toString();
                             if (newName.equals("")) {
@@ -114,8 +113,8 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                             }
                             getParentLifeCounterFragment().setCommanderInfo(-1);
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
+                        .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> dialog1.dismiss())
+                        .create();
                 Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
@@ -148,19 +147,17 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                     absoluteText.setText(String.format(Locale.getDefault(), "%d", absolute[0]));
                 });
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
-                builder.title(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.requireActivity());
+                return builder.setTitle(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
                                 mLcPlayer.mCommanderDamage.get(position).mName))
-                        .customView(view, false)
-                        .negativeText(R.string.dialog_cancel)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog, which) -> {
+                        .setView(view)
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                             mLcPlayer.mCommanderDamage.get(position).mLife = absolute[0];
                             mLcPlayer.mCommanderDamageAdapter.notifyDataSetChanged();
                             mLcPlayer.changeValue(-delta[0], true);
-                        });
-
-                return builder.build();
+                        })
+                        .create();
             }
             case DIALOG_CHANGE_LIFE: {
                 /* Inflate a view to type in a new life, then show it in an AlertDialog */
@@ -181,11 +178,10 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                     title = getResources().getString(R.string.life_counter_edit_life_dialog_title);
                 }
 
-                Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(title)
-                        .customView(textEntryView2, false)
-                        .positiveText(R.string.dialog_ok)
-                        .onPositive((dialog1, which) -> {
+                return new AlertDialog.Builder(getActivity())
+                        .setTitle(title)
+                        .setView(textEntryView2)
+                        .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
                             assert lifeInput.getText() != null;
                             try {
                                 /* make sure the life is valid, not empty */
@@ -199,10 +195,8 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                                 /* eat it */
                             }
                         })
-                        .negativeText(R.string.dialog_cancel)
-                        .build();
-                Objects.requireNonNull(dialog.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                return dialog;
+                        .setNegativeButton(R.string.dialog_cancel, (dialog1, which) -> dialog1.dismiss())
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

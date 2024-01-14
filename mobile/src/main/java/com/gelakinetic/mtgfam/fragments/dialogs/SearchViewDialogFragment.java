@@ -25,8 +25,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 
@@ -80,37 +80,29 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                 already filled in onCreate() */
             switch (mDialogId) {
                 case FORMAT_LIST: {
-                    getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.requireActivity())
-                            .title(R.string.search_formats)
-                            .items(getParentSearchViewFragment().mFormatNames)
-                            .itemsCallbackSingleChoice(getParentSearchViewFragment().mSelectedFormat, (dialog, itemView, which, text) -> {
-                                getParentSearchViewFragment().mSelectedFormat = which;
-                                return true;
-                            })
-                            .positiveText(R.string.dialog_ok)
-                            .negativeText(R.string.mana_pool_clear_all)
-                            .onNegative((dialog, which) -> {
+                    getParentSearchViewFragment().mFormatDialog = new AlertDialog.Builder(this.requireActivity())
+                            .setTitle(R.string.search_formats)
+                            .setSingleChoiceItems(getParentSearchViewFragment().mFormatNames, getParentSearchViewFragment().mSelectedFormat,
+                                    (dialog, which) -> getParentSearchViewFragment().mSelectedFormat = which)
+                            .setPositiveButton(R.string.dialog_ok, (dialog, which) -> dialog.dismiss())
+                            .setNegativeButton(R.string.mana_pool_clear_all, (dialog, which) -> {
                                 getParentSearchViewFragment().mSelectedFormat = -1;
                                 getParentSearchViewFragment().removeDialog(getParentFragmentManager());
                                 getParentSearchViewFragment().checkDialogButtonColors();
                             })
-                            .build();
+                            .create();
                     if (null != getParentSearchViewFragment()) {
                         return getParentSearchViewFragment().mFormatDialog;
                     }
                     return DontShowDialog();
                 }
                 case RARITY_LIST: {
-                    getParentSearchViewFragment().mRarityDialog = new MaterialDialog.Builder(this.requireActivity())
-                            .title(R.string.search_rarities)
-                            .positiveText(R.string.dialog_ok)
-                            .items(getParentSearchViewFragment().mRarityNames)
-                            .alwaysCallMultiChoiceCallback()
-                            .itemsCallbackMultiChoice(toIntegerArray(getParentSearchViewFragment().mRarityCheckedIndices), (dialog, which, text) -> {
-                                getParentSearchViewFragment().mRarityCheckedIndices = toIntArray(which);
-                                return true;
-                            })
-                            .build();
+                    getParentSearchViewFragment().mRarityDialog = new AlertDialog.Builder(this.requireActivity())
+                            .setTitle(R.string.search_rarities)
+                            .setPositiveButton(R.string.dialog_ok, (dialog, which) -> dialog.dismiss())
+                            .setMultiChoiceItems(getParentSearchViewFragment().mRarityNames, getParentSearchViewFragment().mRarityNamesChecked,
+                                    (dialog, which, isChecked) -> getParentSearchViewFragment().mRarityNamesChecked[which] = isChecked)
+                            .create();
                     if (null != getParentSearchViewFragment()) {
                         return getParentSearchViewFragment().mRarityDialog;
                     }
@@ -130,31 +122,4 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    /**
-     * Make an int[] from an Integer[]
-     *
-     * @param which An Integer[]
-     * @return An int[] with the same values as "which"
-     */
-    private int[] toIntArray(Integer[] which) {
-        int[] tmp = new int[which.length];
-        for (int i = 0; i < which.length; i++) {
-            tmp[i] = which[i];
-        }
-        return tmp;
-    }
-
-    /**
-     * Make an int[] from an Integer[]
-     *
-     * @param which An Integer[]
-     * @return An int[] with the same values as "which"
-     */
-    private Integer[] toIntegerArray(int[] which) {
-        Integer[] tmp = new Integer[which.length];
-        for (int i = 0; i < which.length; i++) {
-            tmp[i] = which[i];
-        }
-        return tmp;
-    }
 }

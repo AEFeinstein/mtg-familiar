@@ -28,8 +28,8 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
@@ -55,11 +55,11 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
         switch (mDialogId) {
             case DIALOG_RULES: {
                 /* Use a generic AlertDialog to display the rules text */
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
-                builder.neutralText(R.string.mojhosto_dialog_play)
-                        .content(ImageGetterHelper.formatHtmlString(getString(R.string.mojhosto_rules_text)))
-                        .title(R.string.mojhosto_rules_title);
-                return builder.build();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.requireActivity());
+                return builder.setNeutralButton(R.string.mojhosto_dialog_play, (dialog, which) -> dialog.dismiss())
+                        .setMessage(ImageGetterHelper.formatHtmlString(getString(R.string.mojhosto_rules_text)))
+                        .setTitle(R.string.mojhosto_rules_title)
+                        .create();
             }
             case DIALOG_MOMIR:
             case DIALOG_STONEHEWER:

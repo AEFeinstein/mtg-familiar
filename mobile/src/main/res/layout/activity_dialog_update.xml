@@ -5,59 +5,37 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/progress_layout"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/progress_title_1"
+        style="@style/text.medium"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center|start"
+        android:text="Progress 1" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_bar_1"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/progress_title_1"
-            style="@style/text.medium"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center|start"
-            android:text="Progress 1" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/progress_title_2"
+        style="@style/text.medium"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center|start"
+        android:text="Progress 2" />
 
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/progress_bar_1"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/progress_title_2"
-            style="@style/text.medium"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center|start"
-            android:text="Progress 2" />
-
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/progress_bar_2"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/result_layout"
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_bar_2"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/result_text"
-            style="@style/text.medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Results" />
-    </androidx.core.widget.NestedScrollView>
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0" />
 </androidx.appcompat.widget.LinearLayoutCompat>

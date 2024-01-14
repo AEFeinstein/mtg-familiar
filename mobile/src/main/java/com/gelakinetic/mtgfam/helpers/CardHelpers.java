@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,7 +34,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.appcompat.app.AlertDialog;
+
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
@@ -212,7 +214,7 @@ public class CardHelpers {
             DatabaseManager.closeDatabase(fragment.getActivity(), fetchCardHandle);
         }
 
-        MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
+        DialogInterface.OnClickListener onPositiveCallback = (dialog, which) -> {
 
             ArrayList<MtgCard> list;
             ArrayList<String> nonFoilSets;
@@ -311,7 +313,7 @@ public class CardHelpers {
             customView.findViewById(R.id.show_card_button).setOnClickListener(
                     view -> {
 
-                        onPositiveCallback.onClick(null, null);
+                        onPositiveCallback.onClick(null, 0);
 
                         Bundle args = new Bundle();
                         /* Open the database */
@@ -343,13 +345,12 @@ public class CardHelpers {
         }
 
         /* make and return the actual dialog */
-        return new MaterialDialog.Builder(activity)
-                .title(mCardName + " " + dialogText)
-                .customView(customView, false)
-                .positiveText(fragment.getString(R.string.dialog_ok))
-                .onPositive(onPositiveCallback)
-                .negativeText(fragment.getString(R.string.dialog_cancel))
-                .build();
+        return new AlertDialog.Builder(activity)
+                .setTitle(mCardName + " " + dialogText)
+                .setView(customView)
+                .setPositiveButton(fragment.getString(R.string.dialog_ok), onPositiveCallback)
+                .setNegativeButton(fragment.getString(R.string.dialog_cancel), (dialog, which) -> dialog.dismiss())
+                .create();
     }
 
     /**

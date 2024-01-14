@@ -38,8 +38,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
@@ -150,10 +152,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 ListView lv = new ListView(getParentCardViewFragment().mActivity);
                 lv.setAdapter(adapter);
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
-                builder.customView(lv, false);
-                builder.title(R.string.card_view_legality);
-                return builder.build();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentCardViewFragment().mActivity);
+                builder.setView(lv);
+                builder.setTitle(R.string.card_view_legality);
+                return builder.create();
             }
             case GET_PRICE: {
                 if (null == getParentCardViewFragment() || getParentCardViewFragment().mPriceInfo == null) {
@@ -192,10 +194,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
                             getString(R.string.card_view_price_dialog_link) + "</a>"));
 
-                    MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
-                    adb.customView(v, false);
-                    adb.title(R.string.card_view_price_dialog_title);
-                    return adb.build();
+                    AlertDialog.Builder adb = new AlertDialog.Builder(getParentCardViewFragment().mActivity);
+                    adb.setView(v);
+                    adb.setTitle(R.string.card_view_price_dialog_title);
+                    return adb.create();
                 } else {
                     return DontShowDialog();
                 }
@@ -218,10 +220,14 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 getParentCardViewFragment().setInfoFromID(data.getDbId());
                             }
                         };
-                Dialog dialog = new MaterialDialog.Builder(requireActivity())
-                        .title(R.string.card_view_set_dialog_title)
-                        .adapter(adapter, null)
-                        .build();
+                RecyclerView rv = new RecyclerView(getContext());
+                rv.setLayoutManager(new LinearLayoutManager(getContext()));
+                rv.setAdapter(adapter);
+
+                Dialog dialog = new AlertDialog.Builder(requireActivity())
+                        .setTitle(R.string.card_view_set_dialog_title)
+                        .setView(rv)
+                        .create();
                 adapter.setDialogReference(dialog);
                 return dialog;
             }
@@ -259,10 +265,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 getParentCardViewFragment().mCard.getMultiverseId() + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
-                builder.title(R.string.card_view_rulings);
-                builder.customView(v, false);
-                return builder.build();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentCardViewFragment().mActivity);
+                builder.setTitle(R.string.card_view_rulings);
+                builder.setView(v);
+                return builder.create();
             }
             case WISH_LIST_COUNTS: {
                 if (null == getParentCardViewFragment()) {
@@ -295,15 +301,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 /* Sort alphabetically for convenience */
                 Arrays.sort(deckNames, String.CASE_INSENSITIVE_ORDER);
 
-                return new MaterialDialog.Builder(this.getParentCardViewFragment().mActivity)
-                        .title(R.string.decklist_select_dialog_title)
-                        .negativeText(R.string.dialog_cancel)
-                        .items(deckNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
-
+                return new AlertDialog.Builder(this.getParentCardViewFragment().mActivity)
+                        .setTitle(R.string.decklist_select_dialog_title)
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                        .setItems(deckNames, (dialog, which) -> {
                             try {
                                 // Read the decklist
-                                String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
+                                String deckFileName = deckNames[which] + DecklistFragment.DECK_EXTENSION;
                                 ArrayList<MtgCard> decklist =
                                         DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 
@@ -330,13 +334,12 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 getParentCardViewFragment().handleFamiliarDbException(false);
                             }
                         })
-                        .build();
+                        .create();
             }
             case SHARE_CARD: {
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity)
-                        .title(R.string.card_view_share_card)
-                        .positiveText(R.string.search_text)
-                        .onPositive((dialog, which) -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParentCardViewFragment().mActivity);
+                return builder.setTitle(R.string.card_view_share_card)
+                        .setPositiveButton(R.string.search_text, (dialog, which) -> {
                             View view = getParentCardViewFragment().getView();
                             if (view == null) {
                                 return;
@@ -360,9 +363,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             sendIntent.setType("text/plain");
                             startActivity(sendIntent);
                         })
-                        .negativeText(R.string.card_view_image)
-                        .onNegative((dialog, which) -> getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE));
-                return builder.build();
+                        .setNegativeButton(R.string.card_view_image, (dialog, which) -> getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE))
+                        .create();
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
@@ -455,10 +457,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return false;
                 });
 
-                MaterialDialog.Builder builder = new MaterialDialog.Builder(Objects.requireNonNull(getParentCardViewFragment()).mActivity);
-                builder.customView(lv, false);
-                builder.title(R.string.card_view_translated_dialog_title);
-                return builder.build();
+                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getParentCardViewFragment()).mActivity);
+                return builder.setView(lv)
+                        .setTitle(R.string.card_view_translated_dialog_title)
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

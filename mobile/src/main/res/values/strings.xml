@@ -87,7 +87,7 @@
     <!--"</string>-->
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
-    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.9.8"&gt;Changelog&lt;/a&gt;"</string>
+    <string name="main_whats_new_text" translatable="false">"&lt;a href="https://github.com/AEFeinstein/mtg-familiar/releases/tag/v3.9.9"&gt;Changelog&lt;/a&gt;"</string>
     <string name="main_tts_warning_title">"Text-to-Speech"</string>
     <string name="main_tts_warning_text">"This application has text-to-speech capability for some of its features, but you don't seem to have it installed. If you want to install it, use the Install Text-to-Speech link in the settings menu."</string>
     <string name="main_export_data_title">"Save Data to SD"</string>
@@ -118,8 +118,6 @@ Special thanks to Richard Garfield and the rest of the folks at &lt;a href=http:
 Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-&lt;br&gt;
-&lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; used under the MIT License&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;

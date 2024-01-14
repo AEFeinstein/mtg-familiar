@@ -29,10 +29,10 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.woxthebox.draglistview.DragItemAdapter;
@@ -167,33 +167,31 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         sortView.setCanDragHorizontally(false);
 
         /* Create the dialog */
-        MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
-        adb.customView(view, false);
-        adb.title(getResources().getString(R.string.wishlist_sort_by));
-        adb.negativeText(R.string.dialog_cancel);
-        adb.positiveText(getActivity().getResources().getString(R.string.dialog_ok));
-        adb.onPositive((dialog, which) -> {
-            /* Reordering the entries reorders the pairs */
-            StringBuilder orderByStr = new StringBuilder();
-            boolean first = true;
-            for (SortOption p : options) {
-                if (!first) {
-                    orderByStr.append(",");
-                }
-                orderByStr.append(p.mDatabaseKey);
-                if (p.mAscending) {
-                    orderByStr.append(" ").append(SQL_ASC);
-                } else {
-                    orderByStr.append(" ").append(SQL_DESC);
-                }
-                first = false;
-            }
-            if (null != getParentFamiliarFragment()) {
-                getParentFamiliarFragment().receiveSortOrder(orderByStr.toString());
-            }
-        });
-
-        return adb.build();
+        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+        return adb.setView(view)
+                .setTitle(getResources().getString(R.string.wishlist_sort_by))
+                .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getActivity().getResources().getString(R.string.dialog_ok), (dialog, which) -> {
+                    /* Reordering the entries reorders the pairs */
+                    StringBuilder orderByStr = new StringBuilder();
+                    boolean first = true;
+                    for (SortOption p : options) {
+                        if (!first) {
+                            orderByStr.append(",");
+                        }
+                        orderByStr.append(p.mDatabaseKey);
+                        if (p.mAscending) {
+                            orderByStr.append(" ").append(SQL_ASC);
+                        } else {
+                            orderByStr.append(" ").append(SQL_DESC);
+                        }
+                        first = false;
+                    }
+                    if (null != getParentFamiliarFragment()) {
+                        getParentFamiliarFragment().receiveSortOrder(orderByStr.toString());
+                    }
+                })
+                .create();
     }
 
     private static class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {

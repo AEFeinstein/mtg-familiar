@@ -103,7 +103,7 @@ public class SearchViewFragment extends FamiliarFragment {
     public String[] mFormatNames;
     private char[] mRarityCodes;
     public String[] mRarityNames;
-    public int[] mRarityCheckedIndices;
+    public boolean[] mRarityNamesChecked;
     public int mSelectedFormat;
 
     /* Autocomplete data structures */
@@ -182,10 +182,10 @@ public class SearchViewFragment extends FamiliarFragment {
 
             if (savedInstanceState != null) {
                 mSelectedFormat = savedInstanceState.getInt(SAVED_FORMAT_KEY);
-                mRarityCheckedIndices = savedInstanceState.getIntArray(SAVED_RARITY_KEY);
+                mRarityNamesChecked = savedInstanceState.getBooleanArray(SAVED_RARITY_KEY);
                 mSetCheckedIndices = savedInstanceState.getIntArray(SAVED_SET_KEY);
             } else {
-                mRarityCheckedIndices = new int[0];
+                mRarityNamesChecked = new boolean[i];
                 mSelectedFormat = -1;
             }
 
@@ -556,7 +556,7 @@ public class SearchViewFragment extends FamiliarFragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
-        outState.putIntArray(SAVED_RARITY_KEY, mRarityCheckedIndices);
+        outState.putBooleanArray(SAVED_RARITY_KEY, mRarityNamesChecked);
         outState.putIntArray(SAVED_SET_KEY, mSetCheckedIndices);
         super.onSaveInstanceState(outState);
     }
@@ -722,8 +722,10 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         StringBuilder rarityBuilder = new StringBuilder();
-        for (int index : mRarityCheckedIndices) {
-            rarityBuilder.append(mRarityCodes[index]);
+        for (int i = 0; i < mRarityCodes.length; i++) {
+            if (mRarityNamesChecked[i]) {
+                rarityBuilder.append(mRarityCodes[i]);
+            }
         }
         if (rarityBuilder.length() > 0) {
             searchCriteria.rarity = rarityBuilder.toString();
@@ -870,7 +872,7 @@ public class SearchViewFragment extends FamiliarFragment {
             mSetCheckedIndices = new int[0];
         }
         mSelectedFormat = -1;
-        mRarityCheckedIndices = new int[0];
+        mRarityNamesChecked = new boolean[mRarityNames.length];
         this.removeDialog(getParentFragmentManager());
 
         checkDialogButtonColors();
@@ -1054,18 +1056,10 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* Set rarity */
         if (criteria.rarity != null) {
-            ArrayList<Integer> rarityCheckedIndicesTmp = new ArrayList<>();
             /* For each rarity */
             for (int i = 0; i < mRarityCodes.length; i++) {
                 /* If the persisted options contain that rarity */
-                if (criteria.rarity.contains(String.valueOf(mRarityCodes[i]))) {
-                    /* Save that index */
-                    rarityCheckedIndicesTmp.add(i);
-                }
-            }
-            mRarityCheckedIndices = new int[rarityCheckedIndicesTmp.size()];
-            for (int i = 0; i < mRarityCheckedIndices.length; i++) {
-                mRarityCheckedIndices[i] = rarityCheckedIndicesTmp.get(i);
+                mRarityNamesChecked[i] = criteria.rarity.contains(String.valueOf(mRarityCodes[i]));
             }
         }
 
@@ -1155,7 +1149,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mFormatButton.setTextColor(ContextCompat.getColor(requireContext(), getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
 
-        if (mSetCheckedIndices == null || mRarityCheckedIndices == null) {
+        if (mSetCheckedIndices == null || mRarityNamesChecked == null) {
             return;
         }
 
@@ -1163,8 +1157,11 @@ public class SearchViewFragment extends FamiliarFragment {
         if (mSelectedFormat != -1) {
             mFormatButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
-        if (mRarityCheckedIndices.length > 0) {
-            mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
+        for (boolean checked : mRarityNamesChecked) {
+            if (checked) {
+                mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
+                break;
+            }
         }
     }
 

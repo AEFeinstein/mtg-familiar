@@ -34,9 +34,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.ComponentDialog;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.FamiliarLogger;
@@ -55,6 +57,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_TTS = 103;
     public static final int DIALOG_LOGGING = 104;
     public static final int DIALOG_UPDATE = 105;
+    public static final int DIALOG_UPDATE_RESULT = 106;
 
     /**
      * Overridden to create the specific dialogs
@@ -71,7 +74,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(this.requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.requireActivity());
 
         assert getActivity().getPackageManager() != null;
 
@@ -81,14 +84,14 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the title with the package version if possible */
                 try {
-                    builder.title(getString(R.string.main_about) + " " + getString(R.string.app_name) + " " +
+                    builder.setTitle(getString(R.string.main_about) + " " + getString(R.string.app_name) + " " +
                             getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
                 } catch (PackageManager.NameNotFoundException e) {
-                    builder.title(getString(R.string.main_about) + " " + getString(R.string.app_name));
+                    builder.setTitle(getString(R.string.main_about) + " " + getString(R.string.app_name));
                 }
 
                 /* Set the neutral button */
-                builder.neutralText(R.string.dialog_thanks);
+                builder.setNeutralButton(R.string.dialog_thanks, (dialog, which) -> dialog.dismiss());
 
                 /* Set the custom view, with some images below the text */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
@@ -97,19 +100,19 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
                 text.setMovementMethod(LinkMovementMethod.getInstance());
-                builder.customView(dialogLayout, false);
+                builder.setView(dialogLayout);
 
-                return builder.build();
+                return builder.create();
             }
             case DIALOG_CHANGE_LOG: {
                 try {
-                    builder.title(getString(R.string.main_whats_new_in_title) + " " +
+                    builder.setTitle(getString(R.string.main_whats_new_in_title) + " " +
                             getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
                 } catch (PackageManager.NameNotFoundException e) {
-                    builder.title(R.string.main_whats_new_title);
+                    builder.setTitle(R.string.main_whats_new_title);
                 }
 
-                builder.neutralText(R.string.dialog_enjoy);
+                builder.setNeutralButton(R.string.dialog_enjoy, (dialog, which) -> dialog.dismiss());
 
                 /* Set the custom view, with some images below the text */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
@@ -121,17 +124,17 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
                 dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-                builder.customView(dialogLayout, false);
+                builder.setView(dialogLayout);
 
-                return builder.build();
+                return builder.create();
             }
 //            case DIALOG_DONATE: {
 //                /* Set the title */
-//                builder.title(R.string.main_donate_dialog_title);
+//                builder.setTitle(R.string.main_donate_dialog_title);
 //                /* Set the buttons button */
-//                builder.negativeText(R.string.dialog_thanks_anyway);
+//                builder.setNegativeButton(R.string.dialog_thanks_anyway);
 //
-//                builder.positiveText(R.string.main_donate_title);
+//                builder.setPositiveButton(R.string.main_donate_title);
 //                builder.onPositive((dialog, which) -> {
 //                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(FamiliarActivity.PAYPAL_URL));
 //                    startActivity(myIntent);
@@ -158,16 +161,15 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 //                });
 //                dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
 //
-//                builder.customView(dialogLayout, false);
-//                return builder.build();
+//                builder.setView(dialogLayout, false);
+//                return builder.create();
 //            }
             case DIALOG_TTS: {
                 /* Then display a dialog informing them of TTS */
 
-                builder.title(R.string.main_tts_warning_title)
-                        .content(R.string.main_tts_warning_text)
-                        .positiveText(R.string.main_install_tts)
-                        .onPositive((dialog, which) -> {
+                builder.setTitle(R.string.main_tts_warning_title)
+                        .setMessage(R.string.main_tts_warning_text)
+                        .setPositiveButton(R.string.main_install_tts, (dialog, which) -> {
                             /* TTS couldn't init, try installing TTS data */
                             try {
                                 Intent installIntent = new Intent();
@@ -181,19 +183,33 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                             }
                             dialog.dismiss();
                         })
-                        .negativeText(R.string.dialog_cancel);
-                return builder.build();
+                        .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> dialog.dismiss());
+                return builder.create();
             }
             case DIALOG_LOGGING: {
                 return FamiliarLogger.createDialog(getFamiliarActivity(), builder);
             }
             case DIALOG_UPDATE: {
                 // Show a dialog for database updates
-                builder.title(R.string.update_notification)
-                        .customView(getActivity().getLayoutInflater().inflate(R.layout.activity_dialog_update, null, false), false)
-                        .cancelable(false)
-                        .canceledOnTouchOutside(false);
-                return builder.build();
+                ComponentDialog dialog = builder.setTitle(R.string.update_notification)
+                        .setView(R.layout.activity_dialog_update)
+                        .setCancelable(false)
+                        .create();
+                dialog.getOnBackPressedDispatcher().addCallback(requireActivity(),
+                        new OnBackPressedCallback(true) {
+                            @Override
+                            public void handleOnBackPressed() {
+                                // Consume backs
+                            }
+                        });
+                dialog.setCanceledOnTouchOutside(false);
+                return dialog;
+            }
+            case DIALOG_UPDATE_RESULT: {
+                return builder.setTitle(R.string.update_notification)
+                        .setMessage(requireArguments().getString(ID_ARG_STR))
+                        .setPositiveButton(R.string.dialog_ok, (dialog, which) -> dialog.dismiss())
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

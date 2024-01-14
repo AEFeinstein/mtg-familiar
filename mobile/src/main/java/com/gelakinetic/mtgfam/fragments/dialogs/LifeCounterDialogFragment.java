@@ -24,8 +24,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
@@ -66,7 +66,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         mDialogId = requireArguments().getInt(ID_KEY);
 
         if (null == getParentLifeCounterFragment()) {
@@ -82,40 +82,38 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                 }
 
                 /* Build the dialog */
-                builder.title(getString(R.string.life_counter_remove_player));
+                builder.setTitle(getString(R.string.life_counter_remove_player));
 
-                builder.items(names)
-                        .itemsCallback((dialog, itemView, position, text) -> {
-                            /* Remove the view from the GridLayout based on display mode, then remove the player
-                               from the ArrayList and redraw. Also notify other players to remove this player from
-                               the commander list, and reset the main commander player view in case that player was
-                               removed */
-                            if (getParentLifeCounterFragment().mDisplayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
-                                getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(position).mCommanderRowView);
-                            } else {
-                                getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(position).mView);
-                            }
-                            getParentLifeCounterFragment().mPlayers.remove(position);
-                            getParentLifeCounterFragment().resizeAllPlayers();
-                            getParentLifeCounterFragment().mGridLayout.invalidate();
+                builder.setItems(names, (dialog, which) -> {
+                    /* Remove the view from the GridLayout based on display mode, then remove the player
+                       from the ArrayList and redraw. Also notify other players to remove this player from
+                       the commander list, and reset the main commander player view in case that player was
+                       removed */
+                    if (getParentLifeCounterFragment().mDisplayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
+                        getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(which).mCommanderRowView);
+                    } else {
+                        getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(which).mView);
+                    }
+                    getParentLifeCounterFragment().mPlayers.remove(which);
+                    getParentLifeCounterFragment().resizeAllPlayers();
+                    getParentLifeCounterFragment().mGridLayout.invalidate();
 
-                            getParentLifeCounterFragment().setCommanderInfo(position);
+                    getParentLifeCounterFragment().setCommanderInfo(which);
 
-                            if (getParentLifeCounterFragment().mDisplayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
-                                getParentLifeCounterFragment().mCommanderPlayerView.removeAllViews();
-                                if (getParentLifeCounterFragment().mPlayers.size() > 0) {
-                                    getParentLifeCounterFragment().mCommanderPlayerView.addView(getParentLifeCounterFragment().mPlayers.get(0).mView);
-                                }
-                            }
-                        });
+                    if (getParentLifeCounterFragment().mDisplayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
+                        getParentLifeCounterFragment().mCommanderPlayerView.removeAllViews();
+                        if (getParentLifeCounterFragment().mPlayers.size() > 0) {
+                            getParentLifeCounterFragment().mCommanderPlayerView.addView(getParentLifeCounterFragment().mPlayers.get(0).mView);
+                        }
+                    }
+                });
 
-                return builder.build();
+                return builder.create();
             }
             case DIALOG_RESET_CONFIRM: {
-                builder.content(getString(R.string.life_counter_clear_dialog_text))
-                        .cancelable(true)
-                        .positiveText(getString(R.string.dialog_both))
-                        .onPositive((dialog, which) -> {
+                builder.setMessage(getString(R.string.life_counter_clear_dialog_text))
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.dialog_both), (dialog, which) -> {
                             /* Remove all players, then add defaults */
                             getParentLifeCounterFragment().mPlayers.clear();
                             getParentLifeCounterFragment().mLargestPlayerNumber = 0;
@@ -128,8 +126,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                             getParentLifeCounterFragment().changeDisplayMode(false);
                             dialog.dismiss();
                         })
-                        .neutralText(getString(R.string.dialog_life))
-                        .onNeutral((dialog, which) -> {
+                        .setNeutralButton(getString(R.string.dialog_life), (dialog, which) -> {
                             /* Only reset life totals */
                             for (LcPlayer player : getParentLifeCounterFragment().mPlayers) {
                                 player.resetStats();
@@ -137,27 +134,26 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                             getParentLifeCounterFragment().mGridLayout.invalidate();
                             dialog.dismiss();
                         })
-                        .negativeText(getString(R.string.dialog_cancel));
+                        .setNegativeButton(getString(R.string.dialog_cancel), (dialog, which) -> dialog.dismiss());
 
-                return builder.build();
+                return builder.create();
             }
             case DIALOG_CHANGE_DISPLAY: {
 
-                builder.title(R.string.pref_display_mode_title);
-                builder.items(getResources().getStringArray(R.array.display_array_entries))
-                        .itemsCallbackSingleChoice(getParentLifeCounterFragment().mDisplayMode,
-                                (dialog, itemView, which, text) -> {
+                builder.setTitle(R.string.pref_display_mode_title)
+                        .setSingleChoiceItems(R.array.display_array_entries,
+                                getParentLifeCounterFragment().mDisplayMode,
+                                (dialog, which) -> {
                                     dialog.dismiss();
 
                                     if (getParentLifeCounterFragment().mDisplayMode != which) {
                                         getParentLifeCounterFragment().mDisplayMode = which;
                                         getParentLifeCounterFragment().changeDisplayMode(true);
                                     }
-                                    return true;
                                 }
                         );
 
-                return builder.build();
+                return builder.create();
             }
             case DIALOG_SET_GATHERING: {
                 /* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
@@ -177,13 +173,12 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                 }
 
                 /* Set the AlertDialog title, items */
-                builder.title(R.string.life_counter_gathering_dialog_title);
-                builder.items(properNames)
-                        .itemsCallback((dialog, itemView, position, text) -> {
+                return builder.setTitle(R.string.life_counter_gathering_dialog_title)
+                        .setItems(properNames, (dialog, which) -> {
                             /* Read the gathering from XML, clear and set all the info! changeDisplayMode() adds
                                the player Views */
                             Gathering gathering = GatheringsIO
-                                    .ReadGatheringXML(gatherings.get(position), getActivity().getFilesDir());
+                                    .ReadGatheringXML(gatherings.get(which), getActivity().getFilesDir());
 
                             getParentLifeCounterFragment().mDisplayMode = gathering.mDisplayMode;
 
@@ -195,8 +190,8 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
 
                             getParentLifeCounterFragment().setCommanderInfo(-1);
                             getParentLifeCounterFragment().changeDisplayMode(false);
-                        });
-                return builder.build();
+                        })
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

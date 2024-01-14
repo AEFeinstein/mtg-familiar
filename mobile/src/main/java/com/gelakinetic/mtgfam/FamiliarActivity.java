@@ -1387,6 +1387,17 @@ public class FamiliarActivity extends AppCompatActivity {
      * @return The FamiliarActivityDialogFragment which was created
      */
     public FamiliarActivityDialogFragment showDialogFragment(final int id) throws IllegalStateException {
+        return showDialogFragment(id, null);
+    }
+
+    /**
+     * Dismiss any currently showing dialogs, then show the requested one.
+     *
+     * @param id     the ID of the dialog to show
+     * @param argstr A string to use in the dialog
+     * @return The FamiliarActivityDialogFragment which was created
+     */
+    public FamiliarActivityDialogFragment showDialogFragment(final int id, String argstr) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -1396,6 +1407,7 @@ public class FamiliarActivity extends AppCompatActivity {
         FamiliarActivityDialogFragment newFragment = new FamiliarActivityDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        arguments.putString(FamiliarDialogFragment.ID_ARG_STR, argstr);
         newFragment.setArguments(arguments);
         newFragment.show(getSupportFragmentManager(), FamiliarActivity.DIALOG_TAG);
         return newFragment;
@@ -1565,7 +1577,7 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public int getResourceIdFromAttr(int attr) {
         assert getTheme() != null;
-        int resId = R.color.glyph_grey;
+        int resId;
         try (TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr})) {
             resId = ta.getResourceId(0, 0);
         }
@@ -1580,7 +1592,7 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public static int getResourceIdFromAttr(Context c, int attr) {
         assert c.getTheme() != null;
-        int resId = R.color.glyph_grey;
+        int resId;
         try (TypedArray ta = c.getTheme().obtainStyledAttributes(new int[]{attr})) {
             resId = ta.getResourceId(0, 0);
         }

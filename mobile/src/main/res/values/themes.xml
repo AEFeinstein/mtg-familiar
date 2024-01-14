@@ -64,9 +64,6 @@
 
         <item name="button">@style/button_light</item>
 
-        <!-- Use light theme for dialogs -->
-        <item name="md_dark_theme">false</item>
-
         <item name="ic_drawer_about">@drawable/ic_drawer_about_light</item>
         <item name="ic_drawer_deck">@drawable/ic_drawer_deck_light</item>
         <item name="ic_drawer_dice">@drawable/ic_drawer_dice_light</item>
@@ -131,12 +128,6 @@
         <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
 
         <item name="button">@style/button_dark</item>
-
-        <!-- Use dark theme for dialogs -->
-        <item name="md_dark_theme">true</item>
-        <item name="md_positive_color">@android:color/secondary_text_dark</item>
-        <item name="md_neutral_color">@android:color/secondary_text_dark</item>
-        <item name="md_negative_color">@android:color/secondary_text_dark</item>
 
         <item name="ic_drawer_about">@drawable/ic_drawer_about_dark</item>
         <item name="ic_drawer_deck">@drawable/ic_drawer_deck_dark</item>
