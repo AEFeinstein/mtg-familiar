@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.gelakinetic.mtgfam.helpers;
 
@@ -33,7 +33,7 @@ import java.util.zip.ZipFile;
  */
 class BuildDate {
     /**
-     * <a href="http://stackoverflow.com/questions/7607165/how-to-write-build-time-stamp-into-apk">...</a>
+     * <a href="https://stackoverflow.com/questions/7607165/how-to-write-build-time-stamp-into-apk">...</a>
      *
      * @param context the application context
      * @return a Date object with the time the APK was built

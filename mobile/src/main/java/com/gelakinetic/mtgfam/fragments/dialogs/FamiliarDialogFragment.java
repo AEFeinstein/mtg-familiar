@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments.dialogs;
@@ -76,7 +76,7 @@ public class FamiliarDialogFragment extends DialogFragment {
 
     /**
      * first saving my state, so the bundle wont be empty.
-     * http://code.google.com/p/android/issues/detail?id=19917
+     * https://code.google.com/p/android/issues/detail?id=19917
      *
      * @param outState Bundle in which to place your saved state.
      */
@@ -114,7 +114,7 @@ public class FamiliarDialogFragment extends DialogFragment {
 
     /**
      * Fixes a bug on rotation
-     * http://stackoverflow.com/questions/8235080/fragments-dialogFragment-and-screen-rotation
+     * https://stackoverflow.com/questions/8235080/fragments-dialogFragment-and-screen-rotation
      */
     @Override
     public void onDestroyView() {

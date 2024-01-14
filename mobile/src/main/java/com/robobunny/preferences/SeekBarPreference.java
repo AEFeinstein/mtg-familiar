@@ -18,8 +18,8 @@ import com.gelakinetic.mtgfam.R;
 
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
 
-    private static final String ANDROIDNS = "http://schemas.android.com/apk/res/android";
-    private static final String APPLICATIONNS = "http://robobunny.com";
+    private static final String ANDROIDNS = "https://schemas.android.com/apk/res/android";
+    private static final String APPLICATIONNS = "https://robobunny.com";
     private static final int DEFAULT_VALUE = 50;
     private int mMaxValue = 100;
     private int mMinValue = 0;

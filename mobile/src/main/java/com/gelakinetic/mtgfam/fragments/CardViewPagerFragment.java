@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -239,7 +239,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
 
     /**
      * Just to be fancy, lets spice up the transformation
-     * http://developer.android.com/training/animation/screen-slide.html
+     * https://developer.android.com/training/animation/screen-slide.html
      */
     static class DepthPageTransformer implements ViewPager.PageTransformer {
 

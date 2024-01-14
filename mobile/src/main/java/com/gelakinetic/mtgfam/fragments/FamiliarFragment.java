@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -50,7 +50,7 @@ public abstract class FamiliarFragment extends Fragment {
     Runnable mAfterSearchClosedRunnable = null;
 
     /**
-     * http://developer.android.com/reference/android/app/Fragment.html
+     * https://developer.android.com/reference/android/app/Fragment.html
      * All subclasses of Fragment must include a public empty constructor. The framework will often re-instantiate a
      * fragment class when needed, in particular during state restore, and needs to be able to find this constructor
      * to instantiate it. If the empty constructor is not available, a runtime exception will occur in some cases during
@@ -113,7 +113,7 @@ public abstract class FamiliarFragment extends Fragment {
 
     /**
      * first saving my state, so the bundle wont be empty.
-     * http://code.google.com/p/android/issues/detail?id=19917
+     * https://code.google.com/p/android/issues/detail?id=19917
      *
      * @param outState Bundle in which to place your saved state.
      */

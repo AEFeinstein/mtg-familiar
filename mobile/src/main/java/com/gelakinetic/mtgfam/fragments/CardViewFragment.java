@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -443,7 +443,7 @@ public class CardViewFragment extends FamiliarFragment {
             SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
-            /* http://magiccards.info/scans/en/mt/55.jpg */
+            /* https://magiccards.info/scans/en/mt/55.jpg */
             mCard = new MtgCard(database, cCardById);
 
             switch (mCard.getRarity()) {

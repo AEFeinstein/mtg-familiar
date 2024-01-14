@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MTG Familiar.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -441,7 +441,7 @@ public class ResultListFragment extends FamiliarFragment {
                 Random rand = new Random(System.currentTimeMillis());
 
                 /* Shuffle the array of ids */
-                /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
+                /* implements https://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
                 long temp;
                 int k, j;
                 for (k = cardIds.length - 1; k > 0; k--) {
