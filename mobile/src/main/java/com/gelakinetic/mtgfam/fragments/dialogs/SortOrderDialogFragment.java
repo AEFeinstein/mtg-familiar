@@ -76,6 +76,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             boolean rarityAdded = false;
             boolean setAdded = false;
             boolean colorIdentityAdded = false;
+            boolean subtypeAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -92,6 +93,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     case CardDbAdapter.KEY_SUPERTYPE: {
                         name = getResources().getString(R.string.search_supertype);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_SUBTYPE: {
+                        name = getResources().getString(R.string.search_subtype);
+                        subtypeAdded = true;
                         break;
                     }
                     case CardDbAdapter.KEY_CMC: {
@@ -156,6 +162,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             if (!colorIdentityAdded) {
                 options.add(new SortOption(getString(R.string.search_color_identity_title),
                         false, CardDbAdapter.KEY_COLOR_IDENTITY, idx++));
+            }
+
+            if (!subtypeAdded) {
+                options.add(new SortOption(getString(R.string.search_subtype),
+                        true, CardDbAdapter.KEY_SUBTYPE, idx++));
             }
         }
 
