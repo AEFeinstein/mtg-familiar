@@ -277,6 +277,7 @@ public class DbUpdater {
                             try (InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, mContext)) {
                                 /* Update the dialog to the set being added */
                                 listener.updateTitle(1, String.format(mContext.getString(R.string.update_updating_set), set.mName));
+                                listener.updateProgress(1, 0);
                                 if (streamToRead != null) {
                                     ArrayList<Card> cardsToAdd = new ArrayList<>();
                                     ArrayList<Expansion> setsToAdd = new ArrayList<>();
