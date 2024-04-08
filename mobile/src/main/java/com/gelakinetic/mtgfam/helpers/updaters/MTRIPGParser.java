@@ -110,6 +110,7 @@ class MTRIPGParser {
 
         /* Update the dialog with the document being processed */
         listener.updateTitle(1, String.format(mContext.getString(R.string.update_updating_set), output.getName()));
+        listener.updateProgress(1, 0);
 
         try {
             if (output != null && !output.exists()) {
