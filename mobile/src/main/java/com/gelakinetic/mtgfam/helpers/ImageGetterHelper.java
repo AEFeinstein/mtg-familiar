@@ -146,6 +146,16 @@ public class ImageGetterHelper {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_pr);
             } else if (source.equalsIgnoreCase("pg") || source.equalsIgnoreCase("gp")) {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_pg);
+            } else if (source.equalsIgnoreCase("cw") || source.equalsIgnoreCase("wc")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_cw);
+            } else if (source.equalsIgnoreCase("cu") || source.equalsIgnoreCase("uc")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_cu);
+            } else if (source.equalsIgnoreCase("cb") || source.equalsIgnoreCase("bc")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_cb);
+            } else if (source.equalsIgnoreCase("cr") || source.equalsIgnoreCase("rc")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_cr);
+            } else if (source.equalsIgnoreCase("cg") || source.equalsIgnoreCase("gc")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_cg);
             } else if (source.equalsIgnoreCase("p")) {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_p);
             } else if (source.equalsIgnoreCase("bgp") || source.equalsIgnoreCase("bpg") || source.equalsIgnoreCase("gbp") || source.equalsIgnoreCase("gpb") || source.equalsIgnoreCase("pbg") || source.equalsIgnoreCase("pgb")) {
@@ -178,6 +188,8 @@ public class ImageGetterHelper {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_hr);
             } else if (source.equalsIgnoreCase("hw") || source.equalsIgnoreCase("wh")) {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_hw);
+            } else if (source.equalsIgnoreCase("½")) {
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
             } else if (source.equalsIgnoreCase("c")) {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_c);
             } else if (source.equalsIgnoreCase("chaos")) {
@@ -189,7 +201,7 @@ public class ImageGetterHelper {
             } else if (source.equalsIgnoreCase("x")) {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_x);
             } else if (source.equalsIgnoreCase("h")) {
-                d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
+                d = ContextCompat.getDrawable(context, R.drawable.glyph_h);
             } else if (source.equalsIgnoreCase("pwk")) {
                 d = ContextCompat.getDrawable(context, R.drawable.glyph_pwk);
             } else if (source.equalsIgnoreCase("e")) {

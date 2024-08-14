@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright 2024 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+  <path
+      android:pathData="M50,50m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0"
+      android:fillColor="@color/glyph_grey"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M85.35,14.64C94.4,23.69 100,36.19 100,50 100,77.61 77.61,100 50,100c-13.81,0 -26.31,-5.6 -35.35,-14.65"
+      android:fillColor="@color/glyph_blue"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M76.72,83.68c-2.69,2.74 -6.01,4.11 -9.95,4.11 -4.42,0 -7.93,-1.51 -10.52,-4.54 -2.45,-2.88 -3.68,-6.56 -3.68,-11.03 0,-4.8 2.09,-10.28 6.27,-16.43 3.41,-5.05 7.42,-9.47 12.04,-13.26 -0.67,3.08 -1.01,5.26 -1.01,6.56 0,2.98 0.94,5.89 2.81,8.72 2.31,3.37 4.06,5.86 5.26,7.5 1.87,2.84 2.81,5.6 2.81,8.29 0,3.99 -1.34,7.35 -4.03,10.09ZM76.65,68.29c-0.72,-1.61 -1.56,-2.68 -2.52,-3.21 0.14,0.29 0.22,0.7 0.22,1.23 0,1.01 -0.29,2.45 -0.86,4.32l-0.94,2.88c0,1.68 0.84,2.52 2.52,2.52 1.78,0 2.67,-1.18 2.67,-3.53 0,-1.2 -0.36,-2.61 -1.08,-4.22Z"
+      android:fillColor="@color/glyph_foreground"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M33,8c1.58,3.13 3.51,6.18 5.8,9.13a58.59,58.59 0,0 0,3.35 3.88,57.48 57.48,0 0,0 4.11,4 45.35,45.35 0,0 0,4.94 3.75A45.56,45.56 0,0 0,57 32.01c-3.05,1.61 -6.07,3.57 -9.07,5.9a57.91,57.91 0,0 0,-3.92 3.36,55.06 55.06,0 0,0 -3.99,4.15 53.81,53.81 0,0 0,-3.76 4.94A47.27,47.27 0,0 0,33 56c-1.53,-2.97 -3.43,-5.9 -5.71,-8.81 -1.96,-2.48 -4.44,-5.09 -7.43,-7.84 -2.99,-2.75 -6.61,-5.2 -10.85,-7.35 3.05,-1.57 6.07,-3.51 9.07,-5.82 2.56,-2 5.19,-4.49 7.91,-7.48C28.7,15.72 31.04,12.16 33,8ZM29.41,41.51c1.44,1.81 2.62,3.64 3.55,5.49 1.22,-2.58 2.67,-4.78 4.38,-6.64 1.71,-1.87 3.37,-3.42 4.97,-4.68A39.33,39.33 0,0 1,48 31.99c-2.65,-1.19 -4.89,-2.64 -6.74,-4.34 -1.85,-1.69 -3.41,-3.33 -4.67,-4.92A30.67,30.67 0,0 1,32.96 17c-1.21,2.62 -2.66,4.86 -4.34,6.72 -1.68,1.87 -3.32,3.41 -4.92,4.68A34.24,34.24 0,0 1,18 32c2.65,1.36 4.9,2.89 6.78,4.59 1.87,1.69 3.42,3.34 4.63,4.92Z"
+      android:fillColor="@color/glyph_foreground"
+      android:fillType="evenOdd"/>
+</vector>
