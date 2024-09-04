@@ -1985,13 +1985,15 @@ public class CardDbAdapter {
 
         mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
 
+        // Remove the card's current legalities first
+        mDb.delete(DATABASE_TABLE_CARD_LEGALITIES, KEY_NAME + " = " + sanitizeString(card.getName(), false), null);
         // Put the card legality info in another table
         for (String format : card.mLegalities.keySet()) {
             ContentValues legalityValues = new ContentValues();
             legalityValues.put(KEY_NAME, card.getName());
             legalityValues.put(KEY_FORMAT, format);
             legalityValues.put(KEY_LEGALITY, card.mLegalities.get(format));
-            mDb.replace(DATABASE_TABLE_CARD_LEGALITIES, null, legalityValues);
+            mDb.insert(DATABASE_TABLE_CARD_LEGALITIES, null, legalityValues);
         }
     }
 
