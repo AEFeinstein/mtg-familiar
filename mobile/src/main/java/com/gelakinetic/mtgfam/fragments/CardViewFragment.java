@@ -1436,7 +1436,7 @@ public class CardViewFragment extends FamiliarFragment {
             String gathererPage = gpBuilder.toString();
 
             Document document = Jsoup.parse(gathererPage);
-            Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
+            Elements rulingTable = document.select("div[id*=rulingsContainer] > table > tbody > tr");
 
             for (Element ruling : rulingTable) {
                 String date = ruling.children().get(0).text();
