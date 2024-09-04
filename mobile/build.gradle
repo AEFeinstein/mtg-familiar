@@ -142,13 +142,13 @@ android {
 
 dependencies {
 // Desugar to make APIs backwards compatible
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.4'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.1.2'
 
 // AndroidX
     annotationProcessor 'androidx.annotation:annotation:1.8.2'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.fragment:fragment:1.8.2'
+    implementation 'androidx.fragment:fragment:1.8.3'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.material:material:1.12.0'
 
@@ -186,13 +186,13 @@ dependencies {
     }
 
 // Testing
-    androidTestImplementation 'androidx.test:runner:1.6.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test:rules:1.6.1'
 
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:3.0'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-core:5.13.0'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
