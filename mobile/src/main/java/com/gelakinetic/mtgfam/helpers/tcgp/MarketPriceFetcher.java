@@ -42,14 +42,25 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -111,12 +122,20 @@ public class MarketPriceFetcher {
                         /* Request a token. This will initialize the TcgpApi object */
                         AccessToken token;
                         try {
-                            TcgpKeys keys = new Gson().fromJson(new InputStreamReader(mActivity.getAssets().open("tcgp_keys.json")), TcgpKeys.class);
-                            token = api.getAccessToken(keys.PUBLIC_KEY, keys.PRIVATE_KEY, keys.ACCESS_TOKEN);
+                            SecretKey sk = new SecretKeySpec(context.getString(R.string.key_lastLegalityUpdate).substring(0, 16).getBytes(StandardCharsets.UTF_8), "AES");
+                            IvParameterSpec iv = new IvParameterSpec(sk.getEncoded());
+                            String a = "AES/CBC/PKCS5Padding";
+                            token = api.getAccessToken(
+                                    MarketPriceFetcher.decrypt(a, "j9mxAigDGtwUdJscE38NUh6CKK2EpiPCG/pDURUxAeC8+6btP2GvRQf0In29Wn3T", sk, iv),
+                                    MarketPriceFetcher.decrypt(a, "F10/olisSsKYo/ZJfNiIq6kmd1u+zZZuQTSAa7MGdu47CF+z6eYgLK/HPAV+xQA6", sk, iv),
+                                    MarketPriceFetcher.decrypt(a, "gr3dWliDja7s0d5OYWxdhe/XV9+v1UgTO2e7rRB8doxeAerUcdM9IdSutoqpy0UZ", sk, iv));
                             /* Save the token and expiration date */
                             PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
                             PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
-                        } catch (FileNotFoundException e) {
+                        } catch (FileNotFoundException | InvalidAlgorithmParameterException |
+                                 NoSuchPaddingException | NoSuchAlgorithmException |
+                                 BadPaddingException | InvalidKeyException |
+                                 IllegalBlockSizeException e) {
                             return Single.error(new Exception(mActivity.getString(R.string.price_error_api_key)));
                         }
                     } else {
@@ -445,5 +464,15 @@ public class MarketPriceFetcher {
         mFutures.clear();
         mActivity.clearLoading();
         mCheckFutureRunnable = null;
+    }
+
+    public static String decrypt(String algorithm, String cipherText, SecretKey key,
+                                 IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException, InvalidKeyException,
+            BadPaddingException, IllegalBlockSizeException {
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.DECRYPT_MODE, key, iv);
+        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
+        return new String(plainText);
     }
 }
