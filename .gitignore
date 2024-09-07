@@ -41,3 +41,5 @@ local.properties
 mobile/src/main/assets/tcgp_keys.json
 /mobile/release/output-metadata.json
 *.aab
+*.dm
+/mobile/debug/output-metadata.json
