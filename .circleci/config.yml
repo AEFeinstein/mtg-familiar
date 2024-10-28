@@ -10,7 +10,7 @@ jobs:
 
     docker:
       # specify a container to build in, should match project API level
-      - image: cimg/android:2023.08.1
+      - image: cimg/android:2024.10
 
     environment:
       # Customize the JVM maximum heap limit
@@ -40,6 +40,11 @@ jobs:
       - run:
           name: Build debug APK
           command: ./gradlew :mobile:assembleDebug
+
+      # Build the release APK
+      - run:
+          name: Build release APK
+          command: ./gradlew :mobile:assembleRelease
 
       # Run tests. Note, not running :mobile:check
       - run:
