@@ -41,8 +41,8 @@ MTG Familiar is an Android app which has a suite of tools to play Magic: The Gat
 <a href="https://play.google.com/store/apps/details?id=com.gelakinetic.mtgfam">
 	<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="240" alt="Google Play">
 </a>
-<a href="https://f-droid.org/repository/browse/?fdid=com.gelakinetic.mtgfam">
-	<img src="https://gitlab.com/fdroid/artwork/-/raw/master/badge/get-it-on-en-us.png" width="240" alt="F-Droid">
+<a href="https://f-droid.org/packages/com.gelakinetic.mtgfam">
+    <img src="https://f-droid.org/badge/get-it-on.png" width="240" alt="Get it on F-Droid" >
 </a>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.gelakinetic.mtgfam">
 	<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="240" alt="IzzyOnDroid">
