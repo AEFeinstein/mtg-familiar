@@ -118,7 +118,7 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="search_power">"Sila"</string>
     <string name="search_toughness">"Odolnosť"</string>
 
-    <!-- We don't use CMC often in Slovakia, rather simply Mana cost. I know it's not the same, but it expresses it better than CMC. I will use Mana cost. -->
+    <!-- We don't use Mana Value often in Slovakia, rather simply Mana cost. I know it's not the same, but it expresses it better than Mana Value. I will use Mana cost. -->
     <string name="search_cmc">"Manová cena"</string>
 
     <!-- this has an {X} after it in layout -->
@@ -349,9 +349,9 @@ Pravidlá si môžete kedykoľvek prečítať z menu.&lt;br&gt;
 Pero a papier môžu byť užitočné pre sledovanie stavu hry. Bohužiaľ, MTG Familiar nemôže vytvoriť skutočné karty.&lt;br&gt;
 &lt;br&gt;
 Veľa šťastia a zabavte sa!"</string>
-    <string name="mojhosto_momir_label">"CMC ="</string>
+    <string name="mojhosto_momir_label">"Mana Value ="</string>
     <string name="mojhosto_random_creature">"Náhodná bytosť"</string>
-    <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
+    <string name="mojhosto_stonehewer_label">"Mana Value ≤"</string>
     <string name="mojhosto_random_equipment">"Náhodné vybavenie"</string>
     <string name="mojhosto_random_instants">"Náhodný instant"</string>
     <string name="mojhosto_random_sorceries">"Náhodné sorcery"</string>
@@ -603,7 +603,7 @@ Standard ....... Not Legal -->
     <!-- Deck Stats -->
     <string name="type_distribution">"Distribúcia typu"</string>
     <string name="mana_value_distribution">"Distribúcia symbolov many"</string>
-    <string name="cmc_graph">"Graf CMC"</string>
+    <string name="cmc_graph">"Graf Mana Value"</string>
     <string name="card_colors">"Farby kariet"</string>
     <string name="pref_search_languages_title">"Hľadať jazyky"</string>
     <string name="pref_search_languages_summary">"Jazyky používané na vyhľadávanie kariet (predvolená: angličtina)"</string>

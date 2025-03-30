@@ -115,7 +115,7 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="search_text">"Texte"</string>
     <string name="search_power">"Force"</string>
     <string name="search_toughness">"Endurance"</string>
-    <string name="search_cmc">"CMC"</string>
+    <string name="search_cmc">"Mana Value"</string>
 
     <!-- this has an {X} after it in layout -->
     <string name="search_set">"Extension"</string>
@@ -337,11 +337,11 @@ Bonne chance, et bon jeu!
 "</string>
 
     <!-- Fuzzy -->
-    <string name="mojhosto_momir_label">"CMC ="</string>
+    <string name="mojhosto_momir_label">"Mana Value ="</string>
     <string name="mojhosto_random_creature">"Créature aléatoire"</string>
 
     <!-- Fuzzy -->
-    <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
+    <string name="mojhosto_stonehewer_label">"Mana Value ≤"</string>
     <string name="mojhosto_random_equipment">"Equipement aléatoire"</string>
     <string name="mojhosto_random_instants">"3 éphémères aléatoires"</string>
     <string name="mojhosto_random_sorceries">"3 rituels aléatoires"</string>
@@ -589,7 +589,7 @@ Standard ....... Not Legal -->
     <!-- Deck Stats -->
     <string name="type_distribution">"Distribution de Type"</string>
     <string name="mana_value_distribution">"Distribution des Symboles de Mana"</string>
-    <string name="cmc_graph">"Graphique CMC"</string>
+    <string name="cmc_graph">"Graphique Mana Value"</string>
     <string name="card_colors">"Couleurs de Carte"</string>
     <string name="pref_search_languages_title">"Chercher Langues"</string>
     <string name="pref_search_languages_summary">"Langues utilisées pour la recherche de cartes (Défaut: Anglais)"</string>

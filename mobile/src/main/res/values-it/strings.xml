@@ -117,7 +117,7 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
     <string name="search_text">"Testo"</string>
     <string name="search_power">"Forza"</string>
     <string name="search_toughness">"Costituzione"</string>
-    <string name="search_cmc">"CMC"</string>
+    <string name="search_cmc">"Mana Value"</string>
 
     <!-- this has an {X} after it in layout -->
     <string name="search_set">"Espansione"</string>
@@ -336,9 +336,9 @@ Carta e penna potrebbero essere utili per tener conto dello stato del gioco. Sfo
 &lt;br&gt;
 Buona fortuna, e divertiti!
 "</string>
-    <string name="mojhosto_momir_label">"CMC="</string>
+    <string name="mojhosto_momir_label">"Mana Value="</string>
     <string name="mojhosto_random_creature">"Creatura casuale"</string>
-    <string name="mojhosto_stonehewer_label">"CMC &lt;="</string>
+    <string name="mojhosto_stonehewer_label">"Mana Value &lt;="</string>
     <string name="mojhosto_random_equipment">"Equipaggiamento casuale"</string>
     <string name="mojhosto_random_instants">"Istantaneo casuale"</string>
     <string name="mojhosto_random_sorceries">"Stregoneria casuale"</string>
@@ -587,7 +587,7 @@ Standard ....... Not Legal -->
     <!-- Deck Stats -->
     <string name="type_distribution">"Distribuzione dei tipi"</string>
     <string name="mana_value_distribution">"Distribuzione dei simboli di mana"</string>
-    <string name="cmc_graph">"Grafico del CMC"</string>
+    <string name="cmc_graph">"Grafico del Mana Value"</string>
     <string name="card_colors">"Colori delle carte"</string>
     <string name="pref_search_languages_title">"Cerca Lingue"</string>
     <string name="pref_search_languages_summary">"Lingue usate per la ricerca di carte (predefinito: Inglese)"</string>

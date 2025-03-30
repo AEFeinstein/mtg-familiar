@@ -149,7 +149,7 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="search_text">"Text"</string>
     <string name="search_power">"Power"</string>
     <string name="search_toughness">"Toughness"</string>
-    <string name="search_cmc">"CMC"</string>
+    <string name="search_cmc">"Mana Value"</string>
     <string name="Equals">"Equals"</string>
     <string name="DoesNotEqual">"Is Not Equal"</string>
     <string name="Contains">"Contains"</string>
@@ -382,9 +382,9 @@ Pen and paper might be useful for tracking the game state. Sadly, MTG Familiar c
 &lt;br&gt;
 Good luck, and have fun!
 "</string>
-    <string name="mojhosto_momir_label">"CMC ="</string>
+    <string name="mojhosto_momir_label">"Mana Value ="</string>
     <string name="mojhosto_random_creature">"Random Creature"</string>
-    <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
+    <string name="mojhosto_stonehewer_label">"Mana Value ≤"</string>
     <string name="mojhosto_random_equipment">"Random Equipment"</string>
     <string name="mojhosto_random_instants">"Random Instants"</string>
     <string name="mojhosto_random_sorceries">"Random Sorceries"</string>
@@ -591,7 +591,7 @@ Good luck, and have fun!
     <!-- Deck Stats -->
     <string name="type_distribution">Type Distribution</string>
     <string name="mana_value_distribution">Mana Symbol Distribution</string>
-    <string name="cmc_graph">CMC Graph</string>
+    <string name="cmc_graph">Mana Value Graph</string>
     <string name="card_colors">Card Colors</string>
 
     <string name="search_settype">Set Type</string>

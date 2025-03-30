@@ -129,7 +129,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
     <string name="search_text">"Text"</string>
     <string name="search_power">"Stärke"</string>
     <string name="search_toughness">"Widerstandskraft"</string>
-    <string name="search_cmc">"CMC"</string>
+    <string name="search_cmc">"Mana Value"</string>
 
     <!-- this has an {X} after it in layout -->
     <string name="search_set">"Set"</string>
@@ -352,9 +352,9 @@ Stift und Papier sind nützlich, um den Status des Spiels festzuhalten. Leider k
 &lt;br&gt;
 Viel Glück und viel Spaß!
 "</string>
-    <string name="mojhosto_momir_label">"CMC ="</string>
+    <string name="mojhosto_momir_label">"Mana Value ="</string>
     <string name="mojhosto_random_creature">"Zufällige Kreatur"</string>
-    <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
+    <string name="mojhosto_stonehewer_label">"Mana Value ≤"</string>
     <string name="mojhosto_random_equipment">"Zufällige Ausrüstung"</string>
     <string name="mojhosto_random_instants">"Zufällige Spontanzauber"</string>
     <string name="mojhosto_random_sorceries">"Zufällige Hexereien"</string>
@@ -613,7 +613,7 @@ Standard ....... Not Legal -->
     <!-- Deck Stats -->
     <string name="type_distribution">"Typen Verteilung"</string>
     <string name="mana_value_distribution">"Mana Symbol Verteilung"</string>
-    <string name="cmc_graph">"CMC Graph"</string>
+    <string name="cmc_graph">"Mana Value Graph"</string>
     <string name="card_colors">"Karten Farben"</string>
     <string name="pref_search_languages_title">"Sprachen suchen"</string>
     <string name="pref_search_languages_summary">"Für die Kartensuche verwendete Sprachen (Standard: Englisch)"</string>

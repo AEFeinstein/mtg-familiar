@@ -116,7 +116,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="search_text">"Tekst"</string>
     <string name="search_power">"Siła"</string>
     <string name="search_toughness">"Wytrzymałość"</string>
-    <string name="search_cmc">"CMC"</string>
+    <string name="search_cmc">"Mana Value"</string>
 
     <!-- this has an {X} after it in layout -->
     <string name="search_set">"Edycja"</string>
@@ -340,11 +340,11 @@ Powodzenia i miłej zabawy!
 "</string>
 
     <!-- Fuzzy -->
-    <string name="mojhosto_momir_label">"CMC="</string>
+    <string name="mojhosto_momir_label">"Mana Value="</string>
     <string name="mojhosto_random_creature">"Losowa Kreatura"</string>
 
     <!-- Fuzzy -->
-    <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
+    <string name="mojhosto_stonehewer_label">"Mana Value ≤"</string>
     <string name="mojhosto_random_equipment">"Losowe wyposażenie"</string>
     <string name="mojhosto_random_instants">"Trzy losowe Instanty"</string>
     <string name="mojhosto_random_sorceries">"Trzy losowe Sorcery"</string>
