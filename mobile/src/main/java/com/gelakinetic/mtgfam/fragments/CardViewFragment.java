@@ -88,19 +88,13 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
-import com.gelakinetic.mtgfam.helpers.updaters.CardAndSetParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,8 +102,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import javax.net.ssl.SSLHandshakeException;
 
 /**
  * This class handles displaying card info.
@@ -1427,15 +1419,9 @@ public class CardViewFragment extends FamiliarFragment {
 
         String mErrorMessage = null;
 
-        void parseRulings(BufferedReader br, CardViewFragment frag) throws IOException {
-            StringBuilder gpBuilder = new StringBuilder();
-            String line;
-            while (null != (line = br.readLine())) {
-                gpBuilder.append(line);
-            }
-            String gathererPage = gpBuilder.toString();
+        void parseRulings(CardViewFragment frag) throws IOException {
 
-            Document document = Jsoup.parse(gathererPage);
+            Document document = Jsoup.connect("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId()).get();
             Elements rulingTable = document.select("div[id*=rulingsContainer] > table > tbody > tr");
 
             for (Element ruling : rulingTable) {
@@ -1468,30 +1454,8 @@ public class CardViewFragment extends FamiliarFragment {
             CardViewFragment frag = params[0];
             frag.mRulingsArrayList = new ArrayList<>();
             try {
-                // Gatherer doesn't use HTTPS as of 1/6/2019
-                URL url = new URL("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId());
-
-                try (BufferedReader br = new BufferedReader(
-                        new InputStreamReader(
-                                FamiliarActivity.getHttpInputStream(url, null, frag.getContext()),
-                                StandardCharsets.UTF_8))) {
-                    parseRulings(br, frag);
-                } catch (SSLHandshakeException she) {
-                    // I don't know why this works... download an update first
-                    (new CardAndSetParser()).readUpdateJsonStream(frag.requireContext(), null);
-                    // Then try again
-                    try (BufferedReader br = new BufferedReader(
-                            new InputStreamReader(
-                                    FamiliarActivity.getHttpInputStream(url, null, frag.getContext()),
-                                    StandardCharsets.UTF_8))) {
-                        parseRulings(br, frag);
-                    } catch (IOException ioe) {
-                        mErrorMessage = ioe.getLocalizedMessage();
-                    }
-                } catch (IOException ioe) {
-                    mErrorMessage = ioe.getLocalizedMessage();
-                }
-            } catch (MalformedURLException e) {
+                parseRulings(frag);
+            } catch (IOException e) {
                 mErrorMessage = e.getLocalizedMessage();
             }
 

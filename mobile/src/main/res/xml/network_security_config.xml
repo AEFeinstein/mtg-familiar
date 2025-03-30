@@ -5,6 +5,9 @@
             <certificates src="@raw/gatherer_chain_1" />
             <certificates src="@raw/gatherer_chain_2" />
             <certificates src="@raw/gatherer_chain_3" />
+            <certificates src="@raw/gatherer_chain_4" />
+            <certificates src="@raw/gatherer_chain_5" />
+            <certificates src="@raw/gatherer_chain_6" />
             <certificates src="system" />
         </trust-anchors>
     </base-config>
