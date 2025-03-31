@@ -827,7 +827,7 @@ public class FamiliarActivity extends AppCompatActivity {
             int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > ((long) updateFrequency * 24 * 60 * 60)) {
-                startDatabaseUpdate();
+                checkForDatabaseUpdate();
             }
         }
 
@@ -836,9 +836,16 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
+     * Check if there's an available update and prompt the user to download it
+     */
+    private void checkForDatabaseUpdate() {
+        mDbUpdater.checkIfUpdateExists();
+    }
+
+    /**
      * Start a database update
      */
-    private void startDatabaseUpdate() {
+    public void startDatabaseUpdate() {
         mDbUpdater.checkForUpdates();
     }
 
@@ -895,7 +902,7 @@ public class FamiliarActivity extends AppCompatActivity {
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                                         new long[]{CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_ID)});
                             }
-                            if (args.size() == 0) {
+                            if (args.isEmpty()) {
                                 throw new Exception("Not Found");
                             }
                         } else if ((queryParam = data.getQueryParameter("name")) != null) {
@@ -908,7 +915,7 @@ public class FamiliarActivity extends AppCompatActivity {
                                 isDeepLink = true;
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
                             }
-                            if (args.size() == 0) {
+                            if (args.isEmpty()) {
                                 throw new Exception("Not Found");
                             }
                         } else {

@@ -25,6 +25,7 @@
     <string name="dialog_ok">"OK"</string>
     <string name="dialog_cancel">"Cancel"</string>
     <string name="dialog_yes">"Yes"</string>
+    <string name="dialog_no">"No"</string>
     <string name="dialog_done">"Done"</string>
     <string name="dialog_both">"Both"</string>
     <string name="dialog_life">"Life"</string>
@@ -607,4 +608,5 @@ Good luck, and have fun!
 
     <string name="down">Down</string>
     <string name="up">Up</string>
+    <string name="database_update_available_message">There\'s an available card database update. Would you like to download and install it?</string>
 </resources>

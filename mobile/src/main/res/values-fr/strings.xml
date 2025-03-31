@@ -4,6 +4,7 @@
     <string name="dialog_ok">"OK"</string>
     <string name="dialog_cancel">"Annuler"</string>
     <string name="dialog_yes">"Oui"</string>
+    <string name="dialog_no">Non</string>
     <string name="dialog_done">"Terminé"</string>
     <string name="dialog_both">"Joueurs &amp; Vie"</string>
     <string name="dialog_life">"Que Vie"</string>
@@ -612,4 +613,5 @@ Standard ....... Not Legal -->
     <string name="update_updating_docs">"Mise à jour des documents juge"</string>
     <string name="pref_show_price_on_card_view_title">"Afficher le prix sur la vue de la carte"</string>
     <string name="pref_show_price_on_card_view_summary">"Lorsque vous affichez une carte, chargez immédiatement le prix de la page Affichage de la carte"</string>
+    <string name="database_update_available_message">Une mise à jour de la base de données de cartes est disponible. Souhaitez-vous la télécharger et l\'installer ?</string>
 </resources>

@@ -58,6 +58,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_LOGGING = 104;
     public static final int DIALOG_UPDATE = 105;
     public static final int DIALOG_UPDATE_RESULT = 106;
+    public static final int DIALOG_UPDATE_PROMPT = 107;
 
     /**
      * Overridden to create the specific dialogs
@@ -188,6 +189,16 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_LOGGING: {
                 return FamiliarLogger.createDialog(getFamiliarActivity(), builder);
+            }
+            case DIALOG_UPDATE_PROMPT: {
+                // Show a dialog prompting for a database update
+                return builder.setTitle(R.string.pref_cat_updates)
+                        .setMessage(R.string.database_update_available_message)
+                        .setPositiveButton(R.string.dialog_yes, (dialog1, which) -> getFamiliarActivity().startDatabaseUpdate())
+                        .setNegativeButton(R.string.dialog_no, (dialog1, which) -> {
+                            // Do nothing
+                        })
+                        .create();
             }
             case DIALOG_UPDATE: {
                 // Show a dialog for database updates

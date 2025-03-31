@@ -73,6 +73,10 @@ public class DbUpdater {
         void finish(String updatedStuffString);
     }
 
+    public interface updateExistsListener {
+        void onFinishCheck(boolean updateExists);
+    }
+
     /* The activity that is running this update */
     private final FamiliarActivity mContext;
 
@@ -162,6 +166,75 @@ public class DbUpdater {
     }
 
     /**
+     * Check if there's an available database update and show a dialog prompting if the user
+     * wants to download it
+     */
+    public void checkIfUpdateExists() {
+        updateExistsListener listener = updateExists -> {
+            if (updateExists) {
+                /* If there's an update, prompt the user to download it */
+                mUpdateDialog = mContext.showDialogFragment(FamiliarActivityDialogFragment.DIALOG_UPDATE_PROMPT);
+            }
+        };
+        mExecutor.execute(() -> checkIfUpdateExistsBackground(listener));
+    }
+
+    /**
+     * Check in the background if there's an available database update and if there is and return the status via listener
+     *
+     * @param listener A callback to call with the available update status
+     */
+    private void checkIfUpdateExistsBackground(updateExistsListener listener) {
+        /* Get the manifest of new cards */
+        CardAndSetParser parser = new CardAndSetParser();
+        Manifest manifest = parser.readUpdateJsonStream(mContext, null);
+
+        /* Make hash map of the current digests */
+        HashMap<String, String> storedDigests = new HashMap<>();
+        Cursor setCursor = null;
+        FamiliarDbHandle setsHandle = new FamiliarDbHandle();
+        try {
+            /* Get readable database access */
+            SQLiteDatabase database = DatabaseManager.openDatabase(mContext, false, setsHandle);
+            setCursor = CardDbAdapter.fetchAllSets(database, false, false);
+            setCursor.moveToFirst();
+            while (!setCursor.isAfterLast()) {
+                String code = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                String digest = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_DIGEST);
+                storedDigests.put(code, digest);
+                setCursor.moveToNext();
+            }
+        } catch (SQLiteException | FamiliarDbException e) {
+            /* Error means we can't update, so return false */
+            listener.onFinishCheck(false);
+            return;
+        } finally {
+            if (null != setCursor) {
+                setCursor.close();
+            }
+            DatabaseManager.closeDatabase(mContext, setsHandle);
+        }
+
+        /* For each manifest entry */
+        for (Manifest.ManifestEntry entry : manifest.mPatches) {
+            String dbDigest = storedDigests.get(entry.mCode);
+            if (null == dbDigest) {
+                /* Digest doesn't exist means there's an update */
+                listener.onFinishCheck(true);
+                return;
+            }
+            if (!dbDigest.equals(entry.mDigest)) {
+                /* Digest mismatch means there's an update */
+                listener.onFinishCheck(true);
+                return;
+            }
+        }
+
+        /* No changes or new patches, so return false */
+        listener.onFinishCheck(false);
+    }
+
+    /**
      * This method does the heavy lifting. It opens transactional access to the database, checks the web for new files
      * to patch in, patches them as necessary, and updates the progress dialog to inform the user.
      */
@@ -210,15 +283,13 @@ public class DbUpdater {
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.openDatabase(mContext, false, setsHandle);
                     setCursor = CardDbAdapter.fetchAllSets(database, false, false);
-                    if (setCursor != null) {
-                        setCursor.moveToFirst();
-                        while (!setCursor.isAfterLast()) {
-                            String code = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
-                            String digest = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_DIGEST);
-                            storedDigests.put(code, digest);
-                            currentSetCodes.add(code);
-                            setCursor.moveToNext();
-                        }
+                    setCursor.moveToFirst();
+                    while (!setCursor.isAfterLast()) {
+                        String code = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_CODE);
+                        String digest = CardDbAdapter.getStringFromCursor(setCursor, CardDbAdapter.KEY_DIGEST);
+                        storedDigests.put(code, digest);
+                        currentSetCodes.add(code);
+                        setCursor.moveToNext();
                     }
                 } catch (SQLiteException | FamiliarDbException e) {
                     commitDates = false; /* don't commit the dates */
@@ -403,7 +474,7 @@ public class DbUpdater {
                         SQLiteDatabase database = DatabaseManager.openDatabase(mContext, true, rulesHandle);
 
                         /* Add stored rules */
-                        if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
+                        if (!rulesToAdd.isEmpty() || !glossaryItemsToAdd.isEmpty()) {
                             CardDbAdapter.dropRulesTables(database);
                             CardDbAdapter.createRulesTables(database);
                         }
@@ -499,7 +570,7 @@ public class DbUpdater {
                     PreferenceAdapter.setLastRulesUpdate(mContext, curTime);
                 }
 
-                if (updatedStuff.size() > 0) {
+                if (!updatedStuff.isEmpty()) {
                     listener.finish(getUpdatedStuffString(updatedStuff));
                 } else {
                     listener.finish(null);
@@ -524,7 +595,7 @@ public class DbUpdater {
      * @param newStuff A strings to show the user in a dialog
      */
     private String getUpdatedStuffString(List<String> newStuff) {
-        if (newStuff.size() < 1) {
+        if (newStuff.isEmpty()) {
             return null;
         }
 
