@@ -1369,6 +1369,12 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param fragmentManager The FragmentManager to use for this transaction
      */
     public void removeDialogFragment(FragmentManager fragmentManager) {
+
+        /* Clear FLAG_KEEP_SCREEN_ON just in case.
+         * This is set when showing the dialog for database updates
+         */
+        this.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         if (fragmentManager != null) {
             Fragment prev = fragmentManager.findFragmentByTag(FamiliarActivity.DIALOG_TAG);
             if (prev != null) {

@@ -205,6 +205,8 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 ComponentDialog dialog = builder.setTitle(R.string.update_notification)
                         .setView(R.layout.activity_dialog_update)
                         .setCancelable(false)
+                        .setOnCancelListener(dialog2 -> requireActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON))
+                        .setOnDismissListener(dialog3 -> requireActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON))
                         .create();
                 dialog.getOnBackPressedDispatcher().addCallback(requireActivity(),
                         new OnBackPressedCallback(true) {
@@ -214,6 +216,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                             }
                         });
                 dialog.setCanceledOnTouchOutside(false);
+                requireActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 return dialog;
             }
             case DIALOG_UPDATE_RESULT: {
