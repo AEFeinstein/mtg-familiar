@@ -25,8 +25,9 @@ jobs:
           ENCODED_STRING: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
           SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
         run: |
-          echo $ENCODED_STRING > keystore-b64.txt
-          base64 -d keystore-b64.txt > $SIGNING_KEY_STORE_PATH
+          echo $ENCODED_STRING
+          echo $SIGNING_KEY_STORE_PATH
+          echo $ENCODED_STRING | base64 -d > $SIGNING_KEY_STORE_PATH
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
