@@ -91,6 +91,10 @@ tasks.register('pmdMain', Pmd) {
     exclude '**/gen/**'
 }
 
+def gitVersion = providers.exec {
+    commandLine("git", "rev-parse", "--short", "HEAD")
+}.standardOutput.asText.get().trim()
+
 android {
     compileSdk 35
     defaultConfig {
@@ -101,6 +105,7 @@ android {
         versionName "3.9.12"
         vectorDrawables.useSupportLibrary true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        archivesBaseName = "$applicationId" + "_$versionName" + "_" + "$gitVersion"
     }
     signingConfigs {
         release {
