@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-artifacts
-          paths: app/build/outputs/apk/release/
+          path: mobile/build/outputs/apk/release/
           if-no-files-found: error
           retention-days: 0
           compression-level: 6
