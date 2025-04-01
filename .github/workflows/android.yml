@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+  SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+  SIGNING_KEY_STORE_BASE64: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
+  SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+  SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
 jobs:
   build:
 
@@ -21,23 +28,15 @@ jobs:
           cache: gradle
 
       - name: Decode Keystore
-        env:
-          ENCODED_STRING: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-        run: echo $ENCODED_STRING | base64 -d > mobile/$SIGNING_KEY_STORE_PATH
+        run: echo $SIGNING_KEY_STORE_BASE64 | base64 -d > mobile/$SIGNING_KEY_STORE_PATH
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assemble
+#      - name: Build Debug APK
+#        run: ./gradlew assemble
 
-      - name: Build Release apk
-        env:
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+      - name: Build Release APK
         run: ./gradlew assembleRelease
 
       - name: Upload Release Build to Artifacts
