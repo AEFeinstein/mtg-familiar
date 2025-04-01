@@ -43,3 +43,4 @@ mobile/src/main/assets/tcgp_keys.json
 *.aab
 *.dm
 /mobile/debug/output-metadata.json
+/mobile/keystore.jks
