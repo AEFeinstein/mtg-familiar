@@ -170,13 +170,12 @@ public class DbUpdater {
      * wants to download it
      */
     public void checkIfUpdateExists() {
-        updateExistsListener listener = updateExists -> {
+        mExecutor.execute(() -> checkIfUpdateExistsBackground(updateExists -> mHandler.post(() -> {
             if (updateExists) {
                 /* If there's an update, prompt the user to download it */
                 mUpdateDialog = mContext.showDialogFragment(FamiliarActivityDialogFragment.DIALOG_UPDATE_PROMPT);
             }
-        };
-        mExecutor.execute(() -> checkIfUpdateExistsBackground(listener));
+        })));
     }
 
     /**
