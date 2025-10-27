@@ -537,6 +537,7 @@ Good luck, and have fun!
     <string name="decklist_enchantments">"Enchantments"</string>
     <string name="decklist_artifacts">"Artifacts"</string>
     <string name="decklist_lands">"Lands"</string>
+    <string name="decklist_battles">"Battles"</string>
     <string name="decklist_edit_dialog_title_end">"in the Deck"</string>
     <string name="decklist_new">"New Deck"</string>
     <string name="decklist_delete">"Delete Deck"</string>

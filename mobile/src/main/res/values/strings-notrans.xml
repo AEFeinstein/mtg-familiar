@@ -56,6 +56,7 @@
     <string name="card_type_artifact" translatable="false">Artifact</string>
     <string name="card_type_enchantment" translatable="false">Enchantment</string>
     <string name="card_type_land" translatable="false">Land</string>
+    <string name="card_type_battle" translatable="false">Battle</string>
     <string name="card_type_conspiracy" translatable="false">Conspiracy</string>
     <string name="card_type_phenomenon" translatable="false">Phenomenon</string>
     <string name="card_type_plane" translatable="false">Plane</string>
