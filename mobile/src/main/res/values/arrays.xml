@@ -267,6 +267,7 @@
         <item>@string/decklist_sorceries</item>
         <item>@string/decklist_artifacts</item>
         <item>@string/decklist_enchantments</item>
+        <item>@string/decklist_battles</item>
         <item>@string/decklist_lands</item>
         <item>@string/decklist_others</item>
     </string-array>
@@ -278,8 +279,8 @@
         <item>@string/card_type_sorcery</item>
         <item>@string/card_type_artifact</item>
         <item>@string/card_type_enchantment</item>
-        <item>@string/card_type_land</item>
         <item>@string/card_type_battle</item>
+        <item>@string/card_type_land</item>
         <item>@string/card_type_conspiracy</item>
         <item>@string/card_type_phenomenon</item>
         <item>@string/card_type_plane</item>
