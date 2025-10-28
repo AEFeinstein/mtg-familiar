@@ -83,7 +83,7 @@ tasks.register('pmdMain', Pmd) {
     ruleSetFiles = files("$configDir/pmd/pmd.xml")
     reports {
         html {
-            destination file("$project.buildDir/reports/pmd.html")
+            destination file(layout.buildDirectory.dir("/reports/pmd.html").get().asFile)
         }
     }
     source 'src'
@@ -96,11 +96,11 @@ def gitVersion = providers.exec {
 }.standardOutput.asText.get().trim()
 
 android {
-    compileSdk 35
+    compileSdk = 36
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 21
-        targetSdk 35
+        targetSdk 36
         versionCode 96
         versionName "3.9.13"
         vectorDrawables.useSupportLibrary true
@@ -109,16 +109,16 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(System.getenv("SIGNING_KEY_STORE_PATH"))
-            storePassword System.getenv('SIGNING_STORE_PASSWORD')
-            keyAlias System.getenv('SIGNING_KEY_ALIAS')
-            keyPassword System.getenv('SIGNING_KEY_PASSWORD')
+            storeFile file(System.getenv('SIGNING_KEY_STORE_PATH') ?: './key')
+            storePassword System.getenv('SIGNING_STORE_PASSWORD') ?: ''
+            keyAlias System.getenv('SIGNING_KEY_ALIAS') ?: ''
+            keyPassword System.getenv('SIGNING_KEY_PASSWORD') ?: ''
         }
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             //findbugs
         }
@@ -166,22 +166,22 @@ dependencies {
 
 // AndroidX
     annotationProcessor 'androidx.annotation:annotation:1.9.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.fragment:fragment:1.8.6'
-    implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.fragment:fragment:1.8.9'
+    implementation 'androidx.gridlayout:gridlayout:1.1.0'
+    implementation 'com.google.android.material:material:1.13.0'
 
 // Third-party
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'com.github.woxthebox:draglistview:1.7.3'
-    implementation 'org.jetbrains:annotations:26.0.2'
-    implementation 'com.google.code.gson:gson:2.12.1'
+    implementation 'org.jetbrains:annotations:26.0.2-1'
+    implementation 'com.google.code.gson:gson:2.13.2'
     implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
     implementation 'com.github.machinarius:preferencefragment:0.1.2'
-    implementation 'org.jsoup:jsoup:1.19.1'
+    implementation 'org.jsoup:jsoup:1.21.2'
     implementation 'com.splitwise:tokenautocomplete:3.0.2'
     implementation 'com.google.code.findbugs:annotations:3.0.1', {
         // Need to exclude these, or build is broken by:
@@ -190,8 +190,8 @@ dependencies {
         exclude module: 'jcip-annotations'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation 'com.github.bumptech.glide:glide:5.0.5'
+    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.5'
 
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'com.nytimes.android:cache3:3.1.1', {
@@ -206,13 +206,13 @@ dependencies {
     }
 
 // Testing
-    androidTestImplementation 'androidx.test:runner:1.6.2'
-    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
 
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:3.0'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.16.1'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
