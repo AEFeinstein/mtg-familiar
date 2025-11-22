@@ -1068,6 +1068,12 @@ public class CardDbAdapter {
             // Grist can be a commander
             statement.append(" OR (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_NAME).append(" = 'Grist, the Hunger Tide')");
 
+            // Legendary Spacecraft and Vehicles with power/toughness box can be a commander
+            statement.append(" OR ( ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_POWER).append(" > -1000"); // Make sure it has a p/t box
+            statement.append(" AND (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUBTYPE).append(" LIKE '%Vehicle%'");
+            statement.append(" OR ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUBTYPE).append(" LIKE '%Spacecraft%')");
+            statement.append(" AND (").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SUPERTYPE).append(" LIKE '%Legendary%'))"); // Make sure it's legendary
+
             statement.append(")");
 
             // Set the format to Commander if it isn't set already, so the banlist applies
