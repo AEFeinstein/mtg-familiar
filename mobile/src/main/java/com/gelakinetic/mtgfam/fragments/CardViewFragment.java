@@ -64,6 +64,8 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
@@ -950,10 +952,16 @@ public class CardViewFragment extends FamiliarFragment {
      */
     private Target<Drawable> runGlideRequest(int attempt, String cardLanguage, int width, int height,
                                              boolean onlyCheckCache, Target<Drawable> target) {
-        // Log.d("imgurl", mCard.getImageUrlString(attempt, cardLanguage));
+        GlideUrl glideUrl = new GlideUrl(mCard.getImageUrlString(attempt, cardLanguage), new LazyHeaders.Builder()
+                .addHeader("User-Agent", FamiliarActivity.getUserAgent(getContext()))
+                .addHeader("Accept", "application/json;q=0.9,*/*;q=0.8")
+                .build());
+
+        // Log.d("imgurl", glideUrl.toString());
+
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
-                .load(mCard.getImageUrlString(attempt, cardLanguage))
+                .load(glideUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new RequestListener<Drawable>() {
                     @Override

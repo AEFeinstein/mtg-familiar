@@ -365,14 +365,7 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Make the URL & connection objects, follow redirects, timeout after 5s */
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
-        String version = "";
-        try {
-            version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        connection.setRequestProperty("User-Agent", ctx.getString(R.string.app_name) + "/" + version);
+        connection.setRequestProperty("User-Agent", getUserAgent(ctx));
         connection.setConnectTimeout(5000);
         connection.setInstanceFollowRedirects(true);
 
@@ -439,6 +432,16 @@ public class FamiliarActivity extends AppCompatActivity {
             /* HTTP response is A-OK. Return the inputStream */
             return connection.getInputStream();
         }
+    }
+
+    public static String getUserAgent(Context ctx) {
+        String version = "";
+        try {
+            version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ctx.getString(R.string.app_name) + "/" + version;
     }
 
     /**
