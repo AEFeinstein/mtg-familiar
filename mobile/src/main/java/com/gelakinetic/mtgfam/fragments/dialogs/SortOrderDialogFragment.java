@@ -77,6 +77,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             boolean setAdded = false;
             boolean colorIdentityAdded = false;
             boolean subtypeAdded = false;
+            boolean collectorsNumberAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -167,6 +168,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             if (!subtypeAdded) {
                 options.add(new SortOption(getString(R.string.search_subtype),
                         true, CardDbAdapter.KEY_SUBTYPE, idx++));
+            }
+
+            if (!collectorsNumberAdded) {
+                options.add(new SortOption(getString(R.string.search_collectors_number),
+                        true, CardDbAdapter.KEY_NUMBER, idx++));
             }
         }
 
