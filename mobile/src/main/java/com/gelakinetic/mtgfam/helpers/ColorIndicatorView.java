@@ -25,6 +25,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.gelakinetic.mtgfam.R;
@@ -68,6 +69,9 @@ public class ColorIndicatorView extends View {
         float numColors = 0;
 
         /* Sanitize strings to check for a match */
+        if (null == manacost) {
+            manacost = "";
+        }
         manacost = sanitizeString(manacost);
         color = sanitizeString(color);
 
@@ -166,7 +170,7 @@ public class ColorIndicatorView extends View {
      *
      * @param canvas A canvas to draw on
      */
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         if (mBackground != null) {
             mBackground.draw(canvas);
         }

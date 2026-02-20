@@ -25,9 +25,11 @@ import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.StaleDataException;
 import android.text.Html.ImageGetter;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -152,6 +154,13 @@ public class ResultListAdapter extends SimpleCursorAdapter {
         view.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
         view.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
 
+        LinearLayout colorIndicatorLayout = view.findViewById(R.id.color_indicator_view);
+        colorIndicatorLayout.removeAllViews();
+        colorIndicatorLayout.setVisibility((View.GONE));
+
+        /* This needs to be tracked for the color indicator */
+        String manaCost = null;
+
         /* Iterate through the mFrom, find the appropriate view in mTo */
         for (int i = 0; i < mFrom.length; i++) {
 
@@ -165,16 +174,16 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                         break;
                     }
                     case CardDbAdapter.KEY_MANACOST: {
-                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        manaCost = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
                         hideCost = false;
-                        CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
+                        CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(manaCost, mImgGetter);
                         textField.setText(csq);
                         break;
                     }
                     case CardDbAdapter.KEY_SET: {
                         char rarity = (char) CardDbAdapter.getIntFromCursor(cursor, CardDbAdapter.KEY_RARITY);
-                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
-                        textField.setText(name);
+                        String set = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        textField.setText(set);
                         switch (rarity) {
                             case 'c':
                             case 'C':
@@ -199,7 +208,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                         }
 
                         if (PreferenceAdapter.getSetPref(context)) {
-                            ExpansionImageHelper.loadExpansionImage(context, name, rarity, view.findViewById(R.id.cardsetimage), view.findViewById(R.id.cardset), ExpansionImageHelper.ExpansionImageSize.LARGE);
+                            ExpansionImageHelper.loadExpansionImage(context, set, rarity, view.findViewById(R.id.cardsetimage), view.findViewById(R.id.cardset), ExpansionImageHelper.ExpansionImageSize.LARGE);
                         }
                         break;
                     }
@@ -209,15 +218,15 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                         break;
                     }
                     case CardDbAdapter.KEY_SUPERTYPE: {
-                        String name = CardDbAdapter.getTypeLine(cursor);
+                        String superType = CardDbAdapter.getTypeLine(cursor);
                         hideType = false;
-                        textField.setText(name);
+                        textField.setText(superType);
                         break;
                     }
                     case CardDbAdapter.KEY_ABILITY: {
-                        String name = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        String ability = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
                         hideAbility = false;
-                        CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
+                        CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(ability, mImgGetter);
                         textField.setText(csq);
                         break;
                     }
@@ -239,6 +248,25 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                             hideLoyalty = false;
                             ((TextView) textField.findViewById(R.id.cardt)).setText(CardDbAdapter.getPrintedPTL(l, false));
                         }
+                        break;
+                    }
+                    case CardDbAdapter.KEY_COLOR: {
+                        String colorText = CardDbAdapter.getStringFromCursor(cursor, mFrom[i]);
+                        textField.setText(colorText);
+                        /* Figure out how large the color indicator should be. Medium text is 18sp, with a border
+                         * its 22sp */
+                        int dimension = (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_SP, 22, context.getResources().getDisplayMetrics());
+
+                        ColorIndicatorView civ =
+                                new ColorIndicatorView(context, dimension, dimension / 15, colorText, manaCost);
+                        if (civ.shouldInidcatorBeShown()) {
+                            colorIndicatorLayout.setVisibility(View.VISIBLE);
+                            colorIndicatorLayout.addView(civ);
+                        } else {
+                            colorIndicatorLayout.setVisibility(View.GONE);
+                        }
+
                         break;
                     }
                 }

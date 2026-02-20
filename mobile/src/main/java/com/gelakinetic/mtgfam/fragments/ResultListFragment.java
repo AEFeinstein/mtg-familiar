@@ -403,6 +403,9 @@ public class ResultListFragment extends FamiliarFragment {
                 toList.add(R.id.cardt);
             }
 
+            fromList.add(CardDbAdapter.KEY_COLOR);
+            toList.add(R.id.color_indicator_view_text);
+
             String[] from = new String[fromList.size()];
             fromList.toArray(from);
 
