@@ -33,6 +33,7 @@ MTG Familiar is an Android app which has a suite of tools to play Magic: The Gat
     adb root
     adb pull /data/data/com.gelakinetic.mtgfam/databases/data
     adb pull /data/data/com.gelakinetic.mtgfam.debug/databases/data
+    sqlite3 data "VACUUM;"
     gzip -c -f --best data > datagz
     ~~~~
 5. Copy ```datagz``` into the ```/mobile/src/main/res/raw directory```
