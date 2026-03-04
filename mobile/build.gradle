@@ -29,7 +29,7 @@ check.dependsOn 'pmdMain', 'checkstyleMain' //, 'spotbugsMain'
 def configDir = "${project.rootDir}/config"
 
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven { url = 'https://jitpack.io' }
 }
 //sourceSets {
 //    // we define `main` sourceSet here, so SpotBugs Gradle Plugin generates `spotbugsMain` task
@@ -103,7 +103,7 @@ android {
         targetSdk 36
         versionCode 97
         versionName "3.9.14"
-        vectorDrawables.useSupportLibrary true
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // archivesBaseName = "$applicationId" + "_$versionName" + "_" + "$gitVersion"
     }
@@ -119,7 +119,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
             //findbugs
         }
         debug {
@@ -139,18 +139,18 @@ android {
     }
     compileOptions {
         // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
-        encoding "UTF-8"
+        coreLibraryDesugaringEnabled = true
+        encoding = "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     lint {
-        abortOnError false
+        abortOnError = false
         disable 'MissingTranslation'
     }
-    namespace 'com.gelakinetic.mtgfam'
+    namespace = 'com.gelakinetic.mtgfam'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
@@ -212,7 +212,7 @@ dependencies {
     // Optional -- Hamcrest library
     androidTestImplementation 'org.hamcrest:hamcrest-library:3.0'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:5.21.0'
+    testImplementation 'org.mockito:mockito-core:5.22.0'
 
 // Spotbugs
     // spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
