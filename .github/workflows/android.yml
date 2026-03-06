@@ -34,10 +34,10 @@ jobs:
         run: chmod +x gradlew
 
 #      - name: Build Debug APK
-#        run: ./gradlew --no-parallel assemble
+#        run: ./gradlew clean assembleDebug --no-build-cache --no-configuration-cache --no-daemon --no-parallel
 
       - name: Build Release APK
-        run: ./gradlew --no-parallel assembleRelease
+        run: ./gradlew clean assembleRelease --no-build-cache --no-configuration-cache --no-daemon --no-parallel
 
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
