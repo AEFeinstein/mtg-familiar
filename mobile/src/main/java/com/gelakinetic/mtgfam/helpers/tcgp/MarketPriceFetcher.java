@@ -457,10 +457,12 @@ public class MarketPriceFetcher {
     public void stopAllRequests() {
         mCompositeDisposable.clear();
         mThreadPool.shutdownNow();
-        mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        for (Future<?> future : mFutures) {
-            future.cancel(true);
-        }
+mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+for (Future<?> future : mFutures) {
+    if (!future.isDone()) {
+        future.cancel(true);
+    }
+}
         mFutures.clear();
         mActivity.clearLoading();
         mCheckFutureRunnable = null;
