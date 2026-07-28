@@ -460,7 +460,11 @@ public class MarketPriceFetcher {
 mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 for (Future<?> future : mFutures) {
     if (!future.isDone()) {
-        future.cancel(true);
+        // Check if the Future is already done before attempting to cancel it
+        if (!future.cancel(true)) {
+            // If the Future is not done, attempt to cancel it
+            future.cancel(true);
+        }
     }
 }
         mFutures.clear();
