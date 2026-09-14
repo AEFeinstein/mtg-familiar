@@ -1373,10 +1373,13 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public void removeDialogFragment(FragmentManager fragmentManager) {
 
-        /* Clear FLAG_KEEP_SCREEN_ON just in case.
-         * This is set when showing the dialog for database updates
+        /* Clear FLAG_KEEP_SCREEN_ON just in case (e.g. database updates dialog),
+         * unless the user is on the Life Counter screen with keep-screen-on enabled.
          */
-        this.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(FamiliarActivity.FRAGMENT_TAG);
+        if (!(currentFragment instanceof LifeCounterFragment && PreferenceAdapter.getKeepScreenOn(this))) {
+            this.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
 
         if (fragmentManager != null) {
             Fragment prev = fragmentManager.findFragmentByTag(FamiliarActivity.DIALOG_TAG);
