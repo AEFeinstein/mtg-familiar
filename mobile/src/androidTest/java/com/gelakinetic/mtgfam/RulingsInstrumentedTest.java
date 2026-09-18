@@ -86,21 +86,22 @@ public class RulingsInstrumentedTest {
         TextView textViewRules = view.findViewById(R.id.rules);
         assertNotNull("Rules TextView should exist", textViewRules);
 
-        // Populate mock ruling
+        // Populate mock ruling with HTML formatting and mana glyphs
         CardViewFragment.Ruling sampleRuling = new CardViewFragment.Ruling("2004-10-04", "Sample ruling text with {T} & <rules>.");
-        String rulingText = sampleRuling.toString();
-        assertTrue("Ruling string should contain date", rulingText.contains("2004-10-04"));
-        assertTrue("Ruling string should contain text", rulingText.contains("Sample ruling text"));
+        String html = sampleRuling.toHtmlString();
+        assertTrue("Ruling HTML should contain bold date tag", html.contains("<b>2004-10-04:</b>"));
+        assertTrue("Ruling HTML should escape special characters", html.contains("&amp;"));
+        assertTrue("Ruling HTML should escape special characters", html.contains("&lt;rules&gt;"));
 
-        textViewRules.setText(rulingText);
+        textViewRules.setText(Html.fromHtml(html));
         assertTrue("Rules text should be set", textViewRules.getText().toString().contains("Sample ruling text"));
 
-        TextView textViewUrl = view.findViewById(R.id.url);
-        assertNotNull("URL TextView should exist", textViewUrl);
-
+        // Verify AlertDialog action buttons (Option B)
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(activity)
                 .setTitle(R.string.card_view_rulings)
                 .setView(view)
+                .setNeutralButton(R.string.card_view_scryfall_page, (d, which) -> {})
+                .setPositiveButton(R.string.dialog_ok, (d, which) -> d.dismiss())
                 .create();
 
         assertNotNull("Dialog should be created", dialog);

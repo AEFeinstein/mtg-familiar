@@ -96,6 +96,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1344,6 +1345,12 @@ public class CardViewFragment extends FamiliarFragment {
         @NonNull
         public String toString() {
             return date + ": " + ruling;
+        }
+
+        public String toHtmlString() {
+            String safeDate = date == null ? "" : HtmlUtils.htmlEscape(date);
+            String safeRuling = ruling == null ? "" : HtmlUtils.htmlEscape(ruling);
+            return "<b>" + safeDate + ":</b> " + safeRuling;
         }
     }
 

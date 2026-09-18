@@ -179,4 +179,16 @@ public class RulingsTest {
         CardViewFragment.Ruling rulingScryfall = new CardViewFragment.Ruling("2020-06-01 (Scryfall)", "Companion errata.");
         assertEquals("2020-06-01 (Scryfall): Companion errata.", rulingScryfall.toString());
     }
+
+    /**
+     * Test Case 9: Ruling HTML string generation with bold date header and safe character escaping via HtmlUtils.
+     */
+    @Test
+    public void testRulingToHtmlStringFormatting() {
+        CardViewFragment.Ruling rulingWotc = new CardViewFragment.Ruling("2024-01-01", "Power > 2 & Toughness < 4.");
+        assertEquals("<b>2024-01-01:</b> Power &gt; 2 &amp; Toughness &lt; 4.", rulingWotc.toHtmlString());
+
+        CardViewFragment.Ruling rulingScryfall = new CardViewFragment.Ruling("2020-06-01 (Scryfall)", "Companion errata.");
+        assertEquals("<b>2020-06-01 (Scryfall):</b> Companion errata.", rulingScryfall.toHtmlString());
+    }
 }

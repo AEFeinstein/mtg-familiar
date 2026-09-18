@@ -242,7 +242,6 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 assert v != null; /* Because Android Studio */
 
                 TextView textViewRules = v.findViewById(R.id.rules);
-                TextView textViewUrl = v.findViewById(R.id.url);
 
                 String message;
                 if (getParentCardViewFragment().mRulingsArrayList.size() == 0) {
@@ -250,7 +249,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 } else {
                     StringBuilder messageBuilder = new StringBuilder();
                     for (CardViewFragment.Ruling r : getParentCardViewFragment().mRulingsArrayList) {
-                        messageBuilder.append(r.toString()).append("<br><br>");
+                        messageBuilder.append(r.toHtmlString()).append("<br><br>");
                     }
 
                     message = messageBuilder.toString().replace("{Tap}", "{T}");
@@ -271,14 +270,16 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     scryfallUrl = "https://scryfall.com/search?q=%21%22" + Uri.encode(getParentCardViewFragment().mCard.getName()) + "%22";
                 }
 
-                textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
-                textViewUrl.setText(Html.fromHtml(
-                        "<a href=\"" + scryfallUrl + "\">" + getString(R.string.card_view_scryfall_page) + "</a>"
-                ));
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(getParentCardViewFragment().mActivity);
                 builder.setTitle(R.string.card_view_rulings);
                 builder.setView(v);
+                builder.setNeutralButton(R.string.card_view_scryfall_page, (dialog, which) -> {
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(scryfallUrl)));
+                    } catch (Exception ignored) {
+                    }
+                });
+                builder.setPositiveButton(R.string.dialog_ok, (dialog, which) -> dialog.dismiss());
                 return builder.create();
             }
             case WISH_LIST_COUNTS: {
