@@ -83,6 +83,7 @@ import com.gelakinetic.mtgfam.helpers.GlideRequests;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.ScryfallRulingsHelper;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -1335,7 +1336,7 @@ public class CardViewFragment extends FamiliarFragment {
         final String date;
         final String ruling;
 
-        Ruling(String d, String r) {
+        public Ruling(String d, String r) {
             date = d;
             ruling = r;
         }
@@ -1421,35 +1422,23 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This private class fetches rulings about this card from gatherer.wizards.com.
+     * This private class fetches rulings about this card from api.scryfall.com.
      */
     private static class FetchRulingsTask extends AsyncTask<CardViewFragment, Void, CardViewFragment> {
 
         String mErrorMessage = null;
 
         void parseRulings(CardViewFragment frag) throws IOException {
-
-            Document document = Jsoup.connect("https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + frag.mCard.getMultiverseId()).get();
-            Elements rulingTable = document.select("div[id*=rulingsContainer] > table > tbody > tr");
-
-            for (Element ruling : rulingTable) {
-                String date = ruling.children().get(0).text();
-                Element rulingText = ruling.children().get(1);
-                Elements imageTags = rulingText.getElementsByTag("img");
-                /* For each symbol in the rulings text */
-                for (Element symbol : imageTags) {
-                    /* Build the glyph with {, the text between "name=" and "&" and } */
-                    String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
-                    /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
-                    symbol.html(symbolString);
-                }
-                Ruling r = new Ruling(date, rulingText.text());
-                frag.mRulingsArrayList.add(r);
-            }
+            frag.mRulingsArrayList = ScryfallRulingsHelper.fetchRulings(
+                    frag.mCard.getMultiverseId(),
+                    frag.mCard.getScryfallSetCode(),
+                    frag.mCard.getNumber(),
+                    frag.getContext()
+            );
         }
 
         /**
-         * This function downloads the source of the gatherer page, scans it for rulings, and stores
+         * This function fetches rulings from the Scryfall API and stores
          * them for display.
          *
          * @param params unused

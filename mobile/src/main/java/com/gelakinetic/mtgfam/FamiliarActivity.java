@@ -366,6 +366,7 @@ public class FamiliarActivity extends AppCompatActivity {
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
         connection.setRequestProperty("User-Agent", getUserAgent(ctx));
+        connection.setRequestProperty("Accept", "application/json;q=0.9,*/*;q=0.8");
         connection.setConnectTimeout(5000);
         connection.setInstanceFollowRedirects(true);
 
@@ -396,9 +397,16 @@ public class FamiliarActivity extends AppCompatActivity {
              * redirects and all the header fields end up being in this input stream
              */
             if (nextUrl == null) {
-                /* Open the stream */
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream()));
+                /* Open the stream safely */
+                InputStream is = connection.getErrorStream();
+                if (is == null) {
+                    try {
+                        is = connection.getInputStream();
+                    } catch (IOException e) {
+                        return null;
+                    }
+                }
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line;
                 int linesRead = 0;
                 /* Read one line at a time */
@@ -434,7 +442,10 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
-    public static String getUserAgent(Context ctx) {
+    public static String getUserAgent(@Nullable Context ctx) {
+        if (ctx == null) {
+            return "MTG Familiar";
+        }
         String version = "";
         try {
             version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
