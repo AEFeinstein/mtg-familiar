@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -145,7 +146,12 @@ public class ScryfallRulingsHelper {
         // 1. Try Primary endpoint if multiverseId is valid
         if (multiverseId > 0) {
             String primaryUrl = "https://api.scryfall.com/cards/multiverse/" + multiverseId + "/rulings";
-            InputStream stream = FamiliarActivity.getHttpInputStream(primaryUrl, null, context);
+            InputStream stream = FamiliarActivity.getHttpInputStream(
+                    primaryUrl,
+                    null,
+                    context,
+                    Collections.singletonMap("Accept", "application/json;q=0.9,*/*;q=0.8")
+            );
             if (stream != null) {
                 try (InputStream is = stream;
                      InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
@@ -159,7 +165,12 @@ public class ScryfallRulingsHelper {
             String fallbackUrl = "https://api.scryfall.com/cards/" +
                     setCode.trim().toLowerCase(Locale.US) + "/" +
                     number.trim().toLowerCase(Locale.US) + "/rulings";
-            InputStream stream = FamiliarActivity.getHttpInputStream(fallbackUrl, null, context);
+            InputStream stream = FamiliarActivity.getHttpInputStream(
+                    fallbackUrl,
+                    null,
+                    context,
+                    Collections.singletonMap("Accept", "application/json;q=0.9,*/*;q=0.8")
+            );
             if (stream != null) {
                 try (InputStream is = stream;
                      InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
