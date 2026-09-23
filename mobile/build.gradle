@@ -96,11 +96,11 @@ tasks.register('pmdMain', Pmd) {
 //}.standardOutput.asText.get().trim()
 
 android {
-    compileSdk 37
+    compileSdk 36
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 23
-        targetSdk 37
+        targetSdk 36
         versionCode 100
         versionName "3.9.17"
         vectorDrawables.useSupportLibrary true
@@ -190,8 +190,8 @@ dependencies {
         exclude module: 'jcip-annotations'
     }
 
-    implementation 'com.github.bumptech.glide:glide:5.0.9'
-    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.9'
+    implementation 'com.github.bumptech.glide:glide:5.0.7'
+    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.7'
 
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'com.nytimes.android:cache3:3.1.1', {
