@@ -25,6 +25,7 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
@@ -258,11 +259,21 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 textViewRules.setText(messageGlyph);
 
+                String scryfallUrl;
+                String setCode = getParentCardViewFragment().mCard.getScryfallSetCode();
+                String number = getParentCardViewFragment().mCard.getNumber();
+                if (setCode != null && !setCode.isEmpty() && number != null && !number.isEmpty()) {
+                    if (getParentCardViewFragment().mCard.getIsToken()) {
+                        setCode = "t" + setCode;
+                    }
+                    scryfallUrl = "https://scryfall.com/card/" + setCode.toLowerCase(Locale.US) + "/" + number;
+                } else {
+                    scryfallUrl = "https://scryfall.com/search?q=%21%22" + Uri.encode(getParentCardViewFragment().mCard.getName()) + "%22";
+                }
+
                 textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
-                // Gatherer doesn't use HTTPS as of 1/6/2019
                 textViewUrl.setText(Html.fromHtml(
-                        "<a href=https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-                                getParentCardViewFragment().mCard.getMultiverseId() + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
+                        "<a href=\"" + scryfallUrl + "\">" + getString(R.string.card_view_scryfall_page) + "</a>"
                 ));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getParentCardViewFragment().mActivity);

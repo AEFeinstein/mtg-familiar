@@ -121,6 +121,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -323,7 +324,24 @@ public class FamiliarActivity extends AppCompatActivity {
     public static
     @Nullable
     InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter, Context ctx) throws IOException {
-        return getHttpInputStream(new URL(stringUrl), logWriter, ctx, 0);
+        return getHttpInputStream(new URL(stringUrl), logWriter, ctx, 0, null);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL, with optional request properties.
+     *
+     * @param stringUrl         The URL to open a stream to
+     * @param logWriter         A PrintWriter to log debug info to. Can be null
+     * @param ctx               A context to build the User Agent with
+     * @param requestProperties Optional extra headers to set on the connection. Can be null
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter, Context ctx,
+                                   @Nullable Map<String, String> requestProperties) throws IOException {
+        return getHttpInputStream(new URL(stringUrl), logWriter, ctx, 0, requestProperties);
     }
 
     /**
@@ -338,24 +356,43 @@ public class FamiliarActivity extends AppCompatActivity {
     public static
     @Nullable
     InputStream getHttpInputStream(URL url, PrintWriter logWriter, Context ctx) throws IOException {
-        return getHttpInputStream(url, logWriter, ctx, 0);
+        return getHttpInputStream(url, logWriter, ctx, 0, null);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL, with optional request properties.
+     *
+     * @param url               The URL to open a stream to
+     * @param logWriter         A PrintWriter to log debug info to. Can be null
+     * @param ctx               A context to build the User Agent with
+     * @param requestProperties Optional extra headers to set on the connection. Can be null
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(URL url, PrintWriter logWriter, Context ctx,
+                                   @Nullable Map<String, String> requestProperties) throws IOException {
+        return getHttpInputStream(url, logWriter, ctx, 0, requestProperties);
     }
 
     /**
      * Open an inputStream to the HTML content at the given URL, making recursive calls for
      * redirection (HTTP 301, 302).
      *
-     * @param url            The URL to open a stream to
-     * @param logWriter      A PrintWriter to log debug info to. Can be null
-     * @param ctx            A context to build the User Agent with
-     * @param recursionLevel The redirect recursion level. Starts at 0, doesn't go past 10
+     * @param url               The URL to open a stream to
+     * @param logWriter         A PrintWriter to log debug info to. Can be null
+     * @param ctx               A context to build the User Agent with
+     * @param recursionLevel    The redirect recursion level. Starts at 0, doesn't go past 10
+     * @param requestProperties Optional extra headers to set on the connection. Can be null
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     private static
     @Nullable
     InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter, Context ctx,
-                                   int recursionLevel) throws IOException {
+                                   int recursionLevel,
+                                   @Nullable Map<String, String> requestProperties) throws IOException {
 
         /* Don't allow infinite recursion */
         if (recursionLevel > 10) {
@@ -366,6 +403,11 @@ public class FamiliarActivity extends AppCompatActivity {
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
         connection.setRequestProperty("User-Agent", getUserAgent(ctx));
+        if (requestProperties != null) {
+            for (Map.Entry<String, String> entry : requestProperties.entrySet()) {
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+        }
         connection.setConnectTimeout(5000);
         connection.setInstanceFollowRedirects(true);
 
@@ -422,7 +464,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
             if (nextUrl != null) {
                 /* If there is a URL to follow, follow it */
-                return getHttpInputStream(nextUrl, logWriter, ctx, recursionLevel + 1);
+                return getHttpInputStream(nextUrl, logWriter, ctx, recursionLevel + 1, requestProperties);
             } else {
                 /* Otherwise return null */
                 return null;
@@ -434,7 +476,10 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
-    public static String getUserAgent(Context ctx) {
+    public static String getUserAgent(@Nullable Context ctx) {
+        if (ctx == null) {
+            return "MTG Familiar";
+        }
         String version = "";
         try {
             version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
