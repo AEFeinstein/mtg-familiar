@@ -441,6 +441,38 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             language = getString(R.string.pref_English);
                             break;
                         }
+                        case Language.Sanskrit: {
+                            language = getString(R.string.pref_Sanskrit);
+                            break;
+                        }
+                        case Language.Hebrew: {
+                            language = getString(R.string.pref_Hebrew);
+                            break;
+                        }
+                        case Language.Arabic: {
+                            language = getString(R.string.pref_Arabic);
+                            break;
+                        }
+                        case Language.Latin: {
+                            language = getString(R.string.pref_Latin);
+                            break;
+                        }
+                        case Language.Greek: {
+                            language = getString(R.string.pref_Greek);
+                            break;
+                        }
+                        case Language.Phyrexian: {
+                            language = getString(R.string.pref_Phyrexian);
+                            break;
+                        }
+                        case Language.Quenya: {
+                            language = getString(R.string.pref_Quenya);
+                            break;
+                        }
+                        case Language.Dwarvish: {
+                            language = getString(R.string.pref_Dwarvish);
+                            break;
+                        }
                     }
 
                     /* Add the language and translation */

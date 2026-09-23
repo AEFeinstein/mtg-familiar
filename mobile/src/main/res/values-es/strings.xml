@@ -449,6 +449,7 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
     <string name="decklist_enchantments">"Encantamientos"</string>
     <string name="decklist_artifacts">"Artefactos"</string>
     <string name="decklist_lands">"Tierras"</string>
+    <string name="decklist_battles">Batallas</string>
     <string name="decklist_edit_dialog_title_end">"en el mazo"</string>
     <string name="decklist_delete">"Eliminar mazo"</string>
     <string name="decklist_save">"Guardar mazo"</string>
@@ -633,4 +634,9 @@ Standard ....... Not Legal -->
     <string name="pref_show_price_on_card_view_summary">"Al ver una tarjeta, cargue inmediatamente el precio en la página de la vista de la tarjeta"</string>
     <string name="database_update_available_message">Hay una actualización de la base de datos de tarjetas disponible. ¿Quieres descargarla e instalarla?</string>
     <string name="no_app_to_open_link">No se encontró ninguna aplicación para abrir este enlace</string>
+    <string name="pref_Sanskrit">Sánscrito</string>
+    <string name="pref_Hebrew">Hebreo</string>
+    <string name="pref_Arabic">Árabe</string>
+    <string name="pref_Latin">Latín</string>
+    <string name="pref_Greek">Griego</string>
 </resources>

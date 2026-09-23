@@ -450,6 +450,7 @@ Boa sorte, e divirtam-se!
     <string name="decklist_enchantments">"Encantamentos"</string>
     <string name="decklist_artifacts">"Artefatos"</string>
     <string name="decklist_lands">"Terrenos"</string>
+    <string name="decklist_battles">Batalhas</string>
     <string name="decklist_edit_dialog_title_end">"no deck"</string>
     <string name="decklist_delete">"Deletar Deck"</string>
     <string name="decklist_save">"Salvar Deck"</string>
@@ -618,4 +619,9 @@ Standard ....... Not Legal -->
     <string name="pref_show_price_on_card_view_summary">"Ao visualizar um cartão, carregue imediatamente o preço na página de visualização do cartão"</string>
     <string name="database_update_available_message">Há uma atualização da base de dados de cartões disponível. Gostaria de fazer o download e instalar?</string>
     <string name="no_app_to_open_link">Nenhum aplicativo encontrado para abrir este link</string>
+    <string name="pref_Sanskrit">Sânscrito</string>
+    <string name="pref_Hebrew">Hebraico</string>
+    <string name="pref_Arabic">Árabe</string>
+    <string name="pref_Latin">Latim</string>
+    <string name="pref_Greek">Grego</string>
 </resources>

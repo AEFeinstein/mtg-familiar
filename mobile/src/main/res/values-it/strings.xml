@@ -444,6 +444,7 @@ Buona fortuna, e divertiti!
     <string name="decklist_enchantments">"Incantesimi"</string>
     <string name="decklist_artifacts">"Artefatti"</string>
     <string name="decklist_lands">"Terre"</string>
+    <string name="decklist_battles">Battaglie</string>
     <string name="decklist_edit_dialog_title_end">"Nel grimorio"</string>
     <string name="decklist_delete">"Elimina grimorio"</string>
     <string name="decklist_save">"Salva grimorio"</string>
@@ -615,4 +616,9 @@ Standard ....... Not Legal -->
     <string name="pref_show_price_on_card_view_summary">"Quando si visualizza una scheda, caricare immediatamente il prezzo sulla pagina Visualizza carta"</string>
     <string name="database_update_available_message">C\'è un aggiornamento disponibile del database delle carte. Vuoi scaricarlo e installarlo?</string>
     <string name="no_app_to_open_link">Nessuna app trovata per aprire questo link</string>
+    <string name="pref_Sanskrit">Sanscrito</string>
+    <string name="pref_Hebrew">Ebraico</string>
+    <string name="pref_Arabic">Arabo</string>
+    <string name="pref_Latin">Latino</string>
+    <string name="pref_Greek">Greco</string>
 </resources>

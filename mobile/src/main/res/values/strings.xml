@@ -464,6 +464,14 @@ Good luck, and have fun!
     <string name="pref_Chinese_trad">"Chinese Traditional"</string>
     <string name="pref_Korean">"Korean"</string>
     <string name="pref_Slovak">"Slovak"</string>
+    <string name="pref_Sanskrit">Sanskrit</string>
+    <string name="pref_Hebrew">Hebrew</string>
+    <string name="pref_Arabic">Arabic</string>
+    <string name="pref_Latin">Latin</string>
+    <string name="pref_Greek">Greek</string>
+    <string name="pref_Phyrexian" translatable="false">Phyrexian</string>
+    <string name="pref_Quenya" translatable="false">Quenya</string>
+    <string name="pref_Dwarvish" translatable="false">Dwarvish</string>
     <string name="pref_tap_symbol_title">"Tap Symbol"</string>
     <string name="pref_tap_symbol_summary">"Which tap symbol to use in display"</string>
     <string name="pref_tap_symbol_modern">"Eighth Edition"</string>

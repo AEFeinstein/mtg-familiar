@@ -457,6 +457,7 @@ Veľa šťastia a zabavte sa!"</string>
     <string name="decklist_enchantments">"Očarovania"</string>
     <string name="decklist_artifacts">"Artefakty"</string>
     <string name="decklist_lands">"Landy"</string>
+    <string name="decklist_battles">Bitky</string>
     <string name="decklist_edit_dialog_title_end">"v balíku"</string>
     <string name="decklist_delete">"Zmazať balík"</string>
     <string name="decklist_save">"Uložiť balík"</string>
@@ -629,4 +630,9 @@ Standard ....... Not Legal -->
     <string name="pref_show_price_on_card_view_summary">"Pri prezeraní karty okamžite načítajte cenu na stránku Zobraziť kartu"</string>
     <string name="database_update_available_message">K dispozícii je aktualizácia databázy kariet. Chcete si ho stiahnuť a nainštalovať?</string>
     <string name="no_app_to_open_link">Nenašla sa žiadna aplikácia na otvorenie tohto odkazu</string>
+    <string name="pref_Sanskrit">Sanskrit</string>
+    <string name="pref_Hebrew">Hebrejčina</string>
+    <string name="pref_Arabic">Arabčina</string>
+    <string name="pref_Latin">Latinčina</string>
+    <string name="pref_Greek">Gréčtina</string>
 </resources>

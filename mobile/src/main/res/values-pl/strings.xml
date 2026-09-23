@@ -451,6 +451,7 @@ Liście Życzeń"</string>
     <string name="decklist_enchantments">"Enchantmenty"</string>
     <string name="decklist_artifacts">"Artefakty"</string>
     <string name="decklist_lands">"Landy"</string>
+    <string name="decklist_battles">Bitwy</string>
     <string name="decklist_edit_dialog_title_end">"w talii"</string>
     <string name="decklist_delete">"Usuń talię"</string>
     <string name="decklist_save">"Zapisz talię"</string>
@@ -628,4 +629,9 @@ Standard ....... Not Legal -->
     <string name="pref_show_price_on_card_view_summary">"Podczas przeglądania karty natychmiast załaduj cenę na stronę widoku karty"</string>
     <string name="database_update_available_message">Dostępna jest aktualizacja bazy danych kart. Czy chcesz ją pobrać i zainstalować?</string>
     <string name="no_app_to_open_link">Nie znaleziono aplikacji do otwarcia tego linku</string>
+    <string name="pref_Sanskrit">Sanskryt</string>
+    <string name="pref_Hebrew">Hebrajski</string>
+    <string name="pref_Arabic">Arabski</string>
+    <string name="pref_Latin">Łacina</string>
+    <string name="pref_Greek">Greka</string>
 </resources>

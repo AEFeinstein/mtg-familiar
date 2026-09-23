@@ -1927,6 +1927,11 @@ public class CardDbAdapter {
         initialValues.put(KEY_ONLINE_ONLY, card.getIsOnlineOnly() ? 1 : 0);
 
         for (Card.ForeignPrinting fp : card.getForeignPrintings()) {
+            // Don't try to add if there's no language code
+            if (null == fp.getLanguageCode()) {
+                continue;
+            }
+
             switch (fp.getLanguageCode()) {
                 case Language.Chinese_Traditional: {
                     initialValues.put(KEY_NAME_CHINESE_TRADITIONAL, fp.getName());

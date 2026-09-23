@@ -34,4 +34,12 @@ public class Language {
     public static final String Spanish = "es";
     public static final String Korean = "ko";
     public static final String English = "en";
+    public static final String Sanskrit = "sa";
+    public static final String Hebrew = "he";
+    public static final String Arabic = "ar";
+    public static final String Latin = "la";
+    public static final String Greek = "el";
+    public static final String Phyrexian = "phy";
+    public static final String Quenya = "qya";
+    public static final String Dwarvish = "dwa";
 }

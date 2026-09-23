@@ -462,6 +462,7 @@ Viel Glück und viel Spaß!
     <string name="decklist_enchantments">"Verzauberungen"</string>
     <string name="decklist_artifacts">"Artefakte"</string>
     <string name="decklist_lands">"Länder"</string>
+    <string name="decklist_battles">Schlachten</string>
     <string name="decklist_edit_dialog_title_end">"im Deck"</string>
     <string name="decklist_delete">"Deck löschen"</string>
     <string name="decklist_save">"Deck speichern"</string>
@@ -639,4 +640,9 @@ Standard ....... Not Legal -->
     <string name="pref_show_price_on_card_view_summary">"Laden Sie beim Anzeigen einer Karte den Preis sofort auf die Kartenansichtsseite."</string>
     <string name="database_update_available_message">Es ist ein Update für die Kartendatenbank verfügbar. Möchten Sie es herunterladen und installieren?</string>
     <string name="no_app_to_open_link">Keine App zum Öffnen dieses Links gefunden</string>
+    <string name="pref_Sanskrit">Sanskrit</string>
+    <string name="pref_Hebrew">Hebräisch</string>
+    <string name="pref_Arabic">Arabisch</string>
+    <string name="pref_Latin">Latein</string>
+    <string name="pref_Greek">Griechisch</string>
 </resources>
