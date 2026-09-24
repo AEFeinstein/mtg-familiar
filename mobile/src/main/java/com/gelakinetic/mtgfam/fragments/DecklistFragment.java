@@ -142,8 +142,8 @@ public class DecklistFragment extends FamiliarListFragment {
                                             }
                                             break;
                                         }
-                                        default:
-                                        case "Banned": {
+                                        case "Banned":
+                                        default: {
                                             deckIsLegal = false;
                                             break;
                                         }
@@ -193,33 +193,13 @@ public class DecklistFragment extends FamiliarListFragment {
         private int minCardsForFormat(String format) {
             if (null == format) {
                 return 60;
-            }
-            switch (format) {
-                case "Commander":
-                case "Duel Commander":
-                case "Gladiator":
-                case "Pauper Commander": {
-                    return 100;
-                }
-                case "Brawl":
-                case "Future":
-                case "Frontier":
-                case "Historic":
-                case "Historic Brawl":
-                case "Legacy":
-                case "Modern":
-                case "Old School":
-                case "Pauper":
-                case "Penny Dreadful":
-                case "Pioneer":
-                case "Pre-Modern":
-                case "Standard":
-                case "Vintage":
-                case "Alchemy":
-                case "Explorer":
-                default: {
-                    return 60;
-                }
+            } else if ("Commander".equals(format) ||
+                    "Duel Commander".equals(format) ||
+                    "Gladiator".equals(format) ||
+                    "Pauper Commander".equals(format)) {
+                return 100;
+            } else {
+                return 60;
             }
         }
 
@@ -232,34 +212,15 @@ public class DecklistFragment extends FamiliarListFragment {
         private boolean isSingletonFormat(String format) {
             if (null == format) {
                 return false;
-            }
-
-            switch (format) {
-                case "Brawl":
-                case "Commander":
-                case "Duel Commander":
-                case "Gladiator":
-                case "Historic Brawl":
-                case "Pauper Commander": {
-                    return true;
-                }
-                case "Future":
-                case "Frontier":
-                case "Historic":
-                case "Legacy":
-                case "Modern":
-                case "Old School":
-                case "Pauper":
-                case "Penny Dreadful":
-                case "Pioneer":
-                case "Pre-Modern":
-                case "Standard":
-                case "Vintage":
-                case "Alchemy":
-                case "Explorer":
-                default: {
-                    return false;
-                }
+            } else if ("Brawl".equals(format) ||
+                    "Commander".equals(format) ||
+                    "Duel Commander".equals(format) ||
+                    "Gladiator".equals(format) ||
+                    "Historic Brawl".equals(format) ||
+                    "Pauper Commander".equals(format)) {
+                return true;
+            } else {
+                return false;
             }
         }
 
