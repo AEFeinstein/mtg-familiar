@@ -134,7 +134,7 @@ public class MarketPriceFetcher {
                              NoSuchPaddingException | NoSuchAlgorithmException |
                              BadPaddingException | InvalidKeyException |
                              IllegalBlockSizeException e) {
-                        return Single.error(new Exception(mActivity.getString(R.string.price_error_api_key) + ": " + e));
+                        return Single.error(new Exception(mActivity.getString(R.string.price_error_api_key) + ": " + e.getMessage()));
                     }
                 } else {
                     /* Make sure the token hasn't expired */
@@ -163,7 +163,7 @@ public class MarketPriceFetcher {
                             return Single.error(new Throwable(details.errors[0]));
                         }
                     } catch (IOException e) {
-                        return Single.error(new Exception(mActivity.getString(R.string.price_error_network) + ": " + e));
+                        return Single.error(new Exception(mActivity.getString(R.string.price_error_network) + ": " + e.getMessage()));
                     }
                 }
                 return Single.error(lastThrownException);

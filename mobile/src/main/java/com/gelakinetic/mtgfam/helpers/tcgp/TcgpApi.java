@@ -34,6 +34,8 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import kotlin.io.ByteStreamsKt;
+
 public class TcgpApi {
 
     // Here's the full list of categories as of 1/28/18:
@@ -173,6 +175,13 @@ public class TcgpApi {
                         .fromJson(new InputStreamReader(inStream), AccessToken.class);
                 this.mAccessToken = token.access_token;
                 return token;
+            } catch (IOException e) {
+                InputStream errorStream = conn.getErrorStream();
+                if (errorStream != null) {
+                    // Throw an exception with the HTTP status code and server message
+                    throw new IOException("HTTP " + conn.getResponseCode() + ", " + new String(ByteStreamsKt.readBytes(errorStream)));
+                }
+                throw e;
             }
         }
 
@@ -376,15 +385,12 @@ public class TcgpApi {
                 // Parse the json out of the response and save it
                 return new Gson().fromJson(new InputStreamReader(inStream), ProductMarketPrice.class);
             } catch (IOException e) {
-                try (InputStream inStream = conn.getErrorStream()) {
-                    if (null == inStream) {
-                        // Return an empty, not null, object
-                        return new ProductMarketPrice();
-                    }
-                } catch (IOException e2) {
-                    // Return an empty, not null, object
-                    return new ProductMarketPrice();
+                InputStream errorStream = conn.getErrorStream();
+                if (errorStream != null) {
+                    // Throw an exception with the HTTP status code and server message
+                    throw new IOException("HTTP " + conn.getResponseCode() + ", " + new String(ByteStreamsKt.readBytes(errorStream)));
                 }
+                throw e;
             }
         }
         // No access token
@@ -425,15 +431,12 @@ public class TcgpApi {
                 return builder.create()
                         .fromJson(new InputStreamReader(inStream), ProductDetails.class);
             } catch (IOException e) {
-                try (InputStream inStream = conn.getErrorStream()) {
-                    if (null == inStream) {
-                        // Return an empty, not null, object
-                        return new ProductDetails();
-                    }
-                } catch (IOException e2) {
-                    // Return an empty, not null, object
-                    return new ProductDetails();
+                InputStream errorStream = conn.getErrorStream();
+                if (errorStream != null) {
+                    // Throw an exception with the HTTP status code and server message
+                    throw new IOException("HTTP " + conn.getResponseCode() + ", " + new String(ByteStreamsKt.readBytes(errorStream)));
                 }
+                throw e;
             }
         }
         // No access token
