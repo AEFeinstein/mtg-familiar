@@ -173,16 +173,6 @@ public class TcgpApi {
                         .fromJson(new InputStreamReader(inStream), AccessToken.class);
                 this.mAccessToken = token.access_token;
                 return token;
-            } catch (IOException e) {
-                try (InputStream inStream = conn.getErrorStream()) {
-                    if (null == inStream) {
-                        // Return an empty, not null, object
-                        return new AccessToken();
-                    }
-                } catch (IOException e2) {
-                    // Return an empty, not null, object
-                    return new AccessToken();
-                }
             }
         }
 

@@ -38,7 +38,6 @@ import com.nytimes.android.external.store3.base.impl.Store;
 import com.nytimes.android.external.store3.base.impl.StoreBuilder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -116,34 +115,30 @@ public class MarketPriceFetcher {
                 TcgpApi api = new TcgpApi();
                 String tokenStr = PreferenceAdapter.getTcgpApiToken(mActivity);
                 Date expirationDate = PreferenceAdapter.getTcgpApiTokenExpirationDate(mActivity);
-                try {
-                    /* If we don't have a token or it expired */
-                    if (tokenStr.isEmpty() || expirationDate.before(new Date())) {
-                        /* Request a token. This will initialize the TcgpApi object */
-                        AccessToken token;
-                        try {
-                            SecretKey sk = new SecretKeySpec(context.getString(R.string.key_lastLegalityUpdate).substring(0, 16).getBytes(StandardCharsets.UTF_8), "AES");
-                            IvParameterSpec iv = new IvParameterSpec(sk.getEncoded());
-                            String a = "AES/CBC/PKCS5Padding";
-                            token = api.getAccessToken(
-                                    MarketPriceFetcher.decrypt(a, "j9mxAigDGtwUdJscE38NUh6CKK2EpiPCG/pDURUxAeC8+6btP2GvRQf0In29Wn3T", sk, iv),
-                                    MarketPriceFetcher.decrypt(a, "F10/olisSsKYo/ZJfNiIq6kmd1u+zZZuQTSAa7MGdu47CF+z6eYgLK/HPAV+xQA6", sk, iv),
-                                    MarketPriceFetcher.decrypt(a, "gr3dWliDja7s0d5OYWxdhe/XV9+v1UgTO2e7rRB8doxeAerUcdM9IdSutoqpy0UZ", sk, iv));
-                            /* Save the token and expiration date */
-                            PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
-                            PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
-                        } catch (FileNotFoundException | InvalidAlgorithmParameterException |
-                                 NoSuchPaddingException | NoSuchAlgorithmException |
-                                 BadPaddingException | InvalidKeyException |
-                                 IllegalBlockSizeException e) {
-                            return Single.error(new Exception(mActivity.getString(R.string.price_error_api_key)));
-                        }
-                    } else {
-                        /* Make sure the token hasn't expired */
-                        api.setToken(tokenStr);
+                /* If we don't have a token or it expired */
+                if (tokenStr.isEmpty() || expirationDate.before(new Date())) {
+                    /* Request a token. This will initialize the TcgpApi object */
+                    AccessToken token;
+                    try {
+                        SecretKey sk = new SecretKeySpec(context.getString(R.string.key_lastLegalityUpdate).substring(0, 16).getBytes(StandardCharsets.UTF_8), "AES");
+                        IvParameterSpec iv = new IvParameterSpec(sk.getEncoded());
+                        String a = "AES/CBC/PKCS5Padding";
+                        token = api.getAccessToken(
+                                MarketPriceFetcher.decrypt(a, "j9mxAigDGtwUdJscE38NUh6CKK2EpiPCG/pDURUxAeC8+6btP2GvRQf0In29Wn3T", sk, iv),
+                                MarketPriceFetcher.decrypt(a, "F10/olisSsKYo/ZJfNiIq6kmd1u+zZZuQTSAa7MGdu47CF+z6eYgLK/HPAV+xQA6", sk, iv),
+                                MarketPriceFetcher.decrypt(a, "gr3dWliDja7s0d5OYWxdhe/XV9+v1UgTO2e7rRB8doxeAerUcdM9IdSutoqpy0UZ", sk, iv));
+                        /* Save the token and expiration date */
+                        PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
+                        PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
+                    } catch (IOException | InvalidAlgorithmParameterException |
+                             NoSuchPaddingException | NoSuchAlgorithmException |
+                             BadPaddingException | InvalidKeyException |
+                             IllegalBlockSizeException e) {
+                        return Single.error(new Exception(mActivity.getString(R.string.price_error_api_key) + ": " + e));
                     }
-                } catch (IOException e) {
-                    return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
+                } else {
+                    /* Make sure the token hasn't expired */
+                    api.setToken(tokenStr);
                 }
 
                 /* Make sure the TCGPlayer product ID exists */
@@ -168,7 +163,7 @@ public class MarketPriceFetcher {
                             return Single.error(new Throwable(details.errors[0]));
                         }
                     } catch (IOException e) {
-                        return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
+                        return Single.error(new Exception(mActivity.getString(R.string.price_error_network) + ": " + e));
                     }
                 }
                 return Single.error(lastThrownException);
